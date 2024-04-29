@@ -1,2 +1,0 @@
-#DOC1
-Lorem
