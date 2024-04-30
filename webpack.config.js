@@ -4,6 +4,17 @@ module.exports = {
         rules: [
             { test: /\.css$/, use: ['style-loader', 'css-loader'] },
             { test: /\.js$/, use: 'babel-loader' },
+            {
+                test: /\.(png|jpg|jpeg|gif)$/i,
+                type: 'asset/resource',
+            },
+            {
+                test: /\.svg$/,
+                type: 'asset/resource',
+                generator: {
+                    filename: 'icons/' + '[name].[contenthash][ext]',
+                },
+            },
         ]
     },
     devServer: {
@@ -15,7 +26,8 @@ module.exports = {
     },
     output: {
         path: __dirname + '/docs/',
-        filename: 'index_bundle.js'
+        filename: 'index_bundle.js',
+        assetModuleFilename: 'imgs/' + '[name].[contenthash][ext]',
     },
     mode: process.env.NODE_ENV === 'production' ? 'production' : 'development'
 };
