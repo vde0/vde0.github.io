@@ -1,0 +1,233 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
+
+:root {
+    --custom-dark: #2C2C2C;
+    --cutom-light: #E7E9EE;
+    --custom-black: #171717;
+    --custom-red: #FE0000;
+    --custom-blue: #54A9E9;
+    --custom-orange: #FF8B49;
+}
+
+
+.page {
+    padding: 0;
+    background-color: var(--custom-black);
+    color: var(--cutom-light);
+
+    font-family: "Open Sans", sans-serif;
+}
+
+
+.app {
+    max-width: 454px;
+    margin-left: auto;
+    margin-right: auto;
+
+    padding: 21px 10px;
+}
+
+
+.app__container {
+    height: 63vw;
+    max-height: 288px;
+    margin-bottom: 17px;
+
+    border-radius: 15px;
+    overflow: clip;
+}
+
+.app__container_empty {
+    background-color: var(--cutom-light);
+    background-image: url("imgs/anonim-girl_placeholder.png");
+    background-repeat: no-repeat;
+    background-size: 43.74% 87.85%;
+    background-position: 50%;
+}
+
+
+.app__footer {
+    display: flex;
+    gap: 10px;
+    height: 61px;
+    padding-top: 17px;
+}
+
+
+.app__btn_mod_next {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8pt;
+    text-transform: uppercase;
+    font-size: 2.25rem;
+}
+
+
+.btn {
+    position: relative;
+
+    padding-left: 10px;
+    padding-right: 10px;
+    background-color: var(--custom-dark);
+    border: none;
+    border-radius: 15px;
+    cursor: pointer;
+
+    color: white;
+    font-family: inherit;
+}
+.btn:hover > * {
+    opacity: .7;
+}
+.btn:active > * {
+    opacity: .5;
+}
+
+.btn_color_blue {
+    background-color: var(--custom-blue);
+}
+
+.btn__badge {
+    position: absolute;
+    display: flex;
+
+    width: 27px;
+    height: 27px;
+    top: 0;
+    right: 0;
+    transform: translate(30%, -50%);
+
+    justify-content: center;
+    align-content: center;
+    padding: 2px;
+    box-sizing: border-box;
+
+    border-radius: 50%;
+}
+.btn__badge > span {
+    display: inline-block;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+
+    font-size: 1.25rem;
+    line-height: 1.25rem;
+    text-align: center;
+}
+
+.btn__badge_color_red {
+    color: white;
+    background-color: var(--custom-red);
+}
+.btn__badge_color_blue {
+    color: white;
+    background-color: var(--custom-blue);
+}
+
+
+.dialog {
+    height: 100%;
+    overflow-y: scroll;
+}
+
+.dialog__msg-list {
+    padding: 7px 0;
+    margin: 0;
+    
+    list-style: none;
+    color: black;
+}
+
+.dialog__msg-item {
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+}
+.dialog__msg-item:not(:last-child) {
+    margin-bottom: 17px;
+}
+
+
+.msg {
+    position: relative;
+    color: white;
+    padding: 8px 17px;
+    margin: 0;
+    border-radius: 15px;
+}
+.msg::before {
+    content: "";
+    position: absolute;
+
+    width: 20px;
+    height: 20px;
+    background-color: transparent;
+
+    border-style: solid;
+    border-color: transparent;
+    border-width: 20px;
+
+    bottom: -10px;
+}
+
+.msg_user_current {
+    max-width: 264px;
+    margin-left: auto;
+    margin-right: 7px;
+
+    background-color: var(--custom-blue);
+}
+.msg_user_current::before {
+    border-bottom-color: var(--custom-blue);
+    border-right-width: 0;
+
+    border-radius: 0 100%;
+    right: -14.5px;
+
+    transform-origin: center; 
+    transform:rotate(35deg);
+}
+.msg_user_current .msg__header {
+    color: var(--custom-orange);
+}
+.msg_user_companion {
+    max-width: 256px;
+    margin-right: auto;
+    margin-left: 7px;
+
+    background-color: var(--custom-dark);
+}
+.msg_user_companion .msg__header {
+    color: var(--custom-blue);
+}
+.msg_user_companion::before {
+    border-bottom-color: var(--custom-dark);
+    border-left-width: 0;
+
+    border-radius: 100% 0;
+    left: -14.5px;
+
+    transform-origin: center; 
+    transform:rotate(-35deg);
+}
+
+.msg__header {
+    position: relative;
+    font-size: .87rem;
+}
+
+.msg__content {
+    position: relative;
+}
+
+.msg__text {
+    font-size: 1rem;
+    margin-top: 0;
+}
+.msg__text:last-child {
+    margin-bottom: 0;
+}

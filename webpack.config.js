@@ -1,5 +1,10 @@
 module.exports = {
     entry: './src/index.js',
+    output: {
+        path: __dirname + '/docs/',
+        filename: 'index_bundle.js',
+        assetModuleFilename: 'imgs/' + '[name].[contenthash][ext]',
+    },
     module: {
         rules: [
             { test: /\.css$/, use: ['style-loader', 'css-loader'] },
@@ -23,11 +28,6 @@ module.exports = {
         },
         compress: true,
         port: 9000
-    },
-    output: {
-        path: __dirname + '/docs/',
-        filename: 'index_bundle.js',
-        assetModuleFilename: 'imgs/' + '[name].[contenthash][ext]',
     },
     mode: process.env.NODE_ENV === 'production' ? 'production' : 'development'
 };
