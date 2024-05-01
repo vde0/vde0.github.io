@@ -40,7 +40,7 @@
     max-height: 320px;
 
     border-radius: 15px;
-    overflow: clip;
+    overflow: hidden;
 }
 
 .app__container_empty {
