@@ -1,4 +1,6 @@
 import React from 'react';
+import sendBtnIc from '../icons/to-send.svg';
+import Btn from './Btn';
 
 export default class Dialog extends React.Component {
 
@@ -31,6 +33,13 @@ export default class Dialog extends React.Component {
                         );
                     } )}
                 </ul>
+                <form className="msg-form">
+                    <input type="text" className="msg-form__field" />
+                    <Btn
+                        type="submit"
+                        className="msg-form__send-btn"
+                        content={<img src={sendBtnIc}/>} />
+                </form>
             </article>
         );
     }

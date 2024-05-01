@@ -9,7 +9,7 @@ export default class AppFooter extends React.Component {
 
     constructor (props) {
         super(props);
-
+        
         this.btns = [
             {
                 mod: "msgs",
@@ -42,7 +42,7 @@ export default class AppFooter extends React.Component {
                 {this.btns.map( btn => {
                     return <Btn
                         key={btn.mod}
-                        mod={btn.mod}
+                        className={"app__btn app__btn_mod_" + btn.mod}
                         content={btn.content}
                         color={btn.color}
                         badge={btn.badge}

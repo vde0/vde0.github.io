@@ -10,6 +10,88 @@
 }
 
 
+.btn {
+    position: relative;
+
+    padding: 10px;
+    box-sizing: border-box;
+    background-color: var(--custom-dark);
+    border: none;
+    border-radius: 15px;
+    
+    color: white;
+    font-family: inherit;
+    cursor: pointer;
+    
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none;   /* Chrome/Safari/Opera */
+    -khtml-user-select: none;    /* Konqueror */
+    -moz-user-select: none;      /* Firefox */
+    -ms-user-select: none;       /* Internet Explorer/Edge */
+    user-select: none;           /* Non-prefixed version, currently
+                                    not supported by any browser */
+
+    -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+    -webkit-tap-highlight-color: transparent;
+}
+.btn:hover > *:not(.btn__badge) {
+    opacity: .7;
+}
+.btn:active > *:not(.btn__badge) {
+    opacity: .5;
+}
+
+.btn_color_blue {
+    background-color: var(--custom-blue);
+}
+
+.btn__content {
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn__badge {
+    position: absolute;
+    display: flex;
+
+    width: 27px;
+    height: 27px;
+    top: 0;
+    right: 0;
+    transform: translate(30%, -50%);
+
+    justify-content: center;
+    align-content: center;
+    padding: 2px;
+    box-sizing: border-box;
+
+    border-radius: 50%;
+}
+.btn__badge > span {
+    display: inline-block;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+
+    font-size: 1.25rem;
+    line-height: 1.25rem;
+    text-align: center;
+}
+
+.btn__badge_color_red {
+    color: white;
+    background-color: var(--custom-red);
+}
+.btn__badge_color_blue {
+    color: white;
+    background-color: var(--custom-blue);
+}
+
+
 .page {
     margin: 0;
     background-color: var(--custom-black);
@@ -58,89 +140,17 @@
     padding-top: 16pt;
 }
 
+.app__btn {
+    /* height: 100%; */
+}
 
 .app__btn_mod_next {
     width: 100%;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8pt;
     text-transform: uppercase;
     font-size: 2.25rem;
 }
-
-
-.btn {
-    position: relative;
-
-    padding-left: 10px;
-    padding-right: 10px;
-    background-color: var(--custom-dark);
-    border: none;
-    border-radius: 15px;
-    cursor: pointer;
-
-    color: white;
-    font-family: inherit;
-    
-    -webkit-touch-callout: none; /* iOS Safari */
-    -webkit-user-select: none;   /* Chrome/Safari/Opera */
-    -khtml-user-select: none;    /* Konqueror */
-    -moz-user-select: none;      /* Firefox */
-    -ms-user-select: none;       /* Internet Explorer/Edge */
-    user-select: none;           /* Non-prefixed version, currently
-                                    not supported by any browser */
-
-    -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
-    -webkit-tap-highlight-color: transparent;
-}
-.btn:hover > * {
-    opacity: .7;
-}
-.btn:active > * {
-    opacity: .5;
-}
-
-.btn_color_blue {
-    background-color: var(--custom-blue);
-}
-
-.btn__badge {
-    position: absolute;
-    display: flex;
-
-    width: 27px;
-    height: 27px;
-    top: 0;
-    right: 0;
-    transform: translate(30%, -50%);
-
-    justify-content: center;
-    align-content: center;
-    padding: 2px;
-    box-sizing: border-box;
-
-    border-radius: 50%;
-}
-.btn__badge > span {
-    display: inline-block;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-
-    font-size: 1.25rem;
-    line-height: 1.25rem;
-    text-align: center;
-}
-
-.btn__badge_color_red {
-    color: white;
-    background-color: var(--custom-red);
-}
-.btn__badge_color_blue {
-    color: white;
-    background-color: var(--custom-blue);
+.app__btn_mod_next > .btn__content {
+    gap: 8pt;
 }
 
 
