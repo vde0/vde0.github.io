@@ -20,6 +20,7 @@ function getUserInfo (userID) {
 export default class Dialog extends React.Component {
     
     userID      = this.props.data.userID;
+    hideMenu    = this.props.data.hideMenuFunc;
     msgText     = "";
     msgList     = [
         {
@@ -97,6 +98,7 @@ export default class Dialog extends React.Component {
                         type="text"
                         className="msg-form__field"
                         onInput={this.onInput}
+                        onFocus={this.onFocusField}
                         autoFocus />
                     <Btn
                         type="submit"
@@ -125,6 +127,9 @@ export default class Dialog extends React.Component {
     }
     onInput (evt) {
         this.msgText = evt.target.value;
+    }
+    onFocusField (evt) {
+        this.hideMenu();
     }
     onClickDialog (evt) {
         this.msgField.focus();

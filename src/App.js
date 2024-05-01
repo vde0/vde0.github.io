@@ -15,7 +15,8 @@ export default class App extends React.Component {
         this.onSeeMsgs  = this.onSeeMsgs.bind(this);
         this.onNext     = this.onNext.bind(this);
 
-        this.onRootClick  = this.onRootClick.bind(this);
+        this.onRootClick    = this.onRootClick.bind(this);
+        this.hideDialog     = this.hideDialog();
 
         this.tg = this.props.telegram;
         this.props.clickWrapper.onClick = this.onRootClick;
@@ -28,6 +29,7 @@ export default class App extends React.Component {
 
         this.dialogData = {
             userID: 555,
+            hideMenuFunc: this.hideFooter,
         };
     }
 
