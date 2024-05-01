@@ -59,7 +59,7 @@ export default class App extends React.Component {
         const tg = this.props.telegram;
         return (
             <article className="app">
-                <div>{this.isExpanded}</div>
+                <div>Expanded: {tg.isExpanded}</div>
                 <AppContainer contentType={Video} empty />
                 <AppContainer
                     contentType={Dialog}
