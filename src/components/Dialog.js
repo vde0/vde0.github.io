@@ -56,7 +56,7 @@ export default class Dialog extends React.Component {
 
         this.onSend         = this.onSend.bind(this);
         this.onInput        = this.onInput.bind(this);
-        this.onFocusField   = this.onFocusField.bind(this);
+        // this.onFocusField   = this.onFocusField.bind(this);
         this.onClickDialog  = this.onClickDialog.bind(this);
 
         this.state = {
@@ -100,7 +100,7 @@ export default class Dialog extends React.Component {
                         type="text"
                         className="msg-form__field"
                         onInput={this.onInput}
-                        onFocus={this.onFocusField}
+                        // onFocus={this.onFocusField}
                         autoFocus />
                     <Btn
                         type="submit"
@@ -130,9 +130,9 @@ export default class Dialog extends React.Component {
     onInput (evt) {
         this.msgText = evt.target.value;
     }
-    onFocusField (evt) {
-        if(isMobile) this.hideMenu();
-    }
+    // onFocusField (evt) {
+    //     if(isMobile) this.hideMenu();
+    // }
     onClickDialog (evt) {
         this.msgField.focus();
     }

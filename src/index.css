@@ -181,6 +181,11 @@
     height: 61px;
     padding-top: 16pt;
 }
+@media screen and (max-height: 532px) {
+    .app__footer {
+        display: none;
+    }
+}
 
 
 .app__btn_mod_next {

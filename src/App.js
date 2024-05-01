@@ -16,21 +16,21 @@ export default class App extends React.Component {
         this.onNext     = this.onNext.bind(this);
 
         this.onRootClick    = this.onRootClick.bind(this);
-        this.hideFooter     = this.hideFooter.bind(this);
+        // this.hideFooter     = this.hideFooter.bind(this);
 
         this.tg = this.props.telegram;
         this.props.clickWrapper.onClick = this.onRootClick;
 
         this.state = {
             dialogShown: false,
-            footerShown: true,
+            // footerShown: true,
             unreadedMsgCount: 1,
             height: window.innerHeight,
         };
 
         this.dialogData = {
             userID: 555,
-            hideMenuFunc: this.hideFooter,
+            // hideMenuFunc: this.hideFooter,
         };
     }
 
@@ -50,7 +50,7 @@ export default class App extends React.Component {
                     empty={!this.state.dialogShown}
                     data={this.dialogData} />
 
-                {this.state.footerShown
+                {this.state.footerShown || true
                     ? <AppFooter
                         unreadedMsgCount={this.state.unreadedMsgCount}
                         onSeeMsgs={this.onSeeMsgs}
@@ -65,9 +65,9 @@ export default class App extends React.Component {
     onSeeMsgs (evt) {
         this.setState({dialogShown: !this.state.dialogShown});
 
-        if (isMobile) {
-            this.setState({dialogShown: !this.state.dialogShown});
-        }
+    //     if (isMobile) {
+    //         this.setState({footerShown: !this.state.footerShown});
+    //     }
     }
     onAddUser (evt) {}
     onNext (evt) {}
@@ -81,7 +81,7 @@ export default class App extends React.Component {
 
         if (!clickDialogCheck && !clickMsgsBtnCheck) {
             this.hideDialog();
-            if (isMobile) this.showFooter();
+            // if (isMobile) this.showFooter();
         };
     }
 
@@ -92,10 +92,10 @@ export default class App extends React.Component {
         this.setState({dialogShown: true});
     }
 
-    hideFooter () {
-        this.setState({footerShown: false});
-    }
-    showFooter () {
-        this.setState({footerShown: true});
-    }
+    // hideFooter () {
+    //     this.setState({footerShown: false});
+    // }
+    // showFooter () {
+    //     this.setState({footerShown: true});
+    // }
 }
