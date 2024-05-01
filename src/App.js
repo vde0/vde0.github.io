@@ -59,7 +59,6 @@ export default class App extends React.Component {
         const tg = this.props.telegram;
         return (
             <article className="app">
-                <p>{tg.initDataUnsafe.user?.first_name}</p>
                 <AppContainer contentType={Video} empty />
                 <AppContainer
                     contentType={Dialog}
