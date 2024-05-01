@@ -6,5 +6,15 @@ import './index.css'
 const tg = window.Telegram.WebApp;
 tg.expand();
 
-const root = createRoot( document.getElementById("root") );
-root.render(<App telegram={tg} />);
+
+const clickWrapper = {
+    onClick: () => {},
+};
+
+const rootDOM   = document.getElementById("root");
+const root      = createRoot( document.getElementById("root") );
+rootDOM.onclick = evt => {
+    clickWrapper.onClick(evt);
+};
+
+root.render(<App telegram={tg} clickWrapper={clickWrapper} />);

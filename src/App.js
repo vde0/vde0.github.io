@@ -1,4 +1,5 @@
 import React from 'react';
+import { checkClickByArea } from './utils';
 import AppContainer from './components/AppContainer';
 import Video from './components/Video';
 import Dialog from './components/Dialog';
@@ -10,11 +11,14 @@ export default class App extends React.Component {
     constructor (props) {
         super(props);
 
-        this.tg = this.props.telegram;
-
         this.onAddUser  = this.onAddUser.bind(this);
         this.onSeeMsgs  = this.onSeeMsgs.bind(this);
         this.onNext     = this.onNext.bind(this);
+
+        this.onRootClick  = this.onRootClick.bind(this);
+
+        this.tg = this.props.telegram;
+        this.props.clickWrapper.onClick = this.onRootClick;
 
         this.state = {
             dialogShown: false,
@@ -49,8 +53,17 @@ export default class App extends React.Component {
     onAddUser (evt) {}
     onNext (evt) {}
 
+    onRootClick (evt) {
+        const dialogSelector    = 'dialog';
+        const btnSelector       = 'app__btn_mod_msgs';
+
+        const clickDialogCheck  = checkClickByArea(evt, dialogSelector);
+        const clickMsgsBtnCheck = checkClickByArea(evt, btnSelector);
+
+        if (!clickDialogCheck && !clickMsgsBtnCheck) this.blurDialog();
+    }
+
     blurDialog () {
         this.setState({dialogShown: false});
     }
-
 }
