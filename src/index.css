@@ -37,7 +37,7 @@
 
 .app__container {
     height: 63vw;
-    max-height: 248px;
+    max-height: 320px;
 
     border-radius: 15px;
     overflow: clip;
