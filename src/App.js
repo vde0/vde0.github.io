@@ -25,6 +25,7 @@ export default class App extends React.Component {
             dialogShown: false,
             footerShown: true,
             unreadedMsgCount: 1,
+            height: window.innerHeight,
         };
 
         this.dialogData = {
@@ -33,9 +34,16 @@ export default class App extends React.Component {
         };
     }
 
+    componentDidMount () {
+        setInterval(() => {
+            this.setState({height: window.innerHeight});
+        }, 500);
+    }
+
     render () {
         return (
             <article className="app">
+                <p>{this.state.height}</p>
                 <AppContainer contentType={Video} empty />
                 <AppContainer
                     contentType={Dialog}
