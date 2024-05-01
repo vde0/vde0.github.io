@@ -45,6 +45,8 @@ export default class App extends React.Component {
     constructor (props) {
         super(props);
 
+        this.tg = this.props.telegram;
+
         this.onAddUser  = this.onAddUser.bind(this);
         this.onSeeMsgs  = this.onSeeMsgs.bind(this);
         this.onNext     = this.onNext.bind(this);
@@ -52,14 +54,25 @@ export default class App extends React.Component {
         this.state = {
             dialogShown: false,
             unreadedMsgCount: 1,
+            expanded: this.tg.isExpanded,
+            tgHeight: this.tg.viewportHeight,
         };
     }
 
+    componentDidMount () {
+        setInterval(() => {
+            this.setState({
+                expanded: this.tg.isExpanded,
+                tgHeight: this.tg.viewportHeight,
+            });
+        }, 500);
+    }
+
     render () {
-        const tg = this.props.telegram;
         return (
             <article className="app">
-                <div>Expanded: {tg.isExpanded}</div>
+                <div>Expanded: {String(this.state.expanded)}</div>
+                <div>viewportHeight: {String(this.state.tgHeight)}</div>
                 <AppContainer contentType={Video} empty />
                 <AppContainer
                     contentType={Dialog}
