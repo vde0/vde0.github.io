@@ -34,6 +34,7 @@ export default class App extends React.Component {
     render () {
         return (
             <article className="app">
+                <p>{String(isMobile)}</p>
                 <AppContainer contentType={Video} empty />
                 <AppContainer
                     contentType={Dialog}
@@ -65,6 +66,7 @@ export default class App extends React.Component {
     onRootClick (evt) {
         const dialogSelector    = 'dialog';
         const btnSelector       = 'app__btn_mod_msgs';
+        console.log(isMobile);
 
         const clickDialogCheck  = checkClickByArea(evt, dialogSelector);
         const clickMsgsBtnCheck = checkClickByArea(evt, btnSelector);
