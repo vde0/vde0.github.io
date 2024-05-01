@@ -4,44 +4,9 @@ import Video from './components/Video';
 import Dialog from './components/Dialog';
 import AppFooter from './components/AppFooter';
 
+
 export default class App extends React.Component {
-
-    dialogData = {
-        userID: 555,
-        msgList: [
-            {
-                userID: 555,
-                userName: "Mark",
-                time: "15:06",
-                textContent: "Как дела?",
-            },
-            {
-                userID: 201,
-                userName: "Собеседник",
-                time: "15:00",
-                textContent: "Норм. Уйди.",
-            },
-            {
-                userID: 555,
-                userName: "Mark",
-                time: "15:06",
-                textContent: "Блин :( Ну вот. Ну блин :(",
-            },
-            {
-                userID: 555,
-                userName: "Mark",
-                time: "15:06",
-                textContent: "Блин блинский :(",
-            },
-            {
-                userID: 201,
-                userName: "Собеседник",
-                time: "15:00",
-                textContent: "Хыыыы!",
-            },
-        ]
-    }
-
+    
     constructor (props) {
         super(props);
 
@@ -54,6 +19,10 @@ export default class App extends React.Component {
         this.state = {
             dialogShown: false,
             unreadedMsgCount: 1,
+        };
+
+        this.dialogData = {
+            userID: 555,
         };
     }
 
@@ -75,8 +44,13 @@ export default class App extends React.Component {
     }
 
     onSeeMsgs (evt) {
-        this.setState({dialogShown: this.state.dialogShown ? false : true});
+        this.setState({dialogShown: !this.state.dialogShown});
     }
     onAddUser (evt) {}
     onNext (evt) {}
+
+    blurDialog () {
+        this.setState({dialogShown: false});
+    }
+
 }
