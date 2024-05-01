@@ -54,25 +54,12 @@ export default class App extends React.Component {
         this.state = {
             dialogShown: false,
             unreadedMsgCount: 1,
-            expanded: this.tg.isExpanded,
-            tgHeight: this.tg.viewportHeight,
         };
-    }
-
-    componentDidMount () {
-        setInterval(() => {
-            this.setState({
-                expanded: this.tg.isExpanded,
-                tgHeight: this.tg.viewportHeight,
-            });
-        }, 500);
     }
 
     render () {
         return (
             <article className="app">
-                <div>Expanded: {String(this.state.expanded)}</div>
-                <div>viewportHeight: {String(this.state.tgHeight)}</div>
                 <AppContainer contentType={Video} empty />
                 <AppContainer
                     contentType={Dialog}
