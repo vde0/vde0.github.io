@@ -43,7 +43,6 @@ export default class App extends React.Component {
     render () {
         return (
             <article className="app">
-                <p>{this.state.height}</p>
                 <AppContainer contentType={Video} empty />
                 <AppContainer
                     contentType={Dialog}
