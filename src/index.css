@@ -27,17 +27,17 @@
 
     display: flex;
     flex-direction: column;
-    justify-content: space-evenly;
-    gap: 17px;
+    justify-content: space-between;
+    gap: 16pt;
 
     box-sizing: border-box;
-    padding: 21px 10px;
+    padding: 12pt 12pt;
 }
 
 
 .app__container {
     height: 63vw;
-    max-height: 320px;
+    max-height: 248px;
 
     border-radius: 15px;
     overflow: clip;
@@ -47,16 +47,16 @@
     background-color: var(--cutom-light);
     background-image: url("imgs/anonim-girl_placeholder.png");
     background-repeat: no-repeat;
-    background-size: 43.74% auto;
+    background-size: contain;
     background-position: 50%;
 }
 
 
 .app__footer {
     display: flex;
-    gap: 10px;
+    gap: 8pt;
     height: 61px;
-    padding-top: 17px;
+    padding-top: 16pt;
 }
 
 
@@ -147,11 +147,15 @@
 
 .dialog {
     height: 100%;
+    max-height: inherit;
     overflow-y: scroll;
+
+    position: relative;
+    z-index: 2;
 }
 
 .dialog__msg-list {
-    padding: 7px 0;
+    padding: 8pt 0;
     margin: 0;
     
     list-style: none;
@@ -165,14 +169,14 @@
     overflow: hidden;
 }
 .dialog__msg-item:not(:last-child) {
-    margin-bottom: 17px;
+    margin-bottom: 16pt;
 }
 
 
 .msg {
     position: relative;
     color: white;
-    padding: 8px 17px;
+    padding: 8pt 16pt;
     margin: 0;
     border-radius: 15px;
 }
@@ -194,7 +198,7 @@
 .msg_user_current {
     max-width: 264px;
     margin-left: auto;
-    margin-right: 7px;
+    margin-right: 8pt;
 
     background-color: var(--custom-blue);
 }
@@ -214,7 +218,7 @@
 .msg_user_companion {
     max-width: 256px;
     margin-right: auto;
-    margin-left: 7px;
+    margin-left: 8pt;
 
     background-color: var(--custom-dark);
 }
