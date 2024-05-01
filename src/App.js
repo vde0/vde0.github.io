@@ -1,5 +1,5 @@
 import React from 'react';
-import { checkClickByArea } from './utils';
+import { checkClickByArea, isMobile } from './utils';
 import AppContainer from './components/AppContainer';
 import Video from './components/Video';
 import Dialog from './components/Dialog';
@@ -22,6 +22,7 @@ export default class App extends React.Component {
 
         this.state = {
             dialogShown: false,
+            footerShown: true,
             unreadedMsgCount: 1,
         };
 
@@ -38,17 +39,25 @@ export default class App extends React.Component {
                     contentType={Dialog}
                     empty={!this.state.dialogShown}
                     data={this.dialogData} />
-                <AppFooter
-                    unreadedMsgCount={this.state.unreadedMsgCount}
-                    onSeeMsgs={this.onSeeMsgs}
-                    onAddUser={this.onAddUser}
-                    onNext={this.onNext} />
+
+                {this.state.footerShown
+                    ? <AppFooter
+                        unreadedMsgCount={this.state.unreadedMsgCount}
+                        onSeeMsgs={this.onSeeMsgs}
+                        onAddUser={this.onAddUser}
+                        onNext={this.onNext} />
+                    : ""
+                }
             </article>
         );
     }
 
     onSeeMsgs (evt) {
         this.setState({dialogShown: !this.state.dialogShown});
+
+        if (isMobile) {
+            this.setState({dialogShown: !this.state.dialogShown});
+        }
     }
     onAddUser (evt) {}
     onNext (evt) {}
@@ -60,10 +69,23 @@ export default class App extends React.Component {
         const clickDialogCheck  = checkClickByArea(evt, dialogSelector);
         const clickMsgsBtnCheck = checkClickByArea(evt, btnSelector);
 
-        if (!clickDialogCheck && !clickMsgsBtnCheck) this.blurDialog();
+        if (!clickDialogCheck && !clickMsgsBtnCheck) {
+            this.hideDialog();
+            if (isMobile) this.showFooter();
+        };
     }
 
-    blurDialog () {
+    hideDialog () {
+        this.setState({dialogShown: false});
+    }
+    showDialog () {
+        this.setState({dialogShown: false});
+    }
+
+    hideFooter () {
+        this.setState({dialogShown: false});
+    }
+    showFooter () {
         this.setState({dialogShown: false});
     }
 }

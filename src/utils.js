@@ -14,4 +14,12 @@ function checkClickByArea (evt, selector) {
     );
 }
 
-export {checkAncestorByClass, checkClickByArea}
+const mobile_events = new Set([
+    "touchstart",
+    "touchend",
+    "touchmove",
+    "touchcancel",
+]);
+const isMobile = ('ontouchstart' in document.documentElement && !!(navigator.userAgent.match(/Mobi/)));
+
+export {checkAncestorByClass, checkClickByArea, isMobile}
