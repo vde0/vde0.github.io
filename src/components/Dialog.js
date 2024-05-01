@@ -1,6 +1,7 @@
 import React from 'react';
 import sendBtnIc from '../icons/to-send.svg';
 import Btn from './Btn';
+import { isMobile } from '../utils';
 
 
 let userDB = {
@@ -55,6 +56,7 @@ export default class Dialog extends React.Component {
 
         this.onSend         = this.onSend.bind(this);
         this.onInput        = this.onInput.bind(this);
+        this.onFocusField   = this.onFocusField.bind(this);
         this.onClickDialog  = this.onClickDialog.bind(this);
 
         this.state = {
@@ -129,7 +131,7 @@ export default class Dialog extends React.Component {
         this.msgText = evt.target.value;
     }
     onFocusField (evt) {
-        this.hideMenu();
+        if(isMobile) this.hideMenu();
     }
     onClickDialog (evt) {
         this.msgField.focus();

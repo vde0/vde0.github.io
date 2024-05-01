@@ -16,7 +16,7 @@ export default class App extends React.Component {
         this.onNext     = this.onNext.bind(this);
 
         this.onRootClick    = this.onRootClick.bind(this);
-        this.hideDialog     = this.hideDialog();
+        this.hideFooter     = this.hideFooter.bind(this);
 
         this.tg = this.props.telegram;
         this.props.clickWrapper.onClick = this.onRootClick;
@@ -67,7 +67,6 @@ export default class App extends React.Component {
     onRootClick (evt) {
         const dialogSelector    = 'dialog';
         const btnSelector       = 'app__btn_mod_msgs';
-        console.log(isMobile);
 
         const clickDialogCheck  = checkClickByArea(evt, dialogSelector);
         const clickMsgsBtnCheck = checkClickByArea(evt, btnSelector);
@@ -82,13 +81,13 @@ export default class App extends React.Component {
         this.setState({dialogShown: false});
     }
     showDialog () {
-        this.setState({dialogShown: false});
+        this.setState({dialogShown: true});
     }
 
     hideFooter () {
-        this.setState({dialogShown: false});
+        this.setState({footerShown: false});
     }
     showFooter () {
-        this.setState({dialogShown: false});
+        this.setState({footerShown: true});
     }
 }
