@@ -113,8 +113,11 @@ export default class Dialog extends React.Component {
     }
 
     componentDidMount () {
-        this.msgListBlock.scrollBy(0, this.msgListBlock.scrollHeight);
         this.msgFieldBlock.focus();
+        this.msgListBlock.scrollBy({
+            top: this.msgListBlock.scrollHeight,
+            behavior: "instant",
+        });
     }
     
     componentDidUpdate () {
