@@ -16,6 +16,13 @@ let userDB = {
 
 let msgDB = {
     /// msgID: {...}
+    add (msgBlock) {
+        const msgID = ++this.length;
+        this[msgID] = {...msgBlock};
+
+        return msgID;
+    },
+    length: 5,
     1: {
         userID: 555,
         time: "15:06",
@@ -45,6 +52,9 @@ let msgDB = {
 
 let chatDB = {
     /// chatID: [msgID, msgID, ...]
+    add (msgID, chatID) {
+        this[chatID].push(msgID);
+    },
     1: [1, 2, 3, 4, 5],
 }
 
@@ -60,6 +70,11 @@ function getChat (chatID) {
     return [...chatDB[chatID]];
 }
 
+function sendMsg (msgBlock, chatID) {
+    const msgID = msgDB.add(msgBlock);
+    chatDB.add(msgID, chatID);
+}
+
 export default class Dialog extends React.Component {
     
     userID      = this.props.data.userID;
@@ -73,10 +88,10 @@ export default class Dialog extends React.Component {
             let msg     = getMsg(msgID);
 
             if (msg.userID === this.userID) {
-                msg.classLine   = "msg msg_user_companion";
+                msg.classLine   = "msg msg_user_current";
                 msg.name        = "Вы";
             } else {
-                msg.classLine   = "msg msg_user_current";
+                msg.classLine   = "msg msg_user_companion";
                 msg.name        = getUserInfo(msg.userID).name;
             }
             delete msg.userID;
@@ -151,7 +166,7 @@ export default class Dialog extends React.Component {
             textContent: this.msgText,
         }
 
-        this.msgList.push(msgBlock);
+        sendMsg(msgBlock, this.chatID);
         this.setState({msgList: this.msgList});
 
         this.resetForm();
