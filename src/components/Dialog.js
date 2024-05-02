@@ -119,7 +119,10 @@ export default class Dialog extends React.Component {
     
     componentDidUpdate () {
         if (this.msgList.at(-1).userID === this.userID) {
-            this.msgListBlock.scrollBy(0, this.msgListBlock.scrollHeight);
+            this.msgListBlock.scrollBy({
+                top: this.msgListBlock.scrollHeight,
+                behavior: "smooth",
+            });
         }
     }
 

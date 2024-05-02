@@ -100,10 +100,9 @@
     height: 61px;
 
     margin: auto;
-    /* padding: 8pt; */
-    padding-left: 4pt;
-    padding-right: 4pt;
+    padding: 4pt;
     box-sizing: border-box;
+    border-radius: 10px;
 
     background-color: #171717;
 
