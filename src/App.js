@@ -66,7 +66,6 @@ export default class App extends React.Component {
 
     onSeeMsgs (evt) {
         this.toggleDialog();
-        if (isMobile) this.toggleFooter();
     }
     onAddUser (evt) {}
     onNext (evt) {}
@@ -80,7 +79,6 @@ export default class App extends React.Component {
 
         if (!clickDialogCheck && !clickMsgsBtnCheck) {
             this.hideDialog();
-            if (isMobile) this.showFooter();
         };
     }
 
