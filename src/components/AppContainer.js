@@ -18,8 +18,6 @@ export default class AppContainer extends React.Component {
         if (!this.props.contentType || this.props.empty) {
             this.classLine.add("app__container_empty");
         } else  this.contentType  = <this.props.contentType data={this.props.data} />;
-        //
-        if (this.props.shrink) this.classLine.add("app__container_shrink");
 
         this.state = {
             empty: this.props.empty,

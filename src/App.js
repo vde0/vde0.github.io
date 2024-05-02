@@ -25,7 +25,6 @@ export default class App extends React.Component {
             dialogShown: false,
             footerShown: true,
             unreadedMsgCount: 1,
-            height: window.innerHeight,
         };
 
         this.dialogData = {

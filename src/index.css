@@ -196,10 +196,6 @@
     max-height: var(--cut-container-max-height);
 }
 
-.app__container_shrink {
-    flex-shrink: 1;
-}
-
 
 .app__footer {
     display: flex;
