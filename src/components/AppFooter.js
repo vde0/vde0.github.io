@@ -3,6 +3,7 @@ import Btn from './Btn';
 import msgsIc from '../icons/msgs.svg';
 import addUserIc from '../icons/add-user.svg';
 import whiteArrowRightIc from '../icons/white-arrow-right.svg';
+import { getClassLine } from '../utils';
 
 
 export default class AppFooter extends React.Component {
@@ -16,11 +17,13 @@ export default class AppFooter extends React.Component {
                 content: <img src={msgsIc} />,
                 badge: {value: this.props.unreadedMsgCount, color: "red"},
                 onClick: this.props.onSeeMsgs,
+                get classLine () { return "app__btn app__btn_mod_" + this.mod; },
             },
             {
                 mod: "add-user",
                 content: <img src={addUserIc} />,
                 onClick: this.props.onAddUser,
+                get classLine () { return "app__btn app__btn_mod_" + this.mod; },
             },
             {
                 mod: "next",
@@ -32,6 +35,7 @@ export default class AppFooter extends React.Component {
                     </>
                 ),
                 onClick: this.props.onNext,
+                get classLine () { return "app__btn app__btn_mod_" + this.mod; },
             },
         ];
     }
@@ -42,7 +46,7 @@ export default class AppFooter extends React.Component {
                 {this.btns.map( btn => {
                     return <Btn
                         key={btn.mod}
-                        className={"app__btn app__btn_mod_" + btn.mod}
+                        className={btn.classLine}
                         content={btn.content}
                         color={btn.color}
                         badge={btn.badge}

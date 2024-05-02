@@ -14,6 +14,98 @@ function checkClickByArea (evt, selector) {
     );
 }
 
+function getClassLine (classList) {
+    const classLine = {
+        [Symbol.toPrimitive] (hint) { return this.classList.join(" "); },
+
+        add (className) {
+            if (typeof(className) !== "string") throw TypeError("\"add\" method of the classLine object only takes a string arg");
+            className.trim();
+            if ( isFinite(className.at(0)) ) throw SyntaxError("\"className\" parameter has taken incorrect arg: arg must be not beginning from number");
+            if (className.includes(" ")) throw SyntaxError("\"className\" parameter has taken incorrect arg: arg must have only one class name");
+
+            if ( !this.classList.includes(className) ) this.classList.push(className);
+            return this;
+        },
+
+        remove (className) {
+            if (typeof(className) !== "string") throw TypeError("\"remove\" method of the classLine object only takes a string arg");
+            className.trim();
+            if ( isFinite(className.at(0)) ) throw SyntaxError("\"className\" parameter has taken incorrect arg: arg must be not beginning from number");
+            if (className.includes(" ")) throw SyntaxError("\"className\" parameter has taken incorrect arg: arg must have only one class name");
+
+            const index = this.classList.indexOf(className);
+            if ( ~index ) this.classList.splice(index, 1);
+
+            return this;
+        },
+
+        toggle (className) {
+            if (typeof(className) !== "string") throw TypeError("\"toggle\" method of the classLine object only takes a string arg");
+            className.trim();
+            if ( isFinite(className.at(0)) ) throw SyntaxError("\"className\" parameter has taken incorrect arg: arg must be not beginning from number");
+            if (className.includes(" ")) throw SyntaxError("\"className\" parameter has taken incorrect arg: arg must have only one class name");
+
+            (this.classList.includes(className) ? this.remove(className) : this.add(className));
+            return this;
+        },
+
+        load (classList) {
+            if ( typeof(classList) === "string" ) {
+                let newFragment = classList;
+                newFragment.trim();
+
+                newFragment = newFragment.split(" ");
+                newFragment.forEach( className => this.add(className) );
+            }
+            else if ( Array.isArray(classList) ) {
+                classList.forEach( className => this.add(className) );
+            }
+            else if ( typeof(classList) === "object" ) {
+                if ( !Array.isArray(classList.classList) ) throw SyntaxError;
+                classList.classList.forEach( className => this.add(className) );
+            }
+            else    throw TypeError;
+
+            return this;
+        },
+
+        contains (className) {
+            if (typeof(className) !== "string") throw TypeError("\"contains\" method of the classLine object only takes a string arg");
+            className.trim();
+            if ( isFinite(className.at(0)) ) throw SyntaxError("\"className\" parameter has taken incorrect arg: arg must be not beginning from number");
+            if (className.includes(" ")) throw SyntaxError("\"className\" parameter has taken incorrect arg: arg must have only one class name");
+
+            return this.classList.includes(className);
+        },
+
+        getLine () {
+            return this.classList.join(" ");
+        },
+
+        classList: [],
+    };
+
+    if (classList) classLine.load(classList);
+    return classLine;
+}
+
+function getComponentUpdateHook () {
+    return {
+        update () {
+            if (!this._on) return;
+            this._updateFunc();
+            this._on = false;
+        },
+        setUpdateFunc (func) {
+            this._updateFunc = func;
+        },
+        on () {
+            this._on = true;
+        },
+    };
+}
+
 const mobile_events = new Set([
     "touchstart",
     "touchend",
@@ -22,4 +114,4 @@ const mobile_events = new Set([
 ]);
 const isMobile = ('ontouchstart' in document.documentElement && !!(navigator.userAgent.match(/Mobi/)));
 
-export {checkAncestorByClass, checkClickByArea, isMobile}
+export {checkAncestorByClass, checkClickByArea, getClassLine, getComponentUpdateHook, isMobile}

@@ -14,42 +14,78 @@ let userDB = {
     },
 }
 
+let msgDB = {
+    /// msgID: {...}
+    1: {
+        userID: 555,
+        time: "15:06",
+        textContent: "Как дела?",
+    },
+    2: {
+        userID: 201,
+        time: "15:00",
+        textContent: "Норм. Уйди.",
+    },
+    3: {
+        userID: 555,
+        time: "15:06",
+        textContent: "Блин :( Ну вот. Ну блин :(",
+    },
+    4: {
+        userID: 555,
+        time: "15:06",
+        textContent: "Блин блинский :(",
+    },
+    5: {
+        userID: 201,
+        time: "15:00",
+        textContent: "Хыыыы!",
+    },
+}
+
+let chatDB = {
+    /// chatID: [msgID, msgID, ...]
+    1: [1, 2, 3, 4, 5],
+}
+
 function getUserInfo (userID) {
     return {...userDB[userID]};
+}
+
+function getMsg (msgID) {
+    return {...msgDB[msgID]};
+}
+
+function getChat (chatID) {
+    return [...chatDB[chatID]];
 }
 
 export default class Dialog extends React.Component {
     
     userID      = this.props.data.userID;
+    chatID      = this.props.data.chatID;
     hideMenu    = this.props.data.hideMenuFunc;
     msgText     = "";
-    msgList     = [
-        {
-            userID: 555,
-            time: "15:06",
-            textContent: "Как дела?",
-        },
-        {
-            userID: 201,
-            time: "15:00",
-            textContent: "Норм. Уйди.",
-        },
-        {
-            userID: 555,
-            time: "15:06",
-            textContent: "Блин :( Ну вот. Ну блин :(",
-        },
-        {
-            userID: 555,
-            time: "15:06",
-            textContent: "Блин блинский :(",
-        },
-        {
-            userID: 201,
-            time: "15:00",
-            textContent: "Хыыыы!",
-        },
-    ]
+
+    get msgList () {
+        let chat    = getChat(this.chatID);
+        chat        = chat.map( msgID => {
+            let msg     = getMsg(msgID);
+
+            if (msg.userID === this.userID) {
+                msg.classLine   = "msg msg_user_companion";
+                msg.name        = "Вы";
+            } else {
+                msg.classLine   = "msg msg_user_current";
+                msg.name        = getUserInfo(msg.userID).name;
+            }
+            delete msg.userID;
+
+            return msg;
+        })
+
+        return chat;
+    };
 
     constructor (props) {
         super(props);
@@ -73,18 +109,11 @@ export default class Dialog extends React.Component {
                             <li
                                 key={msg_num}
                                 className="dialog__msg-item"
-                            ><section className={"msg " + (
-                                msg.userID === this.userID
-                                ? "msg_user_current"
-                                : "msg_user_companion")}>
+                            ><section className={msg.classLine}>
                                 <header className="msg__header">
                                     {/* <span className="msg__time">{msg.time}</span> */}
                                     <span className="msg__name">
-                                        {
-                                            msg.userID === this.userID
-                                            ? "Вы"
-                                            : getUserInfo(this.userID)["name"]
-                                        }:
+                                        {msg.name}:
                                     </span>
                                 </header>
                                 <section className="msg__content">

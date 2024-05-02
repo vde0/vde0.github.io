@@ -69,6 +69,7 @@
     padding: 2px;
     box-sizing: border-box;
 
+    outline: 1px solid var(--custom-blue);
     border-radius: 50%;
 }
 .btn__badge > span {
@@ -85,10 +86,12 @@
 .btn__badge_color_red {
     color: white;
     background-color: var(--custom-red);
+    outline: none;
 }
 .btn__badge_color_blue {
     color: white;
     background-color: var(--custom-blue);
+    outline: none;
 }
 
 
@@ -172,6 +175,10 @@
     background-repeat: no-repeat;
     background-size: contain;
     background-position: 50%;
+}
+
+.app__container_shrink {
+    flex-shrink: 1;
 }
 
 

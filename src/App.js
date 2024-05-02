@@ -1,5 +1,5 @@
 import React from 'react';
-import { checkClickByArea, isMobile } from './utils';
+import { checkClickByArea, getComponentUpdateHook, isMobile } from './utils';
 import AppContainer from './components/AppContainer';
 import Video from './components/Video';
 import Dialog from './components/Dialog';
@@ -30,8 +30,11 @@ export default class App extends React.Component {
 
         this.dialogData = {
             userID: 555,
+            chatID: 1,
             hideMenuFunc: this.hideFooter,
         };
+
+        this.dialogHook = getComponentUpdateHook();
     }
 
     componentDidMount () {
@@ -46,6 +49,8 @@ export default class App extends React.Component {
                 <AppContainer contentType={Video} empty />
                 <AppContainer
                     contentType={Dialog}
+                    shrink
+                    hook={this.dialogHook}
                     empty={!this.state.dialogShown}
                     data={this.dialogData} />
 
@@ -64,6 +69,8 @@ export default class App extends React.Component {
     onSeeMsgs (evt) {
         this.toggleDialog();
         if (isMobile) this.toggleFooter();
+
+        this.dialogHook.on();
     }
     onAddUser (evt) {}
     onNext (evt) {}
@@ -98,6 +105,6 @@ export default class App extends React.Component {
         this.setState({footerShown: true});
     }
     toggleFooter () {
-        this.setState({footerShown: !this.state.FooterShown});
+        this.setState({footerShown: !this.state.footerShown});
     }
 }
