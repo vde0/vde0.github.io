@@ -26,7 +26,6 @@ export default class App extends React.Component {
             footerShown: true,
             unreadedMsgCount: 1,
             height: window.innerHeight,
-            keyboardState: String(checkMobileKeyboard()),
         };
 
         this.dialogData = {
@@ -38,14 +37,13 @@ export default class App extends React.Component {
     }
 
     componentDidMount () {
-        window.addEventListener("openkeyboard", evt => this.setState({keyboardState: "opened"}));
-        window.addEventListener("closekeyboard", evt => this.setState({keyboardState: "closed"}));
+        window.addEventListener("openkeyboard", evt => this.hideFooter());
+        window.addEventListener("closekeyboard", evt => this.showFooter());
     }
 
     render () {
         return (
             <article className="app">
-                <p>{this.state.keyboardState}</p>
                 <AppContainer contentType={Video} empty />
                 <AppContainer
                     contentType={Dialog}
