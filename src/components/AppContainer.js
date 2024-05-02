@@ -1,5 +1,5 @@
 import React from 'react';
-import { getClassLine } from '../utils';
+import { getClassLine, isMobile } from '../utils';
 
 export default class AppContainer extends React.Component {
 
@@ -26,6 +26,17 @@ export default class AppContainer extends React.Component {
             classLine: this.classLine.getLine(),
             contentType: this.contentType,
         };
+    }
+
+    componentDidMount () {
+        if (this.props.cut && isMobile) {
+            window.addEventListener("openkeyboard", evt => {
+                this.setState({classLine: this.classLine.add("app__container_cut").getLine()})
+            });
+            window.addEventListener("closekeyboard", evt => {
+                this.setState({classLine: this.classLine.remove("app__container_cut").getLine()})
+            });
+        }
     }
 
     componentDidUpdate () {
