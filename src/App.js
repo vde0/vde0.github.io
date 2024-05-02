@@ -42,10 +42,10 @@ export default class App extends React.Component {
         }, 500);
 
         if (isMobile) {
-            setInterval(() => {
+            document.addEventListener("resize", evt => {
                 if ( checkMobileKeyboard() )    this.hideFooter();
                 else                            this.showFooter();
-            }, 200);
+            });
         }
     }
 
