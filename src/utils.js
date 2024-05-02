@@ -128,7 +128,7 @@ if (isMobile) {
 
     let prevKeyboardState = checkMobileKeyboard();
 
-    // openkeyboard event
+    // openkeyboard event define
     window.addEventListener("resize", evt => {
         const isOpened  = checkMobileKeyboard();
         const eventName = "openkeyboard";
@@ -136,13 +136,11 @@ if (isMobile) {
         if (prevKeyboardState == isOpened)  return;
         if (!isOpened)                      return;
 
-        prevKeyboardState   = isOpened;
-
         const event = new Event(eventName, {bubbles: true});
         window.dispatchEvent(event);
     });
 
-    // closekeyboard event
+    // closekeyboard event define
     window.addEventListener("resize", evt => {
         const isOpened  = checkMobileKeyboard();
         const eventName = "closekeyboard";
@@ -150,11 +148,12 @@ if (isMobile) {
         if (prevKeyboardState == isOpened)  return;
         if (isOpened)                       return;
 
-        prevKeyboardState   = isOpened;
-
         const event = new Event(eventName, {bubbles: true});
         window.dispatchEvent(event);
     });
+
+    window.addEventListener("openkeyboard", _ => prevKeyboardState = true)
+    window.addEventListener("closekeyboard", _ => prevKeyboardState = false)
 }
 
 
