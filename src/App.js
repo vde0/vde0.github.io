@@ -31,28 +31,25 @@ export default class App extends React.Component {
         this.dialogData = {
             userID: 555,
             chatID: 1,
+            keyboardOpened: checkMobileKeyboard(),
         };
 
         this.dialogHook = getComponentUpdateHook();
     }
 
     componentDidMount () {
+        window.addEventListener("openkeyboard", evt => this.hideFooter());
+        window.addEventListener("closekeyboard", evt => this.showFooter());
+        
         setInterval(() => {
-            this.setState({height: window.innerHeight});
+            this.setState({keyboardOpened: checkMobileKeyboard()});
         }, 500);
-
-        if (isMobile) {
-            document.addEventListener("resize", evt => {
-                if ( checkMobileKeyboard() )    this.hideFooter();
-                else                            this.showFooter();
-            });
-        }
     }
 
     render () {
         return (
             <article className="app">
-                <p>{this.state.height}</p>
+                <p>{String(this.state.keyboardOpened)}</p>
                 <AppContainer contentType={Video} empty />
                 <AppContainer
                     contentType={Dialog}

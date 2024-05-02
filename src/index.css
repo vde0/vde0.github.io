@@ -100,7 +100,9 @@
     height: 61px;
 
     margin: auto;
-    padding: 8pt;
+    /* padding: 8pt; */
+    padding-left: 4pt;
+    padding-right: 4pt;
     box-sizing: border-box;
 
     background-color: #171717;

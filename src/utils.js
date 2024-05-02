@@ -106,11 +106,6 @@ function getComponentUpdateHook () {
     };
 }
 
-const startHeight = window.innerHeight;
-function checkMobileKeyboard () {
-    const currentHeight = window.innerHeight;
-    return currentHeight / startHeight <= 0.8;
-}
 
 const mobile_events = new Set([
     "touchstart",
@@ -119,6 +114,32 @@ const mobile_events = new Set([
     "touchcancel",
 ]);
 const isMobile = ('ontouchstart' in document.documentElement && !!(navigator.userAgent.match(/Mobi/)));
+
+
+const startHeight = window.innerHeight;
+function checkMobileKeyboard () {
+    if (!isMobile) return false;
+    const currentHeight = window.innerHeight;
+    return currentHeight / startHeight <= 0.8;
+}
+
+if (isMobile) {
+    let prevKeyboardState = checkMobileKeyboard();
+    window.addEventListener("resize", evt => {
+        let isOpened    = checkMobileKeyboard();
+        let eventName   = "";
+
+        if (prevKeyboardState == isOpened) return;
+
+        if      (prevKeyboardState && !isOpened) eventName = "closekeyboard";
+        else if (!prevKeyboardState && isOpened) eventName = "openkeyboard";
+        else    throw Error;
+
+        const event = new Event(eventName, {bubbles: true});
+        window.dispatchEvent(event);
+    });
+}
+
 
 export {
     checkAncestorByClass,
