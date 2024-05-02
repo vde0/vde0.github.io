@@ -115,19 +115,20 @@ export default class Dialog extends React.Component {
     }
 
     componentDidMount () {
-        this.DOMMsgList.scrollBy(0, this.DOMMsgList.scrollHeight);
+        this.msgListBlock.scrollBy(0, this.msgListBlock.scrollHeight);
+        this.msgFieldBlock.focus();
     }
     
     componentDidUpdate () {
         if (this.msgList.at(-1).userID === this.userID) {
-            this.DOMMsgList.scrollBy(0, this.DOMMsgList.scrollHeight);
+            this.msgListBlock.scrollBy(0, this.msgListBlock.scrollHeight);
         }
     }
 
     render () {
         return(
             <article className="dialog" onClick={this.onClickDialog}>
-                <ul className="dialog__msg-list" ref={el => this.DOMMsgList = el}>
+                <ul className="dialog__msg-list" ref={el => this.msgListBlock = el}>
                     {this.state.msgList.map( (msg, msg_num) => {
                         return (
                             <li
@@ -148,8 +149,8 @@ export default class Dialog extends React.Component {
                     } )}
                 </ul>
 
-                <form ref={el => this.msgForm = el} className="msg-form dialog__msg-form">
-                    <input ref={el => this.msgField = el}
+                <form ref={el => this.msgFormBlock = el} className="msg-form dialog__msg-form">
+                    <input ref={el => this.msgFieldBlock = el}
                         type="text"
                         className="msg-form__field"
                         onInput={this.onInput}
@@ -187,11 +188,11 @@ export default class Dialog extends React.Component {
         if(isMobile) this.hideMenu();
     }
     onClickDialog (evt) {
-        this.msgField.focus();
+        this.msgFieldBlock.focus();
     }
 
     resetForm () {
-        this.msgForm.reset();
+        this.msgFormBlock.reset();
         this.msgText = "";
     }
 
