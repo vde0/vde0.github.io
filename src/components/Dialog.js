@@ -94,7 +94,6 @@ export default class Dialog extends React.Component {
                 msg.classLine   = "msg msg_user_companion";
                 msg.name        = getUserInfo(msg.userID).name;
             }
-            delete msg.userID;
 
             return msg;
         })
@@ -115,10 +114,20 @@ export default class Dialog extends React.Component {
         }
     }
 
+    componentDidMount () {
+        this.DOMMsgList.scrollBy(0, this.DOMMsgList.scrollHeight);
+    }
+    
+    componentDidUpdate () {
+        if (this.msgList.at(-1).userID === this.userID) {
+            this.DOMMsgList.scrollBy(0, this.DOMMsgList.scrollHeight);
+        }
+    }
+
     render () {
         return(
             <article className="dialog" onClick={this.onClickDialog}>
-                <ul className="dialog__msg-list">
+                <ul className="dialog__msg-list" ref={el => this.DOMMsgList = el}>
                     {this.state.msgList.map( (msg, msg_num) => {
                         return (
                             <li
