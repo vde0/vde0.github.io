@@ -106,6 +106,12 @@ function getComponentUpdateHook () {
     };
 }
 
+const startHeight = window.innerHeight;
+function checkMobileKeyboard () {
+    const currentHeight = window.innerHeight;
+    return currentHeight / startHeight <= 0.8;
+}
+
 const mobile_events = new Set([
     "touchstart",
     "touchend",
@@ -114,4 +120,11 @@ const mobile_events = new Set([
 ]);
 const isMobile = ('ontouchstart' in document.documentElement && !!(navigator.userAgent.match(/Mobi/)));
 
-export {checkAncestorByClass, checkClickByArea, getClassLine, getComponentUpdateHook, isMobile}
+export {
+    checkAncestorByClass,
+    checkClickByArea,
+    getClassLine,
+    getComponentUpdateHook,
+    checkMobileKeyboard,
+    isMobile
+}

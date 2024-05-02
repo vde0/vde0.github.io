@@ -1,5 +1,5 @@
 import React from 'react';
-import { checkClickByArea, getComponentUpdateHook, isMobile } from './utils';
+import { checkClickByArea, checkMobileKeyboard, getComponentUpdateHook, isMobile } from './utils';
 import AppContainer from './components/AppContainer';
 import Video from './components/Video';
 import Dialog from './components/Dialog';
@@ -31,7 +31,6 @@ export default class App extends React.Component {
         this.dialogData = {
             userID: 555,
             chatID: 1,
-            hideMenuFunc: this.hideFooter,
         };
 
         this.dialogHook = getComponentUpdateHook();
@@ -41,11 +40,19 @@ export default class App extends React.Component {
         setInterval(() => {
             this.setState({height: window.innerHeight});
         }, 500);
+
+        if (isMobile) {
+            setInterval(() => {
+                if ( checkMobileKeyboard() )    this.hideFooter();
+                else                            this.showFooter();
+            }, 200);
+        }
     }
 
     render () {
         return (
             <article className="app">
+                <p>{this.state.height}</p>
                 <AppContainer contentType={Video} empty />
                 <AppContainer
                     contentType={Dialog}
