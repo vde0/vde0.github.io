@@ -113,7 +113,10 @@ export default class Dialog extends React.Component {
     }
 
     componentDidMount () {
-        this.msgFieldBlock.focus();
+        if (isMobile) {
+            window.dispatchEvent( new Event("openkeyboard", {bubbles: true}) );
+        }
+        setTimeout(_ => this.msgFieldBlock.focus(), 100);
         this.msgListBlock.scrollBy({
             top: this.msgListBlock.scrollHeight,
             behavior: "instant",
@@ -157,8 +160,7 @@ export default class Dialog extends React.Component {
                     <input ref={el => this.msgFieldBlock = el}
                         type="text"
                         className="msg-form__field"
-                        onInput={this.onInput}
-                        autoFocus />
+                        onInput={this.onInput}/>
                     <Btn
                         type="submit"
                         className="msg-form__send-btn"

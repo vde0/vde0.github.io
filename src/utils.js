@@ -1,5 +1,6 @@
 function checkAncestorByClass (el, selector) {
     const parent = el.parentNode;
+    if (!parent)    throw Error("Error at the checkAncestorByClass(): parent is undefined");
 
     if      (parent === document) return false;
     else if (parent.classList.contains(selector)) return true;
