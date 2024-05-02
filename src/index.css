@@ -195,6 +195,10 @@
     }
 } */
 
+.app__footer_hidden {
+    visibility: hidden;
+}
+
 
 .app__btn_mod_next {
     width: 100%;

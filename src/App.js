@@ -52,14 +52,12 @@ export default class App extends React.Component {
                     empty={!this.state.dialogShown}
                     data={this.dialogData} />
 
-                {this.state.footerShown
-                    ? <AppFooter
-                        unreadedMsgCount={this.state.unreadedMsgCount}
-                        onSeeMsgs={this.onSeeMsgs}
-                        onAddUser={this.onAddUser}
-                        onNext={this.onNext} />
-                    : ""
-                }
+                <AppFooter
+                    unreadedMsgCount={this.state.unreadedMsgCount}
+                    hidden={!this.state.footerShown}
+                    onSeeMsgs={this.onSeeMsgs}
+                    onAddUser={this.onAddUser}
+                    onNext={this.onNext} />
             </article>
         );
     }

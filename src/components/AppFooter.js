@@ -42,7 +42,7 @@ export default class AppFooter extends React.Component {
 
     render () {
         return (
-            <footer className="app__footer">
+            <footer className={"app__footer " + (this.props.hidden ? "app__footer_hidden" : "")}>
                 {this.btns.map( btn => {
                     return <Btn
                         key={btn.mod}
