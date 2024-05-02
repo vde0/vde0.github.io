@@ -159,6 +159,7 @@
 
     box-sizing: border-box;
     padding: 12pt 12pt;
+    padding-bottom: 0;
 }
 
 
@@ -188,6 +189,7 @@
     gap: 8pt;
     height: 61px;
     padding-top: 16pt;
+    padding-bottom: 12pt;
 }
 /* @media screen and (max-height: 532px) {
     .app__footer {
@@ -196,7 +198,9 @@
 } */
 
 .app__footer_hidden {
+    display: none;
     visibility: hidden;
+    opacity: 1;
 }
 
 
