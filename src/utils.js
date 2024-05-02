@@ -135,6 +135,8 @@ if (isMobile) {
         else if (!prevKeyboardState && isOpened) eventName = "openkeyboard";
         else    throw Error;
 
+        prevKeyboardState   = isOpened;
+
         const event = new Event(eventName, {bubbles: true});
         window.dispatchEvent(event);
     });
