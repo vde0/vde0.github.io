@@ -16,8 +16,7 @@
 }
 @media screen and (max-width: 992px) {
     :root {
-        --container-max-height: 288px;
-        --cut-container-max-height: 154px;
+        --container-max-height: 33vh;
     }
 }
 
