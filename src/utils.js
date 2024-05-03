@@ -1,18 +1,10 @@
-function checkAncestorByClass (el, selector) {
-    const parent = el.parentNode;
-    if (!parent)    throw Error("Error at the checkAncestorByClass(): parent is undefined");
-
-    if      (parent === document) return false;
-    else if (parent.classList.contains(selector)) return true;
-    
-    return checkAncestorByClass(parent, selector);
+function checkAncestor (el, selector) {
+    return !!el.closest(selector);
 }
 
 function checkClickByArea (evt, selector) {
     const el = evt.target;
-    return (
-        el.classList.contains(selector) || checkAncestorByClass(el, selector)
-    );
+    return el.matches(selector) || checkAncestor(el, selector);
 }
 
 function getClassLine (classList) {
@@ -158,7 +150,7 @@ if (isMobile) {
 
 
 export {
-    checkAncestorByClass,
+    checkAncestor,
     checkClickByArea,
     getClassLine,
     getComponentUpdateHook,
