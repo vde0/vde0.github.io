@@ -53,7 +53,7 @@ export default class App extends React.Component {
                 <AppContainer contentType={Video} empty />
                 <AppContainer
                     contentType={Dialog}
-                    cut
+                    dynamic
                     hook={this.dialogHook}
                     empty={!this.state.dialogShown}
                     data={this.dialogData} />

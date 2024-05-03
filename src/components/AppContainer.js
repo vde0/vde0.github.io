@@ -23,17 +23,6 @@ export default class AppContainer extends React.Component {
         };
     }
 
-    componentDidMount () {
-        if (this.props.cut && isMobile) {
-            window.addEventListener("openkeyboard", evt => {
-                this.setState({classLine: this.classLine.add("app__container_dynamic").getLine()})
-            });
-            window.addEventListener("closekeyboard", evt => {
-                this.setState({classLine: this.classLine.remove("app__container_dynamic").getLine()})
-            });
-        }
-    }
-
     render () {
         return(
             <section className={this.state.classLine}>
@@ -51,6 +40,14 @@ export default class AppContainer extends React.Component {
             this.classLine.remove("app__container_empty");
             this.contentType    = <this.props.contentType data={this.props.data} />;
         }
+
+        console.log("update");
+        if          (this.props.dynamic && !this.props.empty) {
+            this.classLine.add("app__container_dynamic");
+        } else if   (this.props.dynamic && this.props.empty) {
+            this.classLine.remove("app__container_dynamic");
+        }
+        console.log(this.classLine.getLine());
 
         this.setState({
             empty: this.props.empty,
