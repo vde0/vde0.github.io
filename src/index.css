@@ -229,8 +229,7 @@ input[type=text], input[type=submit], textarea{
     box-sizing: content-box;
     
     max-width: inherit;
-
-    background-color: var(--cutom-light);
+    
     border-radius: 16px;
 }
 
