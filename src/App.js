@@ -25,12 +25,12 @@ export default class App extends React.Component {
             dialogShown: false,
             footerShown: true,
             unreadedMsgCount: 1,
+            dialogClick: null,
         };
 
         this.dialogData = {
             userID: 555,
             chatID: 1,
-            dialogClick: null,
         };
 
         this.menuData = {
@@ -51,7 +51,7 @@ export default class App extends React.Component {
     render () {
         return (
             <article className="app">
-                <div>{this.state.dialogClick}</div>
+                <div>{String(this.state.dialogClick)}</div>
                 <AppContainer contentType={Video} empty />
                 <AppContainer
                     contentType={Dialog}
