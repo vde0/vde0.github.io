@@ -26,10 +26,10 @@ export default class AppContainer extends React.Component {
     componentDidMount () {
         if (this.props.cut && isMobile) {
             window.addEventListener("openkeyboard", evt => {
-                this.setState({classLine: this.classLine.add("app__container_cut").getLine()})
+                this.setState({classLine: this.classLine.add("app__container_dynamic").getLine()})
             });
             window.addEventListener("closekeyboard", evt => {
-                this.setState({classLine: this.classLine.remove("app__container_cut").getLine()})
+                this.setState({classLine: this.classLine.remove("app__container_dynamic").getLine()})
             });
         }
     }
