@@ -32,6 +32,13 @@ export default class App extends React.Component {
             chatID: 1,
         };
 
+        this.menuData = {
+            unreadedMsgCount: this.state.unreadedMsgCount,
+            onSeeMsgs: this.onSeeMsgs,
+            onAddUser: this.onAddUser,
+            onNext: this.onNext,
+        }
+
         this.dialogHook = getComponentUpdateHook();
     }
 
@@ -51,12 +58,7 @@ export default class App extends React.Component {
                     empty={!this.state.dialogShown}
                     data={this.dialogData} />
 
-                <AppFooter
-                    unreadedMsgCount={this.state.unreadedMsgCount}
-                    hidden={!this.state.footerShown}
-                    onSeeMsgs={this.onSeeMsgs}
-                    onAddUser={this.onAddUser}
-                    onNext={this.onNext} />
+                <AppFooter data={this.menuData} hidden={!this.state.footerShown} />
             </article>
         );
     }
@@ -69,7 +71,7 @@ export default class App extends React.Component {
 
     onRootClick (evt) {
         const dialogSelector    = '.dialog';
-        const btnSelector       = '.app__btn_mod_msgs';
+        const btnSelector       = '.bottom-menu__btn_mod_msgs';
 
         const clickDialogCheck  = checkClickByArea(evt, dialogSelector);
         const clickMsgsBtnCheck = checkClickByArea(evt, btnSelector);
