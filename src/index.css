@@ -65,6 +65,9 @@
     align-items: center;
     justify-content: center;
 }
+.btn__content > img {
+    height: 100%;
+}
 
 .btn__badge {
     position: absolute;
@@ -244,11 +247,10 @@
 
 .bottom-menu__btn_mod_next {
     width: 100%;
-    text-transform: uppercase;
-    font-size: 2.25rem;
+    font-size: 1.75rem;
 }
 .bottom-menu__btn_mod_next > .btn__content {
-    gap: 8pt;
+    gap: 16pt;
 }
 
 

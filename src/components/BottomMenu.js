@@ -35,7 +35,7 @@ export default class BottomMenu extends React.Component {
                 color: "blue",
                 content: (
                     <>
-                        <span>NEXT</span>
+                        <span>Next</span>
                         <img src={whiteArrowRightIc} />
                     </>
                 ),
