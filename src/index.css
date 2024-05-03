@@ -11,12 +11,13 @@
 
 @media screen and (min-width: 992.2px) {
     :root {
-        --container-max-height: 288px;
+        --container-height: 288px;
     }
 }
 @media screen and (max-width: 992px) {
     :root {
-        --container-max-height: 33vh;
+        /* --container-height: 33vh; */
+        --container-height: 288px;
     }
 }
 
@@ -199,8 +200,8 @@ input[type=text], input[type=submit], textarea{
 
 
 .app__container {
-    max-height: var(--container-max-height);
-    height: 100%;
+    max-height: var(--container-height);
+    height: var(--container-height);
 
     border-radius: 16px;
     overflow: hidden;
@@ -219,6 +220,7 @@ input[type=text], input[type=submit], textarea{
 
 .app__container_dynamic {
     max-height: auto;
+    width: 100%;
 }
 
 
@@ -230,6 +232,9 @@ input[type=text], input[type=submit], textarea{
     box-sizing: content-box;
     
     max-width: inherit;
+
+    background-color: var(--cutom-light);
+    border-radius: 16px;
 }
 
 .app__footer_hidden {
