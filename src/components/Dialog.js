@@ -113,14 +113,24 @@ export default class Dialog extends React.Component {
     }
 
     componentDidMount () {
-        if (isMobile) {
-            window.dispatchEvent( new Event("openkeyboard", {bubbles: true}) );
-        }
+
         setTimeout(_ => this.msgFieldBlock.focus(), 50);
         this.msgListBlock.scrollBy({
             top: this.msgListBlock.scrollHeight,
             behavior: "instant",
         });
+
+        if (isMobile) {
+            window.dispatchEvent( new Event("openkeyboard", {bubbles: true}) );
+
+            window.addEventListener("openkeyboard", this.openKeyboardHandler);
+            window.addEventListener("closekeyboard", this.closeKeyboardHandler);
+        }
+    }
+
+    componentWillUnmount () {
+        window.removeEventListener("openkeyboard", this.openKeyboardHandler);
+        window.removeEventListener("closekeyboard", this.closeKeyboardHandler);
     }
     
     componentDidUpdate () {
@@ -198,4 +208,16 @@ export default class Dialog extends React.Component {
         this.msgText = "";
     }
 
+    openKeyboardHandler = (evt) => {
+        this.msgListBlock.scrollBy({
+            top: 134,
+            behavior: "instant",
+        });
+    }
+    closeKeyboardHandler = (evt) => {
+        this.msgListBlock.scrollBy({
+            top: -134,
+            behavior: "instant",
+        });
+    }
 }
