@@ -30,6 +30,7 @@ export default class App extends React.Component {
         this.dialogData = {
             userID: 555,
             chatID: 1,
+            dialogClick: null,
         };
 
         this.menuData = {
@@ -50,6 +51,7 @@ export default class App extends React.Component {
     render () {
         return (
             <article className="app">
+                <div>{this.state.dialogClick}</div>
                 <AppContainer contentType={Video} empty />
                 <AppContainer
                     contentType={Dialog}
@@ -75,6 +77,8 @@ export default class App extends React.Component {
 
         const clickDialogCheck  = checkClickByArea(evt, dialogSelector);
         const clickMsgsBtnCheck = checkClickByArea(evt, btnSelector);
+
+        this.setState({dialogClick: clickDialogCheck});
 
         if (!clickDialogCheck && !clickMsgsBtnCheck) {
             this.hideDialog();
