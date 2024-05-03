@@ -222,8 +222,8 @@
     padding-top: 24pt;
     padding-bottom: 8pt;
     box-sizing: content-box;
-
-    position: relative;
+    
+    max-width: inherit;
 }
 
 
@@ -232,9 +232,16 @@
     gap: 8pt;
 
     height: inherit;
+    max-width: inherit;
     width: 100%;
+    padding-left: 12pt;
+    padding-right: 12pt;
+    padding-top: 0;
+    box-sizing: border-box;
 
-    position: absolute;
+    transform: translateX(-12pt);
+
+    position: fixed;
     bottom: 12pt;
     z-index: 1000;
 }
