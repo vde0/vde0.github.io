@@ -9,11 +9,8 @@ export default class AppContainer extends React.Component {
 
     constructor (props) {
         super(props);
-        
-        if (this.hook) {
-            this.updateFunc     = this.updateFunc.bind(this);
-            this.hook.setUpdateFunc(this.updateFunc);
-        }
+
+        this.hook?.connect(this.updateFunc, this);
         
         if (!this.props.contentType || this.props.empty) {
             this.classLine.add("app__container_empty");
@@ -35,10 +32,6 @@ export default class AppContainer extends React.Component {
                 this.setState({classLine: this.classLine.remove("app__container_cut").getLine()})
             });
         }
-    }
-
-    componentDidUpdate () {
-        this.hook?.update();
     }
 
     render () {

@@ -114,7 +114,7 @@ export default class Dialog extends React.Component {
 
     componentDidMount () {
 
-        setTimeout(_ => this.msgFieldBlock.focus(), 50);
+        // setTimeout(_ => this.msgFieldBlock?.focus(), 50);
         this.msgListBlock.scrollBy({
             top: this.msgListBlock.scrollHeight,
             behavior: "instant",
@@ -122,7 +122,6 @@ export default class Dialog extends React.Component {
 
         if (isMobile) {
             window.dispatchEvent( new Event("openkeyboard", {bubbles: true}) );
-
 
             this.openKeyboardHandler    = this.openKeyboardHandler.bind(this);
             this.closeKeyboardHandler   = this.closeKeyboardHandler.bind(this);

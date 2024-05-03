@@ -7,6 +7,7 @@ function checkClickByArea (evt, selector) {
     return el.matches(selector) || checkAncestor(el, selector);
 }
 
+
 function getClassLine (classList) {
     const classLine = {
         [Symbol.toPrimitive] (hint) { return this.classList.join(" "); },
@@ -85,16 +86,21 @@ function getClassLine (classList) {
 
 function getComponentUpdateHook () {
     return {
-        update () {
-            if (!this._on) return;
-            this._updateFunc();
-            this._on = false;
-        },
-        setUpdateFunc (func) {
-            this._updateFunc = func;
+        connect (updateFunc, context) {
+            this._customUpdate      = updateFunc.bind(context);
+            this._componentUpdate   = context.componentDidUpdate?.bind(context);
+
+            context.componentDidUpdate  = this._update.bind(this);
         },
         on () {
             this._on = true;
+        },
+        _update () {
+            this._componentUpdate?.();
+
+            if (!this._on) return;
+            this._customUpdate();
+            this._on = false;
         },
     };
 }

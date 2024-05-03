@@ -68,8 +68,8 @@ export default class App extends React.Component {
     onNext (evt) {}
 
     onRootClick (evt) {
-        const dialogSelector    = 'dialog';
-        const btnSelector       = 'app__btn_mod_msgs';
+        const dialogSelector    = '.dialog';
+        const btnSelector       = '.app__btn_mod_msgs';
 
         const clickDialogCheck  = checkClickByArea(evt, dialogSelector);
         const clickMsgsBtnCheck = checkClickByArea(evt, btnSelector);
