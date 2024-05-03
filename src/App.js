@@ -44,7 +44,7 @@ export default class App extends React.Component {
 
     componentDidMount () {
         window.addEventListener("openkeyboard", evt => this.hideFooter());
-        window.addEventListener("closekeyboard", evt => {this.showFooter();});
+        window.addEventListener("closekeyboard", evt => {this.showFooter(); this.hideDialog()});
     }
 
     render () {
