@@ -123,6 +123,10 @@ export default class Dialog extends React.Component {
         if (isMobile) {
             window.dispatchEvent( new Event("openkeyboard", {bubbles: true}) );
 
+
+            this.openKeyboardHandler    = this.openKeyboardHandler.bind(this);
+            this.closeKeyboardHandler   = this.closeKeyboardHandler.bind(this);
+
             window.addEventListener("openkeyboard", this.openKeyboardHandler);
             window.addEventListener("closekeyboard", this.closeKeyboardHandler);
         }
@@ -208,13 +212,13 @@ export default class Dialog extends React.Component {
         this.msgText = "";
     }
 
-    openKeyboardHandler = (evt) => {
+    openKeyboardHandler (evt) {
         this.msgListBlock.scrollBy({
             top: 134,
             behavior: "instant",
         });
     }
-    closeKeyboardHandler = (evt) => {
+    closeKeyboardHandler (evt) {
         this.msgListBlock.scrollBy({
             top: -134,
             behavior: "instant",
