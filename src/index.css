@@ -152,8 +152,8 @@
 
 
 #root {
-    width: 100vw;
-    height: 100vh;
+    width: 100%;
+    height: 100%;
 }
 
 
@@ -163,6 +163,9 @@
     color: var(--cutom-light);
 
     font-family: "Open Sans", sans-serif;
+
+    width: 100vw;
+    height: 100vh;
 }
 
 
