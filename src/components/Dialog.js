@@ -121,7 +121,7 @@ export default class Dialog extends React.Component {
         });
 
         if (isMobile) {
-            window.dispatchEvent( new Event("openkeyboard", {bubbles: true}) );
+            window.dispatchEvent( new Event("openkeyboard") );
 
             this.openKeyboardHandler    = this.openKeyboardHandler.bind(this);
             this.closeKeyboardHandler   = this.closeKeyboardHandler.bind(this);
