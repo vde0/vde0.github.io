@@ -114,7 +114,7 @@ export default class Dialog extends React.Component {
 
     componentDidMount () {
 
-        // setTimeout(_ => this.msgFieldBlock?.focus(), 50);
+        setTimeout(_ => this.msgFieldBlock?.focus());
         this.msgListBlock.scrollBy({
             top: this.msgListBlock.scrollHeight,
             behavior: "instant",
