@@ -47,7 +47,7 @@ export default class BottomMenu extends React.Component {
 
     render () {
         return (
-            <section className={"bottom-menu " + (this.props.hidden ? "bottom-menu_hidden" : "")}>
+            <section className="bottom-menu">
                 {this.btns.map( btn => {
                     return <Btn
                         key={btn.mod}

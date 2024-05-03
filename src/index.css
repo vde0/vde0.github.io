@@ -22,6 +22,11 @@
 }
 
 
+input[type=text], input[type=submit], textarea{
+	-webkit-appearance: none;
+} 
+
+
 .btn {
     position: relative;
 
@@ -173,6 +178,8 @@
 
     width: 100vw;
     height: 100vh;
+
+    -webkit-text-size-adjust: none;
 }
 
 
@@ -194,7 +201,7 @@
 
 .app__container {
     max-height: var(--container-max-height);
-    height: 40vh;
+    height: 100%;
 
     border-radius: 16px;
     overflow: hidden;
@@ -211,8 +218,8 @@
     background-position: 50%;
 }
 
-.app__container_cut {
-    max-height: var(--cut-container-max-height);
+.app__container_dynamic {
+    max-height: auto;
 }
 
 
@@ -224,6 +231,10 @@
     box-sizing: content-box;
     
     max-width: inherit;
+}
+
+.app__footer_hidden {
+    visibility: hidden;
 }
 
 
@@ -244,10 +255,6 @@
     position: fixed;
     bottom: 12pt;
     z-index: 1000;
-}
-
-.bottom-menu_hidden {
-    visibility: hidden;
 }
 
 .bottom-menu__btn_mod_next {
@@ -274,6 +281,7 @@
 
     height: 100%;
     overflow-y: scroll;
+    -webkit-overflow-scrolling:touch;
     
     list-style: none;
     color: black;
