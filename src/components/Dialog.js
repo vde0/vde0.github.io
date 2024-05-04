@@ -115,34 +115,23 @@ export default class Dialog extends React.Component {
     componentDidMount () {
 
         setTimeout(_ => this.msgFieldBlock?.focus());
-        this.msgListBlock.scrollBy({
-            top: this.msgListBlock.scrollHeight,
-            behavior: "instant",
-        });
 
         if (isMobile) {
             window.dispatchEvent( new Event("openkeyboard") );
 
             this.openKeyboardHandler    = this.openKeyboardHandler.bind(this);
-            this.closeKeyboardHandler   = this.closeKeyboardHandler.bind(this);
-
             window.addEventListener("openkeyboard", this.openKeyboardHandler);
-            window.addEventListener("closekeyboard", this.closeKeyboardHandler);
+        } else {
+            this.scrollDown("instant");
         }
     }
 
     componentWillUnmount () {
         window.removeEventListener("openkeyboard", this.openKeyboardHandler);
-        window.removeEventListener("closekeyboard", this.closeKeyboardHandler);
     }
     
     componentDidUpdate () {
-        if (this.msgList.at(-1).userID === this.userID) {
-            this.msgListBlock.scrollBy({
-                top: this.msgListBlock.scrollHeight,
-                behavior: "smooth",
-            });
-        }
+        this.scrollDown("smooth");
     }
 
     render () {
@@ -212,15 +201,25 @@ export default class Dialog extends React.Component {
     }
 
     openKeyboardHandler (evt) {
-        this.msgListBlock.scrollBy({
-            top: 134,
-            behavior: "instant",
-        });
+        this.scrollDown("instant");
     }
-    closeKeyboardHandler (evt) {
-        this.msgListBlock.scrollBy({
-            top: -134,
-            behavior: "instant",
+
+    scrollDown (behaviorArg) {
+        const behaviorValue = behaviorArg ? behaviorArg : "auto";
+        if (typeof behaviorValue !== "string")  throw TypeError(
+            "\"behaviorArg\" arg of Dialog.scrollDown() must be string.");
+        if (
+            behaviorValue !== "instant" &&
+            behaviorValue !== "smooth" &&
+            behaviorValue !== "auto")
+        {
+            throw SyntaxError(
+                "\"behaviorArg\" arg of Dialog.scrollDown() has incorrect value.");
+        }
+        
+        this.msgListBlock.scrollTo({
+            top: this.msgListBlock.scrollHeight,
+            behavior: behaviorValue,
         });
     }
 }
