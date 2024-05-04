@@ -78,6 +78,7 @@ function sendMsg (msgBlock, chatID) {
     chatDB.add(msgID, chatID);
 }
 
+
 export default class Dialog extends React.Component {
     
     userID      = this.props.data.userID;
@@ -113,20 +114,21 @@ export default class Dialog extends React.Component {
         this.state = {
             msgList: this.msgList,
         }
+
+        this.openKeyboardHandler    = this.openKeyboardHandler.bind(this);
     }
     
     getSnapshotBeforeUpdate () {}
 
     componentDidMount () {
-
         if (isMobile) {
             // fake trigger to hide menu
             window.dispatchEvent( new Event("openkeyboard") );
 
             setTimeout(_ => {
                 // handler for true trigger
-                window.addEventListener("openkeyboard", this.openKeyboardHandler.bind(this));
-                this.msgFieldBlock?.focus()
+                window.addEventListener("openkeyboard", this.openKeyboardHandler);
+                this.msgFieldBlock?.focus();
             });
         } else {
             this.scrollDown("instant");
@@ -145,7 +147,9 @@ export default class Dialog extends React.Component {
     }
 
     componentWillUnmount () {
-        window.removeEventListener("openkeyboard", this.openKeyboardHandler);
+        setTimeout(_ => {
+            window.removeEventListener("openkeyboard", this.openKeyboardHandler);
+        }, 50);
     }
     
     componentDidUpdate () {
@@ -221,6 +225,7 @@ export default class Dialog extends React.Component {
     }
 
     openKeyboardHandler (evt) {
+        console.log("open keyboard handler of Dialog block");
         this.scrollDown("instant");
     }
 
