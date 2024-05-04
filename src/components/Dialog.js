@@ -120,13 +120,11 @@ export default class Dialog extends React.Component {
 
         this.openKeyboardHandler    = this.openKeyboardHandler.bind(this);
     }
-    
-    getSnapshotBeforeUpdate () {}
 
     componentDidMount () {
         if (isMobile) {
             // fake trigger to hide menu
-            window.dispatchEvent( new Event("openkeyboard") );
+            // window.dispatchEvent( new Event("openkeyboard") );
 
             setTimeout(_ => {
                 // handler for true trigger
