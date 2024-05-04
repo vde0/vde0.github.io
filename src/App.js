@@ -29,7 +29,6 @@ export default class App extends React.Component {
             dialogShown: false,
             footerShown: true,
             unreadedMsgCount: 1,
-            dialogClick: null,
         };
 
         this.dialogData = {
@@ -55,8 +54,6 @@ export default class App extends React.Component {
     render () {
         return (
             <article className="app">
-                <div>{isMobile ? "touch" : "click"}</div>
-                <div>{String(this.state.dialogClick)}</div>
                 <AppContainer contentType={Video} empty />
                 <AppContainer
                     contentType={Dialog}
@@ -83,8 +80,6 @@ export default class App extends React.Component {
         const clickDialogCheck  = checkClickByArea(evt, dialogSelector);
         const clickMsgsBtnCheck = checkClickByArea(evt, btnSelector);
 
-        this.setState({dialogClick: evt.target.className ? evt.target.className : evt.target.id ? evt.target.id : evt.target.tagName});
-
         if (!clickDialogCheck && !clickMsgsBtnCheck) {
             this.hideDialog();
         };
@@ -95,8 +90,6 @@ export default class App extends React.Component {
 
         const clickDialogCheck  = checkClickByArea(evt, dialogSelector);
         const clickMsgsBtnCheck = checkClickByArea(evt, btnSelector);
-
-        this.setState({dialogClick: evt.target.className ? evt.target.className : evt.target.id ? evt.target.id : evt.target.tagName});
 
         if (!clickDialogCheck && !clickMsgsBtnCheck) {
             this.hideDialog();
