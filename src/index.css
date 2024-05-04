@@ -293,6 +293,15 @@ input, button, textarea {
     width: 15%;
 }
 
+/*a crutch*/
+.bottom-menu__btn_mod_report img {
+    position: absolute;
+    width: 60px;
+    height: auto;
+    top: -9px;
+    right: 6px;
+}
+
 .bottom-menu__btn_mod_next {
     flex-grow: 1;
     width: 50%;
