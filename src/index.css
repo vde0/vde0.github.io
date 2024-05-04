@@ -150,17 +150,19 @@ input, button, textarea {
 
     padding: 0;
     padding-left: 8pt;
-
+    box-sizing: border-box;
+    
     color: white;
     font-size: 1.25rem;
     outline: none;
-    border: 0;
+
+    border: 2px solid var(--custom-dark);
     border-radius: 12px;
     -webkit-border-radius: 12px;
     -moz-border-radius: 12px;
 }
 .msg-form__field:focus {
-    outline: 2px solid var(--custom-blue);
+    border-color: var(--custom-blue);
 }
 
 .msg-form__send-btn {
