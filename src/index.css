@@ -240,6 +240,7 @@ input[type=text], input[type=submit], textarea{
 
 .app__footer_hidden {
     position: absolute;
+    visibility: hidden;
     opacity: 0;
     width: 0;
     height: 0;
