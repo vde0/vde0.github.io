@@ -162,6 +162,7 @@ export default class Dialog extends React.Component {
                     <input ref={el => this.msgFieldBlock = el}
                         type="text"
                         className="msg-form__field"
+                        autoFocus
                         onInput={this.onInput}/>
                     <Btn
                         type="submit"
