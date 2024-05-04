@@ -386,6 +386,8 @@ input, button, textarea {
     border-left-width: 0;
 
     border-radius: 100% 0;
+    -webkit-border-radius: 0 100%;
+    -moz-border-radius: 0 100%;
     left: -14.5px;
 
     transform-origin: center; 
