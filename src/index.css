@@ -176,13 +176,20 @@ input, button, textarea {
 }
 
 
-#root {
-    width: 100%;
-    height: 100%;
-
+.root-document_pos_fixed {
     position: fixed;
+    margin: 0 auto;
+    height: 100vh;
+    width: 100vh;
     top: 0;
-    left: 0;
+}
+
+.root-document_pos_sticky {
+    position: sticky;
+    margin: 0 auto;
+    height: 100vh;
+    width: 100%;
+    top: 0;
 }
 
 
@@ -197,6 +204,16 @@ input, button, textarea {
     height: 100vh;
 
     -webkit-text-size-adjust: none;
+}
+
+
+#root {
+    width: 100%;
+    height: 100%;
+
+    position: fixed;
+    top: 0;
+    left: 0;
 }
 
 
