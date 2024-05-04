@@ -7,14 +7,13 @@ const tg = window.Telegram.WebApp;
 tg.expand();
 
 
-const clickWrapper = {
-    onClick: () => {},
-};
-
 const rootDOM   = document.getElementById("root");
 const root      = createRoot( document.getElementById("root") );
-rootDOM.onclick = evt => {
-    clickWrapper.onClick(evt);
+
+const handlerWrapper = {
+    setHandler (eventName, handlerFunc) {
+        rootDOM.addEventListener(eventName, handlerFunc);
+    }
 };
 
-root.render(<App telegram={tg} clickWrapper={clickWrapper} />);
+root.render(<App telegram={tg} rootHandler={handlerWrapper} />);

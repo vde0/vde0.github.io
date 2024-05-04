@@ -15,11 +15,15 @@ export default class App extends React.Component {
         this.onSeeMsgs  = this.onSeeMsgs.bind(this);
         this.onNext     = this.onNext.bind(this);
 
-        this.onRootClick    = this.onRootClick.bind(this);
-        this.hideFooter     = this.hideFooter.bind(this);
+        this.onRootClickTouch   = isMobile
+            ? this.onRootTouch.bind(this)
+            : this.onRootClick.bind(this);
+        this.hideFooter         = this.hideFooter.bind(this);
 
         this.tg = this.props.telegram;
-        this.props.clickWrapper.onClick = this.onRootClick;
+        this.props.rootHandler.setHandler(
+            (isMobile ? "touchstart" : "click"),
+            this.onRootClickTouch );
 
         this.state = {
             dialogShown: false,
@@ -51,6 +55,7 @@ export default class App extends React.Component {
     render () {
         return (
             <article className="app">
+                <div>{isMobile ? "touch" : "click"}</div>
                 <div>{String(this.state.dialogClick)}</div>
                 <AppContainer contentType={Video} empty />
                 <AppContainer
@@ -72,6 +77,19 @@ export default class App extends React.Component {
     onNext (evt) {}
 
     onRootClick (evt) {
+        const dialogSelector    = '.dialog';
+        const btnSelector       = '.bottom-menu__btn_mod_msgs';
+
+        const clickDialogCheck  = checkClickByArea(evt, dialogSelector);
+        const clickMsgsBtnCheck = checkClickByArea(evt, btnSelector);
+
+        this.setState({dialogClick: evt.target.className ? evt.target.className : evt.target.id ? evt.target.id : evt.target.tagName});
+
+        if (!clickDialogCheck && !clickMsgsBtnCheck) {
+            this.hideDialog();
+        };
+    }
+    onRootTouch (evt) {
         const dialogSelector    = '.dialog';
         const btnSelector       = '.bottom-menu__btn_mod_msgs';
 
