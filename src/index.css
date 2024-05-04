@@ -25,9 +25,11 @@
 }
 
 
-input[type=text], input[type=submit], textarea{
-	-webkit-appearance: none;
-} 
+input, button, textarea {
+    -webkit-appearance: none;
+	-moz-appearance:    none;
+	appearance:         none;
+}
 
 
 .btn {
@@ -38,6 +40,8 @@ input[type=text], input[type=submit], textarea{
     background-color: var(--custom-dark);
     border: none;
     border-radius: 16px;
+    -webkit-border-radius: 16px;
+    -moz-border-radius: 16px;
     
     color: white;
     font-family: inherit;
@@ -94,6 +98,8 @@ input[type=text], input[type=submit], textarea{
 
     outline: 1px solid var(--custom-blue);
     border-radius: 50%;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
 }
 .btn__badge > span {
     display: inline-block;
@@ -127,6 +133,8 @@ input[type=text], input[type=submit], textarea{
     padding: 4pt;
     box-sizing: border-box;
     border-radius: 12px;
+    -webkit-border-radius: 12px;
+    -moz-border-radius: 12px;
 
     background-color: #171717;
 
@@ -148,6 +156,8 @@ input[type=text], input[type=submit], textarea{
     outline: none;
     border: 0;
     border-radius: 12px;
+    -webkit-border-radius: 12px;
+    -moz-border-radius: 12px;
 }
 .msg-form__field:focus {
     outline: 2px solid var(--custom-blue);
@@ -159,6 +169,8 @@ input[type=text], input[type=submit], textarea{
     height: 100%;
 
     border-radius: 12px;
+    -webkit-border-radius: 12px;
+    -moz-border-radius: 12px;
 }
 
 
@@ -206,6 +218,9 @@ input[type=text], input[type=submit], textarea{
     max-height: var(--container-max-height);
 
     border-radius: 16px;
+    -webkit-border-radius: 16px;
+    -moz-border-radius: 16px;
+
     overflow: hidden;
 }
 .app__container:not(:last-of-type) {
@@ -236,6 +251,8 @@ input[type=text], input[type=submit], textarea{
     max-width: inherit;
     
     border-radius: 16px;
+    -webkit-border-radius: 16px;
+    -moz-border-radius: 16px;
 }
 
 .app__footer_hidden {
@@ -291,7 +308,7 @@ input[type=text], input[type=submit], textarea{
 
     height: 100%;
     overflow-y: scroll;
-    -webkit-overflow-scrolling:touch;
+    -webkit-overflow-scrolling: touch;
     
     list-style: none;
     color: black;
@@ -314,6 +331,8 @@ input[type=text], input[type=submit], textarea{
     padding: 8pt 16pt;
     margin: 0;
     border-radius: 16px;
+    -webkit-border-radius: 16px;
+    -moz-border-radius: 16px;
 }
 .msg::before {
     content: "";
@@ -342,6 +361,8 @@ input[type=text], input[type=submit], textarea{
     border-right-width: 0;
 
     border-radius: 0 100%;
+    -webkit-border-radius: 0 100%;
+    -moz-border-radius: 0 100%;
     right: -14.5px;
 
     transform-origin: center; 
