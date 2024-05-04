@@ -12,6 +12,9 @@ let userDB = {
     201: {
         name: "Собеседник",
     },
+    92: {
+        name: "Shrek",
+    },
 }
 
 let msgDB = {
@@ -111,6 +114,8 @@ export default class Dialog extends React.Component {
             msgList: this.msgList,
         }
     }
+    
+    getSnapshotBeforeUpdate () {}
 
     componentDidMount () {
 
@@ -121,12 +126,22 @@ export default class Dialog extends React.Component {
             setTimeout(_ => {
                 // handler for true trigger
                 window.addEventListener("openkeyboard", this.openKeyboardHandler.bind(this));
-                this.msgFieldBlock.focus()
+                this.msgFieldBlock?.focus()
             });
         } else {
             this.scrollDown("instant");
-            this.msgFieldBlock.focus()
+            this.msgFieldBlock?.focus();
         }
+
+        setTimeout(() => {
+            const msgBlock = {
+                userID: 92,
+                textContent: "SOMEBODY WHOOOOOA",
+            };
+            sendMsg(msgBlock, this.chatID);
+
+            this.setState({msgList: this.msgList});
+        }, 4e3);
     }
 
     componentWillUnmount () {
@@ -134,7 +149,9 @@ export default class Dialog extends React.Component {
     }
     
     componentDidUpdate () {
-        this.scrollDown("smooth");
+        if (this.state.msgList.at(-1).userID === this.userID) {
+            this.scrollDown("smooth");
+        }
     }
 
     render () {
@@ -220,7 +237,7 @@ export default class Dialog extends React.Component {
                 "\"behaviorArg\" arg of Dialog.scrollDown() has incorrect value.");
         }
         
-        this.msgListBlock.scrollTo({
+        this.msgListBlock?.scrollTo({
             top: this.msgListBlock.scrollHeight,
             behavior: behaviorValue,
         });

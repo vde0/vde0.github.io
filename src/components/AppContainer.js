@@ -40,14 +40,12 @@ export default class AppContainer extends React.Component {
             this.classLine.remove("app__container_empty");
             this.contentType    = <this.props.contentType data={this.props.data} />;
         }
-
-        console.log("update");
+        
         if          (this.props.dynamic && !this.props.empty) {
             this.classLine.add("app__container_dynamic");
         } else if   (this.props.dynamic && this.props.empty) {
             this.classLine.remove("app__container_dynamic");
         }
-        console.log(this.classLine.getLine());
 
         this.setState({
             empty: this.props.empty,
