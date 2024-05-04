@@ -269,7 +269,9 @@ input, button, textarea {
 
 .bottom-menu {
     display: flex;
-    gap: 8pt;
+    /* gap: 8pt; */
+    gap: 4pt;
+    justify-content: space-between;
 
     height: inherit;
     max-width: inherit;
@@ -286,8 +288,14 @@ input, button, textarea {
     z-index: 1000;
 }
 
+.bottom-menu__btn {
+    flex-shrink: 1;
+    width: 15%;
+}
+
 .bottom-menu__btn_mod_next {
-    width: 100%;
+    flex-grow: 1;
+    width: 50%;
     font-size: 1.75rem;
 }
 .bottom-menu__btn_mod_next > .btn__content {

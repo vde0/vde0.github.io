@@ -11,10 +11,6 @@ export default class App extends React.Component {
     constructor (props) {
         super(props);
 
-        this.onAddUser  = this.onAddUser.bind(this);
-        this.onSeeMsgs  = this.onSeeMsgs.bind(this);
-        this.onNext     = this.onNext.bind(this);
-
         this.onRootClickTouch   = isMobile
             ? this.onRootTouch.bind(this)
             : this.onRootClick.bind(this);
@@ -38,9 +34,10 @@ export default class App extends React.Component {
 
         this.menuData = {
             unreadedMsgCount: this.state.unreadedMsgCount,
-            onSeeMsgs: this.onSeeMsgs,
-            onAddUser: this.onAddUser,
-            onNext: this.onNext,
+            onSeeMsgs: this.onSeeMsgs.bind(this),
+            onAddUser: this.onAddUser.bind(this),
+            onReport: this.onReport.bind(this),
+            onNext: this.onNext.bind(this),
         }
 
         this.dialogHook = getComponentUpdateHook();
@@ -71,6 +68,7 @@ export default class App extends React.Component {
         this.toggleDialog();
     }
     onAddUser (evt) {}
+    onReport (evt) {}
     onNext (evt) {}
 
     onRootClick (evt) {
