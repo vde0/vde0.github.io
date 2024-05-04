@@ -96,7 +96,7 @@ export default class App extends React.Component {
         const clickDialogCheck  = checkClickByArea(evt, dialogSelector);
         const clickMsgsBtnCheck = checkClickByArea(evt, btnSelector);
 
-        this.setState({dialogClick: evt.target.className});
+        this.setState({dialogClick: evt.target.className ? evt.target.className : evt.target.id ? evt.target.id : evt.target.tagName});
 
         if (!clickDialogCheck && !clickMsgsBtnCheck) {
             this.hideDialog();
