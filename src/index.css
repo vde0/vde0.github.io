@@ -298,8 +298,8 @@ input, button, textarea {
     position: absolute;
     width: 60px;
     height: auto;
-    top: -9px;
-    right: 6px;
+    top: -18%;
+    right: 9%;
 }
 
 .bottom-menu__btn_mod_next {
