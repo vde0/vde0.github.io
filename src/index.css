@@ -192,8 +192,11 @@ input, button, textarea {
     top: 0;
 }
 
+.root-document_scroll_block {
+    overflow: hidden;
+}
 
-.page {
+.root-document__page {
     margin: 0;
     background-color: var(--custom-black);
     color: var(--cutom-light);
