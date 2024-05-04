@@ -35,7 +35,7 @@ input, button, textarea {
 .btn {
     position: relative;
 
-    padding: 10px;
+    padding: 6pt;
     box-sizing: border-box;
     background-color: var(--custom-dark);
     border: none;
