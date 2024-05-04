@@ -113,6 +113,7 @@ const mobile_events = new Set([
     "touchcancel",
 ]);
 const isMobile = ('ontouchstart' in document.documentElement && !!(navigator.userAgent.match(/Mobi/)));
+// const isMobile = true;
 
 
 const startHeight = window.innerHeight;
