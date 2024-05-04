@@ -15,6 +15,9 @@ let userDB = {
     92: {
         name: "Shrek",
     },
+    100: {
+        name: "Console",
+    },
 }
 
 let msgDB = {
@@ -224,8 +227,16 @@ export default class Dialog extends React.Component {
         this.msgText = "";
     }
 
+    consoleMsgCount = 0;
     openKeyboardHandler (evt) {
         console.log("open keyboard handler of Dialog block");
+        const msgBlock = {
+            userID: 100,
+            textContent: "open keyboard handler of Dialog block" + ++this.consoleMsgCount,
+        };
+        sendMsg(msgBlock, this.chatID);
+
+        this.setState({msgList: this.msgList});
         this.scrollDown("instant");
     }
 
