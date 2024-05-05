@@ -250,10 +250,11 @@ input, button, textarea {
     padding-bottom: 0;
 }
 
-
 .app__container {
-    height: var(--container-height);
-    max-height: var(--container-max-height);
+    /* height: var(--container-height); */
+    height: 40%;
+    /* max-height: var(--container-max-height); */
+    flex-grow: 100;
 
     border-radius: 16px;
     -webkit-border-radius: 16px;
@@ -276,6 +277,7 @@ input, button, textarea {
 .app__container_dynamic {
     height: 100%;
     max-height: 100%;
+    flex-shrink: 100;
 }
 
 
