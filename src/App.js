@@ -11,9 +11,7 @@ export default class App extends React.Component {
     constructor (props) {
         super(props);
 
-        this.onRootClickTouch   = isMobile
-            ? this.onRootTouch.bind(this)
-            : this.onRootClick.bind(this);
+        this.onRootClickTouch   = this.onRootClickTouch.bind(this);
         this.hideFooter         = this.hideFooter.bind(this);
 
         this.tg = this.props.telegram;
@@ -72,18 +70,7 @@ export default class App extends React.Component {
     onReport (evt) {}
     onNext (evt) {}
 
-    onRootClick (evt) {
-        const dialogSelector    = '.dialog';
-        const btnSelector       = '.bottom-menu__btn_mod_msgs';
-
-        const clickDialogCheck  = checkClickByArea(evt, dialogSelector);
-        const clickMsgsBtnCheck = checkClickByArea(evt, btnSelector);
-
-        if (!clickDialogCheck && !clickMsgsBtnCheck) {
-            this.hideDialog();
-        };
-    }
-    onRootTouch (evt) {
+    onRootClickTouch (evt) {
         const dialogSelector    = '.dialog';
         const btnSelector       = '.bottom-menu__btn_mod_msgs';
 

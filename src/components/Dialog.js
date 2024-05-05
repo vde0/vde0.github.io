@@ -113,10 +113,14 @@ export default class Dialog extends React.Component {
         this.onSend                 = this.onSend.bind(this);
         this.onInput                = this.onInput.bind(this);
         this.onClickTouchDialog     = this.onClickTouchDialog.bind(this);
-        this.onClickTouchSendBtn    = this.onClickTouchSendBtn.bind(this);
 
         this.state = {
             msgList: this.msgList,
+            msgField: (
+                <span
+                    className="msg-form__field-placeholder msg-form__field-placeholder_focused"
+                    ref={el => this.msgFieldBlock = el}></span>
+            ),
         }
 
         this.openKeyboardHandler    = this.openKeyboardHandler.bind(this);
@@ -191,15 +195,9 @@ export default class Dialog extends React.Component {
                     ref={el => this.msgFormBlock = el}
                     onSubmit={this.onSend}
                     className="msg-form dialog__msg-form">
-                    <input ref={el => this.msgFieldBlock = el}
-                        type="text"
-                        className="msg-form__field"
-                        onInput={this.onInput}/>
+                    {this.state.msgField}
                     <Btn
                         type="submit"
-                        onClick={!isMobile ? this.onClickTouchSendBtn : evt=>{
-                            evt.preventDefault()}}
-                        onTouchStart={isMobile ? this.onClickTouchSendBtn : _=>{}}
                         className="msg-form__send-btn"
                         content={<img src={sendBtnIc}/>} />
                 </form>
@@ -225,10 +223,8 @@ export default class Dialog extends React.Component {
     onInput (evt) {
         this.msgText = evt.target.value;
     }
-    onClickTouchSendBtn (evt) {
-        evt.preventDefault();
-    }
     onClickTouchDialog (evt) {
+        if (evt.target === this.msgFieldBlock) return;
         this.focusMsgField();
     }
 
@@ -242,7 +238,24 @@ export default class Dialog extends React.Component {
     }
 
     focusMsgField () {
-        focusAndOpenKeyboard(this.msgFieldBlock, 0);
+        this.setState({
+            msgField: (
+                <span
+                    className="msg-form__field-placeholder msg-form__field-placeholder_focused"
+                    ref={el => this.msgFieldBlock = el}></span>
+            ),
+        });
+        setTimeout(_ => {
+            this.setState({
+                msgField: (
+                    <input ref={el => this.msgFieldBlock = el}
+                        type="text"
+                        autoFocus
+                        className="msg-form__field msg-form__field_focused"
+                        onInput={this.onInput}/>
+                ),
+            });
+        });
     }
 
     scrollDown (behaviorArg) {
