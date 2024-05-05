@@ -42,9 +42,10 @@ export default class App extends React.Component {
     }
 
     componentDidMount () {
-        window.addEventListener("openkeyboard", evt => this.hideFooter());
+        window.addEventListener("openkeyboard", evt => {
+            setTimeout( _ => this.showDialog() ); this.hideFooter(); });
         window.addEventListener("closekeyboard", evt => {
-            this.hideDialog(); setTimeout( _ => this.showFooter() )});
+            this.hideDialog(); setTimeout( _ => this.showFooter() ); });
     }
 
     render () {
@@ -64,7 +65,8 @@ export default class App extends React.Component {
     }
 
     onSeeMsgs (evt) {
-        this.toggleDialog();
+        if (isMobile)   window.dispatchEvent( new Event("openkeyboard") );
+        else            this.toggleDialog();
     }
     onAddUser (evt) {}
     onReport (evt) {}
