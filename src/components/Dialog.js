@@ -161,7 +161,9 @@ export default class Dialog extends React.Component {
 
     render () {
         return(
-            <article className="dialog" onClick={this.onClickDialog}>
+            <article
+                className="dialog"
+                onClick={this.onClickDialog} onTouchStart={this.onClickDialog}>
                 <ul className="dialog__msg-list" ref={el => this.msgListBlock = el}>
                     {this.state.msgList.map( (msg, msg_num) => {
                         return (
@@ -183,7 +185,10 @@ export default class Dialog extends React.Component {
                     } )}
                 </ul>
 
-                <form ref={el => this.msgFormBlock = el} className="msg-form dialog__msg-form">
+                <form
+                    ref={el => this.msgFormBlock = el}
+                    onSubmit={this.onSend}
+                    className="msg-form dialog__msg-form">
                     <input ref={el => this.msgFieldBlock = el}
                         type="text"
                         className="msg-form__field"
@@ -191,7 +196,6 @@ export default class Dialog extends React.Component {
                     <Btn
                         type="submit"
                         className="msg-form__send-btn"
-                        onClick={this.onSend}
                         content={<img src={sendBtnIc}/>} />
                 </form>
             </article>
@@ -200,7 +204,7 @@ export default class Dialog extends React.Component {
 
     onSend (evt) {
         evt.preventDefault();
-
+        
         if (!this.msgText) return;
         
         const msgBlock = {
@@ -211,7 +215,7 @@ export default class Dialog extends React.Component {
         sendMsg(msgBlock, this.chatID);
         this.setState({msgList: this.msgList});
 
-        this.resetForm();
+        this.resetMsgForm();
     }
     onInput (evt) {
         this.msgText = evt.target.value;
@@ -220,7 +224,7 @@ export default class Dialog extends React.Component {
         this.msgFieldBlock.click();
     }
 
-    resetForm () {
+    resetMsgForm () {
         this.msgFormBlock.reset();
         this.msgText = "";
     }
