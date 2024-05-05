@@ -116,11 +116,6 @@ export default class Dialog extends React.Component {
 
         this.state = {
             msgList: this.msgList,
-            msgField: (
-                <span
-                    className="msg-form__field-placeholder msg-form__field-placeholder_focused"
-                    ref={el => this.msgFieldBlock = el}></span>
-            ),
         }
 
         this.openKeyboardHandler    = this.openKeyboardHandler.bind(this);
@@ -128,17 +123,9 @@ export default class Dialog extends React.Component {
 
     componentDidMount () {
         if (isMobile) {
-            // fake trigger to hide menu
-            window.dispatchEvent( new Event("openkeyboard") );
-
-            setTimeout(_ => {
-                // handler for true trigger
-                window.addEventListener("openkeyboard", this.openKeyboardHandler);
-                this.focusMsgField();
-            });
+            window.addEventListener("openkeyboard", this.openKeyboardHandler);
         } else {
             this.scrollDown("instant");
-            this.focusMsgField();
         }
 
         setTimeout(() => {
@@ -195,7 +182,11 @@ export default class Dialog extends React.Component {
                     ref={el => this.msgFormBlock = el}
                     onSubmit={this.onSend}
                     className="msg-form dialog__msg-form">
-                    {this.state.msgField}
+                    <input ref={el => this.msgFieldBlock = el}
+                        type="text"
+                        autoFocus
+                        className="msg-form__field msg-form__field_focused"
+                        onInput={this.onInput}/>
                     <Btn
                         type="submit"
                         className="msg-form__send-btn"
