@@ -228,24 +228,25 @@ export default class Dialog extends React.Component {
     }
 
     focusMsgField () {
-        this.setState({
-            msgField: (
-                <span
-                    className="msg-form__field-placeholder msg-form__field-placeholder_focused"
-                    ref={el => this.msgFieldBlock = el}></span>
-            ),
-        });
-        setTimeout(_ => {
-            this.setState({
-                msgField: (
-                    <input ref={el => this.msgFieldBlock = el}
-                        type="text"
-                        autoFocus
-                        className="msg-form__field msg-form__field_focused"
-                        onInput={this.onInput}/>
-                ),
-            });
-        });
+        this.msgFieldBlock.focus();
+        // this.setState({
+        //     msgField: (
+        //         <span
+        //             className="msg-form__field-placeholder msg-form__field-placeholder_focused"
+        //             ref={el => this.msgFieldBlock = el}></span>
+        //     ),
+        // });
+        // setTimeout(_ => {
+        //     this.setState({
+        //         msgField: (
+        //             <input ref={el => this.msgFieldBlock = el}
+        //                 type="text"
+        //                 autoFocus
+        //                 className="msg-form__field msg-form__field_focused"
+        //                 onInput={this.onInput}/>
+        //         ),
+        //     });
+        // });
     }
 
     scrollDown (behaviorArg) {
