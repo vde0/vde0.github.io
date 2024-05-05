@@ -124,16 +124,16 @@ export default class Dialog extends React.Component {
     componentDidMount () {
         if (isMobile) {
             // fake trigger to hide menu
-            // window.dispatchEvent( new Event("openkeyboard") );
+            window.dispatchEvent( new Event("openkeyboard") );
 
             setTimeout(_ => {
                 // handler for true trigger
                 window.addEventListener("openkeyboard", this.openKeyboardHandler);
-                this.msgFieldBlock?.click();
+                this.msgFieldBlock.click();
             });
         } else {
             this.scrollDown("instant");
-            this.msgFieldBlock?.click();
+            this.msgFieldBlock.click();
         }
 
         setTimeout(() => {
@@ -217,7 +217,7 @@ export default class Dialog extends React.Component {
         this.msgText = evt.target.value;
     }
     onClickDialog (evt) {
-        this.msgFieldBlock.focus();
+        this.msgFieldBlock.click();
     }
 
     resetForm () {
