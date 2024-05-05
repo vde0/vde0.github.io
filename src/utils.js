@@ -106,6 +106,34 @@ function getComponentUpdateHook () {
 }
 
 
+// Solution source: https://stackoverflow.com/questions/54424729/ios-show-keyboard-on-input-focus/55425845
+// Author: (n8jadams) https://stackoverflow.com/users/7176651/n8jadams
+// Code is changed
+function focusAndOpenKeyboard (el) {
+    if (!el) throw SyntaxError(
+        "focusAndOpenKeyboard() must have only one argument: element of the document");
+
+    // Align temp input element approximately where the input element is
+    // so the cursor doesn't jump around
+    var __tempEl__ = document.createElement('input');
+    __tempEl__.style.position = 'absolute';
+    __tempEl__.style.top = (el.offsetTop + 7) + 'px';
+    __tempEl__.style.left = el.offsetLeft + 'px';
+    __tempEl__.style.height = 0;
+    __tempEl__.style.opacity = 0;
+    // Put this temp element as a child of the page <body> and focus on it
+    document.body.appendChild(__tempEl__);
+    __tempEl__.focus();
+
+    // The keyboard is open. Now do a delayed focus on the target element
+    setTimeout(function() {
+        el.focus();
+        // Remove the temp element
+        document.body.removeChild(__tempEl__);
+    });
+}
+
+
 const mobile_events = new Set([
     "touchstart",
     "touchend",
@@ -166,5 +194,6 @@ export {
     getClassLine,
     getComponentUpdateHook,
     checkMobileKeyboard,
+    focusAndOpenKeyboard,
     isMobile
 }

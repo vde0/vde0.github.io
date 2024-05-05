@@ -1,7 +1,7 @@
 import React from 'react';
 import sendBtnIc from '../icons/to-send.svg';
 import Btn from './Btn';
-import { isMobile } from '../utils';
+import { focusAndOpenKeyboard, isMobile } from '../utils';
 
 
 let userDB = {
@@ -129,11 +129,11 @@ export default class Dialog extends React.Component {
             setTimeout(_ => {
                 // handler for true trigger
                 window.addEventListener("openkeyboard", this.openKeyboardHandler);
-                this.msgFieldBlock.click();
+                this.focusMsgField();
             });
         } else {
             this.scrollDown("instant");
-            this.msgFieldBlock.click();
+            this.focusMsgField();
         }
 
         setTimeout(() => {
@@ -221,7 +221,7 @@ export default class Dialog extends React.Component {
         this.msgText = evt.target.value;
     }
     onClickDialog (evt) {
-        this.msgFieldBlock.click();
+        this.focusMsgField();
     }
 
     resetMsgForm () {
@@ -231,6 +231,10 @@ export default class Dialog extends React.Component {
     
     openKeyboardHandler (evt) {
         this.scrollDown("instant");
+    }
+
+    focusMsgField () {
+        focusAndOpenKeyboard(this.msgFieldBlock, 0);
     }
 
     scrollDown (behaviorArg) {
