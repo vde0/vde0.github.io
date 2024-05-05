@@ -277,7 +277,7 @@ input, button, textarea {
 
 .app__container {
     /* height: var(--container-height); */
-    height: 40%;
+    height: 41%;
     /* max-height: var(--container-max-height); */
     flex-grow: 100;
 
