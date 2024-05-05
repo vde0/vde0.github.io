@@ -11,13 +11,11 @@ export default class App extends React.Component {
     constructor (props) {
         super(props);
 
-        this.onRootClickTouch   = this.onRootClickTouch.bind(this);
+        this.onRootClick        = this.onRootClick.bind(this);
         this.hideFooter         = this.hideFooter.bind(this);
 
         this.tg = this.props.telegram;
-        this.props.rootHandler.setHandler(
-            (isMobile ? "touchstart" : "click"),
-            this.onRootClickTouch );
+        this.props.rootHandler.setHandler("click", this.onRootClick);
 
         this.state = {
             dialogShown: false,
@@ -72,7 +70,7 @@ export default class App extends React.Component {
     onReport (evt) {}
     onNext (evt) {}
 
-    onRootClickTouch (evt) {
+    onRootClick (evt) {
         const dialogSelector    = '.dialog';
         const btnSelector       = '.bottom-menu__btn_mod_msgs';
 
