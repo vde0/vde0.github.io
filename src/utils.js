@@ -112,7 +112,8 @@ const mobile_events = new Set([
     "touchmove",
     "touchcancel",
 ]);
-const isMobile = ('ontouchstart' in document.documentElement && !!(navigator.userAgent.match(/Mobi/)));
+// const isMobile = ('ontouchstart' in document.documentElement && !!(navigator.userAgent.match(/Mobi/)));
+const isMobile = true;
 
 
 const startHeight = window.innerHeight;
@@ -135,10 +136,10 @@ if (isMobile) {
         const isOpened  = checkMobileKeyboard();
         const eventName = "openkeyboard";
 
-        queueMicrotask(updateKeyboardState);
-
         if (prevKeyboardState === isOpened) return;
+
         if (!isOpened)                      return;
+        updateKeyboardState();
 
         const event = new Event(eventName, {bubbles: true});
         window.dispatchEvent(event);
@@ -149,10 +150,10 @@ if (isMobile) {
         const isOpened  = checkMobileKeyboard();
         const eventName = "closekeyboard";
 
-        queueMicrotask(updateKeyboardState);
-
         if (prevKeyboardState === isOpened) return;
+
         if (isOpened)                       return;
+        updateKeyboardState();
 
         const event = new Event(eventName, {bubbles: true});
         window.dispatchEvent(event);
