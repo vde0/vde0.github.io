@@ -129,11 +129,11 @@ export default class Dialog extends React.Component {
             setTimeout(_ => {
                 // handler for true trigger
                 window.addEventListener("openkeyboard", this.openKeyboardHandler);
-                this.msgFieldBlock?.focus();
+                this.msgFieldBlock?.click();
             });
         } else {
             this.scrollDown("instant");
-            this.msgFieldBlock?.focus();
+            this.msgFieldBlock?.click();
         }
 
         setTimeout(() => {
