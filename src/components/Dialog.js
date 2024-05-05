@@ -110,9 +110,10 @@ export default class Dialog extends React.Component {
     constructor (props) {
         super(props);
 
-        this.onSend             = this.onSend.bind(this);
-        this.onInput            = this.onInput.bind(this);
-        this.onClickTouchDialog = this.onClickTouchDialog.bind(this);
+        this.onSend                 = this.onSend.bind(this);
+        this.onInput                = this.onInput.bind(this);
+        this.onClickTouchDialog     = this.onClickTouchDialog.bind(this);
+        this.onClickTouchSendBtn    = this.onClickTouchSendBtn.bind(this);
 
         this.state = {
             msgList: this.msgList,
@@ -163,7 +164,7 @@ export default class Dialog extends React.Component {
         return(
             <article
                 className="dialog"
-                onClick={!isMobile ? this.onClickTouchDialog : _=>{}}
+                onClick={!isMobile ? this.onClickTouchDialog : evt=>{evt.preventDefault()}}
                 onTouchStart={isMobile ? this.onClickTouchDialog : _=>{}}>
                 <ul className="dialog__msg-list" ref={el => this.msgListBlock = el}>
                     {this.state.msgList.map( (msg, msg_num) => {
@@ -196,6 +197,9 @@ export default class Dialog extends React.Component {
                         onInput={this.onInput}/>
                     <Btn
                         type="submit"
+                        onClick={!isMobile ? this.onClickTouchSendBtn : evt=>{
+                            evt.preventDefault()}}
+                        onTouchStart={isMobile ? this.onClickTouchSendBtn : _=>{}}
                         className="msg-form__send-btn"
                         content={<img src={sendBtnIc}/>} />
                 </form>
@@ -220,6 +224,9 @@ export default class Dialog extends React.Component {
     }
     onInput (evt) {
         this.msgText = evt.target.value;
+    }
+    onClickTouchSendBtn (evt) {
+        evt.preventDefault();
     }
     onClickTouchDialog (evt) {
         this.focusMsgField();
