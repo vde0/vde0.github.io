@@ -110,9 +110,9 @@ export default class Dialog extends React.Component {
     constructor (props) {
         super(props);
 
-        this.onSend         = this.onSend.bind(this);
-        this.onInput        = this.onInput.bind(this);
-        this.onClickDialog  = this.onClickDialog.bind(this);
+        this.onSend             = this.onSend.bind(this);
+        this.onInput            = this.onInput.bind(this);
+        this.onClickTouchDialog = this.onClickTouchDialog.bind(this);
 
         this.state = {
             msgList: this.msgList,
@@ -163,7 +163,8 @@ export default class Dialog extends React.Component {
         return(
             <article
                 className="dialog"
-                onClick={this.onClickDialog} onTouchStart={this.onClickDialog}>
+                onClick={!isMobile ? this.onClickTouchDialog : _=>{}}
+                onTouchStart={isMobile ? this.onClickTouchDialog : _=>{}}>
                 <ul className="dialog__msg-list" ref={el => this.msgListBlock = el}>
                     {this.state.msgList.map( (msg, msg_num) => {
                         return (
@@ -220,7 +221,7 @@ export default class Dialog extends React.Component {
     onInput (evt) {
         this.msgText = evt.target.value;
     }
-    onClickDialog (evt) {
+    onClickTouchDialog (evt) {
         this.focusMsgField();
     }
 
