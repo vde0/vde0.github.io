@@ -307,6 +307,8 @@ input, button, textarea {
 
 
 .app__footer {
+    display: absolute;
+
     height: 48px;
     margin-top: auto;
     padding-top: 24pt;
