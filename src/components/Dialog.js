@@ -180,7 +180,7 @@ export default class Dialog extends React.Component {
                 <form
                     ref={el => this.msgFormBlock = el}
                     onSubmit={this.onSend}
-                    className="msg-form dialog__msg-form">
+                    className={"dialog__msg-form msg-form " + (isMobile ? "msg-form_mobile" : "")}>
                     <input ref={el => this.msgFieldBlock = el}
                         type="text"
                         autoFocus
