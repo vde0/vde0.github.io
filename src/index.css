@@ -244,6 +244,8 @@ input, button, textarea {
 .root-document_tg {
     position: fixed;
     height: var(--tg-viewport-stable-height);
+    top: auto;
+    bottom: 0;
 }
 
 .root-document_no-scroll {
