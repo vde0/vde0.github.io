@@ -115,10 +115,10 @@ const mobile_events = new Set([
 const isMobile = ('ontouchstart' in document.documentElement && !!(navigator.userAgent.match(/Mobi/)));
 
 
-const startHeight = window.innerHeight;
+const startHeight = window.visualViewport;
 function checkMobileKeyboard () {
     if (!isMobile) return false;
-    const currentHeight = window.innerHeight;
+    const currentHeight = window.visualViewport;
     return currentHeight / startHeight <= 0.8;
 }
 
