@@ -38,7 +38,7 @@ input, button, textarea {
     padding: 6pt;
     box-sizing: border-box;
     /* background-color: var(--tg-theme-button-color); */
-    background-color: var(--custom-dark);
+    background-color: var(--tg-secondary-bg-color);;
     border: none;
     border-radius: 16px;
     -webkit-border-radius: 16px;
@@ -68,7 +68,7 @@ input, button, textarea {
 }
 
 .btn_color_blue {
-    background-color: var(--custom-blue);
+    background-color: var(--tg-theme-button-color);
 }
 
 .btn__content {
@@ -169,8 +169,8 @@ input, button, textarea {
     font-size: 1.25rem;
     outline: none;
 
-    /* border: 2px solid var(--tg-theme-bg-color); */
-    border: 2px solid var(--custom-dark);
+    border: 2px solid var(--tg-secondary-bg-color);
+    /* border: 2px solid var(--custom-dark); */
     border-radius: 12px;
     -webkit-border-radius: 12px;
     -moz-border-radius: 12px;
