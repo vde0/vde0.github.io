@@ -107,7 +107,7 @@ export default class App extends React.Component {
         return (
             <article className="app">
                 <section className={this.state.appContentClassLine}>
-                {/* <AppContainer contentType={Video} empty /> */}
+                <AppContainer contentType={Video} empty />
                 <div className="content-log">
                     <p>Mobile: {String(isMobile)} | iOS: {String(isIOS)}</p>
                     <p>updated by: {this.state.updatedBy}</p>
