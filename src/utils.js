@@ -142,7 +142,7 @@ if (isMobile) {
         updateKeyboardState();
 
         const event = new Event(eventName);
-        Telegram.WebApp.dispatchEvent(event);
+        window.dispatchEvent(event);
     });
 
     // closekeyboard event define
@@ -156,7 +156,7 @@ if (isMobile) {
         updateKeyboardState();
 
         const event = new Event(eventName);
-        Telegram.WebApp.dispatchEvent(event);
+        window.dispatchEvent(event);
     });
 }
 
