@@ -116,10 +116,10 @@ export default class App extends React.Component {
             <article className="app">
                 <div className="content-log">
                     <p>Mobile: {String(isMobile)} | iOS: {String(isIOS)}</p>
-                    <p>keyboard called by events: {this.state.keyboardStateByEvents}</p>
+                    <p>keyboard called by events: {String(this.state.keyboardStateByEvents)}</p>
                     <p>startHeight: {startHeight}</p>
                     <p>updated by: {this.state.updatedBy}</p>
-                    <p>keyboard: {this.state.keyboardState}</p>
+                    <p>keyboard: {String(this.state.keyboardState)}</p>
                     <p>innerHeight: {this.state.innerHeight}</p>
                     <p>clientHeight: {this.state.clientHeight}</p>
                     <p>offsetHeight: {this.state.offsetHeight}</p>
