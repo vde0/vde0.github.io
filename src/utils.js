@@ -116,8 +116,7 @@ const isMobile = ('ontouchstart' in document.documentElement && !!(navigator.use
 const isIOS = !!navigator.userAgent.match(/(iPhone|iPod|iPad)/);
 
 
-let startHeight = 800;
-setTimeout(_ => startHeight = window.Telegram.WebApp.viewportStableHeight, 100);
+const startHeight   = window.Telegram.WebApp.viewportStableHeight;
 function checkMobileKeyboard () {
     if (!isMobile) return false;
     const currentHeight = window.Telegram.WebApp.viewportStableHeight;
