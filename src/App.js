@@ -26,6 +26,7 @@ export default class App extends React.Component {
 
             appContentClassLine: this.appContentClassLine.getLine(),
 
+            wasOpened: false,
             innerHeight: window.innerHeight,
             clientHeight: document.documentElement.clientHeight,
             offsetHeight: document.documentElement.offsetHeight,
@@ -60,6 +61,7 @@ export default class App extends React.Component {
             this.setState({
                 appContentClassLine: this.appContentClassLine.getLine(),
                 keyboardStateByEvents: checkMobileKeyboard(),
+                wasOpened: true,
             });
         });
         window.addEventListener("closekeyboard", evt => {
@@ -117,6 +119,7 @@ export default class App extends React.Component {
                 <div className="content-log">
                     <p>Mobile: {String(isMobile)} | iOS: {String(isIOS)}</p>
                     <p>keyboard called by events: {String(this.state.keyboardStateByEvents)}</p>
+                    <p>wasOpened: {String(this.state.wasOpened)}</p>
                     <p>startHeight: {startHeight}</p>
                     <p>updated by: {this.state.updatedBy}</p>
                     <p>keyboard: {String(this.state.keyboardState)}</p>
