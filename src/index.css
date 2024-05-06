@@ -308,7 +308,7 @@ input, button, textarea {
     transform: translateY(-50%);
     color: black;
     text-shadow: 2px 2px white;
-    z-index: 1000;
+    z-index: 10000;
 }
 .content-log_hidden {
     display: none;

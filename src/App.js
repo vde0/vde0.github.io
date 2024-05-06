@@ -54,7 +54,7 @@ export default class App extends React.Component {
     }
 
     componentDidMount () {
-        this.tg.onEvent("openkeyboard", evt => {
+        window.addEventListener("openkeyboard", evt => {
             setTimeout( _ => this.showDialog() );
             this.hideFooter();
 
@@ -65,7 +65,7 @@ export default class App extends React.Component {
                 wasOpened: true,
             });
         });
-        this.tg.onEvent("closekeyboard", evt => {
+        window.addEventListener("closekeyboard", evt => {
             this.hideDialog();
             setTimeout( _ => this.showFooter() );
 
@@ -118,6 +118,7 @@ export default class App extends React.Component {
         return (
             <article className="app">
                 <div className="content-log">
+                    <p>Update num: 2</p>
                     <p>Mobile: {String(isMobile)} | iOS: {String(isIOS)}</p>
                     <p>Show Dialog Btn was clicked: {String(this.state.showDialogWasClicked)}</p>
                     <p>keyboard called by events: {String(this.state.keyboardStateByEvents)}</p>
@@ -151,7 +152,7 @@ export default class App extends React.Component {
 
     onSeeMsgs (evt) {
         this.setState({showDialogWasClicked: true});
-        if (isMobile)   this.tg.dispatchEvent( new Event("openkeyboard") );
+        if (isMobile)   window.dispatchEvent( new Event("openkeyboard") );
         else            this.toggleDialog();
     }
     onAddUser (evt) {}
