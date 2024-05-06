@@ -296,8 +296,16 @@ input, button, textarea {
 
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: end;
     gap: 16pt;
+}
+
+.content-log {
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    text-shadow: 2px 2px white;
+    z-index: 1000;
 }
 
 .app__content_for-keyboard {

@@ -1,5 +1,5 @@
 import React from 'react';
-import { checkClickByArea, checkMobileKeyboard, getClassLine, getComponentUpdateHook, isMobile } from './utils';
+import { checkClickByArea, checkMobileKeyboard, getClassLine, getComponentUpdateHook, isIOS, isMobile } from './utils';
 import AppContainer from './components/AppContainer';
 import Video from './components/Video';
 import Dialog from './components/Dialog';
@@ -25,6 +25,14 @@ export default class App extends React.Component {
             unreadedMsgCount: 1,
 
             appContentClassLine: this.appContentClassLine.getLine(),
+
+            innerHeight: window.innerHeight,
+            clientHeight: document.documentElement.clientHeight,
+            offsetHeight: document.documentElement.offsetHeight,
+            scrollHeight: document.documentElement.scrollHeight,
+            visualViewportHeight: window.visualViewport.height,
+            tgHeight: this.tg.viewportHeight,
+            tgStableHeight: this.tg.viewportStableHeight,
         };
 
         this.dialogData = {
@@ -58,13 +66,59 @@ export default class App extends React.Component {
             this.appContentClassLine.remove("app__content_for-keyboard");
             this.setState({ appContentClassLine: this.appContentClassLine.getLine() });
         });
+
+        let mode = null;
+
+        window.addEventListener("resize", evt => {
+            mode = "resize";
+
+            this.setState({
+                updatedBy: "resize",
+                innerHeight: window.innerHeight,
+                clientHeight: document.documentElement.clientHeight,
+                scrollHeight: document.documentElement.scrollHeight,
+                offsetHeight: document.documentElement.offsetHeight,
+                visualViewportHeight: window.visualViewport.height,
+                tgHeight: this.tg.viewportHeight,
+                tgStableHeight: this.tg.viewportStableHeight,
+            });
+        });
+
+        const timerID = setInterval(() => {
+            if (mode === "resize") {
+                clearInterval(timerID);
+                return;
+            }
+
+            this.setState({
+                updatedBy: "interval",
+                innerHeight: window.innerHeight,
+                clientHeight: document.documentElement.clientHeight,
+                scrollHeight: document.documentElement.scrollHeight,
+                scrollHeight: document.documentElement.scrollHeight,
+                visualViewportHeight: window.visualViewport.height,
+                tgHeight: this.tg.viewportHeight,
+                tgStableHeight: this.tg.viewportStableHeight,
+            });
+        }, 500);
     }
 
     render () {
         return (
             <article className="app">
                 <section className={this.state.appContentClassLine}>
-                <AppContainer contentType={Video} empty />
+                {/* <AppContainer contentType={Video} empty /> */}
+                <div className="content-log">
+                    <p>Mobile: {String(isMobile)} | iOS: {String(isIOS)}</p>
+                    <p>updated by: {this.state.updatedBy}</p>
+                    <p>innerHeight: {this.state.innerHeight}</p>
+                    <p>clientHeight: {this.state.clientHeight}</p>
+                    <p>offsetHeight: {this.state.offsetHeight}</p>
+                    <p>scrollHeight: {this.state.scrollHeight}</p>
+                    <p>VV height: {this.state.visualViewportHeight}</p>
+                    <p>web-app height: {this.state.tgHeight}</p>
+                    <p>web-app stable-height: {this.state.tgStableHeight}</p>
+                </div>
                 <AppContainer
                     contentType={Dialog}
                     dynamic
