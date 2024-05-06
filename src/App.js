@@ -148,7 +148,7 @@ export default class App extends React.Component {
     }
 
     onSeeMsgs (evt) {
-        if (isMobile)   window.dispatchEvent( new Event("openkeyboard") );
+        if (isMobile)   this.tg.dispatchEvent( new Event("openkeyboard") );
         else            this.toggleDialog();
     }
     onAddUser (evt) {}
