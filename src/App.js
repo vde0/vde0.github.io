@@ -53,7 +53,7 @@ export default class App extends React.Component {
     }
 
     componentDidMount () {
-        window.addEventListener("openkeyboard", evt => {
+        this.tg.onEvent("openkeyboard", evt => {
             setTimeout( _ => this.showDialog() );
             this.hideFooter();
 
@@ -64,7 +64,7 @@ export default class App extends React.Component {
                 wasOpened: true,
             });
         });
-        window.addEventListener("closekeyboard", evt => {
+        this.tg.onEvent("closekeyboard", evt => {
             this.hideDialog();
             setTimeout( _ => this.showFooter() );
 
