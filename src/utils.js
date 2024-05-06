@@ -116,10 +116,10 @@ const isMobile = ('ontouchstart' in document.documentElement && !!(navigator.use
 const isIOS = !!navigator.userAgent.match(/(iPhone|iPod|iPad)/);
 
 
-const startHeight = window.visualViewport.height;
+const startHeight = window.Telegram.WebApp.viewportStableHeight;
 function checkMobileKeyboard () {
     if (!isMobile) return false;
-    const currentHeight = window.visualViewport.height;
+    const currentHeight = window.Telegram.WebApp.viewportStableHeight;
     return currentHeight / startHeight <= 0.8;
 }
 
@@ -132,7 +132,7 @@ if (isMobile) {
     };
 
     // openkeyboard event define
-    window.addEventListener("resize", evt => {
+    Telegram.WebApp.onEvent("viewportChanged", evt => {
         const isOpened  = checkMobileKeyboard();
         const eventName = "openkeyboard";
 
@@ -141,12 +141,12 @@ if (isMobile) {
         if (!isOpened)                      return;
         updateKeyboardState();
 
-        const event = new Event(eventName, {bubbles: true});
-        window.dispatchEvent(event);
+        const event = new Event(eventName);
+        Telegram.WebApp.dispatchEvent(event);
     });
 
     // closekeyboard event define
-    window.addEventListener("resize", evt => {
+    Telegram.WebApp.onEvent("viewportChanged", evt => {
         const isOpened  = checkMobileKeyboard();
         const eventName = "closekeyboard";
 
@@ -155,8 +155,8 @@ if (isMobile) {
         if (isOpened)                       return;
         updateKeyboardState();
 
-        const event = new Event(eventName, {bubbles: true});
-        window.dispatchEvent(event);
+        const event = new Event(eventName);
+        Telegram.WebApp.dispatchEvent(event);
     });
 }
 
