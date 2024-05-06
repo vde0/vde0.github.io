@@ -11,7 +11,8 @@ export default class App extends React.Component {
     constructor (props) {
         super(props);
 
-        this.log = false;
+        this.log            = false;
+        this.showUpdateNum  = true;
 
         this.onRootClick        = this.onRootClick.bind(this);
         this.hideFooter         = this.hideFooter.bind(this);
@@ -87,7 +88,7 @@ export default class App extends React.Component {
     render () {
         return (
             <article className="app">
-                <p>Update num: 9</p>
+                {this.showUpdateNum ? <p>Update num: 10</p> : ""}
                 <div className={"content-log " + (!this.log ? "content-log_hidden" : "")}>
                     <p>Mobile: {String(isMobile)} | iOS: {String(isIOS)}</p>
                     <p>keyboardWasOpened: {String(this.state.keyboardWasOpened)}</p>
