@@ -58,7 +58,8 @@ export default class App extends React.Component {
             setTimeout( _ => this.showDialog() );
             this.hideFooter();
 
-            this.appContentClassLine.add("app__content_for-keyboard");
+            this.appContentClassLine.add(
+                isIOS ? "app__content_for-ios" : "app__content_for-keyboard");
             this.setState({
                 appContentClassLine: this.appContentClassLine.getLine(),
                 keyboardStateByEvents: checkMobileKeyboard(),
@@ -69,7 +70,8 @@ export default class App extends React.Component {
             this.hideDialog();
             setTimeout( _ => this.showFooter() );
 
-            this.appContentClassLine.remove("app__content_for-keyboard");
+            this.appContentClassLine.remove(
+                isIOS ? "app__content_for-ios" : "app__content_for-keyboard");
             this.setState({
                 appContentClassLine: this.appContentClassLine.getLine(),
                 keyboardStateByEvents: checkMobileKeyboard(),

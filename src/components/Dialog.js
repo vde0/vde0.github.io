@@ -179,7 +179,9 @@ export default class Dialog extends React.Component {
 
                 <form
                     ref={el => this.msgFormBlock = el}
-                    className={"dialog__msg-form msg-form " + (isMobile ? "msg-form_mobile" : "")}>
+                    className={
+                        "dialog__msg-form msg-form " +
+                        (isIOS ? "msg-form_ios" : isMobile ? "msg-form_mobile" : "")}>
                     <input ref={el => this.msgFieldBlock = el}
                         type="text"
                         autoFocus

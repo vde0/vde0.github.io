@@ -155,6 +155,16 @@ input, button, textarea {
     bottom: 0;
     transform: translateX(-12pt);
 }
+.msg-form_ios {
+    position: fixed;
+    
+    max-width: var(--container-max-width);
+    padding-left: 16pt;
+    padding-right: 16pt;
+    
+    bottom: 30px;
+    transform: translateX(-12pt);
+}
 
 .msg-form__field {
     height: 100%;
@@ -302,6 +312,13 @@ input, button, textarea {
     gap: 16pt;
 }
 
+.app__content_for-keyboard {
+    padding-bottom: 64px;
+}
+.app__content_for-ios {
+    padding-bottom: 94px;
+}
+
 .content-log {
     position: fixed;
     top: 50%;
@@ -312,10 +329,6 @@ input, button, textarea {
 }
 .content-log_hidden {
     display: none;
-}
-
-.app__content_for-keyboard {
-    padding-bottom: 64px;
 }
 
 .app__container {
