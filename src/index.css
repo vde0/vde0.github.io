@@ -298,6 +298,8 @@ input, button, textarea {
     flex-direction: column;
     justify-content: space-between;
     gap: 16pt;
+
+    background-color: var(--tg-theme-section-bg-color);
 }
 
 .app__content_for-keyboard {
