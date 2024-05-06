@@ -106,9 +106,7 @@ export default class App extends React.Component {
     render () {
         return (
             <article className="app">
-                <section className={this.state.appContentClassLine}>
-                <AppContainer contentType={Video} empty />
-                <div className="content-log">
+                <div className="content-log content-log_hidden">
                     <p>Mobile: {String(isMobile)} | iOS: {String(isIOS)}</p>
                     <p>updated by: {this.state.updatedBy}</p>
                     <p>innerHeight: {this.state.innerHeight}</p>
@@ -119,12 +117,15 @@ export default class App extends React.Component {
                     <p>web-app height: {this.state.tgHeight}</p>
                     <p>web-app stable-height: {this.state.tgStableHeight}</p>
                 </div>
-                <AppContainer
-                    contentType={Dialog}
-                    dynamic
-                    hook={this.dialogHook}
-                    empty={!this.state.dialogShown}
-                    data={this.dialogData} />
+
+                <section className={this.state.appContentClassLine}>
+                    <AppContainer contentType={Video} empty />
+                    <AppContainer
+                        contentType={Dialog}
+                        dynamic
+                        hook={this.dialogHook}
+                        empty={!this.state.dialogShown}
+                        data={this.dialogData} />
                 </section>
 
                 <AppFooter data={this.menuData} hidden={!this.state.footerShown} />

@@ -308,6 +308,9 @@ input, button, textarea {
     text-shadow: 2px 2px white;
     z-index: 1000;
 }
+.content-log_hidden {
+    display: none;
+}
 
 .app__content_for-keyboard {
     padding-bottom: 64px;
