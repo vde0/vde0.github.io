@@ -11,6 +11,8 @@ export default class App extends React.Component {
     constructor (props) {
         super(props);
 
+        this.log = true;
+
         this.onRootClick        = this.onRootClick.bind(this);
         this.hideFooter         = this.hideFooter.bind(this);
 
@@ -26,13 +28,8 @@ export default class App extends React.Component {
 
             appContentClassLine: this.appContentClassLine.getLine(),
 
-            showDialogWasClicked: false,
-            wasOpened: false,
-            innerHeight: window.innerHeight,
-            clientHeight: document.documentElement.clientHeight,
-            offsetHeight: document.documentElement.offsetHeight,
-            scrollHeight: document.documentElement.scrollHeight,
-            visualViewportHeight: window.visualViewport.height,
+            keyboardWasOpened: false,
+            keyboardState: null,
             tgHeight: this.tg.viewportHeight,
             tgStableHeight: this.tg.viewportStableHeight,
         };
@@ -62,8 +59,8 @@ export default class App extends React.Component {
                 isIOS ? "app__content_for-ios" : "app__content_for-keyboard");
             this.setState({
                 appContentClassLine: this.appContentClassLine.getLine(),
-                keyboardStateByEvents: checkMobileKeyboard(),
-                wasOpened: true,
+                keyboardState: checkMobileKeyboard(),
+                keyboardWasOpened: true,
             });
         });
         window.addEventListener("closekeyboard", evt => {
@@ -74,65 +71,28 @@ export default class App extends React.Component {
                 isIOS ? "app__content_for-ios" : "app__content_for-keyboard");
             this.setState({
                 appContentClassLine: this.appContentClassLine.getLine(),
-                keyboardStateByEvents: checkMobileKeyboard(),
+                keyboardState: checkMobileKeyboard(),
             });
         });
 
-        let mode = null;
-
-        this.tg.onEvent("viewportChanged", evt => {
-            mode = "resize";
+        if (this.log) this.tg.onEvent("viewportChanged", evt => {
 
             this.setState({
-                updatedBy: "resize",
-                keyboardState: checkMobileKeyboard(),
-                innerHeight: window.innerHeight,
-                clientHeight: document.documentElement.clientHeight,
-                scrollHeight: document.documentElement.scrollHeight,
-                offsetHeight: document.documentElement.offsetHeight,
-                visualViewportHeight: window.visualViewport.height,
                 tgHeight: this.tg.viewportHeight,
                 tgStableHeight: this.tg.viewportStableHeight,
             });
         });
-
-        const timerID = setInterval(() => {
-            if (mode === "resize") {
-                clearInterval(timerID);
-                return;
-            }
-
-            this.setState({
-                updatedBy: "interval",
-                keyboardState: checkMobileKeyboard(),
-                innerHeight: window.innerHeight,
-                clientHeight: document.documentElement.clientHeight,
-                scrollHeight: document.documentElement.scrollHeight,
-                scrollHeight: document.documentElement.scrollHeight,
-                visualViewportHeight: window.visualViewport.height,
-                tgHeight: this.tg.viewportHeight,
-                tgStableHeight: this.tg.viewportStableHeight,
-            });
-        }, 500);
     }
 
     render () {
         return (
             <article className="app">
-                <div className="content-log">
-                    <p>Update num: 6</p>
+                <div className={"content-log" + (!this.log ? "content-log_hidden" : "")}>
+                    <p>Update num: 7</p>
                     <p>Mobile: {String(isMobile)} | iOS: {String(isIOS)}</p>
-                    <p>Show Dialog Btn was clicked: {String(this.state.showDialogWasClicked)}</p>
-                    <p>keyboard called by events: {String(this.state.keyboardStateByEvents)}</p>
-                    <p>wasOpened: {String(this.state.wasOpened)}</p>
+                    <p>keyboardWasOpened: {String(this.state.keyboardWasOpened)}</p>
+                    <p>keyboard state: {String(this.state.keyboardState)}</p>
                     <p>startHeight: {startHeight}</p>
-                    <p>updated by: {this.state.updatedBy}</p>
-                    <p>keyboard: {String(this.state.keyboardState)}</p>
-                    <p>innerHeight: {this.state.innerHeight}</p>
-                    <p>clientHeight: {this.state.clientHeight}</p>
-                    <p>offsetHeight: {this.state.offsetHeight}</p>
-                    <p>scrollHeight: {this.state.scrollHeight}</p>
-                    <p>VV height: {this.state.visualViewportHeight}</p>
                     <p>web-app height: {this.state.tgHeight}</p>
                     <p>web-app stable-height: {this.state.tgStableHeight}</p>
                 </div>
@@ -153,7 +113,6 @@ export default class App extends React.Component {
     }
 
     onSeeMsgs (evt) {
-        this.setState({showDialogWasClicked: true});
         if (isMobile)   window.dispatchEvent( new Event("openkeyboard") );
         else            this.toggleDialog();
     }
