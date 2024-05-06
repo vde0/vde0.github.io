@@ -1,5 +1,5 @@
 import React from 'react';
-import { checkClickByArea, checkMobileKeyboard, getClassLine, getComponentUpdateHook, isIOS, isMobile } from './utils';
+import { checkClickByArea, checkMobileKeyboard, getClassLine, getComponentUpdateHook, isIOS, isMobile, startHeight } from './utils';
 import AppContainer from './components/AppContainer';
 import Video from './components/Video';
 import Dialog from './components/Dialog';
@@ -106,8 +106,9 @@ export default class App extends React.Component {
     render () {
         return (
             <article className="app">
-                <div className="content-log content-log_hidden">
+                <div className="content-log">
                     <p>Mobile: {String(isMobile)} | iOS: {String(isIOS)}</p>
+                    <p>startHeight: {startHeight}</p>
                     <p>updated by: {this.state.updatedBy}</p>
                     <p>innerHeight: {this.state.innerHeight}</p>
                     <p>clientHeight: {this.state.clientHeight}</p>

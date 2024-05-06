@@ -168,5 +168,6 @@ export {
     getComponentUpdateHook,
     checkMobileKeyboard,
     isMobile,
-    isIOS
+    isIOS,
+    startHeight,
 }
