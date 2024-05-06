@@ -38,7 +38,7 @@ input, button, textarea {
     padding: 6pt;
     box-sizing: border-box;
     /* background-color: var(--tg-theme-button-color); */
-    background-color: var(--tg-secondary-bg-color);;
+    background-color: var(--tg-secondary-bg-color);
     border: none;
     border-radius: 16px;
     -webkit-border-radius: 16px;
