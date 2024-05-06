@@ -169,8 +169,8 @@ input, button, textarea {
     font-size: 1.25rem;
     outline: none;
 
-    border: 2px solid var(--tg-secondary-bg-color);
-    /* border: 2px solid var(--custom-dark); */
+    /* border: 2px solid var(--tg-secondary-bg-color); */
+    border: 2px solid var(--custom-dark);
     border-radius: 12px;
     -webkit-border-radius: 12px;
     -moz-border-radius: 12px;
