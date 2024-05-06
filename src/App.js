@@ -87,8 +87,8 @@ export default class App extends React.Component {
     render () {
         return (
             <article className="app">
+                <p>Update num: 9</p>
                 <div className={"content-log " + (!this.log ? "content-log_hidden" : "")}>
-                    <p>Update num: 8</p>
                     <p>Mobile: {String(isMobile)} | iOS: {String(isIOS)}</p>
                     <p>keyboardWasOpened: {String(this.state.keyboardWasOpened)}</p>
                     <p>keyboard state: {String(this.state.keyboardState)}</p>

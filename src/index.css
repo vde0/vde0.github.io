@@ -259,7 +259,7 @@ input, button, textarea {
     -webkit-text-size-adjust: none;
 
     width: 100%;
-    height: 100%;
+    height: inherit;
 }
 .root-document__page::after {
     content: "";
@@ -281,8 +281,8 @@ input, button, textarea {
 
 
 #root {
-    width: 100%;
-    height: 100%;
+    width: inherit;
+    height: inherit;
 
     position: fixed;
     top: 0;
