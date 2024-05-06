@@ -330,6 +330,13 @@ input, button, textarea {
 .content-log_hidden {
     display: none;
 }
+.update-num-log {
+    position: fixed;
+    top: 0;
+    color: black;
+    text-shadow: 2px 2px white;
+    z-index: 10000;
+}
 
 .app__container {
     /* height: var(--container-height); */
