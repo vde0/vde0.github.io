@@ -298,6 +298,10 @@ input, button, textarea {
     gap: 16pt;
 }
 
+.app__content_for-keyboard {
+    padding-bottom: 61px;
+}
+
 .app__container {
     /* height: var(--container-height); */
     max-width: inherit;

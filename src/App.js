@@ -1,5 +1,5 @@
 import React from 'react';
-import { checkClickByArea, checkMobileKeyboard, getComponentUpdateHook, isMobile } from './utils';
+import { checkClickByArea, checkMobileKeyboard, getClassLine, getComponentUpdateHook, isMobile } from './utils';
 import AppContainer from './components/AppContainer';
 import Video from './components/Video';
 import Dialog from './components/Dialog';
@@ -17,10 +17,14 @@ export default class App extends React.Component {
         this.tg = this.props.telegram;
         this.props.rootHandler.setHandler("click", this.onRootClick);
 
+        this.appContentClassLine = getClassLine("app__content");
+
         this.state = {
             dialogShown: false,
             footerShown: true,
             unreadedMsgCount: 1,
+
+            appContentClassLine: this.appContentClassLine.getLine(),
         };
 
         this.dialogData = {
@@ -41,15 +45,25 @@ export default class App extends React.Component {
 
     componentDidMount () {
         window.addEventListener("openkeyboard", evt => {
-            setTimeout( _ => this.showDialog() ); this.hideFooter(); });
+            setTimeout( _ => this.showDialog() );
+            this.hideFooter();
+
+            this.appContentClassLine.add("app__content_for-keyboard");
+            this.setState({ appContentClassLine: this.appContentClassLine.getLine() });
+        });
         window.addEventListener("closekeyboard", evt => {
-            this.hideDialog(); setTimeout( _ => this.showFooter() ); });
+            this.hideDialog();
+            setTimeout( _ => this.showFooter() );
+
+            this.appContentClassLine.remove("app__content_for-keyboard");
+            this.setState({ appContentClassLine: this.appContentClassLine.getLine() });
+        });
     }
 
     render () {
         return (
             <article className="app">
-                <section className="app__content">
+                <section className={this.state.appContentClassLine}>
                 <AppContainer contentType={Video} empty />
                 <AppContainer
                     contentType={Dialog}
