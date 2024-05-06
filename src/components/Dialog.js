@@ -1,7 +1,7 @@
 import React from 'react';
 import sendBtnIc from '../icons/to-send.svg';
 import Btn from './Btn';
-import { focusAndOpenKeyboard, isMobile } from '../utils';
+import { isIOS, isMobile } from '../utils';
 
 
 let userDB = {

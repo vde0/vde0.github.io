@@ -119,8 +119,8 @@ export default class App extends React.Component {
     render () {
         return (
             <article className="app">
-                <div className="content-log">
-                    <p>Update num: 4</p>
+                <div className="content-log content-log_hidden">
+                    <p>Update num: 5</p>
                     <p>Mobile: {String(isMobile)} | iOS: {String(isIOS)}</p>
                     <p>Show Dialog Btn was clicked: {String(this.state.showDialogWasClicked)}</p>
                     <p>keyboard called by events: {String(this.state.keyboardStateByEvents)}</p>
