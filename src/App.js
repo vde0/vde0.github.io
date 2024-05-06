@@ -26,6 +26,7 @@ export default class App extends React.Component {
 
             appContentClassLine: this.appContentClassLine.getLine(),
 
+            showDialogWasClicked: false,
             wasOpened: false,
             innerHeight: window.innerHeight,
             clientHeight: document.documentElement.clientHeight,
@@ -118,6 +119,7 @@ export default class App extends React.Component {
             <article className="app">
                 <div className="content-log">
                     <p>Mobile: {String(isMobile)} | iOS: {String(isIOS)}</p>
+                    <p>Show Dialog Btn was clicked: {String(this.state.showDialogWasClicked)}</p>
                     <p>keyboard called by events: {String(this.state.keyboardStateByEvents)}</p>
                     <p>wasOpened: {String(this.state.wasOpened)}</p>
                     <p>startHeight: {startHeight}</p>
@@ -148,6 +150,7 @@ export default class App extends React.Component {
     }
 
     onSeeMsgs (evt) {
+        this.setState({showDialogWasClicked: true});
         if (isMobile)   this.tg.dispatchEvent( new Event("openkeyboard") );
         else            this.toggleDialog();
     }
