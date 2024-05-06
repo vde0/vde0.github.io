@@ -37,13 +37,13 @@ input, button, textarea {
 
     padding: 6pt;
     box-sizing: border-box;
-    background-color: var(--custom-dark);
+    background-color: var(--tg-theme-button-color);
     border: none;
     border-radius: 16px;
     -webkit-border-radius: 16px;
     -moz-border-radius: 16px;
     
-    color: white;
+    color: var(--tg-theme-button-text-color);
     font-family: inherit;
     cursor: pointer;
     
@@ -135,7 +135,9 @@ input, button, textarea {
     -webkit-border-radius: 12px;
     -moz-border-radius: 12px;
 
-    background-color: #171717;
+    background-color: var(--custom-black);
+    background-color: var(--tg-theme-bg-color);
+
 
     display: flex;
     gap: 6pt;
@@ -156,17 +158,17 @@ input, button, textarea {
 .msg-form__field {
     height: 100%;
     width: 100%;
-    background-color: var(--custom-dark);
+    background-color: var(--tg-theme-bg-color);
 
     padding: 0;
     padding-left: 8pt;
     box-sizing: border-box;
     
-    color: white;
+    color: var(--tg-theme-text-color);
     font-size: 1.25rem;
     outline: none;
 
-    border: 2px solid var(--custom-dark);
+    border: 2px solid var(--tg-theme-bg-color);
     border-radius: 12px;
     -webkit-border-radius: 12px;
     -moz-border-radius: 12px;
@@ -181,7 +183,7 @@ input, button, textarea {
 .msg-form__field-placeholder {
     height: 100%;
     width: 100%;
-    background-color: var(--custom-dark);
+    background-color: var(--tg-theme-bg-color);
 
     padding: 0;
     padding-left: 8pt;
@@ -233,8 +235,8 @@ input, button, textarea {
 
 .root-document__page {
     margin: 0;
-    background-color: var(--custom-black);
-    color: var(--cutom-light);
+    background-color: var(--tg-theme-bg-color);
+    color: var(--tg-theme-text-color);
 
     font-family: "Open Sans", sans-serif;
     -webkit-text-size-adjust: none;
