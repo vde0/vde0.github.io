@@ -179,7 +179,6 @@ export default class Dialog extends React.Component {
 
                 <form
                     ref={el => this.msgFormBlock = el}
-                    onSubmit={this.onSend}
                     className={"dialog__msg-form msg-form " + (isMobile ? "msg-form_mobile" : "")}>
                     <input ref={el => this.msgFieldBlock = el}
                         type="text"
@@ -188,6 +187,7 @@ export default class Dialog extends React.Component {
                         onInput={this.onInput}/>
                     <Btn
                         type="submit"
+                        onClick={this.onSend}
                         className="msg-form__send-btn"
                         content={<img src={sendBtnIc}/>} />
                 </form>
