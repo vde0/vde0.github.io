@@ -57,23 +57,30 @@ export default class App extends React.Component {
             this.hideFooter();
 
             this.appContentClassLine.add("app__content_for-keyboard");
-            this.setState({ appContentClassLine: this.appContentClassLine.getLine() });
+            this.setState({
+                appContentClassLine: this.appContentClassLine.getLine(),
+                keyboardStateByEvents: checkMobileKeyboard(),
+            });
         });
         window.addEventListener("closekeyboard", evt => {
             this.hideDialog();
             setTimeout( _ => this.showFooter() );
 
             this.appContentClassLine.remove("app__content_for-keyboard");
-            this.setState({ appContentClassLine: this.appContentClassLine.getLine() });
+            this.setState({
+                appContentClassLine: this.appContentClassLine.getLine(),
+                keyboardStateByEvents: checkMobileKeyboard(),
+            });
         });
 
         let mode = null;
 
-        window.addEventListener("resize", evt => {
+        this.tg.onEvent("viewportChanged", evt => {
             mode = "resize";
 
             this.setState({
                 updatedBy: "resize",
+                keyboardState: checkMobileKeyboard(),
                 innerHeight: window.innerHeight,
                 clientHeight: document.documentElement.clientHeight,
                 scrollHeight: document.documentElement.scrollHeight,
@@ -92,6 +99,7 @@ export default class App extends React.Component {
 
             this.setState({
                 updatedBy: "interval",
+                keyboardState: checkMobileKeyboard(),
                 innerHeight: window.innerHeight,
                 clientHeight: document.documentElement.clientHeight,
                 scrollHeight: document.documentElement.scrollHeight,
@@ -108,8 +116,10 @@ export default class App extends React.Component {
             <article className="app">
                 <div className="content-log">
                     <p>Mobile: {String(isMobile)} | iOS: {String(isIOS)}</p>
+                    <p>keyboard called by events: {this.state.keyboardStateByEvents}</p>
                     <p>startHeight: {startHeight}</p>
                     <p>updated by: {this.state.updatedBy}</p>
+                    <p>keyboard: {this.state.keyboardState}</p>
                     <p>innerHeight: {this.state.innerHeight}</p>
                     <p>clientHeight: {this.state.clientHeight}</p>
                     <p>offsetHeight: {this.state.offsetHeight}</p>
