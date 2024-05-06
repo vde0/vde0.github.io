@@ -49,6 +49,7 @@ export default class App extends React.Component {
     render () {
         return (
             <article className="app">
+                <section className="app__content">
                 <AppContainer contentType={Video} empty />
                 <AppContainer
                     contentType={Dialog}
@@ -56,6 +57,7 @@ export default class App extends React.Component {
                     hook={this.dialogHook}
                     empty={!this.state.dialogShown}
                     data={this.dialogData} />
+                </section>
 
                 <AppFooter data={this.menuData} hidden={!this.state.footerShown} />
             </article>

@@ -43,7 +43,8 @@ input, button, textarea {
     -webkit-border-radius: 16px;
     -moz-border-radius: 16px;
     
-    color: var(--tg-theme-button-text-color);
+    /* color: var(--tg-theme-button-text-color); */
+    color: white;
     font-family: inherit;
     cursor: pointer;
     
@@ -138,7 +139,6 @@ input, button, textarea {
     background-color: var(--custom-black);
     background-color: var(--tg-theme-bg-color);
 
-
     display: flex;
     gap: 6pt;
     align-items: stretch;
@@ -206,6 +206,9 @@ input, button, textarea {
     padding: 0;
     padding-right: 5px;
     height: 100%;
+
+    background-color: var(--tg-theme-bg-color);
+    border: solid 1px var(--custom-dark);
 
     border-radius: 12px;
     -webkit-border-radius: 12px;
@@ -279,21 +282,31 @@ input, button, textarea {
     margin-left: auto;
     margin-right: auto;
 
-    /* display: flex;
-    flex-direction: column; */
-
     box-sizing: border-box;
     padding: 12pt 12pt;
     padding-bottom: 0;
+}
+
+.app__content {
+    height: 100%;
+    padding-bottom: 72pt;
+    box-sizing: border-box;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 16pt;
 }
 
 .app__container {
     /* height: var(--container-height); */
     max-width: inherit;
     width: inherit;
-    height: 40%;
+    height: 50%;
     /* max-height: var(--container-max-height); */
-    flex-grow: 100;
+    /* flex-grow: 100; */
+
+    outline: solid 1px var(--custom-dark);
 
     border-radius: 16px;
     -webkit-border-radius: 16px;
@@ -302,7 +315,7 @@ input, button, textarea {
     overflow: hidden;
 }
 .app__container:not(:last-of-type) {
-    margin-bottom: 16pt;
+    /* margin-bottom: 16pt; */
 }
 
 .app__container_empty {
@@ -323,13 +336,7 @@ input, button, textarea {
 .app__footer {
     display: absolute;
 
-    height: 48px;
-    margin-top: auto;
-    padding-top: 24pt;
-    padding-bottom: 8pt;
-    box-sizing: content-box;
-    
-    max-width: inherit;
+    box-sizing: content-box;    
     
     border-radius: 16px;
     -webkit-border-radius: 16px;
@@ -348,17 +355,18 @@ input, button, textarea {
 
 .bottom-menu {
     display: flex;
-    /* gap: 8pt; */
     gap: 4pt;
     justify-content: space-between;
 
-    height: inherit;
-    max-width: inherit;
+    height: 36pt;
+    max-width: var(--container-max-width);
     width: 100%;
+
+    box-sizing: border-box;
+    padding: 0;
     padding-left: 12pt;
     padding-right: 12pt;
-    padding-top: 0;
-    box-sizing: border-box;
+    margin: 0;
 
     transform: translateX(-12pt);
 
