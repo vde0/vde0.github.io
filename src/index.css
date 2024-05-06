@@ -304,6 +304,7 @@ input, button, textarea {
     position: fixed;
     top: 50%;
     transform: translateY(-50%);
+    color: black;
     text-shadow: 2px 2px white;
     z-index: 1000;
 }
