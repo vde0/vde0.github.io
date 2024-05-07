@@ -357,8 +357,8 @@ input, button, textarea {
 
     overflow: hidden;
 }
-.app__container:not(:last-of-type) {
-    /* margin-bottom: 16pt; */
+.app__container_fixing-height {
+    flex-grow: auto;
 }
 
 .app__container_empty {
