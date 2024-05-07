@@ -84,8 +84,11 @@ export default class AppContainer extends React.Component {
     }
 
     resizeHandler (evt) {
-        if (!this.props.dynamic || this.props.empty) return;
-        console.log(this.startHeight - startHeight + telegram.viewportStableHeight);
+        if (!this.props.dynamic || this.props.empty) {
+            this.setState({ computedHeight: this.startHeight });
+            return;
+        }
+        
         this.setState({
             computedHeight: this.startHeight - startHeight + telegram.viewportStableHeight,
         });
