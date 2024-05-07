@@ -7,6 +7,9 @@
     --custom-red: #FE0000;
     --custom-blue: #54A9E9;
     --custom-orange: #FF8B49;
+
+    --tg-top: calc(100vh - var(--tg-viewport-stable-height));
+    --tg-bottom: 0;
 }
 
 @media screen and (min-width: 992.2px) {
@@ -152,7 +155,7 @@ input, button, textarea {
     padding-left: 16pt;
     padding-right: 16pt;
     
-    bottom: 0;
+    bottom: var(--tg-bottom);
     transform: translateX(-12pt);
 }
 .msg-form_ios {
@@ -162,7 +165,7 @@ input, button, textarea {
     padding-left: 16pt;
     padding-right: 16pt;
     
-    bottom: 30px;
+    bottom: 24pt;
     transform: translateX(-12pt);
 }
 
