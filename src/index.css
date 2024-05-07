@@ -346,7 +346,7 @@ input, button, textarea {
     max-width: inherit;
     width: inherit;
 
-    max-height: 50%;
+    max-height: 45%;
     flex-grow: 1;
 
     outline: solid 1px var(--custom-dark);
