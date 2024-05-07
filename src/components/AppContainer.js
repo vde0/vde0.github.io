@@ -25,8 +25,12 @@ export default class AppContainer extends React.Component {
 
     componentDidMount () {
         const computedHeight    = getComputedStyle(this.containerSection).height;
-        this.containerSection.style.setProperty("height", computedHeight);
-        this.setState({ classLine: this.classLine.add("app__container_fixing-height").getLine() });
+        const computedTop       = this.containerSection.offsetTop;
+        setTimeout(_ => {
+            this.containerSection.style.setProperty("height", computedHeight);
+            this.containerSection.style.setProperty("top", computedTop + "px");
+            this.setState({ classLine: this.classLine.add("app__container_fixing-height").getLine() });
+        });
     }
 
     render () {
