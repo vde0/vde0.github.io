@@ -309,7 +309,7 @@ input, button, textarea {
 
     display: flex;
     flex-direction: column;
-    justify-content: end;
+    justify-content: start;
     gap: 16pt;
 }
 
@@ -344,9 +344,8 @@ input, button, textarea {
     max-width: inherit;
     width: inherit;
     height: 100%;
-    max-height: 48%;
+    max-height: 39vh;
     /* max-height: var(--container-max-height); */
-    /* flex-grow: 100; */
 
     outline: solid 1px var(--custom-dark);
 
@@ -370,7 +369,7 @@ input, button, textarea {
 
 .app__container_dynamic {
     max-height: 100%;
-    flex-shrink: 100;
+    flex-shrink: 1000;
 }
 
 
