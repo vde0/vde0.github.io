@@ -2,9 +2,10 @@ import React from 'react';
 import {createRoot} from 'react-dom/client';
 import App from './App';
 import './index.css'
+import { telegram } from './utils';
 
-const tg = window.Telegram.WebApp;
-tg.expand();
+
+telegram.expand();
 
 
 const rootDOM   = document.getElementById("root");
@@ -16,4 +17,4 @@ const handlerWrapper = {
     }
 };
 
-root.render(<App telegram={tg} rootHandler={handlerWrapper} />);
+root.render(<App rootHandler={handlerWrapper} />);

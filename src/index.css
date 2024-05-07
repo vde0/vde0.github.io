@@ -345,8 +345,7 @@ input, button, textarea {
 .app__container {
     max-width: inherit;
     width: inherit;
-
-    /* max-height: 45%; */
+    
     height: 100%;
     flex-grow: 1;
 

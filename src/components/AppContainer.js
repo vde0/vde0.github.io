@@ -1,5 +1,6 @@
 import React from 'react';
-import { getClassLine, isMobile } from '../utils';
+import { getClassLine, isMobile, startHeight, telegram } from '../utils';
+
 
 export default class AppContainer extends React.Component {
 
@@ -11,6 +12,8 @@ export default class AppContainer extends React.Component {
         super(props);
 
         this.hook?.connect(this.updateFunc, this);
+
+        this.resizeHandler  = this.resizeHandler.bind(this);
         
         if (!this.props.contentType || this.props.empty) {
             this.classLine.add("app__container_empty");
@@ -20,22 +23,38 @@ export default class AppContainer extends React.Component {
             empty: this.props.empty,
             classLine: this.classLine.getLine(),
             contentType: this.contentType,
+            rendered: false,
         };
     }
 
     componentDidMount () {
-        const computedHeight    = getComputedStyle(this.containerSection).height;
-        const computedTop       = this.containerSection.offsetTop;
+
         setTimeout(_ => {
-            this.containerSection.style.setProperty("height", computedHeight);
-            this.containerSection.style.setProperty("top", computedTop + "px");
-            this.setState({ classLine: this.classLine.add("app__container_fixing-height").getLine() });
+            // this.containerSection.style.setProperty("height", computedHeight);
+            // this.containerSection.style.setProperty("top", computedTop + "px");
+            this.startHeight    = Number(
+                getComputedStyle(this.containerSection).height.slice(0, -2) );
+            this.setState({
+                classLine: this.classLine.add("app__container_fixing-height").getLine(),
+                computedHeight: this.startHeight,
+                computedTop: this.containerSection.offsetTop,
+                rendered: true,
+            });
+
+            telegram.onEvent("viewportChanged", this.resizeHandler);
         });
     }
 
     render () {
         return(
-            <section ref={el => this.containerSection = el} className={this.state.classLine}>
+            <section
+                ref={el => this.containerSection = el}
+                className={this.state.classLine}
+                style={this.state.rendered ? {
+                    top: this.state.computedTop,
+                    height: this.state.computedHeight,
+                } : {}}
+            >
                 {this.state.contentType}
             </section>
         );
@@ -51,16 +70,24 @@ export default class AppContainer extends React.Component {
             this.contentType    = <this.props.contentType data={this.props.data} />;
         }
         
-        if          (this.props.dynamic && !this.props.empty) {
-            this.classLine.add("app__container_dynamic");
-        } else if   (this.props.dynamic && this.props.empty) {
-            this.classLine.remove("app__container_dynamic");
-        }
+        // if          (this.props.dynamic && !this.props.empty) {
+        //     this.classLine.add("app__container_dynamic");
+        // } else if   (this.props.dynamic && this.props.empty) {
+        //     this.classLine.remove("app__container_dynamic");
+        // }
 
         this.setState({
             empty: this.props.empty,
             classLine: this.classLine.getLine(),
             contentType: this.contentType,
+        });
+    }
+
+    resizeHandler (evt) {
+        if (!this.props.dynamic || this.props.empty) return;
+        console.log(this.startHeight - startHeight + telegram.viewportStableHeight);
+        this.setState({
+            computedHeight: this.startHeight - startHeight + telegram.viewportStableHeight,
         });
     }
 }

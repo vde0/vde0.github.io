@@ -1,5 +1,5 @@
 import React from 'react';
-import { checkClickByArea, checkMobileKeyboard, getClassLine, getComponentUpdateHook, isIOS, isMobile, startHeight } from './utils';
+import { checkClickByArea, checkMobileKeyboard, getClassLine, getComponentUpdateHook, isIOS, isMobile, startHeight, telegram } from './utils';
 import AppContainer from './components/AppContainer';
 import Video from './components/Video';
 import Dialog from './components/Dialog';
@@ -17,9 +17,7 @@ export default class App extends React.Component {
         this.onRootClick        = this.onRootClick.bind(this);
         this.hideFooter         = this.hideFooter.bind(this);
 
-        this.tg = this.props.telegram;
         this.props.rootHandler.setHandler("click", this.onRootClick);
-
         this.appContentClassLine = getClassLine("app__content");
 
         this.state = {
@@ -32,8 +30,8 @@ export default class App extends React.Component {
             keyboardWasOpened: false,
             keyboardState: null,
             windowHeight: window.innerHeight,
-            tgHeight: this.tg.viewportHeight,
-            tgStableHeight: this.tg.viewportStableHeight,
+            tgHeight: telegram.viewportHeight,
+            tgStableHeight: telegram.viewportStableHeight,
         };
 
         this.dialogData = {
@@ -81,8 +79,8 @@ export default class App extends React.Component {
 
             this.setState({
                 windowHeight: window.innerHeight,
-                tgHeight: this.tg.viewportHeight,
-                tgStableHeight: this.tg.viewportStableHeight,
+                tgHeight: telegram.viewportHeight,
+                tgStableHeight: telegram.viewportStableHeight,
             });
         });
     }
@@ -90,7 +88,7 @@ export default class App extends React.Component {
     render () {
         return (
             <article className="app">
-                {this.showUpdateNum ? <p className="update-num-log">Update num: 22.1</p> : ""}
+                {this.showUpdateNum ? <p className="update-num-log">Update num: 22.2</p> : ""}
                 <div className={"content-log " + (!this.log ? "content-log_hidden" : "")}>
                     <p>Mobile: {String(isMobile)} | iOS: {String(isIOS)}</p>
                     <p>keyboardWasOpened: {String(this.state.keyboardWasOpened)}</p>

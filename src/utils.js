@@ -1,3 +1,6 @@
+const telegram  = window.Telegram.WebApp;
+
+
 function checkAncestor (el, selector) {
     return !!el.closest(selector);
 }
@@ -116,10 +119,10 @@ const isMobile = ('ontouchstart' in document.documentElement && !!(navigator.use
 const isIOS = !!navigator.userAgent.match(/(iPhone|iPod|iPad)/);
 
 
-const startHeight   = window.Telegram.WebApp.viewportStableHeight;
+const startHeight   = telegram.viewportStableHeight;
 function checkMobileKeyboard () {
     if (!isMobile) return false;
-    const currentHeight = window.Telegram.WebApp.viewportStableHeight;
+    const currentHeight = telegram.viewportStableHeight;
     return currentHeight / startHeight <= 0.8;
 }
 
@@ -132,7 +135,7 @@ if (isMobile) {
     };
 
     // openkeyboard event define
-    Telegram.WebApp.onEvent("viewportChanged", evt => {
+    telegram.onEvent("viewportChanged", evt => {
         const isOpened  = checkMobileKeyboard();
         const eventName = "openkeyboard";
 
@@ -146,7 +149,7 @@ if (isMobile) {
     });
 
     // closekeyboard event define
-    Telegram.WebApp.onEvent("viewportChanged", evt => {
+    telegram.onEvent("viewportChanged", evt => {
         const isOpened  = checkMobileKeyboard();
         const eventName = "closekeyboard";
 
@@ -167,6 +170,7 @@ export {
     getClassLine,
     getComponentUpdateHook,
     checkMobileKeyboard,
+    telegram,
     isMobile,
     isIOS,
     startHeight,
