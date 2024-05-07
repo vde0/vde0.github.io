@@ -9,9 +9,9 @@
     --custom-orange: #FF8B49;
 
     --app-padding: 12pt;
-    --app-padding-x: var(--app-padding);
+    --app-padding-x: 8pt;
     --app-padding-y: var(--app-padding);
-    --app-padding-top: var(--app-padding-y);
+    --app-padding-top: 16pt;
     --app-padding-left: var(--app-padding-x);
     --app-padding-bottom: 0;
     --app-padding-right: var(--app-padding-x);
@@ -21,9 +21,11 @@
 
     --tg-top: calc(100vh - var(--tg-viewport-stable-height));
     --tg-bottom: 0;
+
+    --container-max-width: 454px;
 }
 
-@media screen and (min-width: 992.2px) {
+/* @media screen and (min-width: 992.2px) {
     :root {
         --container-height: 288px;
         --container-max-height: 33vh;
@@ -36,7 +38,7 @@
         --container-height: 288px;
         --container-max-width: 454px;
     }
-}
+} */
 
 
 input, button, textarea {
