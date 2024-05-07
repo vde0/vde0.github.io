@@ -289,7 +289,7 @@ input, button, textarea {
     height: inherit;
 
     position: fixed;
-    top: 0;
+    top: var(--tg-top);
     left: 0;
 }
 
