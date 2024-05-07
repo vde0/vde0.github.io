@@ -358,7 +358,7 @@ input, button, textarea {
     overflow: hidden;
 }
 .app__container_fixing-height {
-    flex-grow: auto;
+    flex-grow: 0;
 }
 
 .app__container_empty {
