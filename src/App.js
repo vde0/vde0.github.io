@@ -31,6 +31,7 @@ export default class App extends React.Component {
 
             keyboardWasOpened: false,
             keyboardState: null,
+            windowHeight: window.innerHeight,
             tgHeight: this.tg.viewportHeight,
             tgStableHeight: this.tg.viewportStableHeight,
         };
@@ -76,9 +77,10 @@ export default class App extends React.Component {
             });
         });
 
-        if (this.log) this.tg.onEvent("viewportChanged", evt => {
+        if (this.log) setInterval(_ => {
 
             this.setState({
+                windowHeight: window.innerHeight,
                 tgHeight: this.tg.viewportHeight,
                 tgStableHeight: this.tg.viewportStableHeight,
             });
@@ -88,12 +90,13 @@ export default class App extends React.Component {
     render () {
         return (
             <article className="app">
-                {this.showUpdateNum ? <p className="update-num-log">Update num: 14</p> : ""}
+                {this.showUpdateNum ? <p className="update-num-log">Update num: 14.1</p> : ""}
                 <div className={"content-log " + (!this.log ? "content-log_hidden" : "")}>
                     <p>Mobile: {String(isMobile)} | iOS: {String(isIOS)}</p>
                     <p>keyboardWasOpened: {String(this.state.keyboardWasOpened)}</p>
                     <p>keyboard state: {String(this.state.keyboardState)}</p>
                     <p>startHeight: {startHeight}</p>
+                    <p>window height: {this.state.windowHeight}</p>
                     <p>web-app height: {this.state.tgHeight}</p>
                     <p>web-app stable-height: {this.state.tgStableHeight}</p>
                 </div>
