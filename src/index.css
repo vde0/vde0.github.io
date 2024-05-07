@@ -13,7 +13,7 @@
     --app-padding-y: var(--app-padding);
     --app-padding-top: 16pt;
     --app-padding-left: var(--app-padding-x);
-    --app-padding-bottom: 0;
+    --app-padding-bottom: 0pt;
     --app-padding-right: var(--app-padding-x);
 
     --app-inner-width: calc(100% - var(--app-padding-left) - var(--app-padding-right));
@@ -304,13 +304,14 @@ input, button, textarea {
 
 
 .app {
-    position: relative;
+    position: absolute;
+    margin: auto;
+    left: 0;
+    right: 0;
 
-    height: 100%;
-    width: 100%;
+    height: var(--app-inner-height);
+    width: var(--app-inner-width);
     max-width: var(--container-max-width);
-    margin-left: auto;
-    margin-right: auto;
     
     padding: var(--app-padding-y) var(--app-padding-x);
     padding-top: var(--app-padding-top);
@@ -321,7 +322,7 @@ input, button, textarea {
 
 .app__content {
     height: 100%;
-    width: inherit;
+    width: 100%;
     padding-bottom: 72pt;
     box-sizing: border-box;
 
@@ -362,7 +363,7 @@ input, button, textarea {
     overflow: hidden;
 
     max-width: inherit;
-    width: inherit;
+    width: 100%;
 
     height: 100%;
     flex-grow: 1;
@@ -377,6 +378,7 @@ input, button, textarea {
     position: absolute;
     flex-grow: 0;
     
+    max-width: 80vh;
     width: var(--app-inner-width);
     left: var(--app-padding-left);
 }
