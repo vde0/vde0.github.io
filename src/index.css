@@ -169,7 +169,7 @@ input, button, textarea {
 }
 .msg-form_ios {
     position: fixed;
-    
+
     width: var(--app-inner-width);
     
     bottom: calc(var(--tg-bottom) + 24pt);
@@ -427,14 +427,7 @@ input, button, textarea {
     justify-content: space-between;
 
     height: 100%;
-    max-width: var(--container-max-width);
     width: 100%;
-
-    box-sizing: border-box;
-    padding: 0;
-    padding-left: 12pt;
-    padding-right: 12pt;
-    margin: 0;
 }
 
 .bottom-menu__btn {
