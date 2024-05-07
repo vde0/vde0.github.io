@@ -42,7 +42,7 @@ export default class AppContainer extends React.Component {
             });
 
             telegram.onEvent("viewportChanged", this.resizeHandler);
-        });
+        }, 100);
     }
 
     render () {
@@ -88,7 +88,7 @@ export default class AppContainer extends React.Component {
             this.setState({ computedHeight: this.startHeight });
             return;
         }
-        
+
         this.setState({
             computedHeight: this.startHeight - startHeight + telegram.viewportStableHeight,
         });
