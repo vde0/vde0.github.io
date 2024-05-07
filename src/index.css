@@ -163,8 +163,6 @@ input, button, textarea {
     position: fixed;
     
     width: var(--app-inner-width);
-    padding-left: 16pt;
-    padding-right: 16pt;
     
     bottom: var(--tg-bottom);
     left: var(--app-padding-left);
@@ -173,8 +171,6 @@ input, button, textarea {
     position: fixed;
     
     width: var(--app-inner-width);
-    padding-left: 16pt;
-    padding-right: 16pt;
     
     bottom: calc(var(--tg-bottom) + 24pt);
     left: var(--app-padding-left);
