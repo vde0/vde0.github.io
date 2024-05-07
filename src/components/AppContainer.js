@@ -23,9 +23,14 @@ export default class AppContainer extends React.Component {
         };
     }
 
+    componentDidMount () {
+        const computedHeight    = getComputedStyle(this.containerSection).height;
+        this.containerSection.style.setProperty("height", computedHeight);
+    }
+
     render () {
         return(
-            <section className={this.state.classLine}>
+            <section ref={el => this.containerSection = el} className={this.state.classLine}>
                 {this.state.contentType}
             </section>
         );
