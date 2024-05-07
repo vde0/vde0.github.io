@@ -311,10 +311,12 @@ input, button, textarea {
     max-width: var(--container-max-width);
     margin-left: auto;
     margin-right: auto;
-
-    box-sizing: border-box;
-    padding: 12pt 12pt;
-    padding-bottom: 0;
+    
+    padding: var(--app-padding-y) var(--app-padding-x);
+    padding-top: var(--app-padding-top);
+    padding-left: var(--app-padding-left);
+    padding-bottom: var(--app-padding-bottom);
+    padding-right: var(--app-padding-right);
 }
 
 .app__content {
@@ -356,13 +358,20 @@ input, button, textarea {
 }
 
 .app__container {
+    position: relative;
+    overflow: hidden;
+
     max-width: inherit;
     width: inherit;
 
     height: 100%;
     flex-grow: 1;
 
-    overflow: hidden;
+    outline: solid 1px var(--custom-dark);
+
+    border-radius: 16px;
+    -webkit-border-radius: 16px;
+    -moz-border-radius: 16px;
 }
 .app__container_fixing-height {
     position: absolute;
@@ -370,12 +379,6 @@ input, button, textarea {
     
     width: var(--app-inner-width);
     left: var(--app-padding-left);
-
-    outline: solid 1px var(--custom-dark);
-
-    border-radius: 16px;
-    -webkit-border-radius: 16px;
-    -moz-border-radius: 16px;
 }
 
 .app__container_empty::before {
