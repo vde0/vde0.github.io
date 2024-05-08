@@ -1,5 +1,6 @@
 import React from 'react';
-import { getClassLine, isMobile, setMacrotask, startHeight, telegram } from '../utils';
+import { getClassLine, isMobile, startHeight, telegram } from '../utils/utils';
+import TaskManager from '../utils/TaskManager';
 
 
 export default class AppContainer extends React.Component {
@@ -29,8 +30,7 @@ export default class AppContainer extends React.Component {
 
     componentDidMount () {
 
-        setMacrotask(_ => {
-            console.log("lol");
+        TaskManager.setMacrotask(_ => {
             this.startHeight    = Number(
                 getComputedStyle(this.containerSection).height.slice(0, -2) );
             this.setState({

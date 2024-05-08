@@ -1,5 +1,5 @@
 import React from 'react';
-import { getClassLine } from '../utils';
+import { getClassLine } from '../utils/utils';
 
 export default class Btn extends React.Component {
 

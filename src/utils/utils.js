@@ -1,3 +1,5 @@
+import TaskManager from "./TaskManager";
+
 const telegram  = window.Telegram.WebApp;
 
 
@@ -8,30 +10,6 @@ function checkAncestor (el, selector) {
 function checkClickByArea (evt, selector) {
     const el = evt.target;
     return el.matches(selector) || checkAncestor(el, selector);
-}
-
-
-function setMacrotask (func, placeNumber = 1) {
-    if (typeof func !== "function")         throw TypeError(
-        "\"func\" arg of the setMacrotask() util must be a function");
-    if (typeof placeNumber !== "number")    throw TypeError(
-        "\"placeNumber\" arg of the setMacrotask() util must be a number");
-    if (placeNumber <= -1)                  throw RangeError(
-        "\"placeNumber\" arg of the setMacrotask() util must be a range the 1..Infinity");
-    
-    if (placeNumber === 1)  setTimeout(func);
-    else                    setTimeout( setMacrotask.bind(null, func, --placeNumber) );
-}
-function setMicrotask (func, placeNumber = 1) {
-    if (typeof func !== "function")         throw TypeError(
-        "\"func\" arg of the setMicrotask() util must be a function");
-    if (typeof placeNumber !== "number")    throw TypeError(
-        "\"placeNumber\" arg of the setMicrotask() util must be a number");
-    if (placeNumber <= -1)                  throw RangeError(
-        "\"placeNumber\" arg of the setMicrotask() util must be of range the 1..Infinity");
-    
-    if (placeNumber === 1)  queueMicrotask(func);
-    else                    queueMicrotask( setMicrotask.bind(null, func, --placeNumber) );
 }
 
 
@@ -187,7 +165,7 @@ if (isMobile) {
     });
 
     window.addEventListener("load", evt => {
-        setMacrotask(
+        TaskManager.setMacrotask(
             _ => window.dispatchEvent( new Event("touchend", {bubbles: true}) ),
             15);
     }, {once: true});
@@ -195,8 +173,6 @@ if (isMobile) {
 
 
 export {
-    setMacrotask,
-    setMicrotask,
     checkAncestor,
     checkClickByArea,
     getClassLine,

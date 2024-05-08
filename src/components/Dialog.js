@@ -1,7 +1,7 @@
 import React from 'react';
 import sendBtnIc from '../icons/to-send.svg';
 import Btn from './Btn';
-import { isIOS, isMobile } from '../utils';
+import { isIOS, isMobile } from '../utils/utils';
 
 
 let userDB = {
