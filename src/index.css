@@ -361,8 +361,7 @@ input, button, textarea {
 .app__container {
     position: relative;
     overflow: hidden;
-
-    max-width: inherit;
+    
     width: 100%;
 
     height: 100%;
@@ -378,7 +377,6 @@ input, button, textarea {
     position: absolute;
     flex-grow: 0;
     
-    max-width: 80vh;
     width: var(--app-inner-width);
     left: var(--app-padding-left);
 }
