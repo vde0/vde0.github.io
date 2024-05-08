@@ -11,6 +11,30 @@ function checkClickByArea (evt, selector) {
 }
 
 
+function setMacrotask (func, placeNumber = 1) {
+    if (typeof func !== "function")         throw TypeError(
+        "\"func\" arg of the setMacrotask() util must be a function");
+    if (typeof placeNumber !== "number")    throw TypeError(
+        "\"placeNumber\" arg of the setMacrotask() util must be a number");
+    if (placeNumber <= -1)                  throw RangeError(
+        "\"placeNumber\" arg of the setMacrotask() util must be a range the 1..Infinity");
+    
+    if (placeNumber === 1)  setTimeout(func);
+    else                    setTimeout( setMacrotask.bind(null, func, --placeNumber) );
+}
+function setMicrotask (func, placeNumber = 1) {
+    if (typeof func !== "function")         throw TypeError(
+        "\"func\" arg of the setMicrotask() util must be a function");
+    if (typeof placeNumber !== "number")    throw TypeError(
+        "\"placeNumber\" arg of the setMicrotask() util must be a number");
+    if (placeNumber <= -1)                  throw RangeError(
+        "\"placeNumber\" arg of the setMicrotask() util must be of range the 1..Infinity");
+    
+    if (placeNumber === 1)  queueMicrotask(func);
+    else                    queueMicrotask( setMicrotask.bind(null, func, --placeNumber) );
+}
+
+
 function getClassLine (classList) {
     const classLine = {
         [Symbol.toPrimitive] (hint) { return this.classList.join(" "); },
@@ -163,12 +187,14 @@ if (isMobile) {
     });
 
     window.addEventListener("load", evt => {
-        window.dispatchEvent(new Event("touchend"));
+        window.dispatchEvent( new Event("touchend", {bubbles: true}) );
     }, {once: true});
 }
 
 
 export {
+    setMacrotask,
+    setMicrotask,
     checkAncestor,
     checkClickByArea,
     getClassLine,

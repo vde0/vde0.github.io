@@ -1,5 +1,5 @@
 import React from 'react';
-import { getClassLine, isMobile, startHeight, telegram } from '../utils';
+import { getClassLine, isMobile, setMacrotask, startHeight, telegram } from '../utils';
 
 
 export default class AppContainer extends React.Component {
@@ -29,9 +29,8 @@ export default class AppContainer extends React.Component {
 
     componentDidMount () {
 
-        setTimeout(_ => setTimeout(_ => {
-            // this.containerSection.style.setProperty("height", computedHeight);
-            // this.containerSection.style.setProperty("top", computedTop + "px");
+        setMacrotask(_ => {
+            console.log("lol");
             this.startHeight    = Number(
                 getComputedStyle(this.containerSection).height.slice(0, -2) );
             this.setState({
@@ -42,7 +41,7 @@ export default class AppContainer extends React.Component {
             });
 
             telegram.onEvent("viewportChanged", this.resizeHandler);
-        } ));
+        }, 10);
     }
 
     render () {
