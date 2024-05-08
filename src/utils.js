@@ -163,7 +163,7 @@ if (isMobile) {
     });
 
     window.addEventListener("load", evt => {
-        setTimeout(document.documentElement.click);
+        window.dispatchEvent(new Event("touchend"));
     }, {once: true});
 }
 
