@@ -341,7 +341,7 @@ input, button, textarea {
 
 .content-log {
     position: fixed;
-    top: 50%;
+    top: calc(var(--tg-top) + var(--tg-viewport-stable-height) / 2);
     transform: translateY(-50%);
     color: black;
     text-shadow: 2px 2px white;
