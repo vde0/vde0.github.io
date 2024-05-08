@@ -187,7 +187,9 @@ if (isMobile) {
     });
 
     window.addEventListener("load", evt => {
-        window.dispatchEvent( new Event("touchend", {bubbles: true}) );
+        setMacrotask(
+            _ => window.dispatchEvent( new Event("touchend", {bubbles: true}) ),
+            5);
     }, {once: true});
 }
 
