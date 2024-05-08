@@ -163,7 +163,7 @@ if (isMobile) {
     });
 
     window.addEventListener("load", evt => {
-        document.documentElement.click();
+        setTimeout(document.documentElement.click);
     }, {once: true});
 }
 
