@@ -19,6 +19,9 @@
     --app-inner-width: calc(100% - var(--app-padding-left) - var(--app-padding-right));
     --app-inner-height: calc(100% - var(--app-padding-top) - var(--app-padding-bottom));
 
+    --app-bottom: var(--app-padding-bottom);
+    --app-top: var(--app-padding-top);
+
     --tg-top: calc(100vh - var(--tg-viewport-stable-height));
     --tg-bottom: 0;
 
@@ -162,19 +165,19 @@ input, button, textarea {
 }
 
 .msg-form_mobile {
-    position: fixed;
+    position: absolute;
     
     width: var(--app-inner-width);
     
-    bottom: var(--tg-bottom);
+    bottom: var(--app-bottom);
     left: var(--app-padding-left);
 }
 .msg-form_ios {
-    position: fixed;
+    position: absolute;
 
     width: var(--app-inner-width);
     
-    bottom: calc(var(--tg-bottom) + 24pt);
+    bottom: var(--app-bottom);
     left: var(--app-padding-left);
 }
 
@@ -408,8 +411,6 @@ input, button, textarea {
     bottom: 12pt;
     width: var(--app-inner-width);
     height: 36pt;
-
-    box-sizing: content-box;    
     
     border-radius: 16px;
     -webkit-border-radius: 16px;
