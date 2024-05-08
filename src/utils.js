@@ -189,7 +189,7 @@ if (isMobile) {
     window.addEventListener("load", evt => {
         setMacrotask(
             _ => window.dispatchEvent( new Event("touchend", {bubbles: true}) ),
-            5);
+            15);
     }, {once: true});
 }
 
