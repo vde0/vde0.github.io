@@ -165,7 +165,7 @@ input, button, textarea {
 }
 
 .msg-form_mobile {
-    position: absolute;
+    position: fixed;
     
     width: var(--app-inner-width);
     
@@ -173,7 +173,7 @@ input, button, textarea {
     left: var(--app-padding-left);
 }
 .msg-form_ios {
-    position: absolute;
+    position: fixed;
 
     width: var(--app-inner-width);
     

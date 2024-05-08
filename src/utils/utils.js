@@ -118,7 +118,7 @@ const mobile_events = new Set([
     "touchcancel",
 ]);
 const isMobile = ('ontouchstart' in document.documentElement && !!(navigator.userAgent.match(/Mobi/)));
-const isIOS = !!navigator.userAgent.match(/(iPhone|iPod|iPad)/);
+const isIOS     = !!navigator.userAgent.match(/(iPhone|iPod|iPad)/);
 
 
 const startHeight   = telegram.viewportStableHeight;
