@@ -29,7 +29,7 @@ export default class AppContainer extends React.Component {
 
     componentDidMount () {
 
-        setTimeout(_ => {
+        setTimeout(_ => setTimeout(_ => {
             // this.containerSection.style.setProperty("height", computedHeight);
             // this.containerSection.style.setProperty("top", computedTop + "px");
             this.startHeight    = Number(
@@ -42,7 +42,7 @@ export default class AppContainer extends React.Component {
             });
 
             telegram.onEvent("viewportChanged", this.resizeHandler);
-        });
+        } ));
     }
 
     render () {
