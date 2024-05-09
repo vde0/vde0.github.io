@@ -26,23 +26,23 @@ export default class AppContainer extends React.Component {
             contentType: this.contentType,
             rendered: false,
         };
-    }
-
-    componentDidMount () {
 
         window.addEventListener("initapp", evt => {
 
-            this.startHeight    = Number(
-                getComputedStyle(this.containerSection).height.slice(0, -2) );
-
-            this.setState({
-                classLine: this.classLine.add("app__container_fixing-height").getLine(),
-                computedHeight: this.startHeight,
-                computedTop: this.containerSection.offsetTop,
-                rendered: true,
-            });
-
-            telegram.onEvent("viewportChanged", this.resizeHandler);
+            TaskManager.setMacrotask(_ => {
+            
+                this.startHeight    = Number(
+                    getComputedStyle(this.containerSection).height.slice(0, -2) );
+    
+                this.setState({
+                    classLine: this.classLine.add("app__container_fixing-height").getLine(),
+                    computedHeight: this.startHeight,
+                    computedTop: this.containerSection.offsetTop,
+                    rendered: true,
+                });
+    
+                telegram.onEvent("viewportChanged", this.resizeHandler);
+            }, 1);
         }, {once: true});
     }
 

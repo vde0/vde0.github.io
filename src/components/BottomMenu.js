@@ -5,6 +5,7 @@ import addUserIc from '../icons/add-user.svg';
 import reportIc from '../icons/report.png';
 import whiteArrowRightIc from '../icons/white-arrow-right.svg';
 import { appParams } from '../utils/utils';
+import TaskManager from '../utils/TaskManager';
 
 
 export default class BottomMenu extends React.Component {
@@ -61,10 +62,14 @@ export default class BottomMenu extends React.Component {
         });
 
         window.addEventListener("initapp", _ => {
-            if (!appParams.isMobile) return;
-            this.btns.forEach( btn => {
-                this.state[btn.mod + "Handler"] = btn.onClick;
-            });
+
+            TaskManager.setMacrotask(_ => {
+
+                if (!appParams.isMobile) return;
+                this.btns.forEach( btn => {
+                    this.state[btn.mod + "Handler"] = btn.onClick;
+                });
+            }, 2);
         }, {once: true});
     }
 
