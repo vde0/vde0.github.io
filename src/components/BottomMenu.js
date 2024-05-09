@@ -69,7 +69,7 @@ export default class BottomMenu extends React.Component {
                 this.btns.forEach( btn => {
                     this.state[btn.mod + "Handler"] = btn.onClick;
                 });
-            }, 2);
+            }, 3);
         }, {once: true});
     }
 
