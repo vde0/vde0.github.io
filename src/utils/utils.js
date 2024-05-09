@@ -121,7 +121,11 @@ const isMobile = ('ontouchstart' in document.documentElement && !!(navigator.use
 const isIOS     = !!navigator.userAgent.match(/(iPhone|iPod|iPad)/);
 
 
-const startHeight   = telegram.viewportStableHeight;
+let startHeight     = telegram.viewportStableHeight;
+function resetStartHeight () {
+    startHeight     = telegram.viewportStableHeight;
+}
+
 function checkMobileKeyboard () {
     if (!isMobile) return false;
     const currentHeight = telegram.viewportStableHeight;
@@ -173,6 +177,7 @@ if (isMobile) {
 
 
 export {
+    resetStartHeight,
     checkAncestor,
     checkClickByArea,
     getClassLine,

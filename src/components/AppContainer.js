@@ -30,9 +30,11 @@ export default class AppContainer extends React.Component {
 
     componentDidMount () {
 
-        TaskManager.setMacrotask(_ => {
+        window.addEventListener("initapp", evt => {
+            
             this.startHeight    = Number(
                 getComputedStyle(this.containerSection).height.slice(0, -2) );
+
             this.setState({
                 classLine: this.classLine.add("app__container_fixing-height").getLine(),
                 computedHeight: this.startHeight,
@@ -41,7 +43,7 @@ export default class AppContainer extends React.Component {
             });
 
             telegram.onEvent("viewportChanged", this.resizeHandler);
-        }, 20);
+        }, {once: true});
     }
 
     render () {

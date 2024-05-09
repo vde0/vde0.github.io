@@ -244,38 +244,33 @@ input, button, textarea {
 
 
 .root-document {
-    position: sticky;
+    position: relative;
     margin: 0 auto;
     height: 100vh;
     width: 100%;
-    top: var(--tg-top);
 }
 
-.root-document_fixed {
+.root-document_placing_fixed {
     position: fixed;
-    width: 100vh;
+    top: 0;
 }
-
-.root-document_tg {
+.root-document_placing_tg {
     position: fixed;
     height: var(--tg-viewport-stable-height);
-    top: calc(100vh - var(--tg-viewport-stable-height));
+    top: var(--tg-top);
 }
-
 .root-document_no-scroll {
     overflow: hidden;
 }
 
 .root-document__page {
     margin: 0;
-    background-color: var(--tg-theme-bg-color);
-    color: var(--tg-theme-text-color);
 
     font-family: "Open Sans", sans-serif;
     -webkit-text-size-adjust: none;
 
     width: 100%;
-    height: inherit;
+    height: 100%;
 }
 .root-document__page::after {
     content: "";
@@ -295,22 +290,28 @@ input, button, textarea {
     transform: translateY(70px);
 }
 
+.root-document__page_theme_tg {
+    background-color: var(--tg-theme-bg-color);
+    color: var(--tg-theme-text-color);
+}
+
 
 #root {
-    width: inherit;
-    height: inherit;
+    width: 100%;
+    height: 100%;
 
-    position: fixed;
-    top: var(--tg-top);
+    position: absolute;
+    top: 0;
     left: 0;
 }
 
 
 .app {
     position: absolute;
-    margin: auto;
+
     left: 0;
     right: 0;
+    margin: auto;
 
     height: var(--app-inner-height);
     width: var(--app-inner-width);
