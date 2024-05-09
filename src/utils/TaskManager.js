@@ -39,16 +39,16 @@ function runQueue () {
 
 export default class TaskManager {
 
-    static setMacrotask (func, orderPos = 0) {
+    static setMacrotask (func, orderPos = 1) {
         if (typeof func !== "function")     throw TypeError(
             "\"func\" arg of the TaskManager.setMacrotask() util must be a function");
         if (typeof orderPos !== "number")   throw TypeError(
             "\"orderPos\" arg of the TaskManager.setMacrotask() util must be a number");
-        if (orderPos <= -1)                 throw RangeError(
-            "\"orderPos\" arg of the TaskManager.setMacrotask() util must be a range the 0..Infinity");
+        if (orderPos <= 0)                 throw RangeError(
+            "\"orderPos\" arg of the TaskManager.setMacrotask() util must be a range the 1..Infinity");
         
         
-        const taskNum = currentTask + orderPos;
+        const taskNum = currentTask + orderPos -1;
         if ( !taskQueue.has(taskNum) ) {
             taskQueue.add(taskNum);
             taskContainer[taskNum]  = makeMacrotaskList();
