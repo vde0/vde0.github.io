@@ -167,12 +167,6 @@ if (isMobile) {
         const event = new Event(eventName);
         window.dispatchEvent(event);
     });
-
-    window.addEventListener("load", evt => {
-        TaskManager.setMacrotask(
-            _ => window.dispatchEvent( new Event("touchend", {bubbles: true}) ),
-            15);
-    }, {once: true});
 }
 
 
