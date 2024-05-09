@@ -91,7 +91,10 @@ export default class AppContainer extends React.Component {
         }
 
         this.setState({
-            computedHeight: this.startHeight - appParams.startHeight + telegram.viewportStableHeight,
+            computedHeight: Math.max(
+                this.startHeight - appParams.startHeight + telegram.viewportStableHeight,
+                0
+            ),
         });
     }
 }
