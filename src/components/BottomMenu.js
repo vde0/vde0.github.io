@@ -61,15 +61,13 @@ export default class BottomMenu extends React.Component {
                 : btn.onClick;
         });
 
-        window.addEventListener("initapp", _ => {
 
-            TaskManager.setMacrotask(_ => {
-                
-                if (!appParams.isMobile) return;
-                this.btns.forEach( btn => {
-                    this.state[btn.mod + "Handler"] = btn.onClick;
-                });
-            }, 2);
+        if (appParams.isMobile) window.addEventListener("initapp", _ => {
+
+            this.btns.forEach( btn => {
+                this.setState({ [btn.mod + "Handler"]: btn.onClick });
+            });
+            
         }, {once: true});
     }
 
@@ -91,7 +89,7 @@ export default class BottomMenu extends React.Component {
 
     saveClick (handler, evt) {
         window.addEventListener("initapp", _ => {
-            handler(evt);
+            TaskManager.setMacrotask(handler.bind(null, evt), 2);
         }, {once: true});
     }
 }
