@@ -4,6 +4,7 @@ import msgsIc from '../icons/msgs.svg';
 import addUserIc from '../icons/add-user.svg';
 import reportIc from '../icons/report.png';
 import whiteArrowRightIc from '../icons/white-arrow-right.svg';
+import { appParams } from '../utils/utils';
 
 
 export default class BottomMenu extends React.Component {
@@ -51,6 +52,20 @@ export default class BottomMenu extends React.Component {
                 get classLine () { return "bottom-menu__btn bottom-menu__btn_mod_" + this.mod; },
             },
         ];
+
+        this.state = {};
+        this.btns.forEach( btn => {
+            this.state[btn.mod + "Handler"] = appParams.isMobile
+                ? this.saveClick.bind(this, btn.onClick)
+                : btn.onClick;
+        });
+
+        window.addEventListener("initapp", _ => {
+            if (!appParams.isMobile) return;
+            this.btns.forEach( btn => {
+                this.state[btn.mod + "Handler"] = btn.onClick;
+            });
+        }, {once: true});
     }
 
     render () {
@@ -63,10 +78,15 @@ export default class BottomMenu extends React.Component {
                         content={btn.content}
                         color={btn.color}
                         badge={btn.badge}
-                        onClick={btn.onClick} />
+                        onClick={this.state[btn.mod + "Handler"]} />
                 } )}
             </section>
         );
     }
 
+    saveClick (handler, evt) {
+        window.addEventListener("initapp", _ => {
+            handler(evt);
+        }, {once: true});
+    }
 }

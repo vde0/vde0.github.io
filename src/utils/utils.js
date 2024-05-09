@@ -139,7 +139,6 @@ const initApp = () => {
     resetStartHeight();
     document.documentElement.classList.add("root-document_placing_tg");
     window.dispatchEvent( new Event("initapp") );
-
     wasInit = true;
 }
 
