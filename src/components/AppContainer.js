@@ -1,5 +1,5 @@
 import React from 'react';
-import { getClassLine, isMobile, startHeight, telegram } from '../utils/utils';
+import { getClassLine, appParams, telegram } from '../utils/utils';
 import TaskManager from '../utils/TaskManager';
 
 
@@ -31,7 +31,7 @@ export default class AppContainer extends React.Component {
     componentDidMount () {
 
         window.addEventListener("initapp", evt => {
-            
+
             this.startHeight    = Number(
                 getComputedStyle(this.containerSection).height.slice(0, -2) );
 
@@ -91,7 +91,7 @@ export default class AppContainer extends React.Component {
         }
 
         this.setState({
-            computedHeight: this.startHeight - startHeight + telegram.viewportStableHeight,
+            computedHeight: this.startHeight - appParams.startHeight + telegram.viewportStableHeight,
         });
     }
 }

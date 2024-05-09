@@ -1,5 +1,5 @@
 import React from 'react';
-import { checkClickByArea, checkMobileKeyboard, getClassLine, getComponentUpdateHook, isIOS, isMobile, startHeight, telegram } from './utils/utils';
+import { checkClickByArea, getClassLine, getComponentUpdateHook, appParams, telegram } from './utils/utils';
 import AppContainer from './components/AppContainer';
 import Video from './components/Video';
 import Dialog from './components/Dialog';
@@ -56,10 +56,10 @@ export default class App extends React.Component {
             this.hideFooter();
 
             this.appContentClassLine.add(
-                isIOS ? "app__content_for-ios" : "app__content_for-keyboard");
+                appParams.isIOS ? "app__content_for-ios" : "app__content_for-keyboard");
             this.setState({
                 appContentClassLine: this.appContentClassLine.getLine(),
-                keyboardState: checkMobileKeyboard(),
+                keyboardState: appParams.mobileKeyboardState,
                 keyboardWasOpened: true,
             });
         });
@@ -68,10 +68,10 @@ export default class App extends React.Component {
             setTimeout( _ => this.showFooter() );
 
             this.appContentClassLine.remove(
-                isIOS ? "app__content_for-ios" : "app__content_for-keyboard");
+                appParams.isIOS ? "app__content_for-ios" : "app__content_for-keyboard");
             this.setState({
                 appContentClassLine: this.appContentClassLine.getLine(),
-                keyboardState: checkMobileKeyboard(),
+                keyboardState: appParams.mobileKeyboardState,
             });
         });
 
@@ -88,12 +88,12 @@ export default class App extends React.Component {
     render () {
         return (
             <article className="app">
-                {this.showUpdateNum ? <p className="update-num-log">Update num: 23.17.1</p> : ""}
+                {this.showUpdateNum ? <p className="update-num-log">Update num: 23.18</p> : ""}
                 <div className={"content-log " + (!this.log ? "content-log_hidden" : "")}>
-                    <p>Mobile: {String(isMobile)} | iOS: {String(isIOS)}</p>
+                    <p>Mobile: {String(appParams.isMobile)} | iOS: {String(appParams.isIOS)}</p>
                     <p>keyboardWasOpened: {String(this.state.keyboardWasOpened)}</p>
                     <p>keyboard state: {String(this.state.keyboardState)}</p>
-                    <p>startHeight: {startHeight}</p>
+                    <p>appParams.startHeight: {appParams.startHeight}</p>
                     <p>window height: {this.state.windowHeight}</p>
                     <p>web-app height: {this.state.tgHeight}</p>
                     <p>web-app stable-height: {this.state.tgStableHeight}</p>
@@ -115,7 +115,7 @@ export default class App extends React.Component {
     }
 
     onSeeMsgs (evt) {
-        if (isMobile)   window.dispatchEvent( new Event("openkeyboard") );
+        if (appParams.isMobile)   window.dispatchEvent( new Event("openkeyboard") );
         else            this.toggleDialog();
     }
     onAddUser (evt) {}

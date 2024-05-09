@@ -2,25 +2,19 @@ import React from 'react';
 import {createRoot} from 'react-dom/client';
 import App from './App';
 import './index.css'
-import { isMobile, resetStartHeight, telegram } from './utils/utils';
+import { appParams, initApp, telegram } from './utils/utils';
+import TaskManager from './utils/TaskManager';
 
 
 telegram.expand();
 
-let wasInit = false;
-const initApp = () => {
-    if (wasInit) return;
-    resetStartHeight();
-    document.documentElement.classList.add("root-document_placing_tg");
-    window.dispatchEvent( new Event("initapp") );
-
-}
 
 window.addEventListener("load", evt => {
-    if (isMobile) {
-        window.addEventListener("touchend", initApp, {once: true});
+    if (appParams.isMobile) {
+        window.addEventListener(
+            "touchend", TaskManager.setMacrotask.bind(null, initApp, 1), {once: true});
     } else {
-        initApp();
+        TaskManager.setMacrotask(initApp, 1);
     }
 }, {once: true});
 

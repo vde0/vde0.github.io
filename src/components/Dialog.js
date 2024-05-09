@@ -1,7 +1,7 @@
 import React from 'react';
 import sendBtnIc from '../icons/to-send.svg';
 import Btn from './Btn';
-import { isIOS, isMobile } from '../utils/utils';
+import { appParams } from '../utils/utils';
 
 
 let userDB = {
@@ -122,7 +122,7 @@ export default class Dialog extends React.Component {
     }
 
     componentDidMount () {
-        if (isMobile) {
+        if (appParams.isMobile) {
             window.addEventListener("openkeyboard", this.openKeyboardHandler);
         } else {
             this.scrollDown("instant");
@@ -181,7 +181,7 @@ export default class Dialog extends React.Component {
                     ref={el => this.msgFormBlock = el}
                     className={
                         "dialog__msg-form msg-form " +
-                        (isIOS ? "msg-form_ios" : isMobile ? "msg-form_mobile" : "")}>
+                        (appParams.isIOS ? "msg-form_ios" : appParams.isMobile ? "msg-form_mobile" : "")}>
                     <input ref={el => this.msgFieldBlock = el}
                         type="text"
                         autoFocus

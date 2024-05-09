@@ -132,6 +132,37 @@ function checkMobileKeyboard () {
     return currentHeight / startHeight <= 0.8;
 }
 
+
+let wasInit = false;
+const initApp = () => {
+    if (wasInit) return;
+    resetStartHeight();
+    document.documentElement.classList.add("root-document_placing_tg");
+    window.dispatchEvent( new Event("initapp") );
+
+    wasInit = true;
+}
+
+
+const appParams = {
+    get startHeight () {
+        return startHeight;
+    },
+    get wasInit () {
+        return wasInit;
+    },
+    get isMobile () {
+        return isMobile;
+    },
+    get isIOS () {
+        return isIOS;
+    },
+    get mobileKeyboardState () {
+        return checkMobileKeyboard();
+    },
+};
+
+
 if (isMobile) {
 
     let prevKeyboardState = checkMobileKeyboard();
@@ -171,14 +202,11 @@ if (isMobile) {
 
 
 export {
-    resetStartHeight,
+    initApp,
     checkAncestor,
     checkClickByArea,
     getClassLine,
     getComponentUpdateHook,
-    checkMobileKeyboard,
     telegram,
-    isMobile,
-    isIOS,
-    startHeight,
+    appParams,
 }
