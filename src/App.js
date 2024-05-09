@@ -77,11 +77,16 @@ export default class App extends React.Component {
 
         if (this.log) setInterval(_ => {
 
-            this.setState({
-                windowHeight: window.innerHeight,
-                tgHeight: telegram.viewportHeight,
-                tgStableHeight: telegram.viewportStableHeight,
-            });
+            if (this.windowHeight !== window.innerHeight) {
+                this.setState({ windowHeight: window.innerHeight }); }
+            if (this.tgHeight !== telegram.viewportHeight) {
+                this.setState({ tgHeight: telegram.viewportHeight}); }
+            if (this.tgStableHeight !== telegram.viewportStableHeight) {
+                this.setState({ tgStableHeight: telegram.viewportStableHeight }); }
+
+            this.windowHeight   = window.innerHeight;
+            this.tgHeight       = telegram.viewportHeight;
+            this.tgStableHeight = telegram.viewportStableHeight;
         });
     }
 
