@@ -64,7 +64,7 @@ export default class BottomMenu extends React.Component {
         window.addEventListener("initapp", _ => {
 
             TaskManager.setMacrotask(_ => {
-
+                
                 if (!appParams.isMobile) return;
                 this.btns.forEach( btn => {
                     this.state[btn.mod + "Handler"] = btn.onClick;

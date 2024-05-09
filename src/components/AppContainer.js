@@ -28,9 +28,9 @@ export default class AppContainer extends React.Component {
         };
 
         window.addEventListener("initapp", evt => {
-
-            TaskManager.setMacrotask(_ => {
             
+            TaskManager.setMacrotask(_ => {
+                
                 this.startHeight    = Number(
                     getComputedStyle(this.containerSection).height.slice(0, -2) );
     

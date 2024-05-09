@@ -21,18 +21,19 @@ function runQueue () {
     if (isRunning) return;
     isRunning = true;
 
-    exec(currentTask);
+    run(currentTask);
 
-    function exec (taskNumber) {
-        if (taskQueue.size === 0 ) {
+    function run (taskNumber) {
+        if (taskQueue.size === 0) {
             isRunning   = false;
             currentTask = 0;
             return;
         }
 
+        ++currentTask;
         setTimeout(_ => {
             execMacrotask(taskNumber);
-            exec(++taskNumber);
+            run(++taskNumber);
         });
     }
 }
@@ -46,7 +47,6 @@ export default class TaskManager {
             "\"orderPos\" arg of the TaskManager.setMacrotask() util must be a number");
         if (orderPos <= 0)                 throw RangeError(
             "\"orderPos\" arg of the TaskManager.setMacrotask() util must be a range the 1..Infinity");
-        
         
         const taskNum = currentTask + orderPos -1;
         if ( !taskQueue.has(taskNum) ) {

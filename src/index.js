@@ -14,7 +14,7 @@ window.addEventListener("load", evt => {
         window.addEventListener(
             "touchend", TaskManager.setMacrotask.bind(null, initApp, 1), {once: true});
     } else {
-        TaskManager.setMacrotask(initApp, 1);
+        TaskManager.setMacrotask(initApp, 1, true);
     }
 }, {once: true});
 

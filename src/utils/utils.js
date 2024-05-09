@@ -1,4 +1,3 @@
-import TaskManager from "./TaskManager";
 
 const telegram  = window.Telegram.WebApp;
 
