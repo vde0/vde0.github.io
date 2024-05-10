@@ -291,6 +291,10 @@ input, button, textarea {
     transform: translateY(70px);
 }
 
+.root-document__page_no-scroll {
+    overflow: hidden;
+}
+
 .root-document__page_theme_tg {
     background-color: var(--tg-theme-bg-color);
     color: var(--tg-theme-text-color);
