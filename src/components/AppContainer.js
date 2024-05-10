@@ -1,5 +1,5 @@
 import React from 'react';
-import { getClassLine, appParams, telegram } from '../utils/utils';
+import { getClassLine, appParams, telegram, getStickyPiston } from '../utils/utils';
 import TaskManager from '../utils/TaskManager';
 
 
@@ -13,12 +13,13 @@ export default class AppContainer extends React.Component {
         super(props);
 
         this.hook?.connect(this.updateFunc, this);
-
-        this.resizeHandler  = this.resizeHandler.bind(this);
+        this.piston = getStickyPiston();
         
         if (!this.props.contentType || this.props.empty) {
             this.classLine.add("app__container_empty");
-        } else  this.contentType  = <this.props.contentType data={this.props.data} />;
+        } else  this.contentType  = (
+            <this.props.contentType data={this.props.data} piston={this.piston} />
+        );
 
         this.state = {
             empty: this.props.empty,
@@ -30,20 +31,21 @@ export default class AppContainer extends React.Component {
         window.addEventListener("initapp", evt => {
             
             TaskManager.setMacrotask(_ => {
-                
-                this.startHeight    = Number(
-                    getComputedStyle(this.containerSection).height.slice(0, -2) );
-    
+
+                this.computedTop = this.containerSection.offsetTop;
+
                 this.setState({
                     classLine: this.classLine.add("app__container_fixing-height").getLine(),
-                    computedHeight: this.startHeight,
-                    computedTop: this.containerSection.offsetTop,
                     rendered: true,
                 });
-    
-                telegram.onEvent("viewportChanged", this.resizeHandler);
             }, 1);
         }, {once: true});
+    }
+
+    componentDidMount() {
+        this.piston.movable = this.containerSection;
+        this.startHeight    = Number(
+            getComputedStyle(this.containerSection).height.slice(0, -2) );
     }
 
     render () {
@@ -52,8 +54,8 @@ export default class AppContainer extends React.Component {
                 ref={el => this.containerSection = el}
                 className={this.state.classLine}
                 style={this.state.rendered ? {
-                    top: this.state.computedTop,
-                    height: this.state.computedHeight,
+                    top: this.computedTop,
+                    height: this.startHeight,
                 } : {}}
             >
                 {this.state.contentType}
@@ -68,33 +70,28 @@ export default class AppContainer extends React.Component {
             this.contentType    = "";
         } else {
             this.classLine.remove("app__container_empty");
-            this.contentType    = <this.props.contentType data={this.props.data} />;
+            this.contentType    = (
+                <this.props.contentType data={this.props.data} piston={this.piston} />
+            );
         }
         
-        // if          (this.props.dynamic && !this.props.empty) {
-        //     this.classLine.add("app__container_dynamic");
-        // } else if   (this.props.dynamic && this.props.empty) {
-        //     this.classLine.remove("app__container_dynamic");
-        // }
+        if          (this.props.dynamic && !this.props.empty) {
+            this.classLine.add("app__container_dynamic");
+            this.piston.movable = this.containerSection;
+        } else if   (this.props.dynamic && this.props.empty) {
+            this.classLine.remove("app__container_dynamic");
+            this.piston.movable = null;
+            this.containerSection.style.setProperty("height", this.startHeight + "px");
+        } else if   (!this.props.dynamic) {
+            this.classLine.remove("app__container_dynamic");
+            this.piston.movable = null;
+            this.containerSection.style.setProperty("height", this.startHeight + "px");
+        }
 
         this.setState({
             empty: this.props.empty,
             classLine: this.classLine.getLine(),
             contentType: this.contentType,
-        });
-    }
-
-    resizeHandler (evt) {
-        if (!this.props.dynamic || this.props.empty) {
-            this.setState({ computedHeight: this.startHeight });
-            return;
-        }
-
-        this.setState({
-            computedHeight: Math.max(
-                this.startHeight - appParams.startHeight + telegram.viewportStableHeight,
-                0
-            ),
         });
     }
 }

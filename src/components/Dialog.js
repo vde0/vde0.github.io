@@ -1,7 +1,7 @@
 import React from 'react';
 import sendBtnIc from '../icons/to-send.svg';
 import Btn from './Btn';
-import { appParams } from '../utils/utils';
+import { appParams, getStickyPiston, telegram } from '../utils/utils';
 
 
 let userDB = {
@@ -110,6 +110,8 @@ export default class Dialog extends React.Component {
     constructor (props) {
         super(props);
 
+        this.piston         = this.props.piston;
+
         this.onSend         = this.onSend.bind(this);
         this.onInput        = this.onInput.bind(this);
         this.onClickDialog  = this.onClickDialog.bind(this);
@@ -124,6 +126,12 @@ export default class Dialog extends React.Component {
     componentDidMount () {
         if (appParams.isMobile) {
             window.addEventListener("openkeyboard", this.openKeyboardHandler);
+            this.piston.piston = this.msgFormBlock;
+            this.piston.press();
+
+            telegram.onEvent("viewportChanged", tg => {
+                this.piston.press();
+            });
         } else {
             this.scrollDown("instant");
         }
@@ -141,6 +149,7 @@ export default class Dialog extends React.Component {
 
     componentWillUnmount () {
         setTimeout(_ => {
+            this.piston.piston = null;
             window.removeEventListener("openkeyboard", this.openKeyboardHandler);
         }, 50);
     }
@@ -227,6 +236,7 @@ export default class Dialog extends React.Component {
     
     openKeyboardHandler (evt) {
         this.scrollDown("instant");
+        getStickyPiston(this.msgFormBlock);
     }
 
     focusMsgField () {

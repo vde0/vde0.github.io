@@ -117,10 +117,10 @@ const BOTTOM_DIRECT = Symbol("BOTTOM");
 const LEFT_DIRECT   = Symbol("LEFT");
 const surfaceTable  = {
     // direct: [piston-surface, movable-surfase]
-    [TOP_DIRECT]    : ["top"    ,   "bottom"],
-    [RIGHT_DIRECT]  : ["right"  ,   "left"  ],
-    [BOTTOM_DIRECT] : ["bottom" ,   "top"   ],
-    [LEFT_DIRECT]   : ["left"   ,   "right" ],
+    [TOP_DIRECT]    : ["top"    ,   "bottom"    ,   "height"],
+    [RIGHT_DIRECT]  : ["right"  ,   "left"      ,   "width" ],
+    [BOTTOM_DIRECT] : ["bottom" ,   "top"       ,   "height"],
+    [LEFT_DIRECT]   : ["left"   ,   "right"     ,   "width" ],
 };
 function getStickyPiston (pistonEl, movableEl = null) {
 
@@ -133,8 +133,8 @@ function getStickyPiston (pistonEl, movableEl = null) {
     
     // private methods
     const setSurfaces = () => {
-        pistonSurface   = pistonBlock.getBoundingClientRect()[ surfaceTable[curDirect][0] ];
-        movableSurface  = movableBlock.getBoundingClientRect()[ surfaceTable[curDirect][1] ];
+        pistonSurface   = pistonBlock?.getBoundingClientRect()[ surfaceTable[curDirect][0] ];
+        movableSurface  = movableBlock?.getBoundingClientRect()[ surfaceTable[curDirect][1] ];
     }
 
     setSurfaces();
@@ -170,9 +170,17 @@ function getStickyPiston (pistonEl, movableEl = null) {
         get movableSurface () { return movableSurface },
 
         press () {
-            const offset = pistonSurface - movableSurface;
-            console.log(typeof offset + " | " + offset);
-            movableBlock.style.setProperty("width", offset + "px");
+            const offset        = pistonSurface - movableSurface;
+            const curHeight     = movableBlock.offsetHeight;
+            const resultHeight  = curHeight + offset > -1 ? curHeight + offset : 0;
+            console.log(pistonSurface + " | " + movableSurface);
+            console.log(resultHeight + " = " + curHeight + " - " + offset);
+            console.log();
+            if (Number.isNaN(resultHeight)) return;
+
+            movableBlock.style.setProperty(
+                surfaceTable[curDirect][2], resultHeight + "px");
+            setSurfaces();
         },
     };
 }
