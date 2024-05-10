@@ -110,6 +110,67 @@ function getComponentUpdateHook () {
 }
 
 
+// private consts
+const TOP_DIRECT    = Symbol("TOP");
+const RIGHT_DIRECT  = Symbol("RIGHT");
+const BOTTOM_DIRECT = Symbol("BOTTOM");
+const LEFT_DIRECT   = Symbol("LEFT");
+const surfaceTable  = {
+    // direct: [piston-surface, movable-surfase]
+    [TOP_DIRECT]    : ["top"    ,   "bottom"],
+    [RIGHT_DIRECT]  : ["right"  ,   "left"  ],
+    [BOTTOM_DIRECT] : ["bottom" ,   "top"   ],
+    [LEFT_DIRECT]   : ["left"   ,   "right" ],
+};
+function getStickyPiston (pistonEl, movableEl = null) {
+
+    // private vars
+    let pistonBlock     = pistonEl;
+    let movableBlock    = movableEl;
+    let curDirect       = TOP_DIRECT;
+    let pistonSurface   = null;
+    let movableSurface  = null;
+    
+    const setSurfaces = () => {
+        pistonSurface   = pistonBlock.getBoundingClientRect()[ surfaceTable[curDirect][0] ];
+        movableSurface  = movableBlock.getBoundingClientRect()[ surfaceTable[curDirect][1] ];
+    }
+
+    setSurfaces();
+
+    return {
+        get TOP ()      { return TOP_DIRECT; },
+        get RIGHT ()    { return RIGHT_DIRECT; },
+        get BOTTOM ()   { return BOTTOM_DIRECT; },
+        get LEFT ()     { return LEFT_DIRECT; },
+
+        get piston () { return pistonBlock; },
+        set piston (el) { pistonBlock = el; setSurfaces(); },
+
+        get movable () { return movableBlock; },
+        set movable (el) { movableBlock = el; setSurfaces(); },
+
+        get direction () { return curDirect; },
+        set direction (symb) { 
+            if (
+                symb !== TOP_DIRECT     &&
+                symb !== RIGHT_DIRECT   &&
+                symb !== BOTTOM_DIRECT  &&
+                symb !== LEFT_DIRECT
+            ) {
+                throw SyntaxError;
+            }
+
+            curDirect = symb;
+            setSurfaces();
+        },
+
+        get pistonSurface () { return pistonSurface },
+        get movableSurface () { return movableSurface },
+    };
+}
+
+
 const mobile_events = new Set([
     "touchstart",
     "touchend",
@@ -204,6 +265,7 @@ export {
     checkAncestor,
     checkClickByArea,
     getClassLine,
+    getStickyPiston,
     getComponentUpdateHook,
     telegram,
     appParams,
