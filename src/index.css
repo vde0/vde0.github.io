@@ -8,6 +8,10 @@
     --custom-blue: #54A9E9;
     --custom-orange: #FF8B49;
 
+    --tg-offset: 0pt;
+    --tg-top: calc(100vh - var(--tg-viewport-stable-height) - var(--tg-offset));
+    --tg-bottom: var(--tg-offset);
+
     --app-padding: 12pt;
     --app-padding-x: 8pt;
     --app-padding-y: var(--app-padding);
@@ -21,10 +25,6 @@
 
     --app-bottom: var(--app-padding-bottom);
     --app-top: var(--app-padding-top);
-
-    --tg-offset: 0pt;
-    --tg-top: calc(100vh - var(--tg-viewport-stable-height) - var(--tg-offset));
-    --tg-bottom: var(--tg-offset);
 
     --container-max-width: 454px;
 }
@@ -168,17 +168,21 @@ input, button, textarea {
 .msg-form_mobile {
     position: fixed;
     
+    height: calc(61px + 16pt);
     width: var(--app-inner-width);
+    padding-top: 16pt;
     
-    bottom: var(--app-bottom);
+    bottom: var(--tg-bottom);
     left: var(--app-padding-left);
 }
 .msg-form_ios {
     position: fixed;
 
+    height: calc(61px + 16pt);
     width: var(--app-inner-width);
-    
-    bottom: var(--app-bottom);
+    padding-top: 16pt;
+
+    bottom: var(--tg-bottom);
     left: var(--app-padding-left);
 }
 
