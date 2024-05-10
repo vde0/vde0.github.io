@@ -121,17 +121,25 @@ export default class Dialog extends React.Component {
         }
 
         this.openKeyboardHandler    = this.openKeyboardHandler.bind(this);
+        this.resizeMsgListHandler   = this.resizeMsgListHandler.bind(this);
     }
 
     componentDidMount () {
         if (appParams.isMobile) {
             window.addEventListener("openkeyboard", this.openKeyboardHandler);
+
             this.piston.piston = this.msgFormBlock;
             this.piston.press();
-
+            //
             telegram.onEvent("viewportChanged", tg => {
                 this.piston.press();
             });
+            
+            this.resizeMsgListObserver = new ResizeObserver( entries => {
+                this.resizeMsgListHandler();
+            } );
+            this.prevMsgListHeight = this.msgListBlock.offsetHeight;
+            this.resizeMsgListObserver.observe(this.msgListBlock);
         } else {
             this.scrollDown("instant");
         }
@@ -150,6 +158,7 @@ export default class Dialog extends React.Component {
     componentWillUnmount () {
         setTimeout(_ => {
             this.piston.piston = null;
+            this.resizeMsgListObserver?.disconnect();
             window.removeEventListener("openkeyboard", this.openKeyboardHandler);
         }, 50);
     }
@@ -259,6 +268,15 @@ export default class Dialog extends React.Component {
         //         ),
         //     });
         // });
+    }
+
+    resizeMsgListHandler () {
+        this.msgListBlock?.scrollBy({
+            top: this.prevMsgListHeight - this.msgListBlock.offsetHeight,
+            left: 0,
+            behavior: "instant",
+        });
+        this.prevMsgListHeight = this.msgListBlock?.offsetHeight;
     }
 
     scrollDown (behaviorArg) {

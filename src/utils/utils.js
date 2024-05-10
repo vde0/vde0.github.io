@@ -172,10 +172,8 @@ function getStickyPiston (pistonEl, movableEl = null) {
         press () {
             const offset        = pistonSurface - movableSurface;
             const curHeight     = movableBlock.offsetHeight;
-            const resultHeight  = curHeight + offset > -1 ? curHeight + offset : 0;
-            console.log(pistonSurface + " | " + movableSurface);
-            console.log(resultHeight + " = " + curHeight + " - " + offset);
-            console.log();
+            const resultHeight  = curHeight + offset >= 0 ? curHeight + offset : 0;
+
             if (Number.isNaN(resultHeight)) return;
 
             movableBlock.style.setProperty(
