@@ -22,8 +22,9 @@
     --app-bottom: var(--app-padding-bottom);
     --app-top: var(--app-padding-top);
 
-    --tg-top: calc(100vh - var(--tg-viewport-stable-height));
-    --tg-bottom: 0;
+    --tg-offset: 0pt;
+    --tg-top: calc(100vh - var(--tg-viewport-stable-height) - var(--tg-offset));
+    --tg-bottom: var(--tg-offset);
 
     --container-max-width: 454px;
 }
