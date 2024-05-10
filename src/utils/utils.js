@@ -131,6 +131,7 @@ function getStickyPiston (pistonEl, movableEl = null) {
     let pistonSurface   = null;
     let movableSurface  = null;
     
+    // private methods
     const setSurfaces = () => {
         pistonSurface   = pistonBlock.getBoundingClientRect()[ surfaceTable[curDirect][0] ];
         movableSurface  = movableBlock.getBoundingClientRect()[ surfaceTable[curDirect][1] ];
@@ -167,6 +168,12 @@ function getStickyPiston (pistonEl, movableEl = null) {
 
         get pistonSurface () { return pistonSurface },
         get movableSurface () { return movableSurface },
+
+        press () {
+            const offset = pistonSurface - movableSurface;
+            console.log(typeof offset + " | " + offset);
+            movableBlock.style.setProperty("width", offset + "px");
+        },
     };
 }
 
