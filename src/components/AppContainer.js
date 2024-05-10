@@ -32,6 +32,9 @@ export default class AppContainer extends React.Component {
             
             TaskManager.setMacrotask(_ => {
 
+                this.startHeight    = Number(
+                    getComputedStyle(this.containerSection).height.slice(0, -2) );
+
                 this.computedTop = this.containerSection.offsetTop;
 
                 this.setState({
@@ -44,8 +47,6 @@ export default class AppContainer extends React.Component {
 
     componentDidMount() {
         this.piston.movable = this.containerSection;
-        this.startHeight    = Number(
-            getComputedStyle(this.containerSection).height.slice(0, -2) );
     }
 
     render () {
