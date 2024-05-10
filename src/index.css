@@ -350,6 +350,8 @@ input, button, textarea {
     color: black;
     text-shadow: 2px 2px white;
     z-index: 10000;
+    
+    outline: 1px solid green;
 }
 .content-log_hidden {
     display: none;
