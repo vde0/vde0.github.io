@@ -88,6 +88,7 @@ export default class BottomMenu extends React.Component {
     }
 
     saveClick (handler, evt) {
+        if (appParams.wasInit) window.dispatchEvent( new Event("menubtnclickerror") );
         window.addEventListener("initapp", _ => {
             TaskManager.setMacrotask(handler.bind(null, evt), 2);
         }, {once: true});
