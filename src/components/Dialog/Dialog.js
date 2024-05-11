@@ -2,6 +2,7 @@ import React from 'react';
 import { appParams, getClassLine, getStickyPiston, telegram } from '../../utils/utils';
 import './Dialog.css';
 import MsgForm from '../MsgForm/MsgForm';
+import Msg from '../Msg/Msg';
 
 
 let userDB = {
@@ -94,10 +95,10 @@ export default class Dialog extends React.Component {
             let msg     = getMsg(msgID);
 
             if (msg.userID === this.userID) {
-                msg.classLine   = "msg msg_user_current";
+                msg.classLine   = "dialog__msg-block msg msg_user_current";
                 msg.name        = "Вы";
             } else {
-                msg.classLine   = "msg msg_user_companion";
+                msg.classLine   = "dialog__msg-block msg msg_user_companion";
                 msg.name        = getUserInfo(msg.userID).name;
             }
 
@@ -187,17 +188,9 @@ export default class Dialog extends React.Component {
                             <li
                                 key={msg_num}
                                 className="dialog__msg-item"
-                            ><section className={msg.classLine}>
-                                <header className="msg__header">
-                                    {/* <span className="msg__time">{msg.time}</span> */}
-                                    <span className="msg__name">
-                                        {msg.name}:
-                                    </span>
-                                </header>
-                                <section className="msg__content">
-                                    <p className='msg__text'>{msg.textContent}</p>
-                                </section>
-                            </section></li>
+                            >
+                                <Msg msg={msg} />
+                            </li>
                         );
                     } )}
                 </ul>
