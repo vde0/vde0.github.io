@@ -1,0 +1,31 @@
+.bottom-menu {
+    display: flex;
+    gap: 4pt;
+    justify-content: space-between;
+
+    height: 100%;
+    width: 100%;
+}
+
+.bottom-menu__btn {
+    flex-shrink: 1;
+    width: 15%;
+}
+
+/*a crutch*/
+.bottom-menu__btn_mod_report img {
+    position: absolute;
+    width: 60px;
+    height: auto;
+    top: -18%;
+    right: 9%;
+}
+
+.bottom-menu__btn_mod_next {
+    flex-grow: 1;
+    width: 50%;
+    font-size: 1.75rem;
+}
+.bottom-menu__btn_mod_next > .btn__content {
+    gap: 16pt;
+}

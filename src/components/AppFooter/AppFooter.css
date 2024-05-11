@@ -1,0 +1,23 @@
+.app__footer {
+    position: absolute;
+    z-index: 1000;
+    left: var(--app-padding-left);
+
+    outline: 1px solid black;
+    bottom: 12pt;
+    width: var(--app-inner-width);
+    height: 36pt;
+    
+    border-radius: 16px;
+    -webkit-border-radius: 16px;
+    -moz-border-radius: 16px;
+}
+
+.app__footer_hidden {
+    position: absolute;
+    visibility: hidden;
+    opacity: 0;
+    width: 0;
+    height: 0;
+    z-index: -1000;
+}

@@ -6,6 +6,7 @@ import reportIc from '../../icons/report.png';
 import whiteArrowRightIc from '../../icons/white-arrow-right.svg';
 import { appParams } from '../../utils/utils';
 import TaskManager from '../../utils/TaskManager';
+import './BottomMenu.css';
 
 
 export default class BottomMenu extends React.Component {

@@ -1,0 +1,39 @@
+.app__container {
+    position: relative;
+    overflow: hidden;
+    
+    width: 100%;
+
+    height: 100%;
+    flex-grow: 1;
+
+    outline: solid 1px var(--custom-dark);
+
+    border-radius: 16px;
+    -webkit-border-radius: 16px;
+    -moz-border-radius: 16px;
+}
+.app__container_fixing-height {
+    position: absolute;
+    flex-grow: 0;
+    
+    width: var(--app-inner-width);
+    left: var(--app-padding-left);
+}
+
+.app__container_empty::before {
+    content: "";
+    display: block;
+
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+
+    background-color: var(--cutom-light);
+    background-image: url("../../imgs/anonim-girl_placeholder.png");
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: 50%;
+}

@@ -4,6 +4,7 @@ import AppContainer from '../AppContainer/AppContainer';
 import Video from '../Video/Video';
 import Dialog from '../Dialog/Dialog';
 import AppFooter from '../AppFooter/AppFooter';
+import './App.css';
 
 
 export default class App extends React.Component {

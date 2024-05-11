@@ -1,0 +1,36 @@
+.app {
+    position: absolute;
+
+    left: 0;
+    right: 0;
+    margin: auto;
+
+    height: var(--app-inner-height);
+    width: var(--app-inner-width);
+    max-width: var(--container-max-width);
+    
+    padding: var(--app-padding-y) var(--app-padding-x);
+    padding-top: var(--app-padding-top);
+    padding-left: var(--app-padding-left);
+    padding-bottom: var(--app-padding-bottom);
+    padding-right: var(--app-padding-right);
+}
+
+.app__content {
+    height: 100%;
+    width: 100%;
+    padding-bottom: 72pt;
+    box-sizing: border-box;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    gap: 16pt;
+}
+
+.app__content_for-keyboard {
+    padding-bottom: 64px;
+}
+.app__content_for-ios {
+    padding-bottom: 94px;
+}
