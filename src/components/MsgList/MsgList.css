@@ -1,0 +1,23 @@
+.msg-list {
+    padding: 8pt 0;
+    margin: 0;
+
+    height: 100%;
+    overflow-y: scroll;
+    -webkit-overflow-scrolling: touch;
+    
+    list-style: none;
+    color: black;
+}
+
+.msg-item {
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+}
+.msg-item:not(:last-child) {
+    margin-bottom: 16pt;
+}
+
+.msg-list__msg-block {}

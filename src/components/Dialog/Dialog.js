@@ -2,7 +2,7 @@ import React from 'react';
 import { appParams, getClassLine, getStickyPiston, telegram } from '../../utils/utils';
 import './Dialog.css';
 import MsgForm from '../MsgForm/MsgForm';
-import Msg from '../Msg/Msg';
+import MsgList from '../MsgList/MsgList';
 
 
 let userDB = {
@@ -95,10 +95,10 @@ export default class Dialog extends React.Component {
             let msg     = getMsg(msgID);
 
             if (msg.userID === this.userID) {
-                msg.classLine   = "dialog__msg-block msg msg_user_current";
+                msg.classLine   = "msg-list__msg-block msg msg_user_current";
                 msg.name        = "Вы";
             } else {
-                msg.classLine   = "dialog__msg-block msg msg_user_companion";
+                msg.classLine   = "msg-list__msg-block msg msg_user_companion";
                 msg.name        = getUserInfo(msg.userID).name;
             }
 
@@ -182,18 +182,8 @@ export default class Dialog extends React.Component {
             <article
                 className={this.state.classLine}
                 onClick={this.onClickDialog}>
-                <ul className="dialog__msg-list" ref={el => this.msgListBlock = el}>
-                    {this.state.msgList.map( (msg, msg_num) => {
-                        return (
-                            <li
-                                key={msg_num}
-                                className="dialog__msg-item"
-                            >
-                                <Msg msg={msg} />
-                            </li>
-                        );
-                    } )}
-                </ul>
+                
+                <MsgList className="dialog__msg-list" msgList={this.state.msgList} />
 
                 <MsgForm
                     className="dialog__msg-form" onInput={this.onInput} onSend={this.onSend} />

@@ -7,28 +7,6 @@
     justify-content: space-between;
 }
 
-.dialog__msg-list {
-    padding: 8pt 0;
-    margin: 0;
-
-    height: 100%;
-    overflow-y: scroll;
-    -webkit-overflow-scrolling: touch;
-    
-    list-style: none;
-    color: black;
-}
-
-.dialog__msg-item {
-    width: 100%;
-    padding: 0;
-    margin: 0;
-    overflow: hidden;
-}
-.dialog__msg-item:not(:last-child) {
-    margin-bottom: 16pt;
-}
+.dialog__msg-list {}
 
 .dialog__msg-form {}
-
-.dialog__msg-block {}
