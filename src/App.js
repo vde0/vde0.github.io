@@ -26,8 +26,7 @@ export default class App extends React.Component {
             unreadedMsgCount: 1,
 
             appContentClassLine: this.appContentClassLine.getLine(),
-
-            menuBtnClickError: false,
+            
             keyboardWasOpened: false,
             keyboardState: null,
             windowHeight: window.innerHeight,
@@ -76,9 +75,7 @@ export default class App extends React.Component {
             });
         });
 
-        if (this.log) window.addEventListener("menubtnclickerror", evt => {
-            this.setState({ menuBtnClickError: true });
-        });
+
         if (this.log) setInterval(_ => {
 
             if (this.windowHeight !== window.innerHeight) {
@@ -97,12 +94,11 @@ export default class App extends React.Component {
     render () {
         return (
             <article className="app">
-                {this.showUpdateNum ? <p className="update-num-log">Update num: 28.6</p> : ""}
+                {this.showUpdateNum ? <p className="update-num-log">Update num: 28.6.1</p> : ""}
                 <div className={"content-log " + (!this.log ? "content-log_hidden" : "")}>
                     <p>Mobile: {String(appParams.isMobile)} | iOS: {String(appParams.isIOS)}</p>
                     <p>keyboardWasOpened: {String(this.state.keyboardWasOpened)}</p>
                     <p>keyboard state: {String(this.state.keyboardState)}</p>
-                    <p>menuBtnClickError: {String(this.state.menuBtnClickError)}</p>
                     <p>startHeight: {appParams.startHeight}</p>
                     <p>window height: {this.state.windowHeight}</p>
                     <p>web-app height: {this.state.tgHeight}</p>
