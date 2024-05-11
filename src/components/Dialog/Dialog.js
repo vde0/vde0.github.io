@@ -1,8 +1,7 @@
 import React from 'react';
-import sendBtnIc from '../../icons/to-send.svg';
-import Btn from '../Btn/Btn';
 import { appParams, getClassLine, getStickyPiston, telegram } from '../../utils/utils';
 import './Dialog.css';
+import MsgForm from '../MsgForm/MsgForm';
 
 
 let userDB = {
@@ -203,22 +202,8 @@ export default class Dialog extends React.Component {
                     } )}
                 </ul>
 
-                <form
-                    ref={el => this.msgFormBlock = el}
-                    className={
-                        "dialog__msg-form msg-form " +
-                        (appParams.isIOS ? "msg-form_ios" : appParams.isMobile ? "msg-form_mobile" : "")}>
-                    <input ref={el => this.msgFieldBlock = el}
-                        type="text"
-                        autoFocus
-                        className="msg-form__field msg-form__field_focused"
-                        onInput={this.onInput}/>
-                    <Btn
-                        type="submit"
-                        onClick={this.onSend}
-                        className="msg-form__send-btn"
-                        content={<img src={sendBtnIc}/>} />
-                </form>
+                <MsgForm
+                    className="dialog__msg-form" onInput={this.onInput} onSend={this.onSend} />
             </article>
         );
     }
@@ -236,7 +221,8 @@ export default class Dialog extends React.Component {
         sendMsg(msgBlock, this.chatID);
         this.setState({msgList: this.msgList});
 
-        this.resetMsgForm();
+        console.log(evt.target.form);
+        this.resetMsgForm(evt.target.form);
     }
     onInput (evt) {
         this.msgText = evt.target.value;
@@ -246,8 +232,8 @@ export default class Dialog extends React.Component {
         this.focusMsgField();
     }
 
-    resetMsgForm () {
-        this.msgFormBlock.reset();
+    resetMsgForm (msgFormBlock) {
+        msgFormBlock.reset();
         this.msgText = "";
     }
     
@@ -257,7 +243,7 @@ export default class Dialog extends React.Component {
     }
 
     focusMsgField () {
-        this.msgFieldBlock.focus();
+        // this.msgFieldBlock.focus();
         // this.setState({
         //     msgField: (
         //         <span
