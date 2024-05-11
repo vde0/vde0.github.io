@@ -1,9 +1,9 @@
 import React from 'react';
-import { checkClickByArea, getClassLine, getComponentUpdateHook, appParams, telegram } from './utils/utils';
-import AppContainer from './components/AppContainer';
-import Video from './components/Video';
-import Dialog from './components/Dialog';
-import AppFooter from './components/AppFooter';
+import { checkClickByArea, getClassLine, getComponentUpdateHook, appParams, telegram } from '../../utils/utils';
+import AppContainer from '../AppContainer/AppContainer';
+import Video from '../Video/Video';
+import Dialog from '../Dialog/Dialog';
+import AppFooter from '../AppFooter/AppFooter';
 
 
 export default class App extends React.Component {

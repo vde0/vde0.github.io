@@ -1,7 +1,7 @@
 import React from 'react';
-import sendBtnIc from '../icons/to-send.svg';
-import Btn from './Btn';
-import { appParams, getStickyPiston, telegram } from '../utils/utils';
+import sendBtnIc from '../../icons/to-send.svg';
+import Btn from '../Btn/Btn';
+import { appParams, getStickyPiston, telegram } from '../../utils/utils';
 
 
 let userDB = {

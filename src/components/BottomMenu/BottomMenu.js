@@ -1,11 +1,11 @@
 import React from 'react';
-import Btn from './Btn';
-import msgsIc from '../icons/msgs.svg';
-import addUserIc from '../icons/add-user.svg';
-import reportIc from '../icons/report.png';
-import whiteArrowRightIc from '../icons/white-arrow-right.svg';
-import { appParams } from '../utils/utils';
-import TaskManager from '../utils/TaskManager';
+import Btn from '../Btn/Btn';
+import msgsIc from '../../icons/msgs.svg';
+import addUserIc from '../../icons/add-user.svg';
+import reportIc from '../../icons/report.png';
+import whiteArrowRightIc from '../../icons/white-arrow-right.svg';
+import { appParams } from '../../utils/utils';
+import TaskManager from '../../utils/TaskManager';
 
 
 export default class BottomMenu extends React.Component {

@@ -1,5 +1,5 @@
 import React from 'react';
-import BottomMenu from './BottomMenu';
+import BottomMenu from '../BottomMenu/BottomMenu';
 
 
 export default class AppFooter extends React.Component {

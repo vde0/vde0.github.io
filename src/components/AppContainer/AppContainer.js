@@ -1,6 +1,6 @@
 import React from 'react';
-import { getClassLine, appParams, telegram, getStickyPiston } from '../utils/utils';
-import TaskManager from '../utils/TaskManager';
+import { getClassLine, appParams, telegram, getStickyPiston } from '../../utils/utils';
+import TaskManager from '../../utils/TaskManager';
 
 
 export default class AppContainer extends React.Component {
