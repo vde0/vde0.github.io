@@ -1,12 +1,12 @@
 import React from 'react';
 import { getClassLine, appParams, telegram, getStickyPiston } from '../../utils/utils';
 import TaskManager from '../../utils/TaskManager';
-import './AppContainer.css';
+import './Container.css';
 
 
 export default class AppContainer extends React.Component {
 
-    classLine   = getClassLine("app__container");
+    classLine   = getClassLine("container");
     contentType = "";
     get hook () { return this.props.hook };
 
@@ -15,12 +15,18 @@ export default class AppContainer extends React.Component {
 
         this.hook?.connect(this.updateFunc, this);
         this.piston = getStickyPiston();
+
+        if (this.props.className) {
+            this.classLine.load(this.props.className);
+        }
         
         if (!this.props.contentType || this.props.empty) {
-            this.classLine.add("app__container_empty");
+            this.classLine.add("container_empty");
         } else  this.contentType  = (
-            <this.props.contentType data={this.props.data} piston={this.piston} />
+            <this.props.contentType data={this.props.data} piston={this.piston} className="container__content" erm={1+1} />
         );
+
+        console.log(this.classLine.getLine());
 
         this.state = {
             empty: this.props.empty,
@@ -39,7 +45,7 @@ export default class AppContainer extends React.Component {
                 this.computedTop = this.containerSection.offsetTop;
 
                 this.setState({
-                    classLine: this.classLine.add("app__container_fixing-height").getLine(),
+                    classLine: this.classLine.add("container_fixing-height").getLine(),
                     rendered: true,
                 });
             }, 1);
@@ -68,24 +74,25 @@ export default class AppContainer extends React.Component {
     updateFunc () {
         
         if (!this.props.contentType || this.props.empty) {
-            this.classLine.add("app__container_empty");
+            this.classLine.add("container_empty");
             this.contentType    = "";
         } else {
-            this.classLine.remove("app__container_empty");
+            this.classLine.remove("container_empty");
             this.contentType    = (
-                <this.props.contentType data={this.props.data} piston={this.piston} />
+                <this.props.contentType data={this.props.data} piston={this.piston}
+                    className="container__content" />
             );
         }
         
         if          (this.props.dynamic && !this.props.empty) {
-            this.classLine.add("app__container_dynamic");
+            this.classLine.add("container_dynamic");
             this.piston.movable = this.containerSection;
         } else if   (this.props.dynamic && this.props.empty) {
-            this.classLine.remove("app__container_dynamic");
+            this.classLine.remove("container_dynamic");
             this.piston.movable = null;
             this.containerSection.style.setProperty("height", this.startHeight + "px");
         } else if   (!this.props.dynamic) {
-            this.classLine.remove("app__container_dynamic");
+            this.classLine.remove("container_dynamic");
             this.piston.movable = null;
             this.containerSection.style.setProperty("height", this.startHeight + "px");
         }

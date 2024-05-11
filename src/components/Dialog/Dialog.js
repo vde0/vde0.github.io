@@ -1,7 +1,7 @@
 import React from 'react';
 import sendBtnIc from '../../icons/to-send.svg';
 import Btn from '../Btn/Btn';
-import { appParams, getStickyPiston, telegram } from '../../utils/utils';
+import { appParams, getClassLine, getStickyPiston, telegram } from '../../utils/utils';
 import './Dialog.css';
 
 
@@ -108,10 +108,16 @@ export default class Dialog extends React.Component {
         return chat;
     };
 
+    classLine   = getClassLine("dialog");
+
     constructor (props) {
         super(props);
 
         this.piston         = this.props.piston;
+        
+        if (this.props.className) {
+            this.classLine.load(this.props.className);
+        }
 
         this.onSend         = this.onSend.bind(this);
         this.onInput        = this.onInput.bind(this);
@@ -119,6 +125,7 @@ export default class Dialog extends React.Component {
 
         this.state = {
             msgList: this.msgList,
+            classLine: this.classLine.getLine(),
         }
 
         this.openKeyboardHandler    = this.openKeyboardHandler.bind(this);
@@ -173,7 +180,7 @@ export default class Dialog extends React.Component {
     render () {
         return(
             <article
-                className="dialog"
+                className={this.state.classLine}
                 onClick={this.onClickDialog}>
                 <ul className="dialog__msg-list" ref={el => this.msgListBlock = el}>
                     {this.state.msgList.map( (msg, msg_num) => {

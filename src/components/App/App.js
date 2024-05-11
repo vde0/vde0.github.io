@@ -1,6 +1,6 @@
 import React from 'react';
 import { checkClickByArea, getClassLine, getComponentUpdateHook, appParams, telegram } from '../../utils/utils';
-import AppContainer from '../AppContainer/AppContainer';
+import Container from '../Container/Container';
 import Video from '../Video/Video';
 import Dialog from '../Dialog/Dialog';
 import AppFooter from '../AppFooter/AppFooter';
@@ -107,9 +107,10 @@ export default class App extends React.Component {
                 </div>
 
                 <section className={this.state.appContentClassLine}>
-                    <AppContainer contentType={Video} empty />
-                    <AppContainer
+                    <Container contentType={Video} className="app__container" empty />
+                    <Container
                         contentType={Dialog}
+                        className="app__container"
                         dynamic
                         hook={this.dialogHook}
                         empty={!this.state.dialogShown}

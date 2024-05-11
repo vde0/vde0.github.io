@@ -63,7 +63,7 @@ function getClassLine (classList) {
                 if ( !Array.isArray(classList.classList) ) throw SyntaxError;
                 classList.classList.forEach( className => this.add(className) );
             }
-            else    throw TypeError;
+            else    throw TypeError("invalig arg \"classList\" of the classLine.load(): must be string, array or another classLine object");
 
             return this;
         },
