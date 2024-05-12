@@ -183,7 +183,6 @@ export {
     initApp,
     checkAncestor,
     checkClickByArea,
-    getStickyPiston,
     telegram,
     appParams,
 }

@@ -1,8 +1,9 @@
 import React from 'react';
-import { appParams, telegram, getStickyPiston } from '../../utils/utils';
+import { appParams, telegram } from '../../utils/utils';
 import TaskManager from '../../utils/TaskManager';
 import './Container.css';
 import ClassLine from '../../utils/ClassLine';
+import StickyPiston from '../../utils/StickyPiston';
 
 
 export default class AppContainer extends React.Component {
@@ -15,7 +16,7 @@ export default class AppContainer extends React.Component {
         super(props);
 
         this.hook?.connect(this.updateFunc, this);
-        this.piston = getStickyPiston();
+        this.piston = new StickyPiston();
 
         if (this.props.className) {
             this.classLine.load(this.props.className);
@@ -26,8 +27,6 @@ export default class AppContainer extends React.Component {
         } else  this.contentType  = (
             <this.props.contentType data={this.props.data} piston={this.piston} className="container__content" erm={1+1} />
         );
-
-        console.log(this.classLine.getLine());
 
         this.state = {
             empty: this.props.empty,

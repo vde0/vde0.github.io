@@ -1,5 +1,5 @@
 import React from 'react';
-import { appParams, getStickyPiston, telegram } from '../../utils/utils';
+import { appParams, telegram } from '../../utils/utils';
 import './Dialog.css';
 import MsgForm from '../MsgForm/MsgForm';
 import MsgList from '../MsgList/MsgList';
@@ -223,7 +223,6 @@ export default class Dialog extends React.Component {
     
     openKeyboardHandler (evt) {
         this.scrollDown("instant");
-        getStickyPiston(this.msgFormBlock);
     }
 
     focusMsgField () {
