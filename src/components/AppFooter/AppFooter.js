@@ -8,7 +8,9 @@ export default class AppFooter extends React.Component {
 
     classLine = new ClassLine("app__footer");
 
-    constructor () {
+    constructor (props) {
+        super(props);
+
         if (this.props.hidden) {
             this.classLine.add("app__footer_hidden");
         }

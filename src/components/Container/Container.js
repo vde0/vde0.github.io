@@ -17,10 +17,6 @@ export default class AppContainer extends React.Component {
 
         this.hook?.connect(this.updateFunc, this);
         this.piston = new StickyPiston();
-
-        if (this.props.className) {
-            this.classLine.load(this.props.className);
-        }
         
         if (!this.props.contentType || this.props.empty) {
             this.classLine.add("container_empty");
@@ -30,24 +26,23 @@ export default class AppContainer extends React.Component {
 
         this.state = {
             empty: this.props.empty,
-            classLine: this.classLine.getLine(),
             contentType: this.contentType,
             rendered: false,
         };
+        ClassLine.initPassedClassLine(this);
 
         window.addEventListener("initapp", evt => {
             
             TaskManager.setMacrotask(_ => {
 
+                this.classLine.add("container_fixing-height");
                 this.startHeight    = Number(
                     getComputedStyle(this.containerSection).height.slice(0, -2) );
 
                 this.computedTop = this.containerSection.offsetTop;
-
-                this.setState({
-                    classLine: this.classLine.add("container_fixing-height").getLine(),
-                    rendered: true,
-                });
+                
+                ClassLine.updateState(this);
+                this.setState({ rendered: true });
             }, 1);
         }, {once: true});
     }

@@ -116,9 +116,7 @@ export default class Dialog extends React.Component {
 
         this.piston         = this.props.piston;
         
-        if (this.props.className) {
-            this.classLine.load(this.props.className);
-        }
+        ClassLine.initPassedClassLine(this);
 
         this.onSend         = this.onSend.bind(this);
         this.onInput        = this.onInput.bind(this);
@@ -126,7 +124,6 @@ export default class Dialog extends React.Component {
 
         this.state = {
             msgList: this.msgList,
-            classLine: this.classLine.getLine(),
         }
 
         this.openKeyboardHandler    = this.openKeyboardHandler.bind(this);

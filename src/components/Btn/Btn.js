@@ -5,12 +5,14 @@ import ClassLine from '../../utils/ClassLine';
 
 export default class Btn extends React.Component {
 
+    classLine = new ClassLine("btn");
+
     constructor (props) {
         super(props);
 
-        this.btnClassLine           = new ClassLine("btn");
-        if (this.props.color)       this.btnClassLine.add("btn_color_" + this.props.color);
-        if (this.props.className)   this.btnClassLine.load(this.props.className);
+        ClassLine.initPassedClassLine(this);
+        if (this.props.color)       this.classLine.add("btn_color_" + this.props.color);
+        
 
         this.hasBadge       = false;
         this.badgeClassLine = "";
@@ -33,7 +35,7 @@ export default class Btn extends React.Component {
             <button
                 type={this.props.type ? this.props.type : "button"}
                 onClick={this.props.onClick}
-                className={this.btnClassLine}
+                className={this.classLine}
             >
                 <div className="btn__content">
                     {this.props.content}

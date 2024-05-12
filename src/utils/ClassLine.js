@@ -80,8 +80,8 @@ export default class ClassLine {
 
         return resultCode;
     }
-    static updateClassLine (context) {
-        this.initClassLine();
+    static updateState (context) {
+        this.initClassLine(context);
         context.setState({ classLine: context.classLine.getLine() });
     }
     static initPassedClassLine (context) {
@@ -90,6 +90,7 @@ export default class ClassLine {
         this.initClassLine(context);
         context.classLine.load(context.props.className);
 
+        if (!context.state) context.state = {};
         context.state.classLine = context.classLine.getLine();
     };
 }
