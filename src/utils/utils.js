@@ -6,9 +6,8 @@ function checkAncestor (el, selector) {
     return !!el.closest(selector);
 }
 
-function checkClickByArea (evt, selector) {
-    const el = evt.target;
-    return el.matches(selector) || checkAncestor(el, selector);
+function checkOwnershipToArea (el, selector) {
+    return el.matches(selector) || !!el.closest(selector);
 }
 
 
@@ -108,7 +107,7 @@ if (isMobile) {
 export {
     initApp,
     checkAncestor,
-    checkClickByArea,
+    checkOwnershipToArea,
     telegram,
     appParams,
 }

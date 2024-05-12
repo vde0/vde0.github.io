@@ -1,5 +1,5 @@
 import React from 'react';
-import { checkClickByArea, appParams, telegram } from '../../utils/utils';
+import { checkOwnershipToArea, appParams, telegram } from '../../utils/utils';
 import Container from '../Container/Container';
 import Video from '../Video/Video';
 import Dialog from '../Dialog/Dialog';
@@ -136,8 +136,8 @@ export default class App extends React.Component {
         const dialogSelector    = '.dialog';
         const btnSelector       = '.bottom-menu__btn_mod_msgs';
 
-        const clickDialogCheck  = checkClickByArea(evt, dialogSelector);
-        const clickMsgsBtnCheck = checkClickByArea(evt, btnSelector);
+        const clickDialogCheck  = checkOwnershipToArea(evt, dialogSelector);
+        const clickMsgsBtnCheck = checkOwnershipToArea(evt, btnSelector);
 
         if (!clickDialogCheck && !clickMsgsBtnCheck) {
             this.hideDialog();
