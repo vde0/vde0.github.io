@@ -7,6 +7,7 @@ import AppFooter from '../AppFooter/AppFooter';
 import './App.css';
 import ClassLine from '../../utils/ClassLine';
 import ComponentUpdateHook from '../../utils/ComponentUpdateHook';
+import TaskManager from '../../utils/TaskManager';
 
 
 export default class App extends React.Component {
@@ -44,7 +45,7 @@ export default class App extends React.Component {
 
         this.menuData = {
             unreadedMsgCount: this.state.unreadedMsgCount,
-            onSeeMsgs: this.onSeeMsgs.bind(this),
+            onOpenDialog: this.onOpenDialog.bind(this),
             onAddUser: this.onAddUser.bind(this),
             onReport: this.onReport.bind(this),
             onNext: this.onNext.bind(this),
@@ -54,29 +55,12 @@ export default class App extends React.Component {
     }
 
     componentDidMount () {
-        window.addEventListener("openkeyboard", evt => {
-            setTimeout( _ => this.showDialog() );
-            this.hideFooter();
-
-            this.appContentClassLine.add(
-                appParams.isIOS ? "app__content_for-ios" : "app__content_for-keyboard");
-            this.setState({
-                appContentClassLine: this.appContentClassLine.getLine(),
-                keyboardState: appParams.mobileKeyboardState,
-                keyboardWasOpened: true,
-            });
-        });
-        window.addEventListener("closekeyboard", evt => {
-            this.hideDialog();
-            setTimeout( _ => this.showFooter() );
-
-            this.appContentClassLine.remove(
-                appParams.isIOS ? "app__content_for-ios" : "app__content_for-keyboard");
-            this.setState({
-                appContentClassLine: this.appContentClassLine.getLine(),
-                keyboardState: appParams.mobileKeyboardState,
-            });
-        });
+        if (appParams.isMobile) {
+            this.openKeyboardHandler = this.openKeyboardHandler.bind(this);
+            this.closeKeyboardHandler = this.closeKeyboardHandler.bind(this);
+            window.addEventListener("openkeyboard", this.openKeyboardHandler);
+            window.addEventListener("closekeyboard", this.closeKeyboardHandler);
+        }
 
 
         if (this.log) setInterval(_ => {
@@ -92,6 +76,13 @@ export default class App extends React.Component {
             this.tgHeight       = telegram.viewportHeight;
             this.tgStableHeight = telegram.viewportStableHeight;
         });
+    }
+
+    componentWillUnmount () {
+        if (appParams.isMobile) {
+            window.removeEventListener("openkeyboard", this.openKeyboardHandler);
+            window.removeEventListener("closekeyboard", this.closeKeyboardHandler);
+        }
     }
 
     render () {
@@ -124,7 +115,7 @@ export default class App extends React.Component {
         );
     }
 
-    onSeeMsgs (evt) {
+    onOpenDialog (evt) {
         if (appParams.isMobile)   window.dispatchEvent( new Event("openkeyboard") );
         else            this.toggleDialog();
     }
@@ -136,8 +127,9 @@ export default class App extends React.Component {
         const dialogSelector    = '.dialog';
         const btnSelector       = '.bottom-menu__btn_mod_msgs';
 
-        const clickDialogCheck  = checkOwnershipToArea(evt, dialogSelector);
-        const clickMsgsBtnCheck = checkOwnershipToArea(evt, btnSelector);
+        const el                = evt.target;
+        const clickDialogCheck  = checkOwnershipToArea(el, dialogSelector);
+        const clickMsgsBtnCheck = checkOwnershipToArea(el, btnSelector);
 
         if (!clickDialogCheck && !clickMsgsBtnCheck) {
             this.hideDialog();
@@ -165,5 +157,30 @@ export default class App extends React.Component {
     }
     toggleFooter () {
         this.setState({footerShown: !this.state.footerShown});
+    }
+
+
+    openKeyboardHandler (evt) {
+        TaskManager.setMacrotask(_ => this.showDialog(), 1);
+        this.hideFooter();
+
+        this.appContentClassLine.add(
+            appParams.isIOS ? "app__content_for-ios" : "app__content_for-keyboard");
+        this.setState({
+            appContentClassLine: this.appContentClassLine.getLine(),
+            keyboardState: appParams.mobileKeyboardState,
+            keyboardWasOpened: true,
+        });
+    }
+    closeKeyboardHandler (evt) {
+        this.hideDialog();
+        TaskManager.setMacrotask(_ => this.showFooter(), 1);
+
+        this.appContentClassLine.remove(
+            appParams.isIOS ? "app__content_for-ios" : "app__content_for-keyboard");
+        this.setState({
+            appContentClassLine: this.appContentClassLine.getLine(),
+            keyboardState: appParams.mobileKeyboardState,
+        });
     }
 }

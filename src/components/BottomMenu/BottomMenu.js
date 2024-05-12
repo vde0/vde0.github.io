@@ -14,7 +14,7 @@ export default class BottomMenu extends React.Component {
     constructor (props) {
         super(props);
 
-        this.onChatBtn      = this.props.data.onSeeMsgs;
+        this.onChatBtn      = this.props.data.onOpenDialog;
         this.onAddUserBtn   = this.props.data.onAddUser;
         this.onReportBtn    = this.props.data.onReport;
         this.onNextBtn      = this.props.data.onNext;
