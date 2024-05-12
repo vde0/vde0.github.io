@@ -1,11 +1,12 @@
 import React from 'react';
-import { checkClickByArea, getComponentUpdateHook, appParams, telegram } from '../../utils/utils';
+import { checkClickByArea, appParams, telegram } from '../../utils/utils';
 import Container from '../Container/Container';
 import Video from '../Video/Video';
 import Dialog from '../Dialog/Dialog';
 import AppFooter from '../AppFooter/AppFooter';
 import './App.css';
 import ClassLine from '../../utils/ClassLine';
+import ComponentUpdateHook from '../../utils/ComponentUpdateHook';
 
 
 export default class App extends React.Component {
@@ -49,7 +50,7 @@ export default class App extends React.Component {
             onNext: this.onNext.bind(this),
         }
 
-        this.dialogHook = getComponentUpdateHook();
+        this.dialogHook = new ComponentUpdateHook();
     }
 
     componentDidMount () {
