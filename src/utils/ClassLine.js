@@ -72,4 +72,24 @@ export default class ClassLine {
     getLine () {
         return this.classList.join(" ");
     }
+
+
+    static initClassLine (context) {
+        let resultCode  = false;
+        if (!context.classLine) { context.classLine = new ClassLine(); resultCode = true; }
+
+        return resultCode;
+    }
+    static updateClassLine (context) {
+        this.initClassLine();
+        context.setState({ classLine: context.classLine.getLine() });
+    }
+    static initPassedClassLine (context) {
+        if (!context.props.className) return;
+
+        this.initClassLine(context);
+        context.classLine.load(context.props.className);
+
+        context.state.classLine = context.classLine.getLine();
+    };
 }
