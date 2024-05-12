@@ -1,8 +1,9 @@
 import React from 'react';
-import { appParams, getClassLine, getStickyPiston, telegram } from '../../utils/utils';
+import { appParams, getStickyPiston, telegram } from '../../utils/utils';
 import './Dialog.css';
 import MsgForm from '../MsgForm/MsgForm';
 import MsgList from '../MsgList/MsgList';
+import ClassLine from '../../utils/ClassLine';
 
 
 let userDB = {
@@ -108,7 +109,7 @@ export default class Dialog extends React.Component {
         return chat;
     };
 
-    classLine   = getClassLine("dialog");
+    classLine   = new ClassLine("dialog");
 
     constructor (props) {
         super(props);

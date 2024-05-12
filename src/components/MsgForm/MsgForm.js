@@ -1,13 +1,14 @@
 import React from 'react';
 import './MsgForm.css';
 import Btn from '../Btn/Btn';
-import { appParams, getClassLine } from '../../utils/utils';
+import { appParams } from '../../utils/utils';
 import sendBtnIc from '../../icons/to-send.svg';
+import ClassLine from '../../utils/ClassLine';
 
 
 export default class MsgForm extends React.Component {
 
-    classLine   = getClassLine("msg-form");
+    classLine   = new ClassLine("msg-form");
 
     constructor (props) {
         super(props);

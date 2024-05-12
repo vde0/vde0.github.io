@@ -1,12 +1,13 @@
 import React from 'react';
-import { getClassLine, appParams, telegram, getStickyPiston } from '../../utils/utils';
+import { appParams, telegram, getStickyPiston } from '../../utils/utils';
 import TaskManager from '../../utils/TaskManager';
 import './Container.css';
+import ClassLine from '../../utils/ClassLine';
 
 
 export default class AppContainer extends React.Component {
 
-    classLine   = getClassLine("container");
+    classLine   = new ClassLine("container");
     contentType = "";
     get hook () { return this.props.hook };
 

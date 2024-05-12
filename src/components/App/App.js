@@ -1,10 +1,11 @@
 import React from 'react';
-import { checkClickByArea, getClassLine, getComponentUpdateHook, appParams, telegram } from '../../utils/utils';
+import { checkClickByArea, getComponentUpdateHook, appParams, telegram } from '../../utils/utils';
 import Container from '../Container/Container';
 import Video from '../Video/Video';
 import Dialog from '../Dialog/Dialog';
 import AppFooter from '../AppFooter/AppFooter';
 import './App.css';
+import ClassLine from '../../utils/ClassLine';
 
 
 export default class App extends React.Component {
@@ -19,7 +20,7 @@ export default class App extends React.Component {
         this.hideFooter         = this.hideFooter.bind(this);
 
         this.props.rootHandler.setHandler("click", this.onRootClick);
-        this.appContentClassLine = getClassLine("app__content");
+        this.appContentClassLine = new ClassLine("app__content");
 
         this.state = {
             dialogShown: false,

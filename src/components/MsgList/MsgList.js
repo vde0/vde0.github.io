@@ -1,12 +1,12 @@
 import React from "react";
 import './MsgList.css';
-import { getClassLine } from "../../utils/utils";
 import Msg from "../Msg/Msg";
+import ClassLine from "../../utils/ClassLine";
 
 
 export default class MsgList extends React.Component {
 
-    classLine   = getClassLine("msg-list");
+    classLine   = new ClassLine("msg-list");
 
     constructor (props) {
         super(props);

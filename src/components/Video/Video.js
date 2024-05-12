@@ -1,11 +1,11 @@
 import React from 'react';
 import './Video.css';
-import { getClassLine } from '../../utils/utils';
+import ClassLine from '../../utils/ClassLine';
 
 
 export default class Video extends React.Component {
 
-    classLine   = getClassLine("video");
+    classLine   = new ClassLine("video");
 
     constructor (props) {
         super(props);
