@@ -1,7 +1,7 @@
 import React from 'react';
 import './MsgForm.css';
 import Btn from '../Btn/Btn';
-import { appParams } from '../../utils/utils';
+import { appParams, telegram } from '../../utils/utils';
 import sendBtnIc from '../../icons/to-send.svg';
 import ClassLine from '../../utils/ClassLine';
 
@@ -16,16 +16,27 @@ export default class MsgForm extends React.Component {
         this.onSend     = this.props.onSend;
         this.onInput    = this.props.onInput;
 
-        if (this.props.className) {
-            this.classLine.load(this.props.className);
-        }
+        this.piston     = this.props.piston;
+
+        ClassLine.initPassedClassLine(this);
 
         if (appParams.isIOS)    this.classLine.add("msg-form_ios");
         if (appParams.isMobile) this.classLine.add("msg-form_mobile");
+    }
 
-        this.state = {
-            classLine: this.classLine.getLine(),
-        };
+    componentDidMount () {
+        if (appParams.isMobile) {
+            this.piston.piston = this.msgFormBlock;
+            this.piston.press();
+            //
+            telegram.onEvent("viewportChanged", tg => {
+                this.piston.press();
+            });
+        }
+    }
+
+    componentWillUnmount () {
+        this.piston.piston = null;
     }
 
     render () {

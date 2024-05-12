@@ -21,7 +21,7 @@ export default class AppContainer extends React.Component {
         if (!this.props.contentType || this.props.empty) {
             this.classLine.add("container_empty");
         } else  this.contentType  = (
-            <this.props.contentType data={this.props.data} piston={this.piston} className="container__content" erm={1+1} />
+            <this.props.contentType data={this.props.data} piston={this.piston} className="container__content" />
         );
 
         this.state = {
@@ -47,8 +47,12 @@ export default class AppContainer extends React.Component {
         }, {once: true});
     }
 
-    componentDidMount() {
+    componentDidMount () {
         this.piston.movable = this.containerSection;
+    }
+
+    componentWillUnmount () {
+        this.piston.movable = null;
     }
 
     render () {
@@ -91,6 +95,7 @@ export default class AppContainer extends React.Component {
             this.piston.movable = null;
             this.containerSection.style.setProperty("height", this.startHeight + "px");
         }
+        
 
         this.setState({
             empty: this.props.empty,

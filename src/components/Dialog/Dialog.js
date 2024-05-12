@@ -114,10 +114,6 @@ export default class Dialog extends React.Component {
     constructor (props) {
         super(props);
 
-        this.piston         = this.props.piston;
-        
-        ClassLine.initPassedClassLine(this);
-
         this.onSend         = this.onSend.bind(this);
         this.onInput        = this.onInput.bind(this);
         this.onClickDialog  = this.onClickDialog.bind(this);
@@ -125,30 +121,10 @@ export default class Dialog extends React.Component {
         this.state = {
             msgList: this.msgList,
         }
-
-        this.openKeyboardHandler    = this.openKeyboardHandler.bind(this);
-        this.resizeMsgListHandler   = this.resizeMsgListHandler.bind(this);
+        ClassLine.initPassedClassLine(this);
     }
 
     componentDidMount () {
-        if (appParams.isMobile) {
-            window.addEventListener("openkeyboard", this.openKeyboardHandler);
-
-            this.piston.piston = this.msgFormBlock;
-            this.piston.press();
-            //
-            telegram.onEvent("viewportChanged", tg => {
-                this.piston.press();
-            });
-            
-            this.resizeMsgListObserver = new ResizeObserver( entries => {
-                this.resizeMsgListHandler();
-            } );
-            this.prevMsgListHeight = this.msgListBlock.offsetHeight;
-            this.resizeMsgListObserver.observe(this.msgListBlock);
-        } else {
-            this.scrollDown("instant");
-        }
 
         setTimeout(() => {
             const msgBlock = {
@@ -160,18 +136,10 @@ export default class Dialog extends React.Component {
             this.setState({msgList: this.msgList});
         }, 4e3);
     }
-
-    componentWillUnmount () {
-        setTimeout(_ => {
-            this.piston.piston = null;
-            this.resizeMsgListObserver?.disconnect();
-            window.removeEventListener("openkeyboard", this.openKeyboardHandler);
-        }, 50);
-    }
     
     componentDidUpdate () {
         if (this.state.msgList.at(-1).userID === this.userID) {
-            this.scrollDown("smooth");
+            // this.scrollDown("smooth");
         }
     }
 
@@ -184,7 +152,8 @@ export default class Dialog extends React.Component {
                 <MsgList className="dialog__msg-list" msgList={this.state.msgList} />
 
                 <MsgForm
-                    className="dialog__msg-form" onInput={this.onInput} onSend={this.onSend} />
+                    className="dialog__msg-form"
+                    piston={this.props.piston} onInput={this.onInput} onSend={this.onSend} />
             </article>
         );
     }
@@ -209,17 +178,13 @@ export default class Dialog extends React.Component {
         this.msgText = evt.target.value;
     }
     onClickDialog (evt) {
-        if (evt.target === this.msgFieldBlock) return;
-        this.focusMsgField();
+        // if (evt.target === this.msgFieldBlock) return;
+        // this.focusMsgField();
     }
 
     resetMsgForm (msgFormBlock) {
         msgFormBlock.reset();
         this.msgText = "";
-    }
-    
-    openKeyboardHandler (evt) {
-        this.scrollDown("instant");
     }
 
     focusMsgField () {
@@ -242,33 +207,5 @@ export default class Dialog extends React.Component {
         //         ),
         //     });
         // });
-    }
-
-    resizeMsgListHandler () {
-        this.msgListBlock?.scrollBy({
-            top: this.prevMsgListHeight - this.msgListBlock.offsetHeight,
-            left: 0,
-            behavior: "instant",
-        });
-        this.prevMsgListHeight = this.msgListBlock?.offsetHeight;
-    }
-
-    scrollDown (behaviorArg) {
-        const behaviorValue = behaviorArg ? behaviorArg : "auto";
-        if (typeof behaviorValue !== "string")  throw TypeError(
-            "\"behaviorArg\" arg of Dialog.scrollDown() must be string.");
-        if (
-            behaviorValue !== "instant" &&
-            behaviorValue !== "smooth" &&
-            behaviorValue !== "auto")
-        {
-            throw SyntaxError(
-                "\"behaviorArg\" arg of Dialog.scrollDown() has incorrect value.");
-        }
-        
-        this.msgListBlock?.scrollTo({
-            top: this.msgListBlock.scrollHeight,
-            behavior: behaviorValue,
-        });
     }
 }
