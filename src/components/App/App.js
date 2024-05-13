@@ -33,9 +33,9 @@ export default class App extends React.Component {
             
             keyboardWasOpened: false,
             keyboardState: null,
-            windowHeight: window.innerHeight,
-            tgHeight: telegram.viewportHeight,
-            tgStableHeight: telegram.viewportStableHeight,
+            windowHeight: Math.round(window.innerHeight * 100) / 100,
+            tgHeight: Math.round(telegram.viewportHeight * 100) / 100,
+            tgStableHeight: Math.round(telegram.viewportStableHeight * 100) / 100,
         };
 
         this.dialogData = {
@@ -72,9 +72,9 @@ export default class App extends React.Component {
             if (this.tgStableHeight !== telegram.viewportStableHeight) {
                 this.setState({ tgStableHeight: telegram.viewportStableHeight }); }
 
-            this.windowHeight   = window.innerHeight;
-            this.tgHeight       = telegram.viewportHeight;
-            this.tgStableHeight = telegram.viewportStableHeight;
+            this.windowHeight   = Math.round(window.innerHeight * 100) / 100;
+            this.tgHeight       = Math.round(telegram.viewportHeight * 100) / 100;
+            this.tgStableHeight = Math.round(telegram.viewportStableHeight * 100) / 100;
         });
     }
 
@@ -88,7 +88,7 @@ export default class App extends React.Component {
     render () {
         return (
             <article className="app">
-                {this.showUpdateNum ? <p className="update-num-log">Update num: 29.4.1</p> : ""}
+                {this.showUpdateNum ? <p className="update-num-log">Update num: 29.4.2</p> : ""}
                 <div className={"content-log " + (!this.log ? "content-log_hidden" : "")}>
                     <p>Mobile: {String(appParams.isMobile)} | iOS: {String(appParams.isIOS)}</p>
                     <p>keyboardWasOpened: {String(this.state.keyboardWasOpened)}</p>
