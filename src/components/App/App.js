@@ -52,6 +52,7 @@ export default class App extends React.Component {
         }
 
         this.dialogHook = new UpdateHook();
+        this.footerHook = new UpdateHook();
     }
 
     componentDidMount () {
@@ -88,7 +89,7 @@ export default class App extends React.Component {
     render () {
         return (
             <article className="app">
-                {this.showUpdateNum ? <p className="update-num-log">Update num: 29.4.2</p> : ""}
+                {this.showUpdateNum ? <p className="update-num-log">Update num: 29.5</p> : ""}
                 <div className={"content-log " + (!this.log ? "content-log_hidden" : "")}>
                     <p>Mobile: {String(appParams.isMobile)} | iOS: {String(appParams.isIOS)}</p>
                     <p>keyboardWasOpened: {String(this.state.keyboardWasOpened)}</p>
@@ -111,13 +112,14 @@ export default class App extends React.Component {
                         data={this.dialogData} />
                 </section>
 
-                <AppFooter data={this.menuData} hidden={!this.state.footerShown} />
+                <AppFooter
+                    data={this.menuData} hidden={!this.state.footerShown} hook={this.footerHook} />
             </article>
         );
     }
 
     onOpenDialog (evt) {
-        if (appParams.isMobile) {window.dispatchEvent( new Event("openkeyboard") ); console.log("open chat");}
+        if (appParams.isMobile) window.dispatchEvent( new Event("openkeyboard") );
         else                    this.toggleDialog();
     }
     onAddUser (evt) {}
@@ -132,7 +134,6 @@ export default class App extends React.Component {
         const clickDialogCheck  = checkOwnershipToArea(el, dialogSelector);
         const clickMsgsBtnCheck = checkOwnershipToArea(el, btnSelector);
 
-        console.log(clickDialogCheck + " | " + clickMsgsBtnCheck);
         this.setState({ clickDialogCheck: clickDialogCheck });
 
         if (!clickDialogCheck && !clickMsgsBtnCheck) {
@@ -142,25 +143,28 @@ export default class App extends React.Component {
     }
 
     hideDialog () {
+        this.dialogHook.onAsMacrotask(2);
         this.setState({dialogShown: false});
-        this.dialogHook.on();
     }
     showDialog () {
+        this.dialogHook.onAsMacrotask(2);
         this.setState({dialogShown: true});
-        this.dialogHook.on();
     }
     toggleDialog () {
+        this.dialogHook.onAsMacrotask(2);
         this.setState({dialogShown: !this.state.dialogShown});
-        this.dialogHook.on();
     }
 
     hideFooter () {
+        this.footerHook.onAsMacrotask(2);
         this.setState({footerShown: false});
     }
     showFooter () {
+        this.footerHook.onAsMacrotask(2);
         this.setState({footerShown: true});
     }
     toggleFooter () {
+        this.footerHook.onAsMacrotask(2);
         this.setState({footerShown: !this.state.footerShown});
     }
 

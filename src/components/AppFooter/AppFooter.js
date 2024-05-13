@@ -16,6 +16,7 @@ export default class AppFooter extends React.Component {
         }
 
         ClassLine.initState(this);
+        
     }
 
     getSnapshotBeforeUpdate () {

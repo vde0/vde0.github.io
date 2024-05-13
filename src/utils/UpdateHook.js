@@ -5,6 +5,9 @@ export default class UpdateHook {
         this._customUpdate      = updateFunc.bind(context);
     }
     on () {
-        TaskManager.setMacrotask( _ => this._customUpdate() );
+        this._customUpdate?.()
+    }
+    onAsMacrotask (order) {
+        TaskManager.setMacrotask( _ => this._customUpdate?.(), order );
     }
 }
