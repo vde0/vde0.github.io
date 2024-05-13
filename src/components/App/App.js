@@ -88,7 +88,7 @@ export default class App extends React.Component {
     render () {
         return (
             <article className="app">
-                {this.showUpdateNum ? <p className="update-num-log">Update num: 29.1</p> : ""}
+                {this.showUpdateNum ? <p className="update-num-log">Update num: 29.2</p> : ""}
                 <div className={"content-log " + (!this.log ? "content-log_hidden" : "")}>
                     <p>Mobile: {String(appParams.isMobile)} | iOS: {String(appParams.isIOS)}</p>
                     <p>keyboardWasOpened: {String(this.state.keyboardWasOpened)}</p>
@@ -116,8 +116,8 @@ export default class App extends React.Component {
     }
 
     onOpenDialog (evt) {
-        if (appParams.isMobile)   window.dispatchEvent( new Event("openkeyboard") );
-        else            this.toggleDialog();
+        if (appParams.isMobile) window.dispatchEvent( new Event("openkeyboard") );
+        else                    this.toggleDialog();
     }
     onAddUser (evt) {}
     onReport (evt) {}

@@ -18,10 +18,10 @@ export default class MsgForm extends React.Component {
 
         this.piston     = this.props.piston;
 
-        ClassLine.initPassedClassLine(this);
-
         if (appParams.isIOS)    this.classLine.add("msg-form_ios");
         if (appParams.isMobile) this.classLine.add("msg-form_mobile");
+
+        ClassLine.initPassedClassLine(this);
     }
 
     componentDidMount () {
