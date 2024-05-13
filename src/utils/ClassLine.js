@@ -80,6 +80,13 @@ export default class ClassLine {
 
         return resultCode;
     }
+    static initState (context) {
+        let resultCode  = false;
+        this.initClassLine(this);
+
+        if (!context.state) context.state = {};
+        context.state.classLine = context.classLine.getLine();
+    }
     static updateState (context) {
         this.initClassLine(context);
         context.setState({ classLine: context.classLine.getLine() });
