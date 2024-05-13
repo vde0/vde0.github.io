@@ -88,11 +88,12 @@ export default class App extends React.Component {
     render () {
         return (
             <article className="app">
-                {this.showUpdateNum ? <p className="update-num-log">Update num: 29.4</p> : ""}
+                {this.showUpdateNum ? <p className="update-num-log">Update num: 29.4.1</p> : ""}
                 <div className={"content-log " + (!this.log ? "content-log_hidden" : "")}>
                     <p>Mobile: {String(appParams.isMobile)} | iOS: {String(appParams.isIOS)}</p>
                     <p>keyboardWasOpened: {String(this.state.keyboardWasOpened)}</p>
                     <p>keyboard state: {String(this.state.keyboardState)}</p>
+                    <p>clickDialogCheck: {String(this.state.clickDialogCheck)}</p>
                     <p>startHeight: {appParams.startHeight}</p>
                     <p>window height: {this.state.windowHeight}</p>
                     <p>web-app height: {this.state.tgHeight}</p>
@@ -130,6 +131,9 @@ export default class App extends React.Component {
         const el                = evt.target;
         const clickDialogCheck  = checkOwnershipToArea(el, dialogSelector);
         const clickMsgsBtnCheck = checkOwnershipToArea(el, btnSelector);
+
+        console.log(clickDialogCheck + " | " + clickMsgsBtnCheck);
+        this.setState({ clickDialogCheck: clickDialogCheck });
 
         if (!clickDialogCheck && !clickMsgsBtnCheck) {
             if (!appParams.isMobile) { this.hideDialog(); return; }
