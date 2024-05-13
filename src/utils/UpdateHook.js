@@ -1,6 +1,6 @@
 import TaskManager from "./TaskManager";
 
-export default class ComponentUpdateHook {
+export default class UpdateHook {
     connect (updateFunc, context) {
         this._customUpdate      = updateFunc.bind(context);
     }

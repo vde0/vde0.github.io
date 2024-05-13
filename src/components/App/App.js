@@ -6,7 +6,7 @@ import Dialog from '../Dialog/Dialog';
 import AppFooter from '../AppFooter/AppFooter';
 import './App.css';
 import ClassLine from '../../utils/ClassLine';
-import ComponentUpdateHook from '../../utils/ComponentUpdateHook';
+import UpdateHook from '../../utils/UpdateHook';
 import TaskManager from '../../utils/TaskManager';
 
 
@@ -51,7 +51,7 @@ export default class App extends React.Component {
             onNext: this.onNext.bind(this),
         }
 
-        this.dialogHook = new ComponentUpdateHook();
+        this.dialogHook = new UpdateHook();
     }
 
     componentDidMount () {
