@@ -17,8 +17,7 @@ const mobile_events = new Set([
     "touchmove",
     "touchcancel",
 ]);
-// const isMobile = ('ontouchstart' in document.documentElement && !!(navigator.userAgent.match(/Mobi/)));
-const isMobile  = true;
+const isMobile = ('ontouchstart' in document.documentElement && !!(navigator.userAgent.match(/Mobi/)));
 const isIOS     = !!navigator.userAgent.match(/(iPhone|iPod|iPad)/);
 
 
