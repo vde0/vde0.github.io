@@ -88,7 +88,7 @@ export default class App extends React.Component {
     render () {
         return (
             <article className="app">
-                {this.showUpdateNum ? <p className="update-num-log">Update num: 29.3</p> : ""}
+                {this.showUpdateNum ? <p className="update-num-log">Update num: 29.4</p> : ""}
                 <div className={"content-log " + (!this.log ? "content-log_hidden" : "")}>
                     <p>Mobile: {String(appParams.isMobile)} | iOS: {String(appParams.isIOS)}</p>
                     <p>keyboardWasOpened: {String(this.state.keyboardWasOpened)}</p>
@@ -132,38 +132,31 @@ export default class App extends React.Component {
         const clickMsgsBtnCheck = checkOwnershipToArea(el, btnSelector);
 
         if (!clickDialogCheck && !clickMsgsBtnCheck) {
-            console.log("RootClick");
             if (!appParams.isMobile) { this.hideDialog(); return; }
             window.dispatchEvent( new Event("closekeyboard") );
         };
     }
 
     hideDialog () {
-        console.log("hide dialog");
         this.setState({dialogShown: false});
         this.dialogHook.on();
     }
     showDialog () {
-        console.log("show dialog");
         this.setState({dialogShown: true});
         this.dialogHook.on();
     }
     toggleDialog () {
-        console.log("toggle dialog");
         this.setState({dialogShown: !this.state.dialogShown});
         this.dialogHook.on();
     }
 
     hideFooter () {
-        console.log("hide footer");
         this.setState({footerShown: false});
     }
     showFooter () {
-        console.log("show footer");
         this.setState({footerShown: true});
     }
     toggleFooter () {
-        console.log("toggle footer");
         this.setState({footerShown: !this.state.footerShown});
     }
 

@@ -170,9 +170,8 @@ export default class Dialog extends React.Component {
 
         sendMsg(msgBlock, this.chatID);
         this.setState({msgList: this.msgList});
-
-        console.log(evt.target.form);
-        this.resetMsgForm(evt.target.form);
+        
+        this.resetMsgForm(evt.currentTarget.form);
     }
     onInput (evt) {
         this.msgText = evt.target.value;
