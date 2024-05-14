@@ -76,7 +76,9 @@ export default class MsgForm extends React.Component {
 
     reset() {
         this.msgFormBlock.reset();
-        this.msgText = "";
+        queueMicrotask( _ => {
+            this.msgFieldBlock.dispatchEvent( new Event("input", {bubbles: true}) );
+        } );
     }
 
     focus () {
