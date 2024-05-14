@@ -15,7 +15,7 @@ export default class App extends React.Component {
     constructor (props) {
         super(props);
 
-        this.log            = true;
+        this.log            = false;
         this.showUpdateNum  = true;
 
         this.onRootClick        = this.onRootClick.bind(this);
