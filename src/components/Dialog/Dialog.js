@@ -141,16 +141,6 @@ export default class Dialog extends React.Component {
             window.addEventListener("openkeyboard", this.openKeyboardHandler);
             window.addEventListener("closekeyboard", this.closeKeyboardHandler);
         }
-
-        setTimeout(() => {
-            const msgBlock = {
-                userID: 92,
-                textContent: "SOMEBODY WHOOOOOA",
-            };
-            sendMsg(msgBlock, this.chatID);
-
-            this.setState({ msgList: this.msgList });
-        }, 4e3);
     }
 
     componentWillUnmount () {
