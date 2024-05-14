@@ -82,6 +82,9 @@ export default class MsgForm extends React.Component {
     focus () {
         this.msgFieldBlock.focus();
     }
+    blur () {
+        this.msgFieldBlock.blur();
+    }
 
 
     openKeyboardHandler (evt) {
@@ -99,6 +102,7 @@ export default class MsgForm extends React.Component {
     closeKeyboardHandler (evt) {
         this.piston.piston = null;
         funcBridge = () => {};
+        this.blur();
 
         if (appParams.isMobile) this.classLine.remove("msg-form_mobile");
         if (appParams.isIOS)    this.classLine.remove("msg-form_ios");
