@@ -4,6 +4,7 @@ import './Dialog.css';
 import MsgForm from '../MsgForm/MsgForm';
 import MsgList from '../MsgList/MsgList';
 import ClassLine from '../../utils/ClassLine';
+import TaskManager from '../../utils/TaskManager';
 
 
 let userDB = {
@@ -120,11 +121,16 @@ export default class Dialog extends React.Component {
 
         this.state = {
             msgList: this.msgList,
+            focusFieldUpdater: true,
+            scrollDown: null,
+            scrollDownUpdater: true,
         }
         ClassLine.initPassedClassLine(this);
     }
 
     componentDidMount () {
+
+        this.scrollDown("instant");
 
         setTimeout(() => {
             const msgBlock = {
@@ -139,7 +145,7 @@ export default class Dialog extends React.Component {
     
     componentDidUpdate () {
         if (this.state.msgList.at(-1).userID === this.userID) {
-            // this.scrollDown("smooth");
+            this.scrollDown("smooth");
         }
     }
 
@@ -149,10 +155,15 @@ export default class Dialog extends React.Component {
                 className={this.state.classLine}
                 onClick={this.onClickDialog}>
                 
-                <MsgList className="dialog__msg-list" msgList={this.state.msgList} />
+                <MsgList
+                    className="dialog__msg-list"
+                    scrollDown={this.state.scrollDown}
+                    scrollDownUpdater={this.state.scrollDownUpdater}
+                    msgList={this.state.msgList} />
 
                 <MsgForm
                     className="dialog__msg-form"
+                    focusFieldUpdater={this.state.focusFieldUpdater}
                     piston={this.props.piston} onInput={this.onInput} onSend={this.onSend} />
             </article>
         );
@@ -177,34 +188,24 @@ export default class Dialog extends React.Component {
         this.msgText = evt.target.value;
     }
     onClickDialog (evt) {
-        // if (evt.target === this.msgFieldBlock) return;
-        // this.focusMsgField();
-    }
-
-    resetMsgForm (msgFormBlock) {
-        msgFormBlock.reset();
-        this.msgText = "";
+        this.focusMsgField();
     }
 
     focusMsgField () {
-        // this.msgFieldBlock.focus();
-        // this.setState({
-        //     msgField: (
-        //         <span
-        //             className="msg-form__field-placeholder msg-form__field-placeholder_focused"
-        //             ref={el => this.msgFieldBlock = el}></span>
-        //     ),
-        // });
-        // setTimeout(_ => {
-        //     this.setState({
-        //         msgField: (
-        //             <input ref={el => this.msgFieldBlock = el}
-        //                 type="text"
-        //                 autoFocus
-        //                 className="msg-form__field msg-form__field_focused"
-        //                 onInput={this.onInput}/>
-        //         ),
-        //     });
-        // });
+        this.setState({
+            focusFieldUpdater: !this.state.focusFieldUpdater,
+        });
+    }
+
+    scrollDown(behaviorArg="instant") {
+        if (behaviorArg !== "instant" && behaviorArg !== "smooth" && behaviorArg !== "auto") {
+            throw SyntaxError(
+                "Dialog.scrollDown() take the \"instant\", \"smooth\" and \"auto\" arg values only.");
+        }
+
+        this.setState({
+            scrollDown: behaviorArg,
+            scrollDownUpdater: !this.state.scrollDownUpdater,
+        });
     }
 }

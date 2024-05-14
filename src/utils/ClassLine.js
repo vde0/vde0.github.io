@@ -87,9 +87,10 @@ export default class ClassLine {
         if (!context.state) context.state = {};
         context.state.classLine = context.classLine.getLine();
     }
-    static updateState (context) {
+    static updateState (context, stateName="classLine", propName=null) {
+        if (!propName) propName = stateName;
         this.initClassLine(context);
-        context.setState({ classLine: context.classLine.getLine() });
+        context.setState({ [stateName]: context[propName].getLine() });
     }
     static initPassedClassLine (context) {
         if (!context.props.className) return;

@@ -6,6 +6,11 @@ import sendBtnIc from '../../icons/to-send.svg';
 import ClassLine from '../../utils/ClassLine';
 
 
+let funcBridge = () => {};
+if (appParams.isMobile) telegram.onEvent("viewportChanged", tg => {
+    funcBridge();
+});
+
 export default class MsgForm extends React.Component {
 
     classLine   = new ClassLine("msg-form");
@@ -18,25 +23,30 @@ export default class MsgForm extends React.Component {
 
         this.piston     = this.props.piston;
 
-        if (appParams.isIOS)    this.classLine.add("msg-form_ios");
-        if (appParams.isMobile) this.classLine.add("msg-form_mobile");
-
         ClassLine.initPassedClassLine(this);
     }
 
     componentDidMount () {
         if (appParams.isMobile) {
-            this.piston.piston = this.msgFormBlock;
-            this.piston.press();
-            //
-            telegram.onEvent("viewportChanged", tg => {
-                this.piston.press();
-            });
+            this.openKeyboardHandler    = this.openKeyboardHandler.bind(this);
+            this.closeKeyboardHandler   = this.closeKeyboardHandler.bind(this);
+            window.addEventListener("openkeyboard", this.openKeyboardHandler);
+            window.addEventListener("closekeyboard", this.closeKeyboardHandler);
         }
     }
 
     componentWillUnmount () {
-        this.piston.piston = null;
+        if (appParams.isMobile) {
+            this.piston.piston = null;
+            funcBridge = () => {};
+
+            window.removeEventListener("openkeyboard", this.openKeyboardHandler);
+            window.removeEventListener("closekeyboard", this.closeKeyboardHandler);
+        }
+    }
+
+    componentDidUpdate (prevProps) {
+        if (prevProps.focusFieldUpdater !== this.props.focusFieldUpdater) this.focus();
     }
 
     render () {
@@ -52,10 +62,46 @@ export default class MsgForm extends React.Component {
                     onInput={this.onInput}/>
                 <Btn
                     type="submit"
-                    onClick={this.onSend}
+                    onClick={this.onClick.bind(this)}
                     className="msg-form__send-btn"
                     content={<img src={sendBtnIc}/>} />
             </form>
         );
+    }
+
+    onClick (evt) {
+        this.reset();
+        this.onSend(evt);
+    }
+
+    reset() {
+        this.msgFormBlock.reset();
+        this.msgText = "";
+    }
+
+    focus () {
+        this.msgFieldBlock.focus();
+    }
+
+
+    openKeyboardHandler (evt) {
+        this.piston.piston = this.msgFormBlock;
+        this.piston.press();
+        //
+        funcBridge = () => {
+            this.piston.press();
+        };
+
+        if (appParams.isMobile) this.classLine.add("msg-form_mobile");
+        if (appParams.isIOS)    this.classLine.add("msg-form_ios");
+        ClassLine.updateState(this);
+    }
+    closeKeyboardHandler (evt) {
+        this.piston.piston = null;
+        funcBridge = () => {};
+
+        if (appParams.isMobile) this.classLine.remove("msg-form_mobile");
+        if (appParams.isIOS)    this.classLine.remove("msg-form_ios");
+        ClassLine.updateState(this);
     }
 }

@@ -89,7 +89,7 @@ export default class App extends React.Component {
     render () {
         return (
             <article className="app">
-                {this.showUpdateNum ? <p className="update-num-log">Update num: 29.5.1</p> : ""}
+                {this.showUpdateNum ? <p className="update-num-log">Update num: 30</p> : ""}
                 <div className={"content-log " + (!this.log ? "content-log_hidden" : "")}>
                     <p>Mobile: {String(appParams.isMobile)} | iOS: {String(appParams.isIOS)}</p>
                     <p>keyboardWasOpened: {String(this.state.keyboardWasOpened)}</p>
@@ -119,8 +119,7 @@ export default class App extends React.Component {
     }
 
     onOpenDialog (evt) {
-        if (appParams.isMobile) window.dispatchEvent( new Event("openkeyboard") );
-        else                    this.toggleDialog();
+        this.toggleDialog();
     }
     onAddUser (evt) {}
     onReport (evt) {}
@@ -137,8 +136,7 @@ export default class App extends React.Component {
         this.setState({ clickDialogCheck: clickDialogCheck });
 
         if (!clickDialogCheck && !clickMsgsBtnCheck) {
-            if (!appParams.isMobile) { this.hideDialog(); return; }
-            window.dispatchEvent( new Event("closekeyboard") );
+            this.hideDialog();
         };
     }
 
@@ -170,25 +168,27 @@ export default class App extends React.Component {
 
 
     openKeyboardHandler (evt) {
-        TaskManager.setMacrotask(_ => this.showDialog(), 1);
         this.hideFooter();
 
         this.appContentClassLine.add(
-            appParams.isIOS ? "app__content_for-ios" : "app__content_for-keyboard");
+            appParams.isIOS ? "app__content_for-ios" : "app__content_for-keyboard" );
+        ClassLine.updateState(this, "appContentClassLine");
+        
+        if (!this.log) return;
         this.setState({
-            appContentClassLine: this.appContentClassLine.getLine(),
             keyboardState: appParams.mobileKeyboardState,
             keyboardWasOpened: true,
         });
     }
     closeKeyboardHandler (evt) {
-        this.hideDialog();
-        TaskManager.setMacrotask(_ => this.showFooter(), 1);
+        this.showFooter();
 
         this.appContentClassLine.remove(
-            appParams.isIOS ? "app__content_for-ios" : "app__content_for-keyboard");
+            appParams.isIOS ? "app__content_for-ios" : "app__content_for-keyboard" );
+        ClassLine.updateState(this, "appContentClassLine");
+
+        if (!this.log) return;
         this.setState({
-            appContentClassLine: this.appContentClassLine.getLine(),
             keyboardState: appParams.mobileKeyboardState,
         });
     }

@@ -13,7 +13,6 @@ export default class MsgList extends React.Component {
         super(props);
 
         this.resizeMsgListHandler   = this.resizeMsgListHandler.bind(this);
-        this.openKeyboardHandler    = this.openKeyboardHandler.bind(this);
 
         ClassLine.initPassedClassLine(this);
     }
@@ -21,23 +20,24 @@ export default class MsgList extends React.Component {
     componentDidMount () {
 
         if (appParams.isMobile) {
-            window.addEventListener("openkeyboard", this.openKeyboardHandler);
-
             this.resizeMsgListObserver = new ResizeObserver( entries => {
                 this.resizeMsgListHandler();
             } );
             this.prevMsgListHeight = this.msgListBlock.offsetHeight;
             this.resizeMsgListObserver.observe(this.msgListBlock);
-        } else {
-            this.scrollDown("instant");
         }
     }
 
     componentWillUnmount () {
         if (appParams.isMobile) setTimeout(_ => {
-            window.removeEventListener("openkeyboard", this.openKeyboardHandler);
             this.resizeMsgListObserver?.disconnect();
         }, 50);
+    }
+
+    componentDidUpdate (prevProps) {
+        if (prevProps.scrollDownUpdater !== this.props.scrollDownUpdater) {
+            this.scrollDown(this.props.scrollDown);
+        }
     }
 
     render () {
@@ -58,16 +58,18 @@ export default class MsgList extends React.Component {
     }
 
     scrollDown (behaviorArg) {
+        if (behaviorArg === null) return;
+
         const behaviorValue = behaviorArg ? behaviorArg : "auto";
         if (typeof behaviorValue !== "string")  throw TypeError(
-            "\"behaviorArg\" arg of Dialog.scrollDown() must be string.");
+            "\"behaviorArg\" arg of MsgList.scrollDown() must be string.");
         if (
             behaviorValue !== "instant" &&
             behaviorValue !== "smooth" &&
             behaviorValue !== "auto")
         {
             throw SyntaxError(
-                "\"behaviorArg\" arg of Dialog.scrollDown() has incorrect value.");
+                "\"behaviorArg\" arg of MsgList.scrollDown() has invalid value.");
         }
         
         this.msgListBlock?.scrollTo({
@@ -83,9 +85,5 @@ export default class MsgList extends React.Component {
             behavior: "instant",
         });
         this.prevMsgListHeight = this.msgListBlock?.offsetHeight;
-    }
-
-    openKeyboardHandler (evt) {
-        this.scrollDown("instant");
     }
 }
