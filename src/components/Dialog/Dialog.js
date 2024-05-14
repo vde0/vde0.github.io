@@ -142,12 +142,6 @@ export default class Dialog extends React.Component {
             this.setState({ msgList: this.msgList });
         }, 4e3);
     }
-    
-    componentDidUpdate () {
-        if (this.state.msgList.at(-1).userID === this.userID) {
-            this.scrollDown("smooth");
-        }
-    }
 
     render () {
         return(
@@ -181,6 +175,8 @@ export default class Dialog extends React.Component {
 
         sendMsg(msgBlock, this.chatID);
         this.setState({ msgList: this.msgList });
+
+        TaskManager.setMacrotask( _ => this.scrollDown("smooth"), 1 );
     }
     onInput (evt) {
         this.msgText = evt.target.value;
