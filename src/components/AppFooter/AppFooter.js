@@ -7,20 +7,15 @@ import ClassLine from '../../utils/ClassLine';
 export default class AppFooter extends React.Component {
 
     classLine = new ClassLine("app__footer");
+    get hook () { return this.props.hook };
 
     constructor (props) {
         super(props);
 
-        if (this.props.hidden) {
-            this.classLine.add("app__footer_hidden");
-        }
+        this.hook?.connect( this.hookFunc.bind(this) );
 
+        if ( this.props.hidden ) this.makeHidden();
         ClassLine.initState(this);
-        
-    }
-
-    getSnapshotBeforeUpdate () {
-        this.handleHidden();
     }
 
     render () {
@@ -31,15 +26,17 @@ export default class AppFooter extends React.Component {
         );
     }
 
-    hiddenHandlerOn = true;
-    handleHidden () {
-        if (this.props.hidden) {
-            this.classLine.add("app__footer_hidden");
-        } else {
-            this.classLine.remove("app__footer_hidden");
-        }
+    hookFunc() {
+        if ( this.props.hidden ) this.makeHidden();
+        else                     this.makeVisible();
 
-        if (this.hiddenHandlerOn)   {ClassLine.updateState(this); this.hiddenHandlerOn = false}
-        else                        this.hiddenHandlerOn = true;
+        ClassLine.updateState(this);
+    }
+
+    makeHidden () {
+        this.classLine.add("app__footer_hidden");
+    }
+    makeVisible () {
+        this.classLine.remove("app__footer_hidden");
     }
 }

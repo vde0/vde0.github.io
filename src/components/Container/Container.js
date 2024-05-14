@@ -15,35 +15,23 @@ export default class AppContainer extends React.Component {
     constructor (props) {
         super(props);
 
-        this.hook?.connect(this.updateFunc, this);
+        this.hook?.connect( this.hookFunc.bind(this) );
         this.piston = new StickyPiston();
         
-        if (!this.props.contentType || this.props.empty) {
-            this.classLine.add("container_empty");
-        } else  this.contentType  = (
-            <this.props.contentType data={this.props.data} piston={this.piston} className="container__content" />
-        );
-
+        // Fill this.content
+        if      ( this.checkEmpty() )   this.makeEmpty();
+        else                            this.makeFilled();
+        //
         this.state = {
-            empty: this.props.empty,
-            contentType: this.contentType,
+            content: this.content,
             rendered: false,
         };
         ClassLine.initPassedClassLine(this);
 
+
         window.addEventListener("initapp", evt => {
             
-            TaskManager.setMacrotask(_ => {
-
-                this.classLine.add("container_fixing-height");
-                this.startHeight    = Number(
-                    getComputedStyle(this.containerSection).height.slice(0, -2) );
-
-                this.computedTop = this.containerSection.offsetTop;
-                
-                ClassLine.updateState(this);
-                this.setState({ rendered: true });
-            }, 1);
+            TaskManager.setMacrotask(_ => this.setFixedHeight(), 1);
         }, {once: true});
     }
 
@@ -65,42 +53,70 @@ export default class AppContainer extends React.Component {
                     height: this.startHeight,
                 } : {}}
             >
-                {this.state.contentType}
+                {this.state.content}
             </section>
         );
     }
 
-    updateFunc () {
+    hookFunc () {
         
-        if (!this.props.contentType || this.props.empty) {
-            this.classLine.add("container_empty");
-            this.contentType    = "";
-        } else {
-            this.classLine.remove("container_empty");
-            this.contentType    = (
-                <this.props.contentType data={this.props.data} piston={this.piston}
-                    className="container__content" />
-            );
-        }
+        if ( this.checkEmpty() )    this.makeEmpty();
+        else                        this.makeFilled()
         
-        if          (this.props.dynamic && !this.props.empty) {
-            this.classLine.add("container_dynamic");
-            this.piston.movable = this.containerSection;
-        } else if   (this.props.dynamic && this.props.empty) {
-            this.classLine.remove("container_dynamic");
-            this.piston.movable = null;
-            this.containerSection.style.setProperty("height", this.startHeight + "px");
-        } else if   (!this.props.dynamic) {
-            this.classLine.remove("container_dynamic");
-            this.piston.movable = null;
-            this.containerSection.style.setProperty("height", this.startHeight + "px");
-        }
+        if      ( this.checkDynamic() ) this.makeDynamic();
+        else                            this.makeStatic()
         
+        this.updateComponent();
+    }
 
+    setFixedHeight () {
+        this.classLine.add("container_fixing-height");
+        this.startHeight    = Number(
+            getComputedStyle(this.containerSection).height.slice(0, -2) );
+
+        this.computedTop = this.containerSection.offsetTop;
+        
+        ClassLine.updateState(this);
+        this.setState({ rendered: true });
+    }
+
+
+    updateComponent () {
+        ClassLine.updateState(this);
         this.setState({
-            empty: this.props.empty,
-            classLine: this.classLine.getLine(),
-            contentType: this.contentType,
+            content: this.content,
         });
+    }
+
+    makeEmpty () {
+        this.classLine.add("container_empty");
+        this.content    = "";
+    }
+    makeFilled () {
+        this.classLine.remove("container_empty");
+        this.content    = this.getContent();
+    }
+
+    makeDynamic () {
+        this.classLine.add("container_dynamic");
+        this.piston.movable = this.containerSection;
+    }
+    makeStatic () {
+        this.classLine.remove("container_dynamic");
+        this.piston.movable = null;
+        this.containerSection.style.setProperty("height", this.startHeight + "px");
+    }
+    checkDynamic () {
+        return this.props.dynamic && !this.props.empty;
+    }
+
+    checkEmpty () {
+        return !this.props.contentType || this.props.empty;
+    }
+    getContent () {
+        return  <this.props.contentType
+            data={this.props.data}
+            piston={this.piston}
+            className="container__content" />
     }
 }

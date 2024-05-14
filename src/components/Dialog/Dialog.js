@@ -139,7 +139,7 @@ export default class Dialog extends React.Component {
             };
             sendMsg(msgBlock, this.chatID);
 
-            this.setState({msgList: this.msgList});
+            this.setState({ msgList: this.msgList });
         }, 4e3);
     }
     
@@ -180,9 +180,7 @@ export default class Dialog extends React.Component {
         }
 
         sendMsg(msgBlock, this.chatID);
-        this.setState({msgList: this.msgList});
-        
-        this.resetMsgForm(evt.currentTarget.form);
+        this.setState({ msgList: this.msgList });
     }
     onInput (evt) {
         this.msgText = evt.target.value;
