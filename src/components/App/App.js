@@ -26,6 +26,7 @@ export default class App extends React.Component {
 
         this.state = {
             dialogShown: false,
+            dialogDynamic: true,
             footerShown: true,
             unreadedMsgCount: 1,
 
@@ -41,6 +42,8 @@ export default class App extends React.Component {
         this.dialogData = {
             userID: 555,
             chatID: 1,
+            makeContainerDynamic: this.makeDialogBlockDynamic.bind(this),
+            makeContainerStatic: this.makeDialogBlockStatic.bind(this),
         };
 
         this.menuData = {
@@ -89,7 +92,7 @@ export default class App extends React.Component {
     render () {
         return (
             <article className="app">
-                {this.showUpdateNum ? <p className="update-num-log">Update num: 30.2</p> : ""}
+                {this.showUpdateNum ? <p className="update-num-log">Update num: 31</p> : ""}
                 <div className={"content-log " + (!this.log ? "content-log_hidden" : "")}>
                     <p>Mobile: {String(appParams.isMobile)} | iOS: {String(appParams.isIOS)}</p>
                     <p>keyboardWasOpened: {String(this.state.keyboardWasOpened)}</p>
@@ -106,7 +109,7 @@ export default class App extends React.Component {
                     <Container
                         contentType={Dialog}
                         className="app__container"
-                        dynamic
+                        dynamic={this.state.dialogDynamic}
                         hook={this.dialogHook}
                         empty={!this.state.dialogShown}
                         data={this.dialogData} />
@@ -164,6 +167,16 @@ export default class App extends React.Component {
     toggleFooter () {
         this.footerHook.onAsMacrotask(2);
         this.setState({footerShown: !this.state.footerShown});
+    }
+
+
+    makeDialogBlockDynamic () {
+        this.dialogHook.onAsMacrotask(2);
+        this.setState({ dialogDynamic: true });
+    }
+    makeDialogBlockStatic () {
+        this.dialogHook.onAsMacrotask(2);
+        this.setState({ dialogDynamic: false });
     }
 
 

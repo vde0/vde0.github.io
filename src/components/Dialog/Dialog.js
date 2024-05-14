@@ -86,10 +86,13 @@ function sendMsg (msgBlock, chatID) {
 
 
 export default class Dialog extends React.Component {
-    
-    userID      = this.props.data.userID;
-    chatID      = this.props.data.chatID;
+
+    get userID () { return this.props.data.userID; }
+    get chatID () { return this.props.data.chatID; }
     msgText     = "";
+
+    get makeContainerDynamic () { return this.props.data.makeContainerDynamic }
+    get makeContainerStatic () { return this.props.data.makeContainerStatic }
 
     get msgList () {
         let chat    = getChat(this.chatID);
@@ -132,6 +135,13 @@ export default class Dialog extends React.Component {
 
         this.scrollDown("instant");
 
+        if (appParams.isMobile) {
+            this.openKeyboardHandler = this.openKeyboardHandler.bind(this);
+            this.closeKeyboardHandler = this.closeKeyboardHandler.bind(this);
+            window.addEventListener("openkeyboard", this.openKeyboardHandler);
+            window.addEventListener("closekeyboard", this.closeKeyboardHandler);
+        }
+
         setTimeout(() => {
             const msgBlock = {
                 userID: 92,
@@ -141,6 +151,13 @@ export default class Dialog extends React.Component {
 
             this.setState({ msgList: this.msgList });
         }, 4e3);
+    }
+
+    componentWillUnmount () {
+        if (appParams.isMobile) {
+            window.removeEventListener("openkeyboard", this.openKeyboardHandler);
+            window.removeEventListener("closekeyboard", this.closeKeyboardHandler);
+        }
     }
 
     render () {
@@ -162,6 +179,16 @@ export default class Dialog extends React.Component {
             </article>
         );
     }
+
+
+    openKeyboardHandler (evt) {
+        this.makeContainerDynamic();
+    }
+
+    closeKeyboardHandler (evt) {
+        this.makeContainerStatic();
+    }
+
 
     onSend (evt) {
         evt.preventDefault();

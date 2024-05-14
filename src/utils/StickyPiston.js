@@ -61,6 +61,7 @@ export default class StickyPiston {
     }
 
     press () {
+        if (!this.movableBlock || !this.pistonSurface) return;
         const offset        = this.pistonSurface - this.movableSurface;
         const curHeight     = this.movableBlock.offsetHeight;
         const resultHeight  = curHeight + offset >= 0 ? curHeight + offset : 0;

@@ -24,7 +24,6 @@ export default class AppContainer extends React.Component {
         //
         this.state = {
             content: this.content,
-            rendered: false,
         };
         ClassLine.initPassedClassLine(this);
 
@@ -48,15 +47,12 @@ export default class AppContainer extends React.Component {
             <section
                 ref={el => this.containerSection = el}
                 className={this.state.classLine}
-                style={this.state.rendered ? {
-                    top: this.computedTop,
-                    height: this.startHeight,
-                } : {}}
             >
                 {this.state.content}
             </section>
         );
     }
+
 
     hookFunc () {
         
@@ -69,15 +65,18 @@ export default class AppContainer extends React.Component {
         this.updateComponent();
     }
 
-    setFixedHeight () {
-        this.classLine.add("container_fixing-height");
-        this.startHeight    = Number(
-            getComputedStyle(this.containerSection).height.slice(0, -2) );
 
+    setFixedHeight () {
+        this.startHeight = this.containerSection.clientHeight
         this.computedTop = this.containerSection.offsetTop;
         
+        this.classLine.add("container_fixing-height");
         ClassLine.updateState(this);
-        this.setState({ rendered: true });
+
+        queueMicrotask( _ => {
+            this.containerSection.style.setProperty("height", this.startHeight + "px");
+            this.containerSection.style.setProperty("top", this.computedTop + "px");
+        });
     }
 
 
