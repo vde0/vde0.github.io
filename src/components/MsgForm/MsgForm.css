@@ -11,6 +11,7 @@
 
     background-color: var(--custom-black);
     background-color: var(--tg-theme-bg-color);
+    background-color: inherit;
 
     display: flex;
     gap: 6pt;
