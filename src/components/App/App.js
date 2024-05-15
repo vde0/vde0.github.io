@@ -32,7 +32,6 @@ export default class App extends React.Component {
 
             appContentClassLine: this.appContentClassLine.getLine(),
             
-            keyboardWasOpened: false,
             keyboardState: null,
             windowHeight: Math.round(window.innerHeight * 100) / 100,
             tgHeight: Math.round(telegram.viewportHeight * 100) / 100,
@@ -95,9 +94,7 @@ export default class App extends React.Component {
                 {this.showUpdateNum ? <p className="update-num-log">Update num: 34.3</p> : ""}
                 <div className={"content-log " + (!this.log ? "content-log_hidden" : "")}>
                     <p>Mobile: {String(appParams.isMobile)} | iOS: {String(appParams.isIOS)}</p>
-                    <p>keyboardWasOpened: {String(this.state.keyboardWasOpened)}</p>
                     <p>keyboard state: {String(this.state.keyboardState)}</p>
-                    <p>clickDialogCheck: {String(this.state.clickDialogCheck)}</p>
                     <p>startHeight: {appParams.startHeight}</p>
                     <p>window height: {this.state.windowHeight}</p>
                     <p>web-app height: {this.state.tgHeight}</p>
@@ -135,8 +132,6 @@ export default class App extends React.Component {
         const el                = evt.target;
         const clickDialogCheck  = checkOwnershipToArea(el, dialogSelector);
         const clickMsgsBtnCheck = checkOwnershipToArea(el, btnSelector);
-
-        this.setState({ clickDialogCheck: clickDialogCheck });
 
         if (!clickDialogCheck && !clickMsgsBtnCheck) {
             window.dispatchEvent( new Event("closekeyboard") );
@@ -190,7 +185,6 @@ export default class App extends React.Component {
         if (!this.log) return;
         this.setState({
             keyboardState: appParams.mobileKeyboardState,
-            keyboardWasOpened: true,
         });
     }
     closeKeyboardHandler (evt) {
