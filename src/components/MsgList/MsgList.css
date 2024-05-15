@@ -1,13 +1,11 @@
 .msg-list {
     padding: 8pt 0;
     margin: 0;
-
-    height: 100%;
+    
     overflow-y: scroll;
     -webkit-overflow-scrolling: touch;
     
     list-style: none;
-    color: black;
 }
 
 .msg-item {

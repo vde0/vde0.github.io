@@ -4,9 +4,6 @@
     
     width: 100%;
 
-    height: 100%;
-    flex-grow: 1;
-
     border-radius: 16px;
     -webkit-border-radius: 16px;
     -moz-border-radius: 16px;
@@ -38,5 +35,5 @@
 
 
 .container__content {
-    /* height: 100%; */
+    height: 100%;
 }

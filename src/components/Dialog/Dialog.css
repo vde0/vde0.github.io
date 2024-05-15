@@ -1,12 +1,13 @@
 .dialog {
     width: 100%;
-    height: 100%;
 
     display: flex;
     flex-direction: column;
     justify-content: space-between;
 }
 
-.dialog__msg-list {}
+.dialog__msg-list {
+    height: 100%;
+}
 
 .dialog__msg-form {}

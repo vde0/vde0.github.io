@@ -36,6 +36,7 @@ export default class Btn extends React.Component {
                 type={this.props.type ? this.props.type : "button"}
                 onClick={this.props.onClick}
                 className={this.classLine}
+                tabIndex={-1}
             >
                 <div className="btn__content">
                     {this.props.content}
