@@ -41,6 +41,7 @@ export default class App extends React.Component {
         this.dialogData = {
             userID: 555,
             chatID: 1,
+            blur: () => {},
             makeContainerDynamic: this.makeDialogBlockDynamic.bind(this),
             makeContainerStatic: this.makeDialogBlockStatic.bind(this),
         };
@@ -91,7 +92,7 @@ export default class App extends React.Component {
     render () {
         return (
             <article className="app">
-                {this.showUpdateNum ? <p className="update-num-log">Update num: 35.2</p> : ""}
+                {this.showUpdateNum ? <p className="update-num-log">Update num: 36</p> : ""}
                 <div className={"content-log " + (!this.log ? "content-log_hidden" : "")}>
                     <p>Mobile: {String(appParams.isMobile)} | iOS: {String(appParams.isIOS)}</p>
                     <p>keyboard state: {String(this.state.keyboardState)}</p>
@@ -139,16 +140,21 @@ export default class App extends React.Component {
     }
 
     hideDialog () {
+        this.dialogBlur();
         this.dialogHook.onAsMacrotask(1);
         this.setState({dialogShown: false});
     }
     showDialog () {
-        this.dialogHook.onAsMacrotask(2);
+        this.dialogHook.onAsMacrotask(1);
         this.setState({dialogShown: true});
     }
     toggleDialog () {
-        this.dialogHook.onAsMacrotask(1);
-        this.setState({dialogShown: !this.state.dialogShown});
+        if (this.state.dialogShown) this.hideDialog();
+        else                        this.showDialog();
+    }
+
+    dialogBlur () {
+        this.dialogData.blur();
     }
 
     hideFooter () {
@@ -156,12 +162,12 @@ export default class App extends React.Component {
         this.setState({footerShown: false});
     }
     showFooter () {
-        this.footerHook.onAsMacrotask(2);
+        this.footerHook.onAsMacrotask(1);
         this.setState({footerShown: true});
     }
     toggleFooter () {
-        this.footerHook.onAsMacrotask(2);
-        this.setState({footerShown: !this.state.footerShown});
+        if (this.state.footerShown) this.hideFooter();
+        else                        this.showFooter();
     }
 
 

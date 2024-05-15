@@ -27,6 +27,10 @@ export default class MsgForm extends React.Component {
     }
 
     componentDidMount () {
+        if (typeof this.props.focusField === "boolean") {
+            this.props.focusField ? this.focus() : this.blur();
+        }
+
         if (appParams.isMobile) {
             this.openKeyboardHandler    = this.openKeyboardHandler.bind(this);
             this.closeKeyboardHandler   = this.closeKeyboardHandler.bind(this);
@@ -46,7 +50,9 @@ export default class MsgForm extends React.Component {
     }
 
     componentDidUpdate (prevProps) {
-        if (prevProps.focusFieldUpdater !== this.props.focusFieldUpdater) this.focus();
+        if (prevProps.focusFieldUpdater !== this.props.focusFieldUpdater) {
+            this.props.focusField ? this.focus() : this.blur();
+        }
     }
 
     render () {

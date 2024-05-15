@@ -124,6 +124,7 @@ export default class Dialog extends React.Component {
 
         this.state = {
             msgList: this.msgList,
+            focusField: true,
             focusFieldUpdater: true,
             scrollDown: null,
             scrollDownUpdater: true,
@@ -135,6 +136,8 @@ export default class Dialog extends React.Component {
 
         this.scrollDown("instant");
 
+        this.props.data.blur = this.blurMsgField.bind(this);
+
         if (appParams.isMobile) {
             this.openKeyboardHandler = this.openKeyboardHandler.bind(this);
             this.closeKeyboardHandler = this.closeKeyboardHandler.bind(this);
@@ -144,6 +147,7 @@ export default class Dialog extends React.Component {
     }
 
     componentWillUnmount () {
+        this.props.data.blur = () => {};
         if (appParams.isMobile) {
             window.removeEventListener("openkeyboard", this.openKeyboardHandler);
             window.removeEventListener("closekeyboard", this.closeKeyboardHandler);
@@ -164,6 +168,7 @@ export default class Dialog extends React.Component {
 
                 <MsgForm
                     className="dialog__msg-form"
+                    focusField={this.state.focusField}
                     focusFieldUpdater={this.state.focusFieldUpdater}
                     piston={this.props.piston} onInput={this.onInput} onSend={this.onSend} />
             </article>
@@ -204,6 +209,13 @@ export default class Dialog extends React.Component {
 
     focusMsgField () {
         this.setState({
+            focusField: true,
+            focusFieldUpdater: !this.state.focusFieldUpdater,
+        });
+    }
+    blurMsgField () {
+        this.setState({
+            focusField: false,
             focusFieldUpdater: !this.state.focusFieldUpdater,
         });
     }
