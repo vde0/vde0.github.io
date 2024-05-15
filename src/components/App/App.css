@@ -29,10 +29,7 @@
 }
 
 .app__content_for-keyboard {
-    padding-bottom: 64px;
-}
-.app__content_for-ios {
-    padding-bottom: 94px;
+    padding-bottom: 0;
 }
 
 
