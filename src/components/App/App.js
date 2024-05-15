@@ -92,7 +92,7 @@ export default class App extends React.Component {
     render () {
         return (
             <article className="app">
-                {this.showUpdateNum ? <p className="update-num-log">Update num: 34</p> : ""}
+                {this.showUpdateNum ? <p className="update-num-log">Update num: 34.1</p> : ""}
                 <div className={"content-log " + (!this.log ? "content-log_hidden" : "")}>
                     <p>Mobile: {String(appParams.isMobile)} | iOS: {String(appParams.isIOS)}</p>
                     <p>keyboardWasOpened: {String(this.state.keyboardWasOpened)}</p>
@@ -148,7 +148,7 @@ export default class App extends React.Component {
         this.setState({dialogShown: false});
     }
     showDialog () {
-        this.dialogHook.onAsMacrotask(1);
+        this.dialogHook.onAsMacrotask(2);
         this.setState({dialogShown: true});
     }
     toggleDialog () {
@@ -161,11 +161,11 @@ export default class App extends React.Component {
         this.setState({footerShown: false});
     }
     showFooter () {
-        this.footerHook.onAsMacrotask(1);
+        this.footerHook.onAsMacrotask(2);
         this.setState({footerShown: true});
     }
     toggleFooter () {
-        this.footerHook.onAsMacrotask(1);
+        this.footerHook.onAsMacrotask(2);
         this.setState({footerShown: !this.state.footerShown});
     }
 
