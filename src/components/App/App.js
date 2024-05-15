@@ -134,7 +134,6 @@ export default class App extends React.Component {
         const clickMsgsBtnCheck = checkOwnershipToArea(el, btnSelector);
 
         if (!clickDialogCheck && !clickMsgsBtnCheck) {
-            window.dispatchEvent( new Event("closekeyboard") );
             this.hideDialog();
         };
     }
