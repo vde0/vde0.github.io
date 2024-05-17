@@ -2,7 +2,7 @@ import React from 'react';
 import './MsgForm.css';
 import Btn from '../Btn/Btn';
 import { appParams, telegram } from '../../utils/utils';
-import sendBtnIc from '../../icons/to-send.svg';
+import SendIc from '../../icons/to-send.svg';
 import ClassLine from '../../utils/ClassLine';
 
 
@@ -70,7 +70,7 @@ export default class MsgForm extends React.Component {
                     type="submit"
                     onClick={this.onClick.bind(this)}
                     className="msg-form__send-btn"
-                    content={<img src={sendBtnIc}/>} />
+                    content={<SendIc />} />
             </form>
         );
     }
