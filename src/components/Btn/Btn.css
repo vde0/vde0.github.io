@@ -3,15 +3,12 @@
 
     padding: 6pt;
     box-sizing: border-box;
-    /* background-color: var(--tg-theme-button-color); */
     background-color: var(--tg-theme-secondary-bg-color);
     border: none;
     border-radius: 16px;
     -webkit-border-radius: 16px;
     -moz-border-radius: 16px;
     
-    color: var(--tg-theme-button-text-color);
-    color: white;
     font-family: inherit;
     cursor: pointer;
     
@@ -53,8 +50,10 @@ svg.btn__icon > path {
     height: 100%;
 }
 
-svg.btn__icon * {
+svg.btn__icon .msgs_svg__str0 {
     stroke: var(--tg-theme-text-color);
+}
+svg.btn__icon .msgs_svg__fil1 {
     fill: var(--tg-theme-text-color);
 }
 
