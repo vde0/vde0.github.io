@@ -4,8 +4,8 @@ export default class UpdateHook {
     connect (updateFunc) {
         this._customUpdate  = updateFunc;
     }
-    on () {
-        this._customUpdate?.()
+    on (...args) {
+        this._customUpdate?.(...args)
     }
     onAsMacrotask (order) {
         TaskManager.setMacrotask( _ => this._customUpdate?.(), order );

@@ -5,6 +5,7 @@ import MsgForm from '../MsgForm/MsgForm';
 import MsgList from '../MsgList/MsgList';
 import ClassLine from '../../utils/ClassLine';
 import TaskManager from '../../utils/TaskManager';
+import UpdateHook from '../../utils/UpdateHook';
 
 
 let userDB = {
@@ -122,6 +123,8 @@ export default class Dialog extends React.Component {
         this.onInput        = this.onInput.bind(this);
         this.onClickDialog  = this.onClickDialog.bind(this);
 
+        this.focusHook      = new UpdateHook();
+
         this.state = {
             msgList: this.msgList,
             focusField: true,
@@ -136,7 +139,7 @@ export default class Dialog extends React.Component {
 
         this.scrollDown("instant");
 
-        this.props.data.blur = this.blurMsgField.bind(this);
+        this.props.data.blur    = this.blurMsgField.bind(this);
 
         if (appParams.isMobile) {
             this.openKeyboardHandler = this.openKeyboardHandler.bind(this);
@@ -168,8 +171,7 @@ export default class Dialog extends React.Component {
 
                 <MsgForm
                     className="dialog__msg-form"
-                    focusField={this.state.focusField}
-                    focusFieldUpdater={this.state.focusFieldUpdater}
+                    focusHook={this.focusHook}
                     piston={this.props.piston} onInput={this.onInput} onSend={this.onSend} />
             </article>
         );
@@ -208,16 +210,10 @@ export default class Dialog extends React.Component {
     }
 
     focusMsgField () {
-        this.setState({
-            focusField: true,
-            focusFieldUpdater: !this.state.focusFieldUpdater,
-        });
+        this.focusHook.on(true);
     }
     blurMsgField () {
-        this.setState({
-            focusField: false,
-            focusFieldUpdater: !this.state.focusFieldUpdater,
-        });
+        this.focusHook.on(false);
     }
 
     scrollDown(behaviorArg="instant") {

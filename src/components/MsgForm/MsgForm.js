@@ -27,9 +27,8 @@ export default class MsgForm extends React.Component {
     }
 
     componentDidMount () {
-        if (typeof this.props.focusField === "boolean") {
-            this.props.focusField ? this.focus() : this.blur();
-        }
+
+        this.props.focusHook.connect( this.updateFocus.bind(this) );
 
         if (appParams.isMobile) {
             this.openKeyboardHandler    = this.openKeyboardHandler.bind(this);
@@ -85,6 +84,11 @@ export default class MsgForm extends React.Component {
         queueMicrotask( _ => {
             this.msgFieldBlock.dispatchEvent( new Event("input", {bubbles: true}) );
         } );
+    }
+
+
+    updateFocus (mod) {
+        ( mod ? this.focus() : this.blur() );
     }
 
     focus () {
