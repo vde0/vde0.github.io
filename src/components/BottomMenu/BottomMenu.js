@@ -1,9 +1,9 @@
 import React from 'react';
 import Btn from '../Btn/Btn';
-import msgsIc from '../../icons/msgs.svg';
-import addUserIc from '../../icons/add-user.svg';
-import reportIc from '../../icons/report.png';
-import whiteArrowRightIc from '../../icons/white-arrow-right.svg';
+import MsgsIc from '../../icons/msgs.svg';
+import AddUserIc from '../../icons/add-user.svg';
+import ReportIc from '../../icons/report.png';
+import WhiteArrowRightIc from '../../icons/white-arrow-right.svg';
 import { appParams } from '../../utils/utils';
 import TaskManager from '../../utils/TaskManager';
 import './BottomMenu.css';
@@ -24,20 +24,21 @@ export default class BottomMenu extends React.Component {
         this.btns = [
             {
                 mod: "msgs",
-                content: <img src={msgsIc} />,
+                content: <MsgsIc className="btn__icon" />,
                 badge: {value: this.msgCount, color: "red"},
                 onClick: this.onChatBtn,
                 get classLine () { return "bottom-menu__btn bottom-menu__btn_mod_" + this.mod; },
             },
             {
                 mod: "add-user",
-                content: <img src={addUserIc} />,
+                content: <AddUserIc className="btn__icon" />,
                 onClick: this.onAddUserBtn,
                 get classLine () { return "bottom-menu__btn bottom-menu__btn_mod_" + this.mod; },
             },
             {
                 mod: "report",
-                content: <img src={reportIc} width="43" height="35" />,
+                // content: <ReportIc className="btn__icon" />,
+                content: <img className="btn__icon" src={ReportIc} width="43" height="35" />,
                 onClick: this.onReportBtn,
                 get classLine () { return "bottom-menu__btn bottom-menu__btn_mod_" + this.mod; },
             },
@@ -46,8 +47,8 @@ export default class BottomMenu extends React.Component {
                 color: "blue",
                 content: (
                     <>
-                        <span>Next</span>
-                        <img src={whiteArrowRightIc} />
+                        <span className="btn__text">Next</span>
+                        <WhiteArrowRightIc className="btn__icon" />
                     </>
                 ),
                 onClick: this.onNextBtn,

@@ -45,8 +45,22 @@
     align-items: center;
     justify-content: center;
 }
-.btn__content > img {
+
+.btn__icon {
     height: 100%;
+}
+svg.btn__icon > path {
+    height: 100%;
+}
+
+svg.btn__icon * {
+    stroke: var(--tg-theme-text-color);
+    fill: var(--tg-theme-text-color);
+}
+
+
+.btn__text {
+    color: var(--tg-theme-text-color);
 }
 
 .btn__badge {
