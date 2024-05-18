@@ -183,7 +183,7 @@ export default class Dialog extends React.Component {
     }
 
     closeKeyboardHandler (evt) {
-        this.makeContainerStatic();
+        TaskManager.setMacrotask(_ => this.makeContainerStatic(), 3);
     }
 
 
