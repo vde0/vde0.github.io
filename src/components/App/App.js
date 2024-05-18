@@ -93,7 +93,7 @@ export default class App extends React.Component {
     render () {
         return (
             <article className="app">
-                {this.showUpdateNum ? <p className="update-num-log">Update num: 38.4.1</p> : ""}
+                {this.showUpdateNum ? <p className="update-num-log">Update num: 38.5</p> : ""}
                 <div className={"content-log " + (!this.log ? "content-log_hidden" : "")}>
                     <p>Mobile: {String(appParams.isMobile)} | iOS: {String(appParams.isIOS)}</p>
                     <p>keyboard state: {String(this.state.keyboardState)}</p>
@@ -143,11 +143,11 @@ export default class App extends React.Component {
     hideDialog () {
         this.dialogBlur();
         this.dialogShown = false;
-        setTimeout(_ => this.dialogContainerEmptyHook.on(!this.dialogShown), 1e3);
+        this.dialogContainerEmptyHook.on(!this.dialogShown);
     }
     showDialog () {
         this.dialogShown = true;
-        this.dialogContainerEmptyHook.onAsMacrotask(1, !this.dialogShown);
+        this.dialogContainerEmptyHook.on(!this.dialogShown);
     }
     toggleDialog () {
         if (this.dialogShown)   this.hideDialog();
@@ -160,11 +160,11 @@ export default class App extends React.Component {
 
     hideFooter () {
         this.footerShown = false;
-        this.footerHook.onAsMacrotask(1, !this.footerShown);
+        this.footerHook.on(!this.footerShown);
     }
     showFooter () {
         this.footerShown = true;
-        this.footerHook.onAsMacrotask(1, !this.footerShown);
+        this.footerHook.on(!this.footerShown);
     }
     toggleFooter () {
         if (this.footerShown)   this.hideFooter();
