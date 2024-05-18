@@ -95,7 +95,7 @@ export default class AppContainer extends React.Component {
         this.classLine.add("container_empty");
         this.content    = "";
 
-        this.makeStatic();
+        TaskManager.setMacrotask(_ => this.makeStatic());
     }
     makeFilled () {
         this.classLine.remove("container_empty");
