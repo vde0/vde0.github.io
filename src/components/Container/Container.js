@@ -94,6 +94,8 @@ export default class AppContainer extends React.Component {
     makeEmpty () {
         this.classLine.add("container_empty");
         this.content    = "";
+
+        this.makeStatic();
     }
     makeFilled () {
         this.classLine.remove("container_empty");
@@ -107,7 +109,7 @@ export default class AppContainer extends React.Component {
     makeStatic () {
         this.classLine.remove("container_dynamic");
         this.piston.movable = null;
-        this.containerSection.style.setProperty("height", this.startHeight + "px");
+        this.containerSection?.style.setProperty("height", this.startHeight + "px");
     }
 
     getContent () {
