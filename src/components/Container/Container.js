@@ -10,17 +10,16 @@ export default class AppContainer extends React.Component {
 
     classLine   = new ClassLine("container");
     contentType = "";
-    get hook () { return this.props.hook };
 
     constructor (props) {
         super(props);
 
-        this.hook?.connect( this.hookFunc.bind(this) );
+        this.props.emptyHook?.connect( this.emptyHookFunc.bind(this) );
+        this.props.dynamicHook?.connect( this.dynamicHookFunc.bind(this) );
         this.piston = new StickyPiston();
         
         // Fill this.content
-        if      ( this.checkEmpty() )   this.makeEmpty();
-        else                            this.makeFilled();
+        this.makeEmpty();
         //
         this.state = {
             content: this.content,
@@ -54,13 +53,18 @@ export default class AppContainer extends React.Component {
     }
 
 
-    hookFunc () {
+    emptyHookFunc (emptyFlag) {
         
-        if ( this.checkEmpty() )    this.makeEmpty();
+        if      ( emptyFlag )       this.makeEmpty();
         else                        this.makeFilled()
         
-        if      ( this.checkDynamic() ) this.makeDynamic();
-        else                            this.makeStatic()
+        this.updateComponent();
+    }
+
+    dynamicHookFunc (dynamicFlag) {
+
+        if      ( dynamicFlag )     this.makeDynamic();
+        else                        this.makeStatic();
         
         this.updateComponent();
     }
@@ -105,13 +109,7 @@ export default class AppContainer extends React.Component {
         this.piston.movable = null;
         this.containerSection.style.setProperty("height", this.startHeight + "px");
     }
-    checkDynamic () {
-        return this.props.dynamic && !this.props.empty;
-    }
 
-    checkEmpty () {
-        return !this.props.contentType || this.props.empty;
-    }
     getContent () {
         return  <this.props.contentType
             data={this.props.data}

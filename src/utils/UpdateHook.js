@@ -7,7 +7,7 @@ export default class UpdateHook {
     on (...args) {
         this._customUpdate?.(...args)
     }
-    onAsMacrotask (order) {
-        TaskManager.setMacrotask( _ => this._customUpdate?.(), order );
+    onAsMacrotask (order, ...args) {
+        TaskManager.setMacrotask( _ => this._customUpdate?.(...args), order );
     }
 }

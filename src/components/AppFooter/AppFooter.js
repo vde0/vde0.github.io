@@ -26,9 +26,9 @@ export default class AppFooter extends React.Component {
         );
     }
 
-    hookFunc() {
-        if ( this.props.hidden ) this.makeHidden();
-        else                     this.makeVisible();
+    hookFunc (isHidden) {
+        if ( isHidden )     this.makeHidden();
+        else                this.makeVisible();
 
         ClassLine.updateState(this);
     }

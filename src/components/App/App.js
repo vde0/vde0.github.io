@@ -18,6 +18,9 @@ export default class App extends React.Component {
         this.log            = true;
         this.showUpdateNum  = true;
 
+        this.dialogShown    = false;
+        this.footerShown    = true;
+
         this.onRootClick        = this.onRootClick.bind(this);
         this.hideFooter         = this.hideFooter.bind(this);
 
@@ -25,9 +28,6 @@ export default class App extends React.Component {
         this.appContentClassLine = new ClassLine("app__content");
 
         this.state = {
-            dialogShown: false,
-            dialogDynamic: true,
-            footerShown: true,
             unreadedMsgCount: 1,
 
             appContentClassLine: this.appContentClassLine.getLine(),
@@ -54,7 +54,8 @@ export default class App extends React.Component {
             onNext: this.onNext.bind(this),
         }
 
-        this.dialogHook = new UpdateHook();
+        this.dialogContainerEmptyHook   = new UpdateHook();
+        this.dialogContainerDynamicHook = new UpdateHook();
         this.footerHook = new UpdateHook();
     }
 
@@ -92,7 +93,7 @@ export default class App extends React.Component {
     render () {
         return (
             <article className="app">
-                {this.showUpdateNum ? <p className="update-num-log">Update num: 38.3.2</p> : ""}
+                {this.showUpdateNum ? <p className="update-num-log">Update num: 38.4</p> : ""}
                 <div className={"content-log " + (!this.log ? "content-log_hidden" : "")}>
                     <p>Mobile: {String(appParams.isMobile)} | iOS: {String(appParams.isIOS)}</p>
                     <p>keyboard state: {String(this.state.keyboardState)}</p>
@@ -107,14 +108,14 @@ export default class App extends React.Component {
                     <Container
                         contentType={Dialog}
                         className="app__container"
-                        dynamic={this.state.dialogDynamic}
-                        hook={this.dialogHook}
-                        empty={!this.state.dialogShown}
+                        dynamicHook={this.dialogContainerDynamicHook}
+                        emptyHook={this.dialogContainerEmptyHook}
+                        empty={!this.dialogShown}
                         data={this.dialogData} />
                 </section>
 
                 <AppFooter
-                    data={this.menuData} hidden={!this.state.footerShown} hook={this.footerHook} />
+                    data={this.menuData} hidden={!this.footerShown} hook={this.footerHook} />
             </article>
         );
     }
@@ -141,16 +142,16 @@ export default class App extends React.Component {
 
     hideDialog () {
         this.dialogBlur();
-        // setTimeout(_ => this.dialogHook.on(), 1e3);
-        this.setState({dialogShown: false});
+        this.dialogShown = false;
+        setTimeout(_ => this.dialogContainerEmptyHook.on(!this.dialogShown), 1e3);
     }
     showDialog () {
-        this.dialogHook.onAsMacrotask(1);
-        this.setState({dialogShown: true});
+        this.dialogShown = true;
+        this.dialogContainerEmptyHook.onAsMacrotask(1, !this.dialogShown);
     }
     toggleDialog () {
-        if (this.state.dialogShown) this.hideDialog();
-        else                        this.showDialog();
+        if (this.dialogShown)   this.hideDialog();
+        else                    this.showDialog();
     }
 
     dialogBlur () {
@@ -158,26 +159,24 @@ export default class App extends React.Component {
     }
 
     hideFooter () {
-        this.footerHook.onAsMacrotask(1);
-        this.setState({footerShown: false});
+        this.footerShown = false;
+        this.footerHook.onAsMacrotask(1, !this.footerShown);
     }
     showFooter () {
-        this.footerHook.onAsMacrotask(1);
-        this.setState({footerShown: true});
+        this.footerShown = true;
+        this.footerHook.onAsMacrotask(1, !this.footerShown);
     }
     toggleFooter () {
-        if (this.state.footerShown) this.hideFooter();
-        else                        this.showFooter();
+        if (this.footerShown)   this.hideFooter();
+        else                    this.showFooter();
     }
 
 
     makeDialogBlockDynamic () {
-        this.dialogHook.onAsMacrotask(1);
-        this.setState({ dialogDynamic: true });
+        this.dialogContainerDynamicHook.onAsMacrotask(1, true);
     }
     makeDialogBlockStatic () {
-        this.dialogHook.onAsMacrotask(1);
-        this.setState({ dialogDynamic: false });
+        this.dialogContainerDynamicHook.onAsMacrotask(1, false);
     }
 
 
