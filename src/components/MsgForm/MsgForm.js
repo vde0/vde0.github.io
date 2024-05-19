@@ -47,7 +47,7 @@ export default class MsgForm extends React.Component {
             TaskManager.setMacrotask(_ => {
                 window.removeEventListener("openkeyboard", this.openKeyboardHandler);
                 window.removeEventListener("closekeyboard", this.closeKeyboardHandler);
-            });
+            }, 2);
         }
     }
 
