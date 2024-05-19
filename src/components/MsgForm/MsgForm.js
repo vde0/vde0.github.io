@@ -4,6 +4,7 @@ import Btn from '../Btn/Btn';
 import { appParams, telegram } from '../../utils/utils';
 import SendIc from '../../icons/to-send.svg';
 import ClassLine from '../../utils/ClassLine';
+import TaskManager from '../../utils/TaskManager';
 
 
 let funcBridge = () => {};
@@ -43,8 +44,10 @@ export default class MsgForm extends React.Component {
             this.piston.piston = null;
             funcBridge = () => {};
 
-            window.removeEventListener("openkeyboard", this.openKeyboardHandler);
-            window.removeEventListener("closekeyboard", this.closeKeyboardHandler);
+            TaskManager.setMacrotask(_ => {
+                window.removeEventListener("openkeyboard", this.openKeyboardHandler);
+                window.removeEventListener("closekeyboard", this.closeKeyboardHandler);
+            });
         }
     }
 
