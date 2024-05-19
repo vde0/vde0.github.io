@@ -8,9 +8,9 @@
     --custom-blue: #54A9E9;
     --custom-orange: #FF8B49;
 
-    --tg-offset: 0pt;
-    --tg-top: calc(100vh - var(--tg-viewport-stable-height) - var(--tg-offset));
-    --tg-bottom: var(--tg-offset);
+    /* --tg-offset: 0pt; */
+    --tg-top: calc(100vh - var(--tg-viewport-stable-height));
+    --tg-bottom: 0pt;
 
     --app-padding: 12pt;
     --app-padding-x: 8pt;
