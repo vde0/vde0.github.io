@@ -152,7 +152,7 @@ export default class Dialog extends React.Component {
     componentWillUnmount () {
         this.props.data.blur = () => {};
         if (appParams.isMobile) {
-            setTimeout(_ => this.makeContainerStatic(), 500);
+            this.makeContainerStatic();
             window.removeEventListener("openkeyboard", this.openKeyboardHandler);
             window.removeEventListener("closekeyboard", this.closeKeyboardHandler);
         }
