@@ -16,16 +16,7 @@
     left: var(--app-padding-left);
 }
 
-.container_empty::before {
-    content: "";
-    display: block;
-
-    position: absolute;
-    height: 100%;
-    width: 100%;
-    top: 0;
-    left: 0;
-
+.container_empty {
     background-color: var(--cutom-light);
     background-image: url("../../imgs/anonim-girl_placeholder.svg");
     background-repeat: no-repeat;
