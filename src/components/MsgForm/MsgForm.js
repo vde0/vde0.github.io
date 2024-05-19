@@ -44,10 +44,8 @@ export default class MsgForm extends React.Component {
             this.piston.piston = null;
             funcBridge = () => {};
 
-            TaskManager.setMacrotask(_ => {
-                window.removeEventListener("openkeyboard", this.openKeyboardHandler);
-                window.removeEventListener("closekeyboard", this.closeKeyboardHandler);
-            }, 10);
+            window.removeEventListener("openkeyboard", this.openKeyboardHandler);
+            window.removeEventListener("closekeyboard", this.closeKeyboardHandler);
         }
     }
 
@@ -117,7 +115,6 @@ export default class MsgForm extends React.Component {
     closeKeyboardHandler (evt) {
         this.piston.piston = null;
         funcBridge = () => {};
-        this.blur();
 
         if (appParams.isMobile) this.classLine.remove("msg-form_mobile");
         if (appParams.isIOS)    this.classLine.remove("msg-form_ios");
