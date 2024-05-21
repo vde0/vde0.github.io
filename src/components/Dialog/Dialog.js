@@ -147,9 +147,6 @@ export default class Dialog extends React.Component {
         this.props.data.blur    = this.blurMsgField.bind(this);
 
         if (appParams.isMobile) {
-            this.openKeyboardHandler = this.openKeyboardHandler.bind(this);
-            this.closeKeyboardHandler = this.closeKeyboardHandler.bind(this);
-
             this.piston.movable = this.dom;
             resizeObserver.observe(this.dom);
             observerFunc = () => this.piston.press();
