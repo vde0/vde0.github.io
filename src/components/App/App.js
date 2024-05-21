@@ -42,6 +42,7 @@ export default class App extends React.Component {
         this.showUpdateNum  = true;
 
         this.dialogShown    = false;
+        this.videoShown     = false;
         this.footerShown    = true;
 
         this.onRootClick        = this.onRootClick.bind(this);
@@ -54,6 +55,9 @@ export default class App extends React.Component {
 
             contentClassLine: this.contentClassLine.getLine(),
             footerClassLine: this.footerClassLine.getLine(),
+
+            dialogShown: this.dialogShown,
+            videoShown: this.videoShown,
             
             keyboardState: null,
             windowHeight: Math.round(window.innerHeight * 100) / 100,
@@ -125,7 +129,7 @@ export default class App extends React.Component {
     render () {
         return (
             <article className="app">
-                {this.showUpdateNum ? <p className="update-num-log">Update num: 42</p> : ""}
+                {this.showUpdateNum ? <p className="update-num-log">Update num: 43</p> : ""}
                 <div className={"content-log " + (!this.log ? "content-log_hidden" : "")}>
                     <p>Mobile: {String(appParams.isMobile)} | iOS: {String(appParams.isIOS)}</p>
                     <p>keyboard state: {String(this.state.keyboardState)}</p>
@@ -139,14 +143,17 @@ export default class App extends React.Component {
                     <div
                         className={this.state[ this.getContainerStateName("video") ]}
                         ref={el => this.containers["video"].dom = el}
-                    >
+                    >   {!this.state.videoShown ? "" :
                         <Video empty />
+                        }
                     </div>
                     <div
                         className={this.state[ this.getContainerStateName("dialog") ]}
                         ref={el => this.containers["dialog"].dom = el}
-                    >
+                    >   
+                        {!this.state.dialogShown ? "" :
                         <Dialog data={this.dialogData} />
+                        }
                     </div>
                 </section>
 
@@ -183,15 +190,18 @@ export default class App extends React.Component {
             setTimeout(_ => {
                 this.hideContainer("dialog");
                 this.dialogShown = false;
+                this.setState({dialogShown: this.dialogShown});
             }, 500);
         } else {
             this.hideContainer("dialog");
             this.dialogShown = false;
+            this.setState({dialogShown: this.dialogShown});
         }
     }
     showDialog () {
         this.showContainer("dialog");
         this.dialogShown = true;
+        this.setState({dialogShown: this.dialogShown});
     }
     toggleDialog () {
         if (this.dialogShown)   this.hideDialog();
