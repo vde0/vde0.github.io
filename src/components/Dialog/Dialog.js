@@ -140,6 +140,7 @@ export default class Dialog extends React.Component {
     componentDidMount () {
         
         this.scrollDown("instant");
+        this.focusHook.on(true);
 
         this.props.data.blur    = this.blurMsgField.bind(this);
 
