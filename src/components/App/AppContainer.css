@@ -1,6 +1,5 @@
 .app__container {
     position: relative;
-    overflow: hidden;
     
     width: 100%;
 
@@ -28,6 +27,6 @@
 }
 
 
-.app__container__content {
+.app__container-content {
     height: 100%;
 }

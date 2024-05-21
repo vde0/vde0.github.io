@@ -1,5 +1,6 @@
 import React from 'react';
-import { appParams, telegram } from '../../utils/utils';
+import { appParams} from '../../utils/utils';
+import StickyPiston from '../../utils/StickyPiston';
 import './Dialog.css';
 import MsgForm from '../MsgForm/MsgForm';
 import MsgList from '../MsgList/MsgList';
@@ -87,6 +88,9 @@ function sendMsg (msgBlock, chatID) {
 }
 
 
+let observerFunc = () => {};
+const resizeObserver = new ResizeObserver( _ => observerFunc() );
+
 export default class Dialog extends React.Component {
 
     get userID () { return this.props.data.userID; }
@@ -120,7 +124,8 @@ export default class Dialog extends React.Component {
     constructor (props) {
         super(props);
 
-        this.classLineActions = new ClassLineActions({context: this});
+        this.classLineActions   = new ClassLineActions({context: this});
+        this.piston             = new StickyPiston();
 
         this.onSend         = this.onSend.bind(this);
         this.onInput        = this.onInput.bind(this);
@@ -139,7 +144,7 @@ export default class Dialog extends React.Component {
     }
 
     componentDidMount () {
-
+        
         this.scrollDown("instant");
 
         this.props.data.blur    = this.blurMsgField.bind(this);
@@ -149,6 +154,10 @@ export default class Dialog extends React.Component {
             this.closeKeyboardHandler = this.closeKeyboardHandler.bind(this);
             window.addEventListener("openkeyboard", this.openKeyboardHandler);
             window.addEventListener("closekeyboard", this.closeKeyboardHandler);
+
+            this.piston.movable = this.dom;
+            resizeObserver.observe(this.dom);
+            observerFunc = () => this.piston.press();
         }
     }
 
@@ -158,6 +167,9 @@ export default class Dialog extends React.Component {
             this.makeContainerStatic();
             window.removeEventListener("openkeyboard", this.openKeyboardHandler);
             window.removeEventListener("closekeyboard", this.closeKeyboardHandler);
+
+            resizeObserver.disconnect();
+            observerFunc = () => {};
         }
     }
 
@@ -165,6 +177,7 @@ export default class Dialog extends React.Component {
         return(
             <article
                 className={this.state.classLine}
+                ref={el => this.dom = el}
                 onClick={this.onClickDialog}>
                 
                 <MsgList
@@ -176,7 +189,7 @@ export default class Dialog extends React.Component {
                 <MsgForm
                     className="dialog__msg-form"
                     focusHook={this.focusHook}
-                    piston={this.props.piston} onInput={this.onInput} onSend={this.onSend} />
+                    piston={this.piston} onInput={this.onInput} onSend={this.onSend} />
             </article>
         );
     }
