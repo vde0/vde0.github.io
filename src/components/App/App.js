@@ -93,11 +93,11 @@ export default class App extends React.Component {
         for (let containerName of Object.keys( this.containers )) {
             this.hideContainer(containerName);
         }
-        setTimeout(_ => {
+        TaskManager.setMacrotask(_ => {
             for (let containerName of Object.keys( this.containers )) {
                 this.setContainerFixed(containerName);
             }
-        }, 3e3);
+        });
         
 
         if (this.log) setInterval(_ => {
@@ -125,7 +125,7 @@ export default class App extends React.Component {
     render () {
         return (
             <article className="app">
-                {this.showUpdateNum ? <p className="update-num-log">Update num: 41.2</p> : ""}
+                {this.showUpdateNum ? <p className="update-num-log">Update num: 41.2.1</p> : ""}
                 <div className={"content-log " + (!this.log ? "content-log_hidden" : "")}>
                     <p>Mobile: {String(appParams.isMobile)} | iOS: {String(appParams.isIOS)}</p>
                     <p>keyboard state: {String(this.state.keyboardState)}</p>
