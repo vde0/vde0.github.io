@@ -29,6 +29,9 @@
 }
 
 .msg-form__field {
+    display: block;
+    resize: none;
+
     height: 100%;
     width: 100%;
     background-color: var(--tg-theme-bg-color);

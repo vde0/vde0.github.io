@@ -64,11 +64,15 @@ export default class MsgForm extends React.Component {
                 ref={el => this.msgFormBlock = el}
                 className={this.state.classLine}>
                 
-                <input ref={el => this.msgFieldBlock = el}
-                    type="text"
-                    autoFocus
+                <textarea ref={el => this.msgFieldBlock = el}
                     className="msg-form__field msg-form__field_focused"
-                    onInput={this.onInput}/>
+                    onInput={this.onInput}
+                    autoFocus
+                    autocapitalize
+                    autocomplete="false"
+                    spellcheck="true"
+                    wrap="sort"
+                ></textarea>
                 <Btn
                     type="submit"
                     onClick={this.onClick.bind(this)}
