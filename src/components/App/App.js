@@ -3,14 +3,18 @@ import { checkOwnershipToArea, appParams, telegram } from '../../utils/utils';
 import Container from '../Container/Container';
 import Video from '../Video/Video';
 import Dialog from '../Dialog/Dialog';
-import AppFooter from '../AppFooter/AppFooter';
 import './App.css';
+import './AppFooter.css';
 import ClassLine from '../../utils/ClassLine';
 import UpdateHook from '../../utils/UpdateHook';
 import TaskManager from '../../utils/TaskManager';
+import BottomMenu from '../BottomMenu/BottomMenu';
 
 
 export default class App extends React.Component {
+
+    contentClassLine    = new ClassLine("app__content");
+    footerClassLine     = new ClassLine("app__footer");
     
     constructor (props) {
         super(props);
@@ -25,12 +29,12 @@ export default class App extends React.Component {
         this.hideFooter         = this.hideFooter.bind(this);
 
         this.props.rootHandler.setHandler("click", this.onRootClick);
-        this.appContentClassLine = new ClassLine("app__content");
 
         this.state = {
             unreadedMsgCount: 1,
 
-            appContentClassLine: this.appContentClassLine.getLine(),
+            contentClassLine: this.contentClassLine.getLine(),
+            footerClassLine: this.footerClassLine.getLine(),
             
             keyboardState: null,
             windowHeight: Math.round(window.innerHeight * 100) / 100,
@@ -93,7 +97,7 @@ export default class App extends React.Component {
     render () {
         return (
             <article className="app">
-                {this.showUpdateNum ? <p className="update-num-log">Update num: 40</p> : ""}
+                {this.showUpdateNum ? <p className="update-num-log">Update num: 41</p> : ""}
                 <div className={"content-log " + (!this.log ? "content-log_hidden" : "")}>
                     <p>Mobile: {String(appParams.isMobile)} | iOS: {String(appParams.isIOS)}</p>
                     <p>keyboard state: {String(this.state.keyboardState)}</p>
@@ -103,7 +107,7 @@ export default class App extends React.Component {
                     <p>web-app stable-height: {this.state.tgStableHeight}</p>
                 </div>
 
-                <section className={this.state.appContentClassLine}>
+                <section className={this.state.contentClassLine}>
                     <Container contentType={Video} className="app__container" empty />
                     <Container
                         contentType={Dialog}
@@ -114,8 +118,9 @@ export default class App extends React.Component {
                         data={this.dialogData} />
                 </section>
 
-                <AppFooter
-                    data={this.menuData} hidden={!this.footerShown} hook={this.footerHook} />
+                <footer className={this.state.footerClassLine}>
+                    <BottomMenu data={this.menuData} />
+                </footer>
             </article>
         );
     }
@@ -166,12 +171,18 @@ export default class App extends React.Component {
     }
 
     hideFooter () {
+        this.footerClassLine.add("app__footer_hidden");
+        ClassLine.updateState(this, 'footerClassLine');
+
         this.footerShown = false;
-        this.footerHook.on(!this.footerShown);
+        // this.footerHook.on(!this.footerShown);
     }
     showFooter () {
+        this.footerClassLine.remove("app__footer_hidden");
+        ClassLine.updateState(this, 'footerClassLine');
+
         this.footerShown = true;
-        this.footerHook.on(!this.footerShown);
+        // this.footerHook.on(!this.footerShown);
     }
     toggleFooter () {
         if (this.footerShown)   this.hideFooter();
