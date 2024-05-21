@@ -125,7 +125,7 @@ export default class App extends React.Component {
     render () {
         return (
             <article className="app">
-                {this.showUpdateNum ? <p className="update-num-log">Update num: 41.2.4</p> : ""}
+                {this.showUpdateNum ? <p className="update-num-log">Update num: 41.3</p> : ""}
                 <div className={"content-log " + (!this.log ? "content-log_hidden" : "")}>
                     <p>Mobile: {String(appParams.isMobile)} | iOS: {String(appParams.isIOS)}</p>
                     <p>keyboard state: {String(this.state.keyboardState)}</p>
@@ -257,8 +257,8 @@ export default class App extends React.Component {
     openKeyboardHandler (evt) {
         this.hideFooter();
 
-        this.appContentClassLine.add( "app__content_for-keyboard" );
-        ClassLine.updateState(this, "appContentClassLine");
+        this.contentClassLine.add( "app__content_for-keyboard" );
+        this.classLineActions.updateState("contentClassLine");
         
         if (!this.log) return;
         this.setState({
@@ -268,8 +268,8 @@ export default class App extends React.Component {
     closeKeyboardHandler (evt) {
         this.showFooter();
 
-        this.appContentClassLine.remove( "app__content_for-keyboard" );
-        ClassLine.updateState(this, "appContentClassLine");
+        this.contentClassLine.remove( "app__content_for-keyboard" );
+        this.classLineActions.updateState("contentClassLine");
 
         if (!this.log) return;
         this.setState({

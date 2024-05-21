@@ -88,9 +88,6 @@ function sendMsg (msgBlock, chatID) {
 }
 
 
-let observerFunc = () => {};
-const resizeObserver = new ResizeObserver( _ => observerFunc() );
-
 export default class Dialog extends React.Component {
 
     get userID () { return this.props.data.userID; }
@@ -148,8 +145,8 @@ export default class Dialog extends React.Component {
 
         if (appParams.isMobile) {
             this.piston.movable = this.dom;
-            resizeObserver.observe(this.dom);
-            observerFunc = () => this.piston.press();
+
+            window.addEventListener("closekeyboard", this.closeKeyboardHandler);
         }
     }
 
@@ -157,7 +154,6 @@ export default class Dialog extends React.Component {
         this.props.data.blur = () => {};
         if (appParams.isMobile) {
             this.makeContainerStatic();
-            window.removeEventListener("openkeyboard", this.openKeyboardHandler);
             window.removeEventListener("closekeyboard", this.closeKeyboardHandler);
 
             resizeObserver.disconnect();
@@ -226,5 +222,10 @@ export default class Dialog extends React.Component {
             scrollDown: behaviorArg,
             scrollDownUpdater: !this.state.scrollDownUpdater,
         });
+    }
+
+
+    closeKeyboardHandler = (evt) => {
+        this.dom.style.setProperty("height", "100%");
     }
 }
