@@ -97,9 +97,6 @@ export default class Dialog extends React.Component {
     get chatID () { return this.props.data.chatID; }
     msgText     = "";
 
-    get makeContainerDynamic () { return this.props.data.makeContainerDynamic }
-    get makeContainerStatic () { return this.props.data.makeContainerStatic }
-
     get msgList () {
         let chat    = getChat(this.chatID);
         chat        = chat.map( msgID => {
@@ -152,8 +149,6 @@ export default class Dialog extends React.Component {
         if (appParams.isMobile) {
             this.openKeyboardHandler = this.openKeyboardHandler.bind(this);
             this.closeKeyboardHandler = this.closeKeyboardHandler.bind(this);
-            window.addEventListener("openkeyboard", this.openKeyboardHandler);
-            window.addEventListener("closekeyboard", this.closeKeyboardHandler);
 
             this.piston.movable = this.dom;
             resizeObserver.observe(this.dom);
@@ -192,15 +187,6 @@ export default class Dialog extends React.Component {
                     piston={this.piston} onInput={this.onInput} onSend={this.onSend} />
             </article>
         );
-    }
-
-
-    openKeyboardHandler (evt) {
-        this.makeContainerDynamic();
-    }
-
-    closeKeyboardHandler (evt) {
-        this.makeContainerStatic();
     }
 
 
