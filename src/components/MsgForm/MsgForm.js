@@ -5,6 +5,7 @@ import { appParams, telegram } from '../../utils/utils';
 import SendIc from '../../icons/to-send.svg';
 import ClassLine from '../../utils/ClassLine';
 import TaskManager from '../../utils/TaskManager';
+import ClassLineActions from '../../componentUtils/ClassLineActions';
 
 
 let funcBridge = () => {};
@@ -19,12 +20,14 @@ export default class MsgForm extends React.Component {
     constructor (props) {
         super(props);
 
+        this.classLineActions = new ClassLineActions({context: this});
+
         this.onSend     = this.props.onSend;
         this.onInput    = this.props.onInput;
 
         this.piston     = this.props.piston;
 
-        ClassLine.initPassedClassLine(this);
+        this.classLineActions.initState();
     }
 
     componentDidMount () {
@@ -110,7 +113,7 @@ export default class MsgForm extends React.Component {
 
         if (appParams.isMobile) this.classLine.add("msg-form_mobile");
         if (appParams.isIOS)    this.classLine.add("msg-form_ios");
-        ClassLine.updateState(this);
+        this.classLineActions.updateState();
     }
     closeKeyboardHandler (evt) {
         this.piston.piston = null;
@@ -118,6 +121,6 @@ export default class MsgForm extends React.Component {
 
         if (appParams.isMobile) this.classLine.remove("msg-form_mobile");
         if (appParams.isIOS)    this.classLine.remove("msg-form_ios");
-        ClassLine.updateState(this);
+        this.classLineActions.updateState();
     }
 }

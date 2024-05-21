@@ -6,6 +6,7 @@ import MsgList from '../MsgList/MsgList';
 import ClassLine from '../../utils/ClassLine';
 import TaskManager from '../../utils/TaskManager';
 import UpdateHook from '../../utils/UpdateHook';
+import ClassLineActions from '../../componentUtils/ClassLineActions';
 
 
 let userDB = {
@@ -119,6 +120,8 @@ export default class Dialog extends React.Component {
     constructor (props) {
         super(props);
 
+        this.classLineActions = new ClassLineActions({context: this});
+
         this.onSend         = this.onSend.bind(this);
         this.onInput        = this.onInput.bind(this);
         this.onClickDialog  = this.onClickDialog.bind(this);
@@ -132,7 +135,7 @@ export default class Dialog extends React.Component {
             scrollDown: null,
             scrollDownUpdater: true,
         }
-        ClassLine.initPassedClassLine(this);
+        this.classLineActions.initState();
     }
 
     componentDidMount () {

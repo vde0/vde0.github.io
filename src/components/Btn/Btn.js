@@ -1,6 +1,7 @@
 import React from 'react';
 import './Btn.css';
 import ClassLine from '../../utils/ClassLine';
+import ClassLineActions from '../../componentUtils/ClassLineActions';
 
 
 export default class Btn extends React.Component {
@@ -10,7 +11,7 @@ export default class Btn extends React.Component {
     constructor (props) {
         super(props);
 
-        ClassLine.initPassedClassLine(this);
+        this.classLineActions = new ClassLineActions({context: this});
         if (this.props.color)       this.classLine.add("btn_color_" + this.props.color);
         
 

@@ -3,6 +3,8 @@ import './MsgList.css';
 import Msg from "../Msg/Msg";
 import ClassLine from "../../utils/ClassLine";
 import { appParams } from "../../utils/utils";
+import ClassLineActions from "../../componentUtils/ClassLineActions";
+import TaskManager from "../../utils/TaskManager";
 
 
 export default class MsgList extends React.Component {
@@ -14,7 +16,8 @@ export default class MsgList extends React.Component {
 
         this.resizeMsgListHandler   = this.resizeMsgListHandler.bind(this);
 
-        ClassLine.initPassedClassLine(this);
+        this.classLineActions = new ClassLineActions({context: this});
+        this.classLineActions.initState();
     }
 
     componentDidMount () {

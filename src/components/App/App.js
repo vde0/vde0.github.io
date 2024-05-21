@@ -1,23 +1,42 @@
 import React from 'react';
 import { checkOwnershipToArea, appParams, telegram } from '../../utils/utils';
-import Container from '../Container/Container';
 import Video from '../Video/Video';
 import Dialog from '../Dialog/Dialog';
 import './App.css';
+import './AppContainer.css';
 import './AppFooter.css';
 import ClassLine from '../../utils/ClassLine';
 import UpdateHook from '../../utils/UpdateHook';
 import TaskManager from '../../utils/TaskManager';
 import BottomMenu from '../BottomMenu/BottomMenu';
+import ClassLineActions from '../../componentUtils/ClassLineActions';
 
 
 export default class App extends React.Component {
 
     contentClassLine    = new ClassLine("app__content");
     footerClassLine     = new ClassLine("app__footer");
+
+    containers  = {
+        // containerName: {...}
+        video: {
+            stateName: Symbol("videoClassLine"),
+            classLine: new ClassLine("app__container"),
+            dom: null,
+            data: null,
+        },
+        dialog: {
+            stateName: Symbol("dialogClassLine"),
+            classLine: new ClassLine("app__container"),
+            dom: null,
+            data: null,
+        },
+    };
     
     constructor (props) {
         super(props);
+
+        this.classLineActions = new ClassLineActions({context: this, makeClassLine: false});
 
         this.log            = true;
         this.showUpdateNum  = true;
@@ -41,14 +60,19 @@ export default class App extends React.Component {
             tgHeight: Math.round(telegram.viewportHeight * 100) / 100,
             tgStableHeight: Math.round(telegram.viewportStableHeight * 100) / 100,
         };
+        for (let containerObj of Object.values( this.containers )) {
+            this.classLineActions.initState(containerObj.stateName, "classLine", containerObj);
+        }
+        
 
         this.dialogData = {
             userID: 555,
             chatID: 1,
             blur: () => {},
-            makeContainerDynamic: this.makeDialogBlockDynamic.bind(this),
-            makeContainerStatic: this.makeDialogBlockStatic.bind(this),
+            // makeContainerDynamic: this.makeDialogBlockDynamic.bind(this),
+            // makeContainerStatic: this.makeDialogBlockStatic.bind(this),
         };
+        this.containers['dialog'].data = this.dialogData;
 
         this.menuData = {
             unreadedMsgCount: this.state.unreadedMsgCount,
@@ -58,12 +82,13 @@ export default class App extends React.Component {
             onNext: this.onNext.bind(this),
         }
 
-        this.dialogContainerEmptyHook   = new UpdateHook();
-        this.dialogContainerDynamicHook = new UpdateHook();
-        this.footerHook = new UpdateHook();
+        // this.dialogContainerEmptyHook   = new UpdateHook();
+        // this.dialogContainerDynamicHook = new UpdateHook();
+        // this.footerHook = new UpdateHook();
     }
 
     componentDidMount () {
+
         if (appParams.isMobile) {
             this.openKeyboardHandler = this.openKeyboardHandler.bind(this);
             this.closeKeyboardHandler = this.closeKeyboardHandler.bind(this);
@@ -71,6 +96,15 @@ export default class App extends React.Component {
             window.addEventListener("closekeyboard", this.closeKeyboardHandler);
         }
 
+        for (let containerName of Object.keys( this.containers )) {
+            this.hideContainer(containerName);
+        }
+        setTimeout(_ => {
+            for (let containerName of Object.keys( this.containers )) {
+                this.setContainerFixed(containerName);
+            }
+        }, 3e3);
+        
 
         if (this.log) setInterval(_ => {
 
@@ -97,7 +131,7 @@ export default class App extends React.Component {
     render () {
         return (
             <article className="app">
-                {this.showUpdateNum ? <p className="update-num-log">Update num: 41</p> : ""}
+                {this.showUpdateNum ? <p className="update-num-log">Update num: 41.1</p> : ""}
                 <div className={"content-log " + (!this.log ? "content-log_hidden" : "")}>
                     <p>Mobile: {String(appParams.isMobile)} | iOS: {String(appParams.isIOS)}</p>
                     <p>keyboard state: {String(this.state.keyboardState)}</p>
@@ -108,14 +142,18 @@ export default class App extends React.Component {
                 </div>
 
                 <section className={this.state.contentClassLine}>
-                    <Container contentType={Video} className="app__container" empty />
-                    <Container
-                        contentType={Dialog}
-                        className="app__container"
-                        dynamicHook={this.dialogContainerDynamicHook}
-                        emptyHook={this.dialogContainerEmptyHook}
-                        empty={!this.dialogShown}
-                        data={this.dialogData} />
+                    <div
+                        className={this.state[ this.getContainerState("video") ]}
+                        ref={el => this.containers["video"].dom = el}
+                    >
+                        <Video empty />
+                    </div>
+                    <div
+                        className={this.state[ this.getContainerState("dialog") ]}
+                        ref={el => this.containers["dialog"].dom = el}
+                    >
+                        <Dialog data={this.dialogData} />
+                    </div>
                 </section>
 
                 <footer className={this.state.footerClassLine}>
@@ -149,17 +187,20 @@ export default class App extends React.Component {
         if ( appParams.mobileKeyboardState ) {
             this.dialogBlur();
             setTimeout(_ => {
+                this.hideContainer("dialog");
                 this.dialogShown = false;
-                this.dialogContainerEmptyHook.on(!this.dialogShown);
+                // // this.dialogContainerEmptyHook.on(!this.dialogShown);
             }, 500);
         } else {
+            this.hideContainer("dialog");
             this.dialogShown = false;
-            this.dialogContainerEmptyHook.on(!this.dialogShown);
+            // this.dialogContainerEmptyHook.on(!this.dialogShown);
         }
     }
     showDialog () {
+        this.showContainer("dialog");
         this.dialogShown = true;
-        this.dialogContainerEmptyHook.on(!this.dialogShown);
+        // this.dialogContainerEmptyHook.on(!this.dialogShown);
     }
     toggleDialog () {
         if (this.dialogShown)   this.hideDialog();
@@ -172,14 +213,14 @@ export default class App extends React.Component {
 
     hideFooter () {
         this.footerClassLine.add("app__footer_hidden");
-        ClassLine.updateState(this, 'footerClassLine');
+        this.classLineActions.updateState('footerClassLine');
 
         this.footerShown = false;
         // this.footerHook.on(!this.footerShown);
     }
     showFooter () {
         this.footerClassLine.remove("app__footer_hidden");
-        ClassLine.updateState(this, 'footerClassLine');
+        this.classLineActions.updateState('footerClassLine');
 
         this.footerShown = true;
         // this.footerHook.on(!this.footerShown);
@@ -190,12 +231,46 @@ export default class App extends React.Component {
     }
 
 
-    makeDialogBlockDynamic () {
-        this.dialogContainerDynamicHook.on(true);
+    showContainer (containerName) {
+        const containerObj  = this.containers[containerName];
+        containerObj.classLine.remove("app__container_empty");
+        
+        this.classLineActions.updateState(containerObj.stateName, "classLine", containerObj);
     }
-    makeDialogBlockStatic () {
-        this.dialogContainerDynamicHook.on(false);
+    hideContainer (containerName) {
+        const containerObj  = this.containers[containerName];
+        containerObj.classLine.add("app__container_empty");
+
+        this.classLineActions.updateState(containerObj.stateName, "classLine", containerObj);
     }
+
+    setContainerFixed (containerName) {
+        const containerObj  = this.containers[containerName];
+        const containerDom  = containerObj.dom;
+
+        containerObj.startHeight = containerDom.clientHeight
+        containerObj.computedTop = containerDom.offsetTop;
+        
+        containerObj.classLine.add("app__container_fixing-height");
+        this.classLineActions.updateState(containerObj.stateName, "classLine", containerObj);
+
+        queueMicrotask( _ => {
+            containerDom.style.setProperty("height", containerObj.startHeight + "px");
+            containerDom.style.setProperty("top", containerObj.computedTop + "px");
+        });
+    }
+
+    getContainerState (containerName) {
+        return this.containers[containerName]?.stateName;
+    }
+
+
+    // makeDialogBlockDynamic () {
+    //     this.dialogContainerDynamicHook.on(true);
+    // }
+    // makeDialogBlockStatic () {
+    //     this.dialogContainerDynamicHook.on(false);
+    // }
 
 
     openKeyboardHandler (evt) {
