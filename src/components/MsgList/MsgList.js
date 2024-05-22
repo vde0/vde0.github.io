@@ -32,9 +32,7 @@ export default class MsgList extends React.Component {
     }
 
     componentWillUnmount () {
-        if (appParams.isMobile) setTimeout(_ => {
-            this.resizeMsgListObserver?.disconnect();
-        }, 50);
+        this.resizeMsgListObserver.disconnect();
     }
 
     componentDidUpdate (prevProps) {
