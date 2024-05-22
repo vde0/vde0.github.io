@@ -116,7 +116,6 @@ export default class MsgForm extends React.Component {
         };
 
         if (appParams.isMobile) this.classLine.add("msg-form_mobile");
-        if (appParams.isIOS)    this.classLine.add("msg-form_ios");
         this.classLineActions.updateState();
     }
     closeKeyboardHandler (evt) {
@@ -124,7 +123,6 @@ export default class MsgForm extends React.Component {
         funcBridge = () => {};
 
         if (appParams.isMobile) this.classLine.remove("msg-form_mobile");
-        if (appParams.isIOS)    this.classLine.remove("msg-form_ios");
         this.classLineActions.updateState();
     }
 }
