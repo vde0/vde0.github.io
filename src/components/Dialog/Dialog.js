@@ -226,6 +226,6 @@ export default class Dialog extends React.Component {
     closeKeyboardHandler = (evt) => {
         TaskManager.setMacrotask(_ => {
             this.dom.style.setProperty("height", "100%");
-        }, 3);
+        });
     }
 }
