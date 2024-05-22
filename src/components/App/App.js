@@ -122,14 +122,14 @@ export default class App extends React.Component {
             TaskManager.setMacrotask(_ => {
                 window.removeEventListener("openkeyboard", this.openKeyboardHandler);
                 window.removeEventListener("closekeyboard", this.closeKeyboardHandler);
-            }, 3);
+            }, 2);
         }
     }
 
     render () {
         return (
             <article className="app">
-                {this.showUpdateNum ? <p className="update-num-log">Update num: 44.3</p> : ""}
+                {this.showUpdateNum ? <p className="update-num-log">Update num: 44.4</p> : ""}
                 <div className={"content-log " + (!this.log ? "content-log_hidden" : "")}>
                     <p>Mobile: {String(appParams.isMobile)} | iOS: {String(appParams.isIOS)}</p>
                     <p>keyboard state: {String(this.state.keyboardState)}</p>
