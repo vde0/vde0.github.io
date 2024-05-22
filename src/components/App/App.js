@@ -88,8 +88,6 @@ export default class App extends React.Component {
     componentDidMount () {
 
         if (appParams.isMobile) {
-            this.openKeyboardHandler = this.openKeyboardHandler.bind(this);
-            this.closeKeyboardHandler = this.closeKeyboardHandler.bind(this);
             window.addEventListener("openkeyboard", this.openKeyboardHandler);
             window.addEventListener("closekeyboard", this.closeKeyboardHandler);
         }
@@ -121,15 +119,17 @@ export default class App extends React.Component {
 
     componentWillUnmount () {
         if (appParams.isMobile) {
-            window.removeEventListener("openkeyboard", this.openKeyboardHandler);
-            window.removeEventListener("closekeyboard", this.closeKeyboardHandler);
+            TaskManager.setMacrotask(_ => {
+                window.removeEventListener("openkeyboard", this.openKeyboardHandler);
+                window.removeEventListener("closekeyboard", this.closeKeyboardHandler);
+            }, 3);
         }
     }
 
     render () {
         return (
             <article className="app">
-                {this.showUpdateNum ? <p className="update-num-log">Update num: 44.2.2</p> : ""}
+                {this.showUpdateNum ? <p className="update-num-log">Update num: 44.3</p> : ""}
                 <div className={"content-log " + (!this.log ? "content-log_hidden" : "")}>
                     <p>Mobile: {String(appParams.isMobile)} | iOS: {String(appParams.isIOS)}</p>
                     <p>keyboard state: {String(this.state.keyboardState)}</p>
@@ -264,7 +264,7 @@ export default class App extends React.Component {
     }
 
 
-    openKeyboardHandler (evt) {
+    openKeyboardHandler = (evt) => {
         this.hideFooter();
 
         this.contentClassLine.add( "app__content_for-keyboard" );
@@ -275,7 +275,7 @@ export default class App extends React.Component {
             keyboardState: appParams.mobileKeyboardState,
         });
     }
-    closeKeyboardHandler (evt) {
+    closeKeyboardHandler = (evt) => {
         this.showFooter();
 
         this.contentClassLine.remove( "app__content_for-keyboard" );

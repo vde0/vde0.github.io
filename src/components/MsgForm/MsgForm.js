@@ -35,8 +35,6 @@ export default class MsgForm extends React.Component {
         this.props.focusHook.connect( this.updateFocus.bind(this) );
 
         if (appParams.isMobile) {
-            this.openKeyboardHandler    = this.openKeyboardHandler.bind(this);
-            this.closeKeyboardHandler   = this.closeKeyboardHandler.bind(this);
             window.addEventListener("openkeyboard", this.openKeyboardHandler);
             window.addEventListener("closekeyboard", this.closeKeyboardHandler);
         }
@@ -47,8 +45,10 @@ export default class MsgForm extends React.Component {
             this.piston.piston = null;
             funcBridge = () => {};
 
-            window.removeEventListener("openkeyboard", this.openKeyboardHandler);
-            window.removeEventListener("closekeyboard", this.closeKeyboardHandler);
+            TaskManager.setMacrotask(_ => {
+                window.removeEventListener("openkeyboard", this.openKeyboardHandler);
+                window.removeEventListener("closekeyboard", this.closeKeyboardHandler);
+            }, 1);
         }
     }
 
@@ -68,10 +68,10 @@ export default class MsgForm extends React.Component {
                     className="msg-form__field msg-form__field_focused"
                     onInput={this.onInput}
                     autoFocus
-                    autocapitalize
-                    autocomplete="false"
-                    spellcheck="true"
-                    wrap="sort"
+                    autoCapitalize="on"
+                    autoComplete="false"
+                    spellCheck="true"
+                    wrap="soft"
                 ></textarea>
                 <Btn
                     type="submit"
@@ -107,7 +107,7 @@ export default class MsgForm extends React.Component {
     }
 
 
-    openKeyboardHandler (evt) {
+    openKeyboardHandler = (evt) => {
         this.piston.piston = this.msgFormBlock;
         this.piston.press();
         //
@@ -118,7 +118,7 @@ export default class MsgForm extends React.Component {
         if (appParams.isMobile) this.classLine.add("msg-form_mobile");
         this.classLineActions.updateState();
     }
-    closeKeyboardHandler (evt) {
+    closeKeyboardHandler = (evt) => {
         this.piston.piston = null;
         funcBridge = () => {};
 
