@@ -129,7 +129,7 @@ export default class App extends React.Component {
     render () {
         return (
             <article className="app">
-                {this.showUpdateNum ? <p className="update-num-log">Update num: 45</p> : ""}
+                {this.showUpdateNum ? <p className="update-num-log">Update num: 45.1</p> : ""}
                 <div className={"content-log " + (!this.log ? "content-log_hidden" : "")}>
                     <p>Mobile: {String(appParams.isMobile)} | iOS: {String(appParams.isIOS)}</p>
                     <p>keyboard state: {String(this.state.keyboardState)}</p>
@@ -185,18 +185,9 @@ export default class App extends React.Component {
     }
 
     hideDialog () {
-        if ( appParams.mobileKeyboardState ) {
-            this.dialogBlur();
-            setTimeout(_ => {
-                this.hideContainer("dialog");
-                this.dialogShown = false;
-                this.setState({dialogShown: this.dialogShown});
-            }, 500);
-        } else {
-            this.hideContainer("dialog");
-            this.dialogShown = false;
-            this.setState({dialogShown: this.dialogShown});
-        }
+        this.hideContainer("dialog");
+        this.dialogShown = false;
+        this.setState({dialogShown: this.dialogShown});
     }
     showDialog () {
         this.showContainer("dialog");
