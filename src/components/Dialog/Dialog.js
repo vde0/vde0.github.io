@@ -153,12 +153,9 @@ export default class Dialog extends React.Component {
 
     componentWillUnmount () {
         this.props.data.blur = () => {};
+        this.piston.movable = null;
         if (appParams.isMobile) {
-            this.makeContainerStatic();
             window.removeEventListener("closekeyboard", this.closeKeyboardHandler);
-
-            resizeObserver.disconnect();
-            observerFunc = () => {};
         }
     }
 
