@@ -82,10 +82,12 @@ if (isMobile) {
         if (prevKeyboardState === isOpened) return;
 
         if (!isOpened)                      return;
-        updateKeyboardState();
 
         const event = new Event(eventName);
-        window.dispatchEvent(event);
+        execWhenEnd(_ => {
+            window.dispatchEvent(event);
+            updateKeyboardState();
+        }, telegram.viewportStableHeight);
     });
 
     // closekeyboard event define
@@ -96,11 +98,21 @@ if (isMobile) {
         if (prevKeyboardState === isOpened) return;
 
         if (isOpened)                       return;
-        updateKeyboardState();
 
         const event = new Event(eventName);
-        window.dispatchEvent(event);
+        execWhenEnd(_ => {
+            window.dispatchEvent(event);
+            updateKeyboardState();
+        }, telegram.viewportStableHeight);
     });
+
+
+    function execWhenEnd (func, curHeight) {
+        setTimeout(_ => {
+            if (curHeight === telegram.viewportStableHeight) func();
+            else    execWhenEnd(func, telegram.viewportStableHeight);
+        });
+    }
 }
 
 
