@@ -1,3 +1,4 @@
+import TaskManager from "./TaskManager";
 
 const telegram  = window.Telegram.WebApp;
 
@@ -108,10 +109,10 @@ if (isMobile) {
 
 
     function execWhenEnd (func, curHeight) {
-        setTimeout(_ => {
+        TaskManager.setMacrotask(_ => {
             if (curHeight === telegram.viewportStableHeight) func();
             else    execWhenEnd(func, telegram.viewportStableHeight);
-        });
+        }, 2);
     }
 }
 
