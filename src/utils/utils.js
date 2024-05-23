@@ -112,7 +112,7 @@ if (isMobile) {
         TaskManager.setMacrotask(_ => {
             if (curHeight === telegram.viewportStableHeight) func();
             else    execWhenEnd(func, telegram.viewportStableHeight);
-        }, 2);
+        });
     }
 }
 
