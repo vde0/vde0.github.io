@@ -22,9 +22,17 @@ const isMobile = ('ontouchstart' in document.documentElement && !!(navigator.use
 const isIOS     = !!navigator.userAgent.match(/(iPhone|iPod|iPad)/);
 
 
+function execWhenResizeEnd (func, curHeight = null) {
+    if (curHeight === null)     curHeight = telegram.viewportStableHeight;
+    TaskManager.setMacrotask(_ => {
+        if (curHeight === telegram.viewportStableHeight) func();
+        else    execWhenResizeEnd(func, telegram.viewportStableHeight);
+    });
+}
+
 let startHeight     = null;
 window.addEventListener("load", _ => {
-    TaskManager.setMacrotask(_ => startHeight = telegram.viewportStableHeight, 10);
+    execWhenResizeEnd(_ => startHeight = telegram.viewportStableHeight);
 }, {once: true});
 // function resetStartHeight () {
 //     startHeight     = telegram.viewportStableHeight;
@@ -88,10 +96,10 @@ if (isMobile) {
         if (!isOpened)                      return;
 
         const event = new Event(eventName);
-        execWhenEnd(_ => {
+        execWhenResizeEnd(_ => {
             window.dispatchEvent(event);
             updateKeyboardState();
-        }, telegram.viewportStableHeight);
+        });
     });
 
     // closekeyboard event define
@@ -104,19 +112,11 @@ if (isMobile) {
         if (isOpened)                       return;
 
         const event = new Event(eventName);
-        execWhenEnd(_ => {
+        execWhenResizeEnd(_ => {
             window.dispatchEvent(event);
             updateKeyboardState();
-        }, telegram.viewportStableHeight);
-    });
-
-
-    function execWhenEnd (func, curHeight) {
-        TaskManager.setMacrotask(_ => {
-            if (curHeight === telegram.viewportStableHeight) func();
-            else    execWhenEnd(func, telegram.viewportStableHeight);
         });
-    }
+    });
 }
 
 
