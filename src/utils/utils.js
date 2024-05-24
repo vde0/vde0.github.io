@@ -24,7 +24,7 @@ const isIOS     = !!navigator.userAgent.match(/(iPhone|iPod|iPad)/);
 
 let startHeight     = telegram.viewportStableHeight;
 window.addEventListener("load", _ => {
-    setTimeout(_ => startHeight = telegram.viewportStableHeight, 1e3);
+    TaskManager.setMacrotask(_ => startHeight = telegram.viewportStableHeight, 10);
 }, {once: true});
 // function resetStartHeight () {
 //     startHeight     = telegram.viewportStableHeight;
