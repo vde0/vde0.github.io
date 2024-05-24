@@ -26,9 +26,9 @@ let startHeight     = telegram.viewportStableHeight;
 window.addEventListener("load", _ => {
     startHeight     = telegram.viewportStableHeight
 }, {once: true});
-// function resetStartHeight () {
-//     startHeight     = telegram.viewportStableHeight;
-// }
+function resetStartHeight () {
+    startHeight     = telegram.viewportStableHeight;
+}
 
 function checkMobileKeyboard () {
     if (!isMobile) return false;
@@ -41,7 +41,7 @@ let wasInit = false;
 const initApp = () => {
     if (wasInit) return;
 
-    // resetStartHeight();
+    resetStartHeight();
     // document.querySelector(":root").style.setProperty(
     //     "--tg-offset", (window.innerHeight - startHeight) + "px")
     document.documentElement.classList.add("root-document_placing_tg");
