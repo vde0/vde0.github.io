@@ -22,7 +22,7 @@ const isMobile = ('ontouchstart' in document.documentElement && !!(navigator.use
 const isIOS     = !!navigator.userAgent.match(/(iPhone|iPod|iPad)/);
 
 
-let startHeight     = telegram.viewportStableHeight;
+let startHeight     = null;
 window.addEventListener("load", _ => {
     TaskManager.setMacrotask(_ => startHeight = telegram.viewportStableHeight, 10);
 }, {once: true});
