@@ -48,7 +48,7 @@ export default class App extends React.Component {
         this.onRootClick        = this.onRootClick.bind(this);
         this.hideFooter         = this.hideFooter.bind(this);
 
-        this.props.rootHandler.setHandler("click", this.onRootClick);
+        // this.props.rootHandler.setHandler("click", this.onRootClick);
 
         this.state = {
             unreadedMsgCount: 1,
@@ -129,7 +129,7 @@ export default class App extends React.Component {
     render () {
         return (
             <article className="app">
-                {this.showUpdateNum ? <p className="update-num-log">Update num: 46.3.1</p> : ""}
+                {this.showUpdateNum ? <p className="update-num-log">Update num: 46.4</p> : ""}
                 <div className={"content-log " + (!this.log ? "content-log_hidden" : "")}>
                     <p>Mobile: {String(appParams.isMobile)} | iOS: {String(appParams.isIOS)}</p>
                     <p>keyboard state: {String(this.state.keyboardState)}</p>
