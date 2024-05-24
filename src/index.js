@@ -6,10 +6,8 @@ import { appParams, initApp, telegram } from './utils/utils';
 import TaskManager from './utils/TaskManager';
 
 
-telegram.expand();
-
-
 window.addEventListener("load", evt => {
+    telegram.expand();
     if (appParams.isMobile) {
         window.addEventListener(
             "touchend", _ => TaskManager.setMacrotask(initApp, 1), {once: true});
