@@ -143,6 +143,7 @@ export default class Dialog extends React.Component {
         this.focusHook.on(true);
 
         this.props.data.blur    = this.blurMsgField.bind(this);
+        this.props.data.focus   = this.focusMsgField.bind(this);
 
         if (appParams.isMobile) {
             this.piston.movable = this.dom;

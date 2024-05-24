@@ -48,7 +48,7 @@ export default class App extends React.Component {
         this.onRootClick        = this.onRootClick.bind(this);
         this.hideFooter         = this.hideFooter.bind(this);
 
-        // this.props.rootHandler.setHandler("click", this.onRootClick);
+        this.props.rootHandler.setHandler("click", this.onRootClick);
 
         this.state = {
             unreadedMsgCount: 1,
@@ -73,6 +73,7 @@ export default class App extends React.Component {
             userID: 555,
             chatID: 1,
             blur: () => {},
+            focus: () => {},
         };
         this.containers['dialog'].data = this.dialogData;
 
@@ -129,7 +130,7 @@ export default class App extends React.Component {
     render () {
         return (
             <article className="app">
-                {this.showUpdateNum ? <p className="update-num-log">Update num: 46.4</p> : ""}
+                {this.showUpdateNum ? <p className="update-num-log">Update num: 46.5</p> : ""}
                 <div className={"content-log " + (!this.log ? "content-log_hidden" : "")}>
                     <p>Mobile: {String(appParams.isMobile)} | iOS: {String(appParams.isIOS)}</p>
                     <p>keyboard state: {String(this.state.keyboardState)}</p>
@@ -179,6 +180,7 @@ export default class App extends React.Component {
         const clickDialogCheck  = checkOwnershipToArea(el, dialogSelector);
         const clickMsgsBtnCheck = checkOwnershipToArea(el, btnSelector);
 
+        if (this.dialogShown)   this.dialogFocus();
         if (!clickDialogCheck && !clickMsgsBtnCheck) {
             // this.hideDialog();
         };
@@ -201,6 +203,9 @@ export default class App extends React.Component {
 
     dialogBlur () {
         this.dialogData.blur();
+    }
+    dialogFocus () {
+        this.dialogData.focus();
     }
 
     hideFooter () {
