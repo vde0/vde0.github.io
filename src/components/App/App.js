@@ -130,7 +130,7 @@ export default class App extends React.Component {
     render () {
         return (
             <article className="app">
-                {this.showUpdateNum ? <p className="update-num-log">Update num: 46.7.2</p> : ""}
+                {this.showUpdateNum ? <p className="update-num-log">Update num: 47</p> : ""}
                 <div className={"content-log " + (!this.log ? "content-log_hidden" : "")}>
                     <p>Mobile: {String(appParams.isMobile)} | iOS: {String(appParams.isIOS)}</p>
                     <p>keyboard state: {String(this.state.keyboardState)}</p>
@@ -180,20 +180,15 @@ export default class App extends React.Component {
         const clickDialogCheck  = checkOwnershipToArea(el, dialogSelector);
         const clickMsgsBtnCheck = checkOwnershipToArea(el, btnSelector);
 
-        this.dialogFocus();
-        window.dispatchEvent( new Event("touchcancel", {bubbles: true}) );
         if (!clickDialogCheck && !clickMsgsBtnCheck) {
-            // this.hideDialog();
+            this.hideDialog();
         };
     }
 
     hideDialog () {
-        this.dialogBlur();
-        setTimeout(_ => {
-            this.hideContainer("dialog");
-            this.dialogShown = false;
-            this.setState({dialogShown: this.dialogShown});
-        }, 1e3);
+        this.hideContainer("dialog");
+        this.dialogShown = false;
+        this.setState({dialogShown: this.dialogShown});
     }
     showDialog () {
         this.showContainer("dialog");
