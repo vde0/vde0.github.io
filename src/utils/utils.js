@@ -23,16 +23,16 @@ const isIOS     = !!navigator.userAgent.match(/(iPhone|iPod|iPad)/);
 
 
 function execWhenResizeEnd (func, curHeight = null) {
-    if (curHeight === null)     curHeight = telegram.viewportStableHeight;
+    if (curHeight === null)     curHeight = telegram.viewportHeight;
     TaskManager.setMacrotask(_ => {
-        if (curHeight === telegram.viewportStableHeight) func();
-        else    execWhenResizeEnd(func, telegram.viewportStableHeight);
+        if (curHeight === telegram.viewportHeight) func();
+        else    execWhenResizeEnd(func, telegram.viewportHeight);
     });
 }
 
 let startHeight     = null;
 window.addEventListener("load", _ => {
-    execWhenResizeEnd(_ => startHeight = telegram.viewportStableHeight);
+    execWhenResizeEnd(_ => startHeight = telegram.viewportHeight);
 }, {once: true});
 // function resetStartHeight () {
 //     startHeight     = telegram.viewportStableHeight;
