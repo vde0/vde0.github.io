@@ -39,7 +39,7 @@ function execWhenResizeEnd (func) {
 
 let startHeight     = null;
 window.addEventListener("load", _ => {
-    TaskManager.setMacrotask(_ => execWhenResizeEnd(_ => startHeight = telegram.viewportHeight), 15);
+    execWhenResizeEnd(_ => startHeight = telegram.viewportHeight);
 }, {once: true});
 // function resetStartHeight () {
 //     startHeight     = telegram.viewportStableHeight;
