@@ -22,12 +22,19 @@ const isMobile = ('ontouchstart' in document.documentElement && !!(navigator.use
 const isIOS     = !!navigator.userAgent.match(/(iPhone|iPod|iPad)/);
 
 
-function execWhenResizeEnd (func, curHeight = null) {
-    if (curHeight === null)     curHeight = telegram.viewportHeight;
-    TaskManager.setMacrotask(_ => {
-        if (curHeight === telegram.viewportHeight) func();
-        else    execWhenResizeEnd(func, telegram.viewportHeight);
-    }, 2);
+function execWhenResizeEnd (func) {
+    
+    const curHeight = telegram.viewportHeight;
+    trackResize(curHeight);
+
+    function trackResize (prevHeight) {
+
+        TaskManager.setMacrotask(_ => {
+            const curHeight = telegram.viewportHeight;
+            if (curHeight === prevHeight) func();
+            else    trackResize(curHeight);
+        }, 2);
+    }
 }
 
 let startHeight     = null;
