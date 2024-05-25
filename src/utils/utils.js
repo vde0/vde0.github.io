@@ -32,7 +32,7 @@ function execWhenResizeEnd (func, curHeight = null) {
 
 let startHeight     = null;
 window.addEventListener("load", _ => {
-    // execWhenResizeEnd(_ => startHeight = telegram.viewportStableHeight);
+    execWhenResizeEnd(_ => startHeight = telegram.viewportStableHeight);
 }, {once: true});
 // function resetStartHeight () {
 //     startHeight     = telegram.viewportStableHeight;
