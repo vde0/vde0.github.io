@@ -33,7 +33,7 @@ function execWhenResizeEnd (func) {
             const curHeight = telegram.viewportHeight;
             if (curHeight === prevHeight) func();
             else    trackResize(curHeight);
-        }, 10);
+        }, 100);
     }
 }
 
