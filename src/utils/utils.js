@@ -27,7 +27,7 @@ function execWhenResizeEnd (func, curHeight = null) {
     TaskManager.setMacrotask(_ => {
         if (curHeight === telegram.viewportHeight) func();
         else    execWhenResizeEnd(func, telegram.viewportHeight);
-    });
+    }, 2);
 }
 
 let startHeight     = null;
