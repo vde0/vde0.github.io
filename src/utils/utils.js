@@ -37,18 +37,21 @@ function execWhenResizeEnd (func) {
     }
 }
 
-let startHeight     = null;
+let maxHeight     = null;
 window.addEventListener("load", _ => {
-    execWhenResizeEnd(_ => startHeight = telegram.viewportHeight);
+    // execWhenResizeEnd(_ => maxHeight = telegram.viewportHeight);
+    telegram.onEvent("viewportChanged", evt => {
+        if (telegram.viewportHeight > maxHeight) maxHeight = telegram.viewportHeight;
+    });
 }, {once: true});
-// function resetStartHeight () {
-//     startHeight     = telegram.viewportStableHeight;
+// function resetmaxHeight () {
+//     maxHeight     = telegram.viewportStableHeight;
 // }
 
 function checkMobileKeyboard () {
     if (!isMobile) return false;
     const currentHeight = telegram.viewportStableHeight;
-    return currentHeight / startHeight <= 0.8;
+    return currentHeight / maxHeight <= 0.8;
 }
 
 
@@ -56,9 +59,9 @@ let wasInit = false;
 const initApp = () => {
     if (wasInit) return;
 
-    // resetStartHeight();
+    // resetmaxHeight();
     // document.querySelector(":root").style.setProperty(
-    //     "--tg-offset", (window.innerHeight - startHeight) + "px")
+    //     "--tg-offset", (window.innerHeight - maxHeight) + "px")
     document.documentElement.classList.add("root-document_placing_tg");
 
     window.dispatchEvent( new Event("initapp") );
@@ -67,8 +70,8 @@ const initApp = () => {
 
 
 const appParams = {
-    get startHeight () {
-        return startHeight;
+    get maxHeight () {
+        return maxHeight;
     },
     get wasInit () {
         return wasInit;

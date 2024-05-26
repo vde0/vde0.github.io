@@ -130,11 +130,11 @@ export default class App extends React.Component {
     render () {
         return (
             <article className="app">
-                {this.showUpdateNum ? <p className="update-num-log">Update num: 48.9.4</p> : ""}
+                {this.showUpdateNum ? <p className="update-num-log">Update num: 48.10</p> : ""}
                 <div className={"content-log " + (!this.log ? "content-log_hidden" : "")}>
                     <p>Mobile: {String(appParams.isMobile)} | iOS: {String(appParams.isIOS)}</p>
                     <p>keyboard state: {String(this.state.keyboardState)}</p>
-                    <p>startHeight: {appParams.startHeight}</p>
+                    <p>startHeight: {appParams.maxHeight}</p>
                     <p>window height: {this.state.windowHeight}</p>
                     <p>web-app height: {this.state.tgHeight}</p>
                     <p>web-app stable-height: {this.state.tgStableHeight}</p>
