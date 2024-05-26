@@ -90,43 +90,51 @@ const appParams = {
 
 if (isMobile) {
 
-    let prevKeyboardState = checkMobileKeyboard();
+    // let prevKeyboardState = checkMobileKeyboard();
 
-    const updateKeyboardState = () => {
-        prevKeyboardState = checkMobileKeyboard();
-    };
+    // const updateKeyboardState = () => {
+    //     prevKeyboardState = checkMobileKeyboard();
+    // };
 
+    let isCalc  = false;
     // openkeyboard event define
     telegram.onEvent("viewportChanged", evt => {
-        const isOpened  = checkMobileKeyboard();
-        const eventName = "openkeyboard";
+        if (isCalc) return;
 
-        if (prevKeyboardState === isOpened) return;
+        const startHeight   = telegram.viewportStableHeight;
+        // const isOpened  = checkMobileKeyboard();
+        const openName  = "openkeyboard";
+        const closeName = "closekeyboard";
 
-        if (!isOpened)                      return;
+        // if (prevKeyboardState === isOpened) return;
 
-        const event = new Event(eventName);
+        // if (!isOpened)                      return;
+
         execWhenResizeEnd(_ => {
+            const eventName = telegram.viewportStableHeight > startHeight
+                ? closeName
+                : openName;
+            const event     = new Event(eventName);
             window.dispatchEvent(event);
-            updateKeyboardState();
+            // updateKeyboardState();
         });
     });
 
     // closekeyboard event define
-    telegram.onEvent("viewportChanged", evt => {
-        const isOpened  = checkMobileKeyboard();
-        const eventName = "closekeyboard";
+    // telegram.onEvent("viewportChanged", evt => {
+    //     const isOpened  = checkMobileKeyboard();
+    //     const eventName = "closekeyboard";
 
-        if (prevKeyboardState === isOpened) return;
+    //     if (prevKeyboardState === isOpened) return;
 
-        if (isOpened)                       return;
+    //     if (isOpened)                       return;
 
-        const event = new Event(eventName);
-        execWhenResizeEnd(_ => {
-            window.dispatchEvent(event);
-            updateKeyboardState();
-        });
-    });
+    //     const event = new Event(eventName);
+    //     execWhenResizeEnd(_ => {
+    //         window.dispatchEvent(event);
+    //         updateKeyboardState();
+    //     });
+    // });
 }
 
 
