@@ -111,6 +111,8 @@ if (isMobile) {
         // if (!isOpened)                      return;
 
         execWhenResizeEnd(_ => {
+            if (telegram.viewportStableHeight === startHeight) throw ErrorEvent("the start app height and the current app height are equal in the result of the generation closekeyboard and openkeyboard events.")
+
             const eventName = telegram.viewportStableHeight > startHeight
                 ? closeName
                 : openName;
