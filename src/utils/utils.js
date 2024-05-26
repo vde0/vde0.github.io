@@ -104,6 +104,7 @@ if (isMobile) {
     // openkeyboard event define
     telegram.onEvent("viewportChanged", evt => {
         if (isCalc) return;
+        isCalc = true;
 
         const startHeight   = telegram.viewportHeight;
         // const isOpened  = checkMobileKeyboard();
@@ -116,6 +117,7 @@ if (isMobile) {
 
         execWhenResizeEnd(_ => {
             const curHeight = telegram.viewportHeight;
+            isCalc = false;
             // if (curHeight === startHeight) throw new ErrorEvent(`the start height (${startHeight}) and the current height (${curHeight}) are equal in the result of the generation closekeyboard and openkeyboard events.`)
 
             const eventName = curHeight > startHeight
