@@ -10,7 +10,7 @@ window.addEventListener("load", evt => {
     telegram.expand();
     if (appParams.isMobile) {
         window.addEventListener(
-            "touchend", _ => TaskManager.setMacrotask(initApp, 1), {once: true});
+            "click", _ => TaskManager.setMacrotask(initApp, 1), {once: true});
     } else {
         TaskManager.setMacrotask(initApp, 1);
     }

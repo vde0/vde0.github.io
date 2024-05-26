@@ -18,7 +18,8 @@ const mobile_events = new Set([
     "touchmove",
     "touchcancel",
 ]);
-const isMobile = ('ontouchstart' in document.documentElement && !!(navigator.userAgent.match(/Mobi/)));
+// const isMobile = ('ontouchstart' in document.documentElement && !!(navigator.userAgent.match(/Mobi/)));
+const isMobile  = true;
 const isIOS     = !!navigator.userAgent.match(/(iPhone|iPod|iPad)/);
 
 
@@ -101,7 +102,7 @@ if (isMobile) {
     telegram.onEvent("viewportChanged", evt => {
         if (isCalc) return;
 
-        const startHeight   = telegram.viewportStableHeight;
+        const startHeight   = telegram.viewportHeight;
         // const isOpened  = checkMobileKeyboard();
         const openName  = "openkeyboard";
         const closeName = "closekeyboard";
@@ -111,9 +112,10 @@ if (isMobile) {
         // if (!isOpened)                      return;
 
         execWhenResizeEnd(_ => {
-            if (telegram.viewportStableHeight === startHeight) throw ErrorEvent("the start app height and the current app height are equal in the result of the generation closekeyboard and openkeyboard events.")
+            const curHeight = telegram.viewportHeight;
+            // if (curHeight === startHeight) throw new ErrorEvent(`the start height (${startHeight}) and the current height (${curHeight}) are equal in the result of the generation closekeyboard and openkeyboard events.`)
 
-            const eventName = telegram.viewportStableHeight > startHeight
+            const eventName = curHeight > startHeight
                 ? closeName
                 : openName;
             const event     = new Event(eventName);
