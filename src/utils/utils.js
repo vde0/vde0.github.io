@@ -38,11 +38,12 @@ function execWhenResizeEnd (func) {
 }
 
 let maxHeight     = null;
+let maxHeightCalcTime = 0;
 window.addEventListener("load", _ => {
-    // execWhenResizeEnd(_ => maxHeight = telegram.viewportHeight);
-    telegram.onEvent("viewportChanged", evt => {
-        if (telegram.viewportHeight > maxHeight) maxHeight = telegram.viewportHeight;
-    });
+    execWhenResizeEnd(_ => {maxHeight = telegram.viewportHeight; maxHeightCalcTime++});
+    // telegram.onEvent("viewportChanged", evt => {
+    //     if (telegram.viewportHeight > maxHeight) maxHeight = telegram.viewportHeight;
+    // });
 }, {once: true});
 // function resetmaxHeight () {
 //     maxHeight     = telegram.viewportStableHeight;
@@ -72,6 +73,9 @@ const initApp = () => {
 const appParams = {
     get maxHeight () {
         return maxHeight;
+    },
+    get maxHeightCalcTime () {
+        return maxHeightCalcTime;
     },
     get wasInit () {
         return wasInit;
