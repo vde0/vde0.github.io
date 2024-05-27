@@ -25,9 +25,7 @@ const isIOS     = !!navigator.userAgent.match(/(iPhone|iPod|iPad)/);
 const   startValue  = 3;
 let     timerCount  = startValue;
 
-const resetTimer = () => TaskManager.setMacrotask(_ => {
-    timerCount = startValue;
-});
+const resetTimer = () =>    timerCount = startValue;
 
 telegram.onEvent("viewportChanged", _ => resetTimer());
 function execWhenResizeEnd (func) {
