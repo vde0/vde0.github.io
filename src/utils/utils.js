@@ -119,7 +119,7 @@ if (isMobile) {
             const curHeight = telegram.viewportHeight;
             isCalc = false;
             // if (curHeight === startHeight) throw new ErrorEvent(`the start height (${startHeight}) and the current height (${curHeight}) are equal in the result of the generation closekeyboard and openkeyboard events.`)
-
+            if (curHeight === startHeight) return;
             const eventName = curHeight > startHeight
                 ? closeName
                 : openName;
