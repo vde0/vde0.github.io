@@ -1,3 +1,6 @@
+import TaskManager from "./TaskManager";
+import { isMobile } from "./utils";
+
 const telegram  = window.Telegram.WebApp;
 
 const   startValue  = 3;
