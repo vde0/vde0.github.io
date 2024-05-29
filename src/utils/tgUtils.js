@@ -3,7 +3,7 @@ import { isMobile } from "./utils";
 
 const telegram  = window.Telegram.WebApp;
 
-const   startValue  = 3;
+const   startValue  = 10;
 let     timerCount  = startValue;
 
 const resetTimer = () =>    timerCount = startValue;
@@ -17,7 +17,7 @@ function execWhenResizeEnd (func) {
             timerCount--;
             exec();
         }
-    });
+    }, 2);
 
     exec();
     
