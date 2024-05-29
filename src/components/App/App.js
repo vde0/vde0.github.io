@@ -1,15 +1,15 @@
 import React from 'react';
-import { checkOwnershipToArea, appParams, telegram } from '../../utils/utils';
+import { checkOwnershipToArea, isMobile, isIOS } from '../../utils/utils';
+import * as tg from '../../utils/tgUtils';
 import Video from '../Video/Video';
 import Dialog from '../Dialog/Dialog';
 import './App.css';
 import './AppContainer.css';
 import './AppFooter.css';
 import ClassLine from '../../utils/ClassLine';
-import UpdateHook from '../../utils/UpdateHook';
 import TaskManager from '../../utils/TaskManager';
 import BottomMenu from '../BottomMenu/BottomMenu';
-import ClassLineActions from '../../componentUtils/ClassLineActions';
+import ClassLineActions from '../../utils/react/ClassLineActions';
 
 
 export default class App extends React.Component {
@@ -61,8 +61,8 @@ export default class App extends React.Component {
             
             keyboardState: null,
             windowHeight: Math.round(window.innerHeight * 100) / 100,
-            tgHeight: Math.round(telegram.viewportHeight * 100) / 100,
-            tgStableHeight: Math.round(telegram.viewportStableHeight * 100) / 100,
+            tgHeight: Math.round(tg.telegram.viewportHeight * 100) / 100,
+            tgStableHeight: Math.round(tg.telegram.viewportStableHeight * 100) / 100,
         };
         for (let containerObj of Object.values( this.containers )) {
             this.classLineActions.initState(containerObj.stateName, "classLine", containerObj);
@@ -88,7 +88,7 @@ export default class App extends React.Component {
 
     componentDidMount () {
 
-        if (appParams.isMobile) {
+        if (isMobile) {
             window.addEventListener("openkeyboard", this.openKeyboardHandler);
             window.addEventListener("closekeyboard", this.closeKeyboardHandler);
         }
@@ -107,19 +107,19 @@ export default class App extends React.Component {
 
             if (this.windowHeight !== window.innerHeight) {
                 this.setState({ windowHeight: window.innerHeight }); }
-            if (this.tgHeight !== telegram.viewportHeight) {
-                this.setState({ tgHeight: telegram.viewportHeight}); }
-            if (this.tgStableHeight !== telegram.viewportStableHeight) {
-                this.setState({ tgStableHeight: telegram.viewportStableHeight }); }
+            if (this.tgHeight !== tg.telegram.viewportHeight) {
+                this.setState({ tgHeight: tg.telegram.viewportHeight}); }
+            if (this.tgStableHeight !== tg.telegram.viewportStableHeight) {
+                this.setState({ tgStableHeight: tg.telegram.viewportStableHeight }); }
 
             this.windowHeight   = Math.round(window.innerHeight * 100) / 100;
-            this.tgHeight       = Math.round(telegram.viewportHeight * 100) / 100;
-            this.tgStableHeight = Math.round(telegram.viewportStableHeight * 100) / 100;
+            this.tgHeight       = Math.round(tg.telegram.viewportHeight * 100) / 100;
+            this.tgStableHeight = Math.round(tg.telegram.viewportStableHeight * 100) / 100;
         });
     }
 
     componentWillUnmount () {
-        if (appParams.isMobile) {
+        if (isMobile) {
             TaskManager.setMacrotask(_ => {
                 window.removeEventListener("openkeyboard", this.openKeyboardHandler);
                 window.removeEventListener("closekeyboard", this.closeKeyboardHandler);
@@ -130,12 +130,10 @@ export default class App extends React.Component {
     render () {
         return (
             <article className="app">
-                {this.showUpdateNum ? <p className="update-num-log">Update num: 49.6.1</p> : ""}
+                {this.showUpdateNum ? <p className="update-num-log">Update num: 50</p> : ""}
                 <div className={"content-log " + (!this.log ? "content-log_hidden" : "")}>
-                    <p>Mobile: {String(appParams.isMobile)} | iOS: {String(appParams.isIOS)}</p>
+                    <p>Mobile: {String(isMobile)} | iOS: {String(isIOS)}</p>
                     <p>keyboard state: {String(this.state.keyboardState)}</p>
-                    <p>maxHeight: {appParams.maxHeight}</p>
-                    <p>maxHeightCalcTime: {appParams.maxHeightCalcTime}</p>
                     <p>window height: {this.state.windowHeight}</p>
                     <p>web-app height: {this.state.tgHeight}</p>
                     <p>web-app stable-height: {this.state.tgStableHeight}</p>
@@ -268,7 +266,7 @@ export default class App extends React.Component {
         
         if (!this.log) return;
         this.setState({
-            keyboardState: appParams.mobileKeyboardState,
+            keyboardState: tg.checkMobileKeyboard(),
         });
     }
     closeKeyboardHandler = (evt) => {
@@ -279,7 +277,7 @@ export default class App extends React.Component {
 
         if (!this.log) return;
         this.setState({
-            keyboardState: appParams.mobileKeyboardState,
+            keyboardState: tg.checkMobileKeyboard(),
         });
     }
 }

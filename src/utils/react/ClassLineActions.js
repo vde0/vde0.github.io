@@ -1,4 +1,4 @@
-import ClassLine from "../utils/ClassLine";
+import ClassLine from "../ClassLine";
 
 export default class ClassLineActions {
 

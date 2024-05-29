@@ -1,5 +1,5 @@
 import React from 'react';
-import { appParams} from '../../utils/utils';
+import { isMobile } from '../../utils/utils';
 import StickyPiston from '../../utils/StickyPiston';
 import './Dialog.css';
 import MsgForm from '../MsgForm/MsgForm';
@@ -7,7 +7,7 @@ import MsgList from '../MsgList/MsgList';
 import ClassLine from '../../utils/ClassLine';
 import TaskManager from '../../utils/TaskManager';
 import UpdateHook from '../../utils/UpdateHook';
-import ClassLineActions from '../../componentUtils/ClassLineActions';
+import ClassLineActions from '../../utils/react/ClassLineActions';
 
 
 let userDB = {
@@ -145,7 +145,7 @@ export default class Dialog extends React.Component {
         this.props.data.blur    = this.blurMsgField.bind(this);
         this.props.data.focus   = this.focusMsgField.bind(this);
 
-        if (appParams.isMobile) {
+        if (isMobile) {
             this.piston.movable = this.dom;
 
             window.addEventListener("closekeyboard", this.closeKeyboardHandler);
@@ -154,7 +154,7 @@ export default class Dialog extends React.Component {
 
     componentWillUnmount () {
         this.props.data.blur = () => {};
-        if (appParams.isMobile) {
+        if (isMobile) {
             this.piston.movable = null;
             TaskManager.setMacrotask(_ => {
                 window.removeEventListener("closekeyboard", this.closeKeyboardHandler);

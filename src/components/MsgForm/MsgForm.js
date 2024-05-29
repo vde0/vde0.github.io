@@ -1,15 +1,16 @@
 import React from 'react';
 import './MsgForm.css';
 import Btn from '../Btn/Btn';
-import { appParams, telegram } from '../../utils/utils';
+import { isMobile } from '../../utils/utils';
+import * as tg from '../../utils/tgUtils';
 import SendIc from '../../icons/to-send.svg';
 import ClassLine from '../../utils/ClassLine';
 import TaskManager from '../../utils/TaskManager';
-import ClassLineActions from '../../componentUtils/ClassLineActions';
+import ClassLineActions from '../../utils/react/ClassLineActions';
 
 
 let funcBridge = () => {};
-if (appParams.isMobile) telegram.onEvent("viewportChanged", tg => {
+if (isMobile) tg.telegram.onEvent("viewportChanged", tg => {
     funcBridge();
 });
 
@@ -34,14 +35,14 @@ export default class MsgForm extends React.Component {
 
         this.props.focusHook.connect( this.updateFocus.bind(this) );
 
-        if (appParams.isMobile) {
+        if (isMobile) {
             window.addEventListener("openkeyboard", this.openKeyboardHandler);
             window.addEventListener("closekeyboard", this.closeKeyboardHandler);
         }
     }
 
     componentWillUnmount () {
-        if (appParams.isMobile) {
+        if (isMobile) {
             this.piston.piston = null;
             funcBridge = () => {};
 
@@ -115,14 +116,14 @@ export default class MsgForm extends React.Component {
             this.piston.press();
         };
 
-        if (appParams.isMobile) this.classLine.add("msg-form_mobile");
+        if (isMobile) this.classLine.add("msg-form_mobile");
         this.classLineActions.updateState();
     }
     closeKeyboardHandler = (evt) => {
         this.piston.piston = null;
         funcBridge = () => {};
 
-        if (appParams.isMobile) this.classLine.remove("msg-form_mobile");
+        if (isMobile) this.classLine.remove("msg-form_mobile");
         this.classLineActions.updateState();
     }
 }

@@ -2,18 +2,12 @@ import React from 'react';
 import {createRoot} from 'react-dom/client';
 import App from './components/App/App';
 import './index.css'
-import { appParams, initApp, telegram } from './utils/utils';
+import { telegram } from './utils/tgUtils';
 import TaskManager from './utils/TaskManager';
 
 
 window.addEventListener("load", evt => {
     telegram.expand();
-    if (appParams.isMobile) {
-        window.addEventListener(
-            "touchend", _ => TaskManager.setMacrotask(initApp, 1), {once: true});
-    } else {
-        TaskManager.setMacrotask(initApp, 1);
-    }
 }, {once: true});
 
 

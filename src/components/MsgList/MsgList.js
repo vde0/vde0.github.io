@@ -2,8 +2,8 @@ import React from "react";
 import './MsgList.css';
 import Msg from "../Msg/Msg";
 import ClassLine from "../../utils/ClassLine";
-import { appParams } from "../../utils/utils";
-import ClassLineActions from "../../componentUtils/ClassLineActions";
+import { isMobile } from "../../utils/utils";
+import ClassLineActions from '../../utils/react/ClassLineActions';
 import TaskManager from "../../utils/TaskManager";
 
 
@@ -22,7 +22,7 @@ export default class MsgList extends React.Component {
 
     componentDidMount () {
 
-        if (appParams.isMobile) {
+        if (isMobile) {
             this.resizeMsgListObserver = new ResizeObserver( entries => {
                 this.resizeMsgListHandler();
             } );
@@ -32,7 +32,7 @@ export default class MsgList extends React.Component {
     }
 
     componentWillUnmount () {
-        if (appParams.isMobile) {
+        if (isMobile) {
             this.resizeMsgListObserver.disconnect();
         }
     }

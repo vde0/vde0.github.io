@@ -4,7 +4,7 @@ import MsgsIc from '../../icons/msgs.svg';
 import AddUserIc from '../../icons/add-user.svg';
 import ReportIc from '../../icons/report.png';
 import WhiteArrowRightIc from '../../icons/white-arrow-right.svg';
-import { appParams } from '../../utils/utils';
+import { isMobile } from '../../utils/utils';
 import TaskManager from '../../utils/TaskManager';
 import './BottomMenu.css';
 
@@ -56,21 +56,21 @@ export default class BottomMenu extends React.Component {
             },
         ];
 
-        this.state = {};
-        this.btns.forEach( btn => {
-            this.state[btn.mod + "Handler"] = appParams.isMobile
-                ? this.saveClick.bind(this, btn.onClick)
-                : btn.onClick;
-        });
+        // this.state = {};
+        // this.btns.forEach( btn => {
+        //     this.state[btn.mod + "Handler"] = isMobile
+        //         ? this.saveClick.bind(this, btn.onClick)
+        //         : btn.onClick;
+        // });
 
 
-        if (appParams.isMobile) window.addEventListener("initapp", _ => {
+        // if (isMobile) window.addEventListener("initapp", _ => {
 
-            this.btns.forEach( btn => {
-                this.setState({ [btn.mod + "Handler"]: btn.onClick });
-            });
+        //     this.btns.forEach( btn => {
+        //         this.setState({ [btn.mod + "Handler"]: btn.onClick });
+        //     });
             
-        }, {once: true});
+        // }, {once: true});
     }
 
     render () {
@@ -83,16 +83,17 @@ export default class BottomMenu extends React.Component {
                         content={btn.content}
                         color={btn.color}
                         badge={btn.badge}
-                        onClick={this.state[btn.mod + "Handler"]} />
+                        onClick={btn.onClick} />
                 } )}
             </section>
         );
     }
 
     saveClick (handler, evt) {
-        if (appParams.wasInit)  TaskManager.setMacrotask(handler.bind(null, evt), 2);
-        else                    window.addEventListener("initapp", _ => {
-            TaskManager.setMacrotask(handler.bind(null, evt), 2);
-        }, {once: true});
+        // if (appParams.wasInit)  TaskManager.setMacrotask(handler.bind(null, evt), 2);
+        // else                    window.addEventListener("initapp", _ => {
+        //     TaskManager.setMacrotask(handler.bind(null, evt), 2);
+        // }, {once: true});
+        TaskManager.setMacrotask(handler.bind(null, evt), 2);
     }
 }

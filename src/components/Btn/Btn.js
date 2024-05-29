@@ -1,7 +1,7 @@
 import React from 'react';
 import './Btn.css';
 import ClassLine from '../../utils/ClassLine';
-import ClassLineActions from '../../componentUtils/ClassLineActions';
+import ClassLineActions from '../../utils/react/ClassLineActions';
 
 
 export default class Btn extends React.Component {
