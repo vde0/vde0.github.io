@@ -111,10 +111,13 @@ export default class App extends React.Component {
                 this.setState({ tgHeight: tg.telegram.viewportHeight}); }
             if (this.tgStableHeight !== tg.telegram.viewportStableHeight) {
                 this.setState({ tgStableHeight: tg.telegram.viewportStableHeight }); }
+            if (this.calcCount !== tg.calcCount) {
+                this.setState({ calcCount: this.calcCount }); }
 
             this.windowHeight   = Math.round(window.innerHeight * 100) / 100;
             this.tgHeight       = Math.round(tg.telegram.viewportHeight * 100) / 100;
             this.tgStableHeight = Math.round(tg.telegram.viewportStableHeight * 100) / 100;
+            this.calcCount      = tg.calcCount;
         });
     }
 
@@ -130,10 +133,11 @@ export default class App extends React.Component {
     render () {
         return (
             <article className="app">
-                {this.showUpdateNum ? <p className="update-num-log">Update num: 51.1</p> : ""}
+                {this.showUpdateNum ? <p className="update-num-log">Update num: 51.1.1</p> : ""}
                 <div className={"content-log " + (!this.log ? "content-log_hidden" : "")}>
                     <p>Mobile: {String(isMobile)} | iOS: {String(isIOS)}</p>
                     <p>keyboard state: {String(this.state.keyboardState)}</p>
+                    <p>calc count: {String(this.state.calcCount)}</p>
                     <p>window height: {this.state.windowHeight}</p>
                     <p>web-app height: {this.state.tgHeight}</p>
                     <p>web-app stable-height: {this.state.tgStableHeight}</p>

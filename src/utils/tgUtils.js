@@ -90,6 +90,7 @@ const initApp = () => {
     wasInit = true;
 }
 
+let calcCount = 0;
 if (isMobile) {
 
     // let prevKeyboardState = checkMobileKeyboard();
@@ -103,6 +104,7 @@ if (isMobile) {
     telegram.onEvent("viewportChanged", evt => {
         if (isCalc) return;
         isCalc = true;
+        calcCount++;
 
         const startHeight   = telegram.viewportHeight;
         // const isOpened  = checkMobileKeyboard();
@@ -147,4 +149,5 @@ if (isMobile) {
 export {
     telegram,
     checkMobileKeyboard,
+    calcCount,
 }
