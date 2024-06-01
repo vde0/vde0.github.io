@@ -127,7 +127,7 @@ if (isMobile) {
                 ? closeName
                 : openName;
             console.log(eventName);
-            const event     = new Event(eventName);
+            const event     = new Event(eventName, {bubbles: true});
             window.dispatchEvent(event);
             // updateKeyboardState();
         });
