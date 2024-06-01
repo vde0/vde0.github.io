@@ -102,6 +102,7 @@ if (isMobile) {
     let isCalc  = false;
     // openkeyboard event define
     telegram.onEvent("viewportChanged", evt => {
+        console.log("resize");
         if (isCalc) return;
         isCalc = true;
         calcCount++;
