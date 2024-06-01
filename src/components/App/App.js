@@ -61,6 +61,7 @@ export default class App extends React.Component {
             
             keyboardState: null,
             calcCount: null,
+            maxHeight: null,
             windowHeight: Math.round(window.innerHeight * 100) / 100,
             tgHeight: Math.round(tg.telegram.viewportHeight * 100) / 100,
             tgStableHeight: Math.round(tg.telegram.viewportStableHeight * 100) / 100,
@@ -106,19 +107,22 @@ export default class App extends React.Component {
 
         if (this.log) setInterval(_ => {
 
-            if (this.windowHeight !== window.innerHeight) {
-                this.setState({ windowHeight: window.innerHeight }); }
-            if (this.tgHeight !== tg.telegram.viewportHeight) {
-                this.setState({ tgHeight: tg.telegram.viewportHeight}); }
-            if (this.tgStableHeight !== tg.telegram.viewportStableHeight) {
-                this.setState({ tgStableHeight: tg.telegram.viewportStableHeight }); }
-            if (this.calcCount !== tg.calcCount) {
-                this.setState({ calcCount: tg.calcCount }); }
+            if (this.state.windowHeight !== this.windowHeight) {
+                this.setState({ windowHeight: this.windowHeight }); }
+            if (this.state.tgHeight !== this.tgHeight) {
+                this.setState({ tgHeight: this.tgHeight}); }
+            if (this.state.tgStableHeight !== this.tgStableHeight) {
+                this.setState({ tgStableHeight: this.tgStableHeight }); }
+            if (this.state.calcCount !== this.calcCount) {
+                this.setState({ calcCount: this.calcCount }); }
+            if (this.state.maxHeight !== this.maxHeight) {
+                this.setState({ maxHeight: this.maxHeight }); }
 
             this.windowHeight   = Math.round(window.innerHeight * 100) / 100;
             this.tgHeight       = Math.round(tg.telegram.viewportHeight * 100) / 100;
             this.tgStableHeight = Math.round(tg.telegram.viewportStableHeight * 100) / 100;
             this.calcCount      = tg.calcCount;
+            this.maxHeight      = tg.maxHeight;
         });
     }
 
@@ -134,11 +138,12 @@ export default class App extends React.Component {
     render () {
         return (
             <article className="app">
-                {this.showUpdateNum ? <p className="update-num-log">Update num: 51.2</p> : ""}
+                {this.showUpdateNum ? <p className="update-num-log">Update num: 51.3</p> : ""}
                 <div className={"content-log " + (!this.log ? "content-log_hidden" : "")}>
                     <p>Mobile: {String(isMobile)} | iOS: {String(isIOS)}</p>
                     <p>keyboard state: {String(this.state.keyboardState)}</p>
                     <p>calc count: {String(this.state.calcCount)}</p>
+                    <p>maxHeight: {String(this.state.maxHeight)}</p>
                     <p>window height: {this.state.windowHeight}</p>
                     <p>web-app height: {this.state.tgHeight}</p>
                     <p>web-app stable-height: {this.state.tgStableHeight}</p>

@@ -24,21 +24,21 @@ function execWhenResizeEnd (func) {
                     checker["2"] === false ||
                     checker["3"] === false
                 ) {
-                    exec(curHeight); console.log("fail"); }
+                    exec(curHeight); }
                 
                 if (
                     checker["1"] === true &&
                     checker["2"] === true &&
                     checker["3"] === true
                 ) {
-                    func(); console.log("success exec"); }
+                    func(); }
                 
                 if (
                     checker["1"] !== null &&
                     checker["2"] !== null &&
                     checker["3"] !== null
                 ) {
-                    clearInterval(timerId); console.log("clear interval"); }
+                    clearInterval(timerId); }
             });
         }
         else    TaskManager.setMacrotask(_ => exec(curHeight), 2);
@@ -118,7 +118,7 @@ if (isMobile) {
         // if (!isOpened)                      return;
 
         execWhenResizeEnd(_ => {
-            console.log("execed");
+            console.log("exec");
             const curHeight = telegram.viewportHeight;
             isCalc = false;
             // if (curHeight === startHeight) throw new ErrorEvent(`the start height (${startHeight}) and the current height (${curHeight}) are equal in the result of the generation closekeyboard and openkeyboard events.`)
@@ -126,6 +126,7 @@ if (isMobile) {
             const eventName = curHeight > startHeight
                 ? closeName
                 : openName;
+            console.log(eventName);
             const event     = new Event(eventName);
             window.dispatchEvent(event);
             // updateKeyboardState();
@@ -153,4 +154,5 @@ export {
     telegram,
     checkMobileKeyboard,
     calcCount,
+    maxHeight,
 }
