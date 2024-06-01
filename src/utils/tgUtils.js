@@ -68,9 +68,12 @@ function execWhenResizeEnd (func) {
 }
 
 let maxHeight     = null;
-let maxHeightCalcTime = 0;
 window.addEventListener("load", _ => {
-    execWhenResizeEnd(_ => {maxHeight = telegram.viewportHeight; maxHeightCalcTime++});
+    maxHeight = telegram.viewportHeight
+    telegram.onEvent("viewportChanged", _ => {
+        if (telegram.viewportHeight > maxHeight) maxHeight = telegram.viewportHeight;
+    });
+    // execWhenResizeEnd(_ => {maxHeight = telegram.viewportHeight; maxHeightCalcTime++});
     // telegram.onEvent("viewportChanged", evt => {
     //     if (telegram.viewportHeight > maxHeight) maxHeight = telegram.viewportHeight;
     // });
