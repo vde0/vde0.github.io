@@ -84,7 +84,7 @@ window.addEventListener("load", _ => {
 
 function checkMobileKeyboard () {
     if (!isMobile) return false;
-    const currentHeight = telegram.viewportStableHeight;
+    const currentHeight = telegram.viewportHeight;
     return currentHeight / maxHeight <= 0.8;
 }
 
