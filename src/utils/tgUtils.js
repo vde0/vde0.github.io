@@ -11,32 +11,36 @@ function execWhenResizeEnd (func) {
         const curHeight = telegram.viewportHeight;
 
         if (prevHeight === curHeight) {
-            const checker = {1: null, 2: null, 3: null}
+            const checker = {1: null, 2: null, 3: null, 4: null}
 
             TaskManager.setMacrotask(_ => checker["1"] = (prevHeight === curHeight), 2);
             TaskManager.setMacrotask(_ => checker["2"] = (prevHeight === curHeight), 4);
             TaskManager.setMacrotask(_ => checker["3"] = (prevHeight === curHeight), 6);
+            TaskManager.setMacrotask(_ => checker["4"] = (prevHeight === curHeight), 8);
 
             const timerId   = setInterval(_ => {
                 
                 if (
                     checker["1"] === false ||
                     checker["2"] === false ||
-                    checker["3"] === false
+                    checker["3"] === false ||
+                    checker["4"] === false
                 ) {
                     exec(curHeight); }
                 
                 if (
                     checker["1"] === true &&
                     checker["2"] === true &&
-                    checker["3"] === true
+                    checker["3"] === true &&
+                    checker["4"] === true
                 ) {
                     func(); }
                 
                 if (
                     checker["1"] !== null &&
                     checker["2"] !== null &&
-                    checker["3"] !== null
+                    checker["3"] !== null &&
+                    checker["4"] !== null
                 ) {
                     clearInterval(timerId); }
             });
@@ -118,7 +122,6 @@ if (isMobile) {
         // if (!isOpened)                      return;
 
         execWhenResizeEnd(_ => {
-            console.log("exec");
             const curHeight = telegram.viewportHeight;
             isCalc = false;
             // if (curHeight === startHeight) throw new ErrorEvent(`the start height (${startHeight}) and the current height (${curHeight}) are equal in the result of the generation closekeyboard and openkeyboard events.`)
@@ -126,7 +129,7 @@ if (isMobile) {
             const eventName = curHeight > startHeight
                 ? closeName
                 : openName;
-            console.log(eventName);
+            
             const event     = new Event(eventName, {bubbles: true});
             window.dispatchEvent(event);
             // updateKeyboardState();
