@@ -13,10 +13,10 @@ function execWhenResizeEnd (func) {
         if (prevHeight === curHeight) {
             const checker = {1: null, 2: null, 3: null, 4: null}
 
-            TaskManager.setMacrotask(_ => checker["1"] = (prevHeight === curHeight), 2);
-            TaskManager.setMacrotask(_ => checker["2"] = (prevHeight === curHeight), 4);
-            TaskManager.setMacrotask(_ => checker["3"] = (prevHeight === curHeight), 6);
-            TaskManager.setMacrotask(_ => checker["4"] = (prevHeight === curHeight), 8);
+            TaskManager.setMacrotask(_ => checker["1"] = (prevHeight === curHeight), 3);
+            TaskManager.setMacrotask(_ => checker["2"] = (prevHeight === curHeight), 6);
+            TaskManager.setMacrotask(_ => checker["3"] = (prevHeight === curHeight), 9);
+            TaskManager.setMacrotask(_ => checker["4"] = (prevHeight === curHeight), 12);
 
             const timerId   = setInterval(_ => {
                 
@@ -45,10 +45,10 @@ function execWhenResizeEnd (func) {
                     clearInterval(timerId); }
             });
         }
-        else    TaskManager.setMacrotask(_ => exec(curHeight), 2);
+        else    TaskManager.setMacrotask(_ => exec(curHeight), 3);
     };
 
-    TaskManager.setMacrotask(_ => exec(telegram.viewportHeight), 2);
+    TaskManager.setMacrotask(_ => exec(telegram.viewportHeight), 3);
     
     // const curHeight = telegram.viewportHeight;
     // trackResize(curHeight);
