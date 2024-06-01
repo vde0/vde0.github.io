@@ -3,23 +3,47 @@ import { isMobile } from "./utils";
 
 const telegram  = window.Telegram.WebApp;
 
-const   startValue  = 10;
-let     timerCount  = startValue;
 
-const resetTimer = () =>    timerCount = startValue;
-
-telegram.onEvent("viewportChanged", _ => resetTimer());
 function execWhenResizeEnd (func) {
     
-    const exec = () => TaskManager.setMacrotask(_ => {
-        if (timerCount === 0) func();
-        else    {
-            timerCount--;
-            exec();
-        }
-    }, 2);
+    const exec = (prevHeight) => {
 
-    exec();
+        const curHeight = telegram.viewportHeight;
+
+        if (prevHeight === curHeight) {
+            const checker = {1: null, 2: null, 3: null}
+
+            TaskManager.setMacrotask(_ => checker["1"] = (prevHeight === curHeight), 2);
+            TaskManager.setMacrotask(_ => checker["2"] = (prevHeight === curHeight), 4);
+            TaskManager.setMacrotask(_ => checker["3"] = (prevHeight === curHeight), 6);
+
+            const timerId   = setInterval(_ => {
+                if (
+                    checker["1"] !== null &&
+                    checker["2"] !== null &&
+                    checker["3"] !== null
+                ) {
+                    clearInterval(timerId); return; }
+                
+                if (
+                    checker["1"] === false ||
+                    checker["2"] === false ||
+                    checker["3"] === false
+                ) {
+                    exec(curHeight); return; }
+                
+                if (
+                    checker["1"] === true &&
+                    checker["2"] === true &&
+                    checker["3"] === true
+                ) {
+                    func(); return; }
+            });
+        }
+        else    TaskManager.setMacrotask(_ => exec(curHeight), 2);
+    };
+
+    TaskManager.setMacrotask(_ => exec(telegram.viewportHeight), 2);
     
     // const curHeight = telegram.viewportHeight;
     // trackResize(curHeight);
