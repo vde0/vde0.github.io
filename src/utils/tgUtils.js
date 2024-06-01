@@ -7,7 +7,7 @@ const telegram  = window.Telegram.WebApp;
 function execWhenResizeEnd (func) {
     
     const exec = (prevHeight) => {
-
+        
         const curHeight = telegram.viewportHeight;
 
         if (prevHeight === curHeight) {
@@ -18,26 +18,27 @@ function execWhenResizeEnd (func) {
             TaskManager.setMacrotask(_ => checker["3"] = (prevHeight === curHeight), 6);
 
             const timerId   = setInterval(_ => {
-                if (
-                    checker["1"] !== null &&
-                    checker["2"] !== null &&
-                    checker["3"] !== null
-                ) {
-                    clearInterval(timerId); return; }
                 
                 if (
                     checker["1"] === false ||
                     checker["2"] === false ||
                     checker["3"] === false
                 ) {
-                    exec(curHeight); return; }
+                    exec(curHeight); console.log("fail"); }
                 
                 if (
                     checker["1"] === true &&
                     checker["2"] === true &&
                     checker["3"] === true
                 ) {
-                    func(); return; }
+                    func(); console.log("success exec"); }
+                
+                if (
+                    checker["1"] !== null &&
+                    checker["2"] !== null &&
+                    checker["3"] !== null
+                ) {
+                    clearInterval(timerId); console.log("clear interval"); }
             });
         }
         else    TaskManager.setMacrotask(_ => exec(curHeight), 2);
@@ -102,7 +103,7 @@ if (isMobile) {
     let isCalc  = false;
     // openkeyboard event define
     telegram.onEvent("viewportChanged", evt => {
-        console.log("resize");
+        
         if (isCalc) return;
         isCalc = true;
         calcCount++;
@@ -117,6 +118,7 @@ if (isMobile) {
         // if (!isOpened)                      return;
 
         execWhenResizeEnd(_ => {
+            console.log("execed");
             const curHeight = telegram.viewportHeight;
             isCalc = false;
             // if (curHeight === startHeight) throw new ErrorEvent(`the start height (${startHeight}) and the current height (${curHeight}) are equal in the result of the generation closekeyboard and openkeyboard events.`)
