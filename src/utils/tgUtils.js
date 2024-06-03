@@ -154,10 +154,13 @@ if (isMobile) {
         if (!isOpened)                      return;
 
         const event = new Event(eventName);
-        execWhenResizeEnd(_ => {
-            window.dispatchEvent(event);
-            updateKeyboardState();
-        });
+        updateKeyboardState();
+
+        setTimeout(_ => window.dispatchEvent(event), 200);
+        // execWhenResizeEnd(_ => {
+        //     window.dispatchEvent(event);
+        //     updateKeyboardState();
+        // });
     });
     // closekeyboard event define
     telegram.onEvent("viewportChanged", evt => {
@@ -169,10 +172,13 @@ if (isMobile) {
         if (isOpened)                       return;
 
         const event = new Event(eventName);
-        execWhenResizeEnd(_ => {
-            window.dispatchEvent(event);
-            updateKeyboardState();
-        });
+        updateKeyboardState();
+
+        setTimeout(_ => window.dispatchEvent(event), 200);
+        // execWhenResizeEnd(_ => {
+        //     window.dispatchEvent(event);
+        //     updateKeyboardState();
+        // });
     });
 }
 
