@@ -105,59 +105,75 @@ const initApp = () => {
 let calcCount = 0;
 if (isMobile) {
 
-    // let prevKeyboardState = checkMobileKeyboard();
-
-    // const updateKeyboardState = () => {
-    //     prevKeyboardState = checkMobileKeyboard();
-    // };
-
-    let isCalc  = false;
-    // openkeyboard event define
-    telegram.onEvent("viewportChanged", evt => {
-        
-        if (isCalc) return;
-        isCalc = true;
-        calcCount++;
-
-        const startHeight   = telegram.viewportHeight;
-        // const isOpened  = checkMobileKeyboard();
-        const openName  = "openkeyboard";
-        const closeName = "closekeyboard";
-
-        // if (prevKeyboardState === isOpened) return;
-
-        // if (!isOpened)                      return;
-
-        execWhenResizeEnd(_ => {
-            const curHeight = telegram.viewportHeight;
-            isCalc = false;
-            // if (curHeight === startHeight) throw new ErrorEvent(`the start height (${startHeight}) and the current height (${curHeight}) are equal in the result of the generation closekeyboard and openkeyboard events.`)
-            if (curHeight === startHeight) return;
-            const eventName = curHeight > startHeight
-                ? closeName
-                : openName;
-            
-            const event     = new Event(eventName, {bubbles: true});
-            window.dispatchEvent(event);
-            // updateKeyboardState();
-        });
-    });
-
-    // closekeyboard event define
+    // let isCalc  = false;
+    // // openkeyboard event define
     // telegram.onEvent("viewportChanged", evt => {
-    //     const isOpened  = checkMobileKeyboard();
-    //     const eventName = "closekeyboard";
+        
+    //     if (isCalc) return;
+    //     isCalc = true;
+    //     calcCount++;
 
-    //     if (prevKeyboardState === isOpened) return;
+    //     const startHeight   = telegram.viewportHeight;
+    //     // const isOpened  = checkMobileKeyboard();
+    //     const openName  = "openkeyboard";
+    //     const closeName = "closekeyboard";
 
-    //     if (isOpened)                       return;
+    //     // if (prevKeyboardState === isOpened) return;
 
-    //     const event = new Event(eventName);
+    //     // if (!isOpened)                      return;
+
     //     execWhenResizeEnd(_ => {
+    //         const curHeight = telegram.viewportHeight;
+    //         isCalc = false;
+    //         // if (curHeight === startHeight) throw new ErrorEvent(`the start height (${startHeight}) and the current height (${curHeight}) are equal in the result of the generation closekeyboard and openkeyboard events.`)
+    //         if (curHeight === startHeight) return;
+    //         const eventName = curHeight > startHeight
+    //             ? closeName
+    //             : openName;
+            
+    //         const event     = new Event(eventName, {bubbles: true});
     //         window.dispatchEvent(event);
-    //         updateKeyboardState();
+    //         // updateKeyboardState();
     //     });
     // });
+
+
+    let prevKeyboardState = checkMobileKeyboard();
+
+    const updateKeyboardState = () => {
+        prevKeyboardState = checkMobileKeyboard();
+    };
+
+    // openkeyboard event define
+    telegram.onEvent("viewportChanged", evt => {
+        const isOpened  = checkMobileKeyboard();
+        const eventName = "openkeyboard";
+
+        if (prevKeyboardState === isOpened) return;
+
+        if (!isOpened)                      return;
+
+        const event = new Event(eventName);
+        execWhenResizeEnd(_ => {
+            window.dispatchEvent(event);
+            updateKeyboardState();
+        });
+    });
+    // closekeyboard event define
+    telegram.onEvent("viewportChanged", evt => {
+        const isOpened  = checkMobileKeyboard();
+        const eventName = "closekeyboard";
+
+        if (prevKeyboardState === isOpened) return;
+
+        if (isOpened)                       return;
+
+        const event = new Event(eventName);
+        execWhenResizeEnd(_ => {
+            window.dispatchEvent(event);
+            updateKeyboardState();
+        });
+    });
 }
 
 export {
