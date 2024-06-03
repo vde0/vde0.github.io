@@ -158,7 +158,7 @@ if (isMobile) {
         setTimeout(_ => {
             updateKeyboardState();
             window.dispatchEvent(event);
-        }, 200);
+        }, 50);
         // execWhenResizeEnd(_ => {
         //     window.dispatchEvent(event);
         //     updateKeyboardState();
@@ -178,7 +178,7 @@ if (isMobile) {
         setTimeout(_ => {
             updateKeyboardState();
             window.dispatchEvent(event);
-        }, 200);
+        }, 50);
         // execWhenResizeEnd(_ => {
         //     window.dispatchEvent(event);
         //     updateKeyboardState();
