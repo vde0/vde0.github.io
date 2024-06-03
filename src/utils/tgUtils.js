@@ -154,9 +154,11 @@ if (isMobile) {
         if (!isOpened)                      return;
 
         const event = new Event(eventName);
-        updateKeyboardState();
 
-        setTimeout(_ => window.dispatchEvent(event), 200);
+        setTimeout(_ => {
+            updateKeyboardState();
+            window.dispatchEvent(event);
+        }, 200);
         // execWhenResizeEnd(_ => {
         //     window.dispatchEvent(event);
         //     updateKeyboardState();
@@ -172,9 +174,11 @@ if (isMobile) {
         if (isOpened)                       return;
 
         const event = new Event(eventName);
-        updateKeyboardState();
 
-        setTimeout(_ => window.dispatchEvent(event), 200);
+        setTimeout(_ => {
+            updateKeyboardState();
+            window.dispatchEvent(event);
+        }, 200);
         // execWhenResizeEnd(_ => {
         //     window.dispatchEvent(event);
         //     updateKeyboardState();
