@@ -154,19 +154,24 @@ if (isMobile) {
 
 
     let prevKeyboardState = checkMobileKeyboard();
+    let isCalc = false;
 
     const updateKeyboardState = () => {
         prevKeyboardState = checkMobileKeyboard();
     };
 
-    // openkeyboard event define
+    // openkeyboard and closekeyboard events define
     telegram.onEvent("viewportChanged", evt => {
-        const isOpened  = checkMobileKeyboard();
-        const eventName = "openkeyboard";
+        const isOpened          = checkMobileKeyboard();
+        const openEventName     = "openkeyboard";
+        const closeEventName    = "closekeyboard";
+        let eventName           = '';
 
-        if (prevKeyboardState === isOpened) return;
+        if (isCalc) return;
+        isCalc = true;
 
-        if (!isOpened)                      return;
+        if (isOpened)   eventName = openEventName;
+        else            eventName = closeEventName;      
 
         const event = new Event(eventName);
 
@@ -176,31 +181,32 @@ if (isMobile) {
         // }, 50);
         execWhenResizeEnd(_ => {
             window.dispatchEvent(event);
-            calcCount++;
             updateKeyboardState();
+            calcCount++;
+            isCalc = false;
         });
     });
     // closekeyboard event define
-    telegram.onEvent("viewportChanged", evt => {
-        const isOpened  = checkMobileKeyboard();
-        const eventName = "closekeyboard";
+    // telegram.onEvent("viewportChanged", evt => {
+    //     const isOpened  = checkMobileKeyboard();
+    //     const eventName = "closekeyboard";
 
-        if (prevKeyboardState === isOpened) return;
+    //     if (prevKeyboardState === isOpened) return;
+    //     updateKeyboardState();
 
-        if (isOpened)                       return;
+    //     if (isOpened)                       return;
 
-        const event = new Event(eventName);
+    //     const event = new Event(eventName);
 
-        // setTimeout(_ => {
-        //     updateKeyboardState();
-        //     window.dispatchEvent(event);
-        // }, 50);
-        execWhenResizeEnd(_ => {
-            window.dispatchEvent(event);
-            calcCount++;
-            updateKeyboardState();
-        });
-    });
+    //     // setTimeout(_ => {
+    //     //     updateKeyboardState();
+    //     //     window.dispatchEvent(event);
+    //     // }, 50);
+    //     execWhenResizeEnd(_ => {
+    //         window.dispatchEvent(event);
+    //         calcCount++;
+    //     });
+    // });
 }
 
 export {
