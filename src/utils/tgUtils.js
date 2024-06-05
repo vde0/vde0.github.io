@@ -11,7 +11,7 @@ telegram.onEvent("viewportChanged", _ => {
     layerCount++;
 
     TaskManager.setMacrotask(_ => {
-        if (--layerCount === 0) isResizing = false});
+        if (--layerCount === 0) isResizing = false }, 3);
 });
 
 function execWhenResizeEnd (func) {
