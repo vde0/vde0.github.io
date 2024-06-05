@@ -170,8 +170,8 @@ if (isMobile) {
         if (isCalc) return;
         isCalc = true;
 
-        if (isOpened)   eventName = openEventName;
-        else            eventName = closeEventName;      
+        if (!prevKeyboardState)     eventName = openEventName;
+        else                        eventName = closeEventName;      
 
         const event = new Event(eventName);
 
