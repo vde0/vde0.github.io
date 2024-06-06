@@ -40,6 +40,7 @@ function checkMobileKeyboard () {
 
 
 let calcCount = 0;
+let lastKeyboardEvent = null;
 if (isMobile) {
 
     let prevKeyboardState = checkMobileKeyboard();
@@ -60,7 +61,10 @@ if (isMobile) {
         isCalc = true;
 
         if (!prevKeyboardState)     eventName = openEventName;
-        else                        eventName = closeEventName;      
+        else                        eventName = closeEventName;
+        
+        if (!prevKeyboardState)     lastKeyboardEvent = openEventName;
+        else                        lastKeyboardEvent = closeEventName;
 
         const event = new Event(eventName);
 
@@ -80,4 +84,5 @@ export {
     changeCount,
     usefulChangeCount,
     maxHeight,
+    lastKeyboardEvent,
 }

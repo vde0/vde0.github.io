@@ -64,6 +64,7 @@ export default class App extends React.Component {
             changeCount: null,
             usefulChangeCount: null,
             maxHeight: null,
+            lastKeyboardEvent: null,
             windowHeight: Math.round(window.innerHeight * 100) / 100,
             tgHeight: Math.round(tg.telegram.viewportHeight * 100) / 100,
             tgStableHeight: Math.round(tg.telegram.viewportStableHeight * 100) / 100,
@@ -123,6 +124,8 @@ export default class App extends React.Component {
                 this.setState({ usefulChangeCount: this.usefulChangeCount }); }
             if (this.state.maxHeight !== this.maxHeight) {
                 this.setState({ maxHeight: this.maxHeight }); }
+            if (this.state.lastKeyboardEvent !== this.lastKeyboardEvent) {
+                this.setState({ lastKeyboardEvent: this.lastKeyboardEvent }); }
 
             this.windowHeight   = Math.round(window.innerHeight * 100) / 100;
             this.tgHeight       = Math.round(tg.telegram.viewportHeight * 100) / 100;
@@ -131,6 +134,7 @@ export default class App extends React.Component {
             this.changeCount    = tg.changeCount;
             this.usefulChangeCount = tg.usefulChangeCount;
             this.maxHeight      = tg.maxHeight;
+            this.lastKeyboardEvent = tg.lastKeyboardEvent;
         });
     }
 
@@ -146,9 +150,10 @@ export default class App extends React.Component {
     render () {
         return (
             <article className="app">
-                {this.showUpdateNum ? <p className="update-num-log">Update num: 55.6</p> : ""}
+                {this.showUpdateNum ? <p className="update-num-log">Update num: 55.7</p> : ""}
                 <div className={"content-log " + (!this.log ? "content-log_hidden" : "")}>
                     <p>Mobile: {String(isMobile)} | iOS: {String(isIOS)}</p>
+                    <p>lastKeyboardEvent: {String(this.state.lastKeyboardEvent)}</p>
                     <p>keyboard state: {String(this.state.keyboardState)}</p>
                     <p>calc count: {String(this.state.calcCount)}</p>
                     <p>change count: {String(this.state.changeCount)}</p>
