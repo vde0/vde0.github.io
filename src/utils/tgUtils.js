@@ -6,9 +6,11 @@ const telegram  = window.Telegram.WebApp;
 
 let isResizing = false;
 let layerCount = 0;
+let changeCount = 0;
 telegram.onEvent("viewportChanged", _ => {
     isResizing = true;
     layerCount++;
+    changeCount++;
 
     TaskManager.setMacrotask(_ => {
         if (--layerCount === 0) isResizing = false }, 3);
@@ -213,5 +215,6 @@ export {
     telegram,
     checkMobileKeyboard,
     calcCount,
+    changeCount,
     maxHeight,
 }
