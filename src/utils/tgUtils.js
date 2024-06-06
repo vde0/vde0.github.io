@@ -7,14 +7,14 @@ const telegram  = window.Telegram.WebApp;
 let isResizing = false;
 let layerCount = 0;
 let changeCount = 0;
-telegram.onEvent("viewportChanged", _ => {
+window.addEventListener("load", _ => telegram.onEvent("viewportChanged", _ => {
     isResizing = true;
     layerCount++;
     changeCount++;
 
     TaskManager.setMacrotask(_ => {
         if (--layerCount === 0) isResizing = false }, 3);
-});
+}), {once: true});
 
 function execWhenResizeEnd (func) {
 
@@ -150,7 +150,7 @@ if (isMobile) {
     };
 
     // openkeyboard and closekeyboard events define
-    telegram.onEvent("viewportChanged", evt => {
+    window.addEventListener("load", _ => telegram.onEvent("viewportChanged", evt => {
         const isOpened          = checkMobileKeyboard();
         const openEventName     = "openkeyboard";
         const closeEventName    = "closekeyboard";
@@ -174,7 +174,7 @@ if (isMobile) {
             calcCount++;
             isCalc = false;
         });
-    });
+    }), {once: true});
     // closekeyboard event define
     // telegram.onEvent("viewportChanged", evt => {
     //     const isOpened  = checkMobileKeyboard();
