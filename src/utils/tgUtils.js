@@ -57,6 +57,8 @@ if (isMobile) {
         const closeEventName    = "closekeyboard";
         let eventName           = '';
 
+        if (prevKeyboardState === isOpened) return;
+
         if (isCalc) return;
         isCalc = true;
 
