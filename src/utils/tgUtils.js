@@ -106,19 +106,6 @@ function checkMobileKeyboard () {
 }
 
 
-let wasInit = false;
-const initApp = () => {
-    if (wasInit) return;
-
-    // resetmaxHeight();
-    // document.querySelector(":root").style.setProperty(
-    //     "--tg-offset", (window.innerHeight - maxHeight) + "px")
-    document.documentElement.classList.add("root-document_placing_tg");
-
-    window.dispatchEvent( new Event("initapp") );
-    wasInit = true;
-}
-
 let calcCount = 0;
 if (isMobile) {
 
