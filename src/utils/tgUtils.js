@@ -18,9 +18,10 @@ window.addEventListener("load", _ => telegram.onEvent("viewportChanged", _ => {
 }), {once: true});
 
 function execWhenResizeEnd (func) {
+    if (!isResizing) return;
 
     const timerId = setInterval(_ => {
-        if (isResizing === true) { clearInterval(timerId); func(); }
+        if (!isResizing) { clearInterval(timerId); func(); }
     });
 }
 
