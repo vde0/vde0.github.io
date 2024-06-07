@@ -26,12 +26,12 @@ function execWhenResizeEnd (func) {
 }
 
 let maxHeight     = null;
-window.addEventListener("load", _ => {
+window.addEventListener("load", execWhenResizeEnd(_ => {
     maxHeight = telegram.viewportHeight
     telegram.onEvent("viewportChanged", _ => {
         if (telegram.viewportHeight > maxHeight) maxHeight = telegram.viewportHeight;
     });
-}, {once: true});
+}), {once: true});
 
 function checkMobileKeyboard () {
     if (!isMobile) return false;
@@ -52,31 +52,33 @@ if (isMobile) {
     };
 
     // openkeyboard and closekeyboard events define
-    window.addEventListener("load", _ => telegram.onEvent("viewportChanged", evt => {
-        const isOpened          = checkMobileKeyboard();
-        const openEventName     = "openkeyboard";
-        const closeEventName    = "closekeyboard";
-        let eventName           = '';
+    window.addEventListener("load", _ => execWhenResizeEnd(_ => {
+        telegram.onEvent("viewportChanged", _ => {
+            const isOpened          = checkMobileKeyboard();
+            const openEventName     = "openkeyboard";
+            const closeEventName    = "closekeyboard";
+            let eventName           = '';
 
-        if (prevKeyboardState === isOpened) return;
+            if (prevKeyboardState === isOpened) return;
 
-        if (isCalc) return;
-        isCalc = true;
+            if (isCalc) return;
+            isCalc = true;
 
-        if (!prevKeyboardState)     eventName = openEventName;
-        else                        eventName = closeEventName;
-        
-        if (!prevKeyboardState)     lastKeyboardEvent = openEventName;
-        else                        lastKeyboardEvent = closeEventName;
+            if (!prevKeyboardState)     eventName = openEventName;
+            else                        eventName = closeEventName;
+            
+            if (!prevKeyboardState)     lastKeyboardEvent = openEventName;
+            else                        lastKeyboardEvent = closeEventName;
 
-        const event = new Event(eventName);
+            const event = new Event(eventName);
 
-        execWhenResizeEnd(_ => {
-            window.dispatchEvent(event);
-            updateKeyboardState();
-            calcCount++;
-            isCalc = false;
-        });
+            execWhenResizeEnd(_ => {
+                window.dispatchEvent(event);
+                updateKeyboardState();
+                calcCount++;
+                isCalc = false;
+            });
+        })
     }), {once: true});
 }
 
