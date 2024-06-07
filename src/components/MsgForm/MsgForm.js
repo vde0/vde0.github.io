@@ -102,9 +102,11 @@ export default class MsgForm extends React.Component {
 
     focus () {
         this.msgFieldBlock.focus();
+        tg.MKBController.open();
     }
     blur () {
         this.msgFieldBlock.blur();
+        tg.MKBController.close();
     }
 
 

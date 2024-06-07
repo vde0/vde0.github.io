@@ -3,6 +3,12 @@ import { isMobile } from "./utils";
 
 const telegram  = window.Telegram.WebApp;
 
+const openKeyboardEvent     = new Event("openkeyboard", {bubbles: true});
+const closeKeyboardEvent    = new Event("closekeyboard", {bubbles: true});
+const MKBController = {
+    open: window.dispatchEvent.bind(window, openKeyboardEvent),
+    close: window.dispatchEvent.bind(window, closeKeyboardEvent),
+};
 
 let isResizing = false;
 let layerCount = 0;
@@ -42,49 +48,50 @@ function checkMobileKeyboard () {
 
 let calcCount = 0;
 let lastKeyboardEvent = null;
-if (isMobile) {
+// if (isMobile) {
 
-    let prevKeyboardState = checkMobileKeyboard();
-    let isCalc = false;
+//     let prevKeyboardState = checkMobileKeyboard();
+//     let isCalc = false;
 
-    const updateKeyboardState = () => {
-        prevKeyboardState = checkMobileKeyboard();
-    };
+//     const updateKeyboardState = () => {
+//         prevKeyboardState = checkMobileKeyboard();
+//     };
 
-    // openkeyboard and closekeyboard events define
-    window.addEventListener("load", _ => execWhenResizeEnd(_ => {
-        telegram.onEvent("viewportChanged", _ => {
-            const isOpened          = checkMobileKeyboard();
-            const openEventName     = "openkeyboard";
-            const closeEventName    = "closekeyboard";
-            let eventName           = '';
+//     // openkeyboard and closekeyboard events define
+//     window.addEventListener("load", _ => execWhenResizeEnd(_ => {
+//         telegram.onEvent("viewportChanged", _ => {
+//             const isOpened          = checkMobileKeyboard();
+//             const openEventName     = "openkeyboard";
+//             const closeEventName    = "closekeyboard";
+//             let eventName           = '';
 
-            if (prevKeyboardState === isOpened) return;
+//             if (prevKeyboardState === isOpened) return;
 
-            if (isCalc) return;
-            isCalc = true;
+//             if (isCalc) return;
+//             isCalc = true;
 
-            if (!prevKeyboardState)     eventName = openEventName;
-            else                        eventName = closeEventName;
+//             if (!prevKeyboardState)     eventName = openEventName;
+//             else                        eventName = closeEventName;
             
-            if (!prevKeyboardState)     lastKeyboardEvent = openEventName;
-            else                        lastKeyboardEvent = closeEventName;
+//             if (!prevKeyboardState)     lastKeyboardEvent = openEventName;
+//             else                        lastKeyboardEvent = closeEventName;
 
-            const event = new Event(eventName);
+//             const event = new Event(eventName);
 
-            execWhenResizeEnd(_ => {
-                window.dispatchEvent(event);
-                updateKeyboardState();
-                calcCount++;
-                isCalc = false;
-            });
-        })
-    }), {once: true});
-}
+//             execWhenResizeEnd(_ => {
+//                 window.dispatchEvent(event);
+//                 updateKeyboardState();
+//                 calcCount++;
+//                 isCalc = false;
+//             });
+//         })
+//     }), {once: true});
+// }
 
 export {
     telegram,
     checkMobileKeyboard,
+    MKBController,
     calcCount,
     changeCount,
     usefulChangeCount,
