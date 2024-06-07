@@ -32,7 +32,7 @@ export default class MsgForm extends React.Component {
     }
 
     componentDidMount () {
-
+        
         this.props.focusHook.connect( this.updateFocus.bind(this) );
 
         if (isMobile) {
@@ -46,16 +46,12 @@ export default class MsgForm extends React.Component {
             this.piston.piston = null;
             funcBridge = () => {};
 
+            this.blur();
+
             TaskManager.setMacrotask(_ => {
                 window.removeEventListener("openkeyboard", this.openKeyboardHandler);
                 window.removeEventListener("closekeyboard", this.closeKeyboardHandler);
             }, 2);
-        }
-    }
-
-    componentDidUpdate (prevProps) {
-        if (prevProps.focusFieldUpdater !== this.props.focusFieldUpdater) {
-            this.props.focusField ? this.focus() : this.blur();
         }
     }
 

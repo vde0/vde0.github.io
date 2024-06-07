@@ -130,7 +130,6 @@ export default class Dialog extends React.Component {
         this.state = {
             msgList: this.msgList,
             focusField: true,
-            focusFieldUpdater: true,
             scrollDown: null,
             scrollDownUpdater: true,
         }
@@ -154,6 +153,7 @@ export default class Dialog extends React.Component {
 
     componentWillUnmount () {
         this.props.data.blur = () => {};
+        
         if (isMobile) {
             this.piston.movable = null;
             TaskManager.setMacrotask(_ => {
@@ -227,6 +227,6 @@ export default class Dialog extends React.Component {
 
 
     closeKeyboardHandler = (evt) => {
-        this.dom.style.setProperty("height", "100%");
+        this.dom?.style.setProperty("height", "100%");
     }
 }

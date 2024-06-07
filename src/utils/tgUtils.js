@@ -48,45 +48,6 @@ function checkMobileKeyboard () {
 
 let calcCount = 0;
 let lastKeyboardEvent = null;
-// if (isMobile) {
-
-//     let prevKeyboardState = checkMobileKeyboard();
-//     let isCalc = false;
-
-//     const updateKeyboardState = () => {
-//         prevKeyboardState = checkMobileKeyboard();
-//     };
-
-//     // openkeyboard and closekeyboard events define
-//     window.addEventListener("load", _ => execWhenResizeEnd(_ => {
-//         telegram.onEvent("viewportChanged", _ => {
-//             const isOpened          = checkMobileKeyboard();
-//             const openEventName     = "openkeyboard";
-//             const closeEventName    = "closekeyboard";
-//             let eventName           = '';
-
-//             if (prevKeyboardState === isOpened) return;
-
-//             if (isCalc) return;
-//             isCalc = true;
-
-//             if (!prevKeyboardState)     eventName = openEventName;
-//             else                        eventName = closeEventName;
-            
-//             if (!prevKeyboardState)     lastKeyboardEvent = openEventName;
-//             else                        lastKeyboardEvent = closeEventName;
-
-//             const event = new Event(eventName);
-
-//             execWhenResizeEnd(_ => {
-//                 window.dispatchEvent(event);
-//                 updateKeyboardState();
-//                 calcCount++;
-//                 isCalc = false;
-//             });
-//         })
-//     }), {once: true});
-// }
 
 export {
     telegram,
