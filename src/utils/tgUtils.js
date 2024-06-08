@@ -6,21 +6,21 @@ const telegram  = window.Telegram.WebApp;
 const openKeyboardEvent     = new Event("openkeyboard", {bubbles: true});
 const closeKeyboardEvent    = new Event("closekeyboard", {bubbles: true});
 const MKBController = {
-    open: window.dispatchEvent.bind(window, openKeyboardEvent),
-    close: window.dispatchEvent.bind(window, closeKeyboardEvent),
+    open: _ => execWhenResizeEnd(_ => window.dispatchEvent( openKeyboardEvent )),
+    close: _ => execWhenResizeEnd(_ => window.dispatchEvent( closeKeyboardEvent )),
 };
 
 let isResizing = false;
-let layerCount = 0;
+let stack = 0;
 let changeCount = 0;
 let usefulChangeCount = 0;
 window.addEventListener("load", _ => telegram.onEvent("viewportChanged", _ => {
     isResizing = true;
-    layerCount++;
+    stack++;
     changeCount++;
 
     TaskManager.setMacrotask(_ => {
-        if (--layerCount === 0) isResizing = false; }, 10);
+        if (--stack === 0) isResizing = false; }, 10);
 }), {once: true});
 
 function execWhenResizeEnd (func) {
