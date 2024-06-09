@@ -18,15 +18,24 @@ window.addEventListener("load", _ => telegram.onEvent("viewportChanged", _ => {
 }), {once: true});
 
 function execWhenResizeEnd (func) {
-    if (!isResizing) return;
 
-    const startHeight = telegram.viewportHeight;
+    let availableFails = 5;
+    exec();
 
-    const timerId = setInterval(_ => {
-        if (isResizing) return;
-        clearInterval(timerId);
-        if (startHeight !== telegram.viewportHeight) { usefulChangeCount++; func(); }
-    });
+    function exec () {
+        if (!isResizing) {
+            if (availableFails-- === 0) return;
+            TaskManager.setMacrotask(exec, 3);
+        }
+    
+        const startHeight = telegram.viewportHeight;
+    
+        const timerId = setInterval(_ => {
+            if (isResizing) return;
+            clearInterval(timerId);
+            if (startHeight !== telegram.viewportHeight) { usefulChangeCount++; func(); }
+        });
+    }
 }
 
 let maxHeight     = null;
