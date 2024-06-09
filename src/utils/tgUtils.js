@@ -20,12 +20,12 @@ window.addEventListener("load", _ => telegram.onEvent("viewportChanged", _ => {
 function execWhenResizeEnd (func) {
     if (!isResizing) return;
 
-    const startHeight = tg.viewportHeight;
+    const startHeight = telegram.viewportHeight;
 
     const timerId = setInterval(_ => {
         if (isResizing) return;
         clearInterval(timerId);
-        if (startHeight !== tg.viewportHeight) { usefulChangeCount++; func(); }
+        if (startHeight !== telegram.viewportHeight) { usefulChangeCount++; func(); }
     });
 }
 
@@ -44,28 +44,26 @@ function checkMobileKeyboard () {
 }
 
 
-let calcCount = 0;
 let lastKeyboardEvent = null;
 
 
 function execWhenKBOpened(func) {
 
-    const timerId = setInterval(_ => {
-        if (tg.viewportHeight < maxHeight) return;
-        clearInterval(timerId);
-        usefulChangeCount++;
-        func();
-    });
-}
-function execWhenKBClosed (func) {
-    if (!isResizing) return;
-
-    const startHeight = tg.viewportHeight;
+    const startHeight = telegram.viewportHeight;
 
     const timerId = setInterval(_ => {
         if ( checkMobileKeyboard() ) return;
         clearInterval(timerId);
         execWhenResizeEnd(func);
+    });
+}
+function execWhenKBClosed (func) {
+
+    const timerId = setInterval(_ => {
+        if (telegram.viewportHeight < maxHeight) return;
+        clearInterval(timerId);
+        usefulChangeCount++;
+        func();
     });
 }
 
