@@ -60,7 +60,6 @@ export default class App extends React.Component {
             videoShown: this.videoShown,
             
             keyboardState: null,
-            calcCount: null,
             changeCount: null,
             usefulChangeCount: null,
             maxHeight: null,
@@ -116,8 +115,6 @@ export default class App extends React.Component {
                 this.setState({ tgHeight: this.tgHeight}); }
             if (this.state.tgStableHeight !== this.tgStableHeight) {
                 this.setState({ tgStableHeight: this.tgStableHeight }); }
-            if (this.state.calcCount !== this.calcCount) {
-                this.setState({ calcCount: this.calcCount }); }
             if (this.state.changeCount !== this.changeCount) {
                 this.setState({ changeCount: this.changeCount }); }
             if (this.state.usefulChangeCount !== this.usefulChangeCount) {
@@ -130,7 +127,6 @@ export default class App extends React.Component {
             this.windowHeight   = Math.round(window.innerHeight * 100) / 100;
             this.tgHeight       = Math.round(tg.telegram.viewportHeight * 100) / 100;
             this.tgStableHeight = Math.round(tg.telegram.viewportStableHeight * 100) / 100;
-            this.calcCount      = tg.calcCount;
             this.changeCount    = tg.changeCount;
             this.usefulChangeCount = tg.usefulChangeCount;
             this.maxHeight      = tg.maxHeight;
@@ -150,12 +146,11 @@ export default class App extends React.Component {
     render () {
         return (
             <article className="app">
-                {this.showUpdateNum ? <p className="update-num-log">Update num: 59.4</p> : ""}
+                {this.showUpdateNum ? <p className="update-num-log">Update num: 59.5</p> : ""}
                 <div className={"content-log " + (!this.log ? "content-log_hidden" : "")}>
                     <p>Mobile: {String(isMobile)} | iOS: {String(isIOS)}</p>
                     <p>lastKeyboardEvent: {String(this.state.lastKeyboardEvent)}</p>
                     <p>keyboard state: {String(this.state.keyboardState)}</p>
-                    <p>calc count: {String(this.state.calcCount)}</p>
                     <p>change count: {String(this.state.changeCount)}</p>
                     <p>useful change count: {String(this.state.usefulChangeCount)}</p>
                     <p>maxHeight: {String(this.state.maxHeight)}</p>

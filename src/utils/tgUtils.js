@@ -48,18 +48,40 @@ let calcCount = 0;
 let lastKeyboardEvent = null;
 
 
+function execWhenKBOpened(func) {
+
+    const timerId = setInterval(_ => {
+        if (tg.viewportHeight < maxHeight) return;
+        clearInterval(timerId);
+        usefulChangeCount++;
+        func();
+    });
+}
+function execWhenKBClosed (func) {
+    if (!isResizing) return;
+
+    const startHeight = tg.viewportHeight;
+
+    const timerId = setInterval(_ => {
+        if ( checkMobileKeyboard() ) return;
+        clearInterval(timerId);
+        execWhenResizeEnd(func);
+    });
+}
+
 const getOpenKeyboardEvent     = () => new Event("openkeyboard", {bubbles: true});
 const getCloseKeyboardEvent    = () => new Event("closekeyboard", {bubbles: true});
 const MKBController = {
-    open: _ => execWhenResizeEnd(_ => window.dispatchEvent( getOpenKeyboardEvent() )),
-    close: _ => execWhenResizeEnd(_ => window.dispatchEvent( getCloseKeyboardEvent() )),
+    open: _ => execWhenKBOpened(_ => {
+        window.dispatchEvent( getOpenKeyboardEvent() ); lastKeyboardEvent="openkeyboard"; }),
+    close: _ => execWhenKBClosed(_ => {
+        window.dispatchEvent( getCloseKeyboardEvent() ); lastKeyboardEvent="closekeyboard"; }),
 };
 
 export {
     telegram,
     checkMobileKeyboard,
     MKBController,
-    calcCount,
     changeCount,
     usefulChangeCount,
     maxHeight,
