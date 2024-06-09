@@ -30,12 +30,12 @@ function execWhenResizeEnd (func) {
 }
 
 let maxHeight     = null;
-window.addEventListener("load", execWhenResizeEnd(_ => {
-    maxHeight = telegram.viewportHeight
+window.addEventListener("load", _ => {
+    maxHeight = telegram.viewportHeight;
     telegram.onEvent("viewportChanged", _ => {
         if (telegram.viewportHeight > maxHeight) maxHeight = telegram.viewportHeight;
     });
-}), {once: true});
+}, {once: true});
 
 function checkMobileKeyboard () {
     if (!isMobile) return false;
