@@ -53,7 +53,6 @@ const MKBController = {
     open: _ => execWhenResizeEnd(_ => window.dispatchEvent( getOpenKeyboardEvent() )),
     close: _ => execWhenResizeEnd(_ => window.dispatchEvent( getCloseKeyboardEvent() )),
 };
-MKBController.open();
 
 export {
     telegram,
