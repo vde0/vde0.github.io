@@ -23,7 +23,8 @@ function execWhenResizeEnd (func) {
     const startHeight = tg.viewportHeight;
 
     const timerId = setInterval(_ => {
-        if (!isResizing) clearInterval(timerId);
+        if (isResizing) return;
+        clearInterval(timerId);
         if (startHeight !== tg.viewportHeight) { usefulChangeCount++; func(); }
     });
 }
