@@ -64,6 +64,8 @@ export default class MsgForm extends React.Component {
                 <textarea ref={el => this.msgFieldBlock = el}
                     className="msg-form__field msg-form__field_focused"
                     onInput={this.onInput}
+                    onFocus={_ => tg.MKBController.open()}
+                    onBlur={_ => tg.MKBController.close()}
                     autoFocus
                     autoCapitalize="on"
                     autoComplete="false"
@@ -98,11 +100,9 @@ export default class MsgForm extends React.Component {
 
     focus () {
         this.msgFieldBlock.focus();
-        tg.MKBController.open();
     }
     blur () {
         this.msgFieldBlock.blur();
-        tg.MKBController.close();
     }
 
 
