@@ -109,28 +109,31 @@ export default class App extends React.Component {
 
         if (this.log) setInterval(_ => {
 
-            if (this.state.windowHeight !== this.windowHeight) {
-                this.setState({ windowHeight: this.windowHeight }); }
-            if (this.state.tgHeight !== this.tgHeight) {
-                this.setState({ tgHeight: this.tgHeight}); }
-            if (this.state.tgStableHeight !== this.tgStableHeight) {
-                this.setState({ tgStableHeight: this.tgStableHeight }); }
+            if (this.state.keyboardState !== this.keyboardState) {
+                this.setState({ keyboardState: this.keyboardState }); }
+            if (this.state.lastKeyboardEvent !== this.lastKeyboardEvent) {
+                this.setState({ lastKeyboardEvent: this.lastKeyboardEvent }); }
             if (this.state.changeCount !== this.changeCount) {
                 this.setState({ changeCount: this.changeCount }); }
             if (this.state.usefulChangeCount !== this.usefulChangeCount) {
                 this.setState({ usefulChangeCount: this.usefulChangeCount }); }
             if (this.state.maxHeight !== this.maxHeight) {
                 this.setState({ maxHeight: this.maxHeight }); }
-            if (this.state.lastKeyboardEvent !== this.lastKeyboardEvent) {
-                this.setState({ lastKeyboardEvent: this.lastKeyboardEvent }); }
-
-            this.windowHeight   = Math.round(window.innerHeight * 100) / 100;
-            this.tgHeight       = Math.round(tg.telegram.viewportHeight * 100) / 100;
-            this.tgStableHeight = Math.round(tg.telegram.viewportStableHeight * 100) / 100;
+            if (this.state.windowHeight !== this.windowHeight) {
+                this.setState({ windowHeight: this.windowHeight }); }
+            if (this.state.tgHeight !== this.tgHeight) {
+                this.setState({ tgHeight: this.tgHeight}); }
+            if (this.state.tgStableHeight !== this.tgStableHeight) {
+                this.setState({ tgStableHeight: this.tgStableHeight }); }
+            
+            this.keyboardState  = tg.checkMobileKeyboard();
+            this.lastKeyboardEvent = tg.lastKeyboardEvent;
             this.changeCount    = tg.changeCount;
             this.usefulChangeCount = tg.usefulChangeCount;
             this.maxHeight      = tg.maxHeight;
-            this.lastKeyboardEvent = tg.lastKeyboardEvent;
+            this.windowHeight   = Math.round(window.innerHeight * 100) / 100;
+            this.tgHeight       = Math.round(tg.telegram.viewportHeight * 100) / 100;
+            this.tgStableHeight = Math.round(tg.telegram.viewportStableHeight * 100) / 100;
         });
     }
 
@@ -146,11 +149,11 @@ export default class App extends React.Component {
     render () {
         return (
             <article className="app">
-                {this.showUpdateNum ? <p className="update-num-log">Update num: 59.6</p> : ""}
+                {this.showUpdateNum ? <p className="update-num-log">Update num: 59.7</p> : ""}
                 <div className={"content-log " + (!this.log ? "content-log_hidden" : "")}>
                     <p>Mobile: {String(isMobile)} | iOS: {String(isIOS)}</p>
-                    <p>lastKeyboardEvent: {String(this.state.lastKeyboardEvent)}</p>
                     <p>keyboard state: {String(this.state.keyboardState)}</p>
+                    <p>lastKeyboardEvent: {String(this.state.lastKeyboardEvent)}</p>
                     <p>change count: {String(this.state.changeCount)}</p>
                     <p>useful change count: {String(this.state.usefulChangeCount)}</p>
                     <p>maxHeight: {String(this.state.maxHeight)}</p>
