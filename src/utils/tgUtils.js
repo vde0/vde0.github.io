@@ -3,12 +3,6 @@ import { isMobile } from "./utils";
 
 const telegram  = window.Telegram.WebApp;
 
-const getOpenKeyboardEvent     = () => new Event("openkeyboard", {bubbles: true});
-const getCloseKeyboardEvent    = () => new Event("closekeyboard", {bubbles: true});
-const MKBController = {
-    open: _ => execWhenResizeEnd(_ => window.dispatchEvent( getOpenKeyboardEvent() )),
-    close: _ => execWhenResizeEnd(_ => window.dispatchEvent( getCloseKeyboardEvent() )),
-};
 
 let isResizing = false;
 let stack = 0;
@@ -51,6 +45,15 @@ function checkMobileKeyboard () {
 
 let calcCount = 0;
 let lastKeyboardEvent = null;
+
+
+const getOpenKeyboardEvent     = () => new Event("openkeyboard", {bubbles: true});
+const getCloseKeyboardEvent    = () => new Event("closekeyboard", {bubbles: true});
+const MKBController = {
+    open: _ => execWhenResizeEnd(_ => window.dispatchEvent( getOpenKeyboardEvent() )),
+    close: _ => execWhenResizeEnd(_ => window.dispatchEvent( getCloseKeyboardEvent() )),
+};
+MKBController.open();
 
 export {
     telegram,
