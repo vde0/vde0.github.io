@@ -5,17 +5,22 @@ const telegram  = window.Telegram.WebApp;
 
 
 let isResizing = false;
-let stack = 0;
 let changeCount = 0;
 let usefulChangeCount = 0;
-window.addEventListener("load", _ => telegram.onEvent("viewportChanged", _ => {
-    isResizing = true;
-    stack++;
-    changeCount++;
+window.addEventListener("load", _ => {
+    let prevHeight = telegram.viewportHeight;
 
-    TaskManager.setMacrotask(_ => {
-        if (--stack === 0) isResizing = false; }, 10);
-}), {once: true});
+    function checkResize () {
+        TaskManager.setMacrotask(_ => {
+            const curHeight = telegram.viewportHeight;
+            if (curHeight !== prevHeight)   {isResizing = true; changeCount++;}
+            else                            isResizing = false;
+            prevHeight = curHeight;
+
+            checkResize();
+        });
+    }
+}, {once: true});
 
 function execWhenResizeEnd (func) {
 
@@ -28,12 +33,11 @@ function execWhenResizeEnd (func) {
             TaskManager.setMacrotask(exec, 3);
         }
     
-        const startHeight = telegram.viewportHeight;
-    
         const timerId = setInterval(_ => {
             if (isResizing) return;
+            usefulChangeCount++;
             clearInterval(timerId);
-            if (startHeight !== telegram.viewportHeight) { usefulChangeCount++; func(); }
+            func();
         });
     }
 }
@@ -48,8 +52,8 @@ window.addEventListener("load", _ => {
 
 function checkMobileKeyboard () {
     if (!isMobile) return false;
-    const currentHeight = telegram.viewportHeight;
-    return currentHeight / maxHeight <= 0.8;
+    const curHeight = telegram.viewportHeight;
+    return curHeight / maxHeight <= 0.8;
 }
 
 
@@ -92,5 +96,6 @@ export {
     changeCount,
     usefulChangeCount,
     maxHeight,
+    isResizing,
     lastKeyboardEvent,
 }
