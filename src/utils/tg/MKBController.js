@@ -9,7 +9,7 @@ export default class MKBController {
 
     static get lastEvent () { return lastEventVal }
 
-    static open () { _ => this.execWhenOpened(_ => {
+    static open () { this.execWhenOpened(_ => {
         this.makeOpenKeyboardEvent();
         lastEventVal = "openkeyboard";
 
