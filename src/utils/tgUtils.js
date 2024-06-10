@@ -25,7 +25,7 @@ window.addEventListener("load", _ => {
 
 function execWhenResizeEnd (func) {
 
-    let availableFails = 5;
+    let availableFails = 10;
     exec();
 
     function exec () {
