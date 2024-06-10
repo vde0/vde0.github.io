@@ -9,7 +9,7 @@ export default class MKBController {
 
     static get lastEvent () { return lastEventVal }
 
-    static open () { this.execWhenOpened(_ => {
+    static open () {
         this.makeOpenKeyboardEvent();
         lastEventVal = "openkeyboard";
 
@@ -17,7 +17,7 @@ export default class MKBController {
             this.makeCloseKeyboardEvent();
             lastEventVal = "closekeyboard";
         });
-    }) }
+    }
 
     static get isOpened () {
         if (!isMobile) return null;
