@@ -31,13 +31,13 @@ export default class MKBController {
 
     static execWhenOpened (func) {
         TaskManager.setMacrotask(_ => {
-            if ( this.isOpened() ) { execWhenResizeEnd(func); return; }
+            if ( this.isOpened ) { execWhenResizeEnd(func); return; }
             this.execWhenOpened(func);
         });
     }
     static execWhenClosed (func) {
         TaskManager.setMacrotask(_ => {
-            if ( this.isClosed() ) { func(); return; }
+            if ( this.isClosed ) { func(); return; }
             this.execWhenClosed(func);
         });
     }
