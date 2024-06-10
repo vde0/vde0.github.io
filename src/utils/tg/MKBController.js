@@ -13,10 +13,10 @@ export default class MKBController {
         this.makeOpenKeyboardEvent();
         lastEventVal = "openkeyboard";
 
-        this.execWhenClosed(_ => {
+        execWhenResizeEnd(_ => this.execWhenClosed(_ => {
             this.makeCloseKeyboardEvent();
             lastEventVal = "closekeyboard";
-        });
+        }) );
     }
 
     static get isOpened () {
