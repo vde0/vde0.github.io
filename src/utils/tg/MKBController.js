@@ -13,7 +13,7 @@ export default class MKBController {
         this.makeOpenKeyboardEvent();
         lastEventVal = "openkeyboard";
 
-        execWhenResizeEnd(_ => this.execWhenClosed(_ => {
+        TaskManager.setMacrotask(_ => this.execWhenClosed(_ => {
             this.makeCloseKeyboardEvent();
             lastEventVal = "closekeyboard";
         }) );
