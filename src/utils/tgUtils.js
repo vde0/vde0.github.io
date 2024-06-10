@@ -30,7 +30,7 @@ function execWhenResizeEnd (func) {
     function exec () {
         if (!isResizing) {
             if (availableFails-- === 0) return;
-            TaskManager.setMacrotask(exec, 3);
+            TaskManager.setMacrotask(exec);
             return;
         }
     
