@@ -2,14 +2,14 @@ import TaskManager from "../TaskManager";
 import { isMobile } from "../utils";
 import { execWhenResizeEnd, telegram } from "./utils";
 
-// private class fields
+// private static class fields
 let lastEventVal = null;
 
 export default class MKBController {
 
-    get lastEvent () { return lastEventVal }
+    static get lastEvent () { return lastEventVal }
 
-    open () { _ => this.execWhenOpened(_ => {
+    static open () { _ => this.execWhenOpened(_ => {
         this.makeOpenKeyboardEvent();
         lastEventVal = "openkeyboard";
 
@@ -19,31 +19,33 @@ export default class MKBController {
         });
     }) }
 
-    get isOpened () {
+    static get isOpened () {
         if (!isMobile) return null;
         const curHeight = telegram.viewportHeight;
         return curHeight / maxHeight <= 0.8;
     }
-    get isClosed () {
+    static get isClosed () {
         if (!isMobile) return null;
         return telegram.viewportHeight === maxHeight;
     }
 
-    execWhenOpened (func) {
+    static execWhenOpened (func) {
         TaskManager.setMacrotask(_ => {
             if ( this.isOpened() ) { execWhenResizeEnd(func); return; }
             this.execWhenClosed(func);
         });
     }
-    execWhenClosed (func) {
+    static execWhenClosed (func) {
         TaskManager.setMacrotask(_ => {
             if ( this.isClosed() ) { func(); return; }
             this.execWhenClosed(func);
         });
     }
 
-    makeOpenKeyboardEvent () {
+    static makeOpenKeyboardEvent () {
         window.dispatchEvent( new Event("openkeyboard", {bubbles: true}) ); }
-    makeCloseKeyboardEvent () {
+    static makeCloseKeyboardEvent () {
         window.dispatchEvent( new Event("closekeyboard", {bubbles: true}) ); }
+    
+    constructor () { throw Error("MKBController is a static class.") }
 }
