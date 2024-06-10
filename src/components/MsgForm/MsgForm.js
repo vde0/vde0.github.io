@@ -2,7 +2,8 @@ import React from 'react';
 import './MsgForm.css';
 import Btn from '../Btn/Btn';
 import { isMobile } from '../../utils/utils';
-import * as tg from '../../utils/tgUtils';
+import * as tg from '../../utils/tg/utils';
+import MKBController from '../../utils/tg/MKBController';
 import SendIc from '../../icons/to-send.svg';
 import ClassLine from '../../utils/ClassLine';
 import TaskManager from '../../utils/TaskManager';
@@ -64,8 +65,7 @@ export default class MsgForm extends React.Component {
                 <textarea ref={el => this.msgFieldBlock = el}
                     className="msg-form__field msg-form__field_focused"
                     onInput={this.onInput}
-                    onFocus={_ => tg.MKBController.open()}
-                    onBlur={_ => tg.MKBController.close()}
+                    onFocus={_ => MKBController.open()}
                     autoFocus
                     autoCapitalize="on"
                     autoComplete="false"

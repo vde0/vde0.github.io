@@ -2,7 +2,7 @@ import React from 'react';
 import {createRoot} from 'react-dom/client';
 import App from './components/App/App';
 import './index.css'
-import { telegram } from './utils/tgUtils';
+import { telegram } from './utils/tg/utils';
 import TaskManager from './utils/TaskManager';
 
 

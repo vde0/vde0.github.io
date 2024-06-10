@@ -1,6 +1,7 @@
 import React from 'react';
 import { checkOwnershipToArea, isMobile, isIOS } from '../../utils/utils';
-import * as tg from '../../utils/tgUtils';
+import * as tg from '../../utils/tg/utils';
+import MKBController from '../../utils/tg/MKBController';
 import Video from '../Video/Video';
 import Dialog from '../Dialog/Dialog';
 import './App.css';
@@ -126,14 +127,14 @@ export default class App extends React.Component {
             if (this.state.tgStableHeight !== this.tgStableHeight) {
                 this.setState({ tgStableHeight: this.tgStableHeight }); }
             
-            this.keyboardState  = tg.checkMobileKeyboard();
-            this.lastKeyboardEvent = tg.lastKeyboardEvent;
-            this.changeCount    = tg.changeCount;
-            this.usefulChangeCount = tg.usefulChangeCount;
-            this.maxHeight      = tg.maxHeight;
-            this.windowHeight   = Math.round(window.innerHeight * 100) / 100;
-            this.tgHeight       = Math.round(tg.telegram.viewportHeight * 100) / 100;
-            this.tgStableHeight = Math.round(tg.telegram.viewportStableHeight * 100) / 100;
+            this.keyboardState      = MKBController.isOpened;
+            this.lastKeyboardEvent  = MKBController.lastEvent;
+            this.changeCount        = tg.changeCount;
+            this.usefulChangeCount  = tg.usefulChangeCount;
+            this.maxHeight          = tg.maxHeight;
+            this.windowHeight       = Math.round(window.innerHeight * 100) / 100;
+            this.tgHeight           = Math.round(tg.telegram.viewportHeight * 100) / 100;
+            this.tgStableHeight     = Math.round(tg.telegram.viewportStableHeight * 100) / 100;
         });
     }
 
@@ -149,7 +150,7 @@ export default class App extends React.Component {
     render () {
         return (
             <article className="app">
-                {this.showUpdateNum ? <p className="update-num-log">Update num: 59.15</p> : ""}
+                {this.showUpdateNum ? <p className="update-num-log">Update num: 60</p> : ""}
                 <div className={"content-log " + (!this.log ? "content-log_hidden" : "")}>
                     <p>Mobile: {String(isMobile)} | iOS: {String(isIOS)}</p>
                     <p>keyboard state: {String(this.state.keyboardState)}</p>
@@ -286,21 +287,11 @@ export default class App extends React.Component {
 
         this.contentClassLine.add( "app__content_for-keyboard" );
         this.classLineActions.updateState("contentClassLine");
-        
-        if (!this.log) return;
-        this.setState({
-            keyboardState: tg.checkMobileKeyboard(),
-        });
     }
     closeKeyboardHandler = (evt) => {
         this.showFooter();
 
         this.contentClassLine.remove( "app__content_for-keyboard" );
         this.classLineActions.updateState("contentClassLine");
-
-        if (!this.log) return;
-        this.setState({
-            keyboardState: tg.checkMobileKeyboard(),
-        });
     }
 }

@@ -1,8 +1,7 @@
-import TaskManager from "./TaskManager";
-import { isMobile } from "./utils";
+import TaskManager from "../TaskManager";
+
 
 const telegram  = window.Telegram.WebApp;
-
 
 let isResizing = false;
 let changeCount = 0;
@@ -30,9 +29,7 @@ function execWhenResizeEnd (func) {
 
     function exec () {
         if (!isResizing) {
-            if (availableFails-- === 0) return;
-            TaskManager.setMacrotask(exec);
-            return;
+            if (availableFails-- > 0) { TaskManager.setMacrotask(exec); return; }
         }
     
         const timerId = setInterval(_ => {
@@ -52,32 +49,11 @@ window.addEventListener("load", _ => {
     });
 }, {once: true});
 
-function checkMobileKeyboard () {
-    if (!isMobile) return false;
-    const curHeight = telegram.viewportHeight;
-    return curHeight / maxHeight <= 0.8;
-}
-
-
-let lastKeyboardEvent = null;
-
-const getOpenKeyboardEvent     = () => new Event("openkeyboard", {bubbles: true});
-const getCloseKeyboardEvent    = () => new Event("closekeyboard", {bubbles: true});
-const MKBController = {
-    open: _ => execWhenResizeEnd(_ => {
-        if ( !checkMobileKeyboard() ) return;
-        window.dispatchEvent( getOpenKeyboardEvent() ); lastKeyboardEvent="openkeyboard"; }),
-    close: _ => execWhenResizeEnd(_ => {
-        if ( checkMobileKeyboard() ) return;
-        window.dispatchEvent( getCloseKeyboardEvent() ); lastKeyboardEvent="closekeyboard"; }),
-};
 
 export {
     telegram,
-    checkMobileKeyboard,
-    MKBController,
     changeCount,
     usefulChangeCount,
     maxHeight,
-    lastKeyboardEvent,
+    execWhenResizeEnd,
 }
