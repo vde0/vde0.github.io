@@ -1,6 +1,6 @@
 import TaskManager from "../TaskManager";
 import { isMobile } from "../utils";
-import { execWhenResizeEnd, telegram } from "./utils";
+import { execWhenResizeEnd, maxHeight, telegram } from "./utils";
 
 // private static class fields
 let lastEventVal = null;
