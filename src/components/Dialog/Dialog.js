@@ -203,6 +203,7 @@ export default class Dialog extends React.Component {
         this.msgText = evt.target.value;
     }
     onClickDialog (evt) {
+        this.blurMsgField();
         this.focusMsgField();
     }
 
