@@ -63,8 +63,10 @@ const getOpenKeyboardEvent     = () => new Event("openkeyboard", {bubbles: true}
 const getCloseKeyboardEvent    = () => new Event("closekeyboard", {bubbles: true});
 const MKBController = {
     open: _ => execWhenResizeEnd(_ => {
+        if ( !checkMobileKeyboard() ) return;
         window.dispatchEvent( getOpenKeyboardEvent() ); lastKeyboardEvent="openkeyboard"; }),
     close: _ => execWhenResizeEnd(_ => {
+        if ( checkMobileKeyboard() ) return;
         window.dispatchEvent( getCloseKeyboardEvent() ); lastKeyboardEvent="closekeyboard"; }),
 };
 
