@@ -32,7 +32,7 @@ export default class MKBController {
     static execWhenOpened (func) {
         TaskManager.setMacrotask(_ => {
             if ( this.isOpened() ) { execWhenResizeEnd(func); return; }
-            this.execWhenClosed(func);
+            this.execWhenOpened(func);
         });
     }
     static execWhenClosed (func) {
