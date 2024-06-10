@@ -59,33 +59,12 @@ function checkMobileKeyboard () {
 
 let lastKeyboardEvent = null;
 
-
-function execWhenKBOpened(func) {
-
-    const startHeight = telegram.viewportHeight;
-
-    const timerId = setInterval(_ => {
-        if ( checkMobileKeyboard() ) return;
-        clearInterval(timerId);
-        execWhenResizeEnd(func);
-    });
-}
-function execWhenKBClosed (func) {
-
-    const timerId = setInterval(_ => {
-        if (telegram.viewportHeight < maxHeight) return;
-        clearInterval(timerId);
-        usefulChangeCount++;
-        func();
-    });
-}
-
 const getOpenKeyboardEvent     = () => new Event("openkeyboard", {bubbles: true});
 const getCloseKeyboardEvent    = () => new Event("closekeyboard", {bubbles: true});
 const MKBController = {
-    open: _ => execWhenKBOpened(_ => {
+    open: _ => execWhenResizeEnd(_ => {
         window.dispatchEvent( getOpenKeyboardEvent() ); lastKeyboardEvent="openkeyboard"; }),
-    close: _ => execWhenKBClosed(_ => {
+    close: _ => execWhenResizeEnd(_ => {
         window.dispatchEvent( getCloseKeyboardEvent() ); lastKeyboardEvent="closekeyboard"; }),
 };
 
