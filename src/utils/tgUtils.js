@@ -17,7 +17,7 @@ window.addEventListener("load", _ => {
             if (curHeight !== prevHeight)   {isResizing = true; changeCount++;}
             else                            isResizing = false;
             prevHeight = curHeight;
-            
+
             checkResize();
         });
     }
@@ -79,6 +79,5 @@ export {
     changeCount,
     usefulChangeCount,
     maxHeight,
-    isResizing,
     lastKeyboardEvent,
 }
