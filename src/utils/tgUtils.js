@@ -31,6 +31,7 @@ function execWhenResizeEnd (func) {
         if (!isResizing) {
             if (availableFails-- === 0) return;
             TaskManager.setMacrotask(exec, 3);
+            return;
         }
     
         const timerId = setInterval(_ => {
