@@ -63,6 +63,7 @@ export default class App extends React.Component {
             keyboardState: null,
             changeCount: null,
             usefulChangeCount: null,
+            duray: null,
             maxHeight: null,
             lastKeyboardEvent: null,
             windowHeight: Math.round(window.innerHeight * 100) / 100,
@@ -118,6 +119,8 @@ export default class App extends React.Component {
                 this.setState({ changeCount: this.changeCount }); }
             if (this.state.usefulChangeCount !== this.usefulChangeCount) {
                 this.setState({ usefulChangeCount: this.usefulChangeCount }); }
+            if (this.state.duray !== this.duray) {
+                this.setState({ duray: this.duray }); }
             if (this.state.maxHeight !== this.maxHeight) {
                 this.setState({ maxHeight: this.maxHeight }); }
             if (this.state.windowHeight !== this.windowHeight) {
@@ -131,6 +134,7 @@ export default class App extends React.Component {
             this.lastKeyboardEvent  = MKBController.lastEvent;
             this.changeCount        = tg.changeCount;
             this.usefulChangeCount  = tg.usefulChangeCount;
+            this.duray              = tg.duray;
             this.maxHeight          = tg.maxHeight;
             this.windowHeight       = Math.round(window.innerHeight * 100) / 100;
             this.tgHeight           = Math.round(tg.telegram.viewportHeight * 100) / 100;
@@ -150,13 +154,14 @@ export default class App extends React.Component {
     render () {
         return (
             <article className="app">
-                {this.showUpdateNum ? <p className="update-num-log">Update num: 60.5.1</p> : ""}
+                {this.showUpdateNum ? <p className="update-num-log">Update num: 61</p> : ""}
                 <div className={"content-log " + (!this.log ? "content-log_hidden" : "")}>
                     <p>Mobile: {String(isMobile)} | iOS: {String(isIOS)}</p>
                     <p>keyboard state: {String(this.state.keyboardState)}</p>
                     <p>lastKeyboardEvent: {String(this.state.lastKeyboardEvent)}</p>
                     <p>change count: {String(this.state.changeCount)}</p>
                     <p>useful change count: {String(this.state.usefulChangeCount)}</p>
+                    <p>duray: {String(this.state.duray)}</p>
                     <p>maxHeight: {String(this.state.maxHeight)}</p>
                     <p>window height: {this.state.windowHeight}</p>
                     <p>web-app height: {this.state.tgHeight}</p>
