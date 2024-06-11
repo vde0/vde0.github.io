@@ -14,8 +14,9 @@ window.addEventListener("load", _ => {
     function checkResize () {
         TaskManager.setMacrotask(_ => {
             const curHeight = telegram.viewportHeight;
-            if (curHeight !== prevHeight)   {isResizing = true; duray++; changeCount++;}
-            else                            {isResizing = false; duray = 0;}
+            if (curHeight !== prevHeight)   {
+                if (!isResizing) duray=0; isResizing = true; duray++; changeCount++;}
+            else                            isResizing = false;
             prevHeight = curHeight;
 
             checkResize();
