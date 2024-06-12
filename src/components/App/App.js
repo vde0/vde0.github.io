@@ -1,5 +1,5 @@
 import React from 'react';
-import { checkOwnershipToArea, isMobile, isIos } from '../../utils/utils';
+import { checkOwnershipToArea, isMobile, isIOs } from '../../utils/utils';
 import * as tg from '../../utils/tg/utils';
 import MKBController from '../../utils/tg/MKBController';
 import Video from '../Video/Video';
@@ -154,9 +154,9 @@ export default class App extends React.Component {
     render () {
         return (
             <article className="app">
-                {this.showUpdateNum ? <p className="update-num-log">Update num: 62</p> : ""}
+                {this.showUpdateNum ? <p className="update-num-log">Update num: 62.1</p> : ""}
                 <div className={"content-log " + (!this.log ? "content-log_hidden" : "")}>
-                    <p>Mobile: {String(isMobile)} | iOS: {String(isIos)}</p>
+                    <p>Mobile: {String(isMobile)} | iOS: {String(isIOs)}</p>
                     <p>keyboard state: {String(this.state.keyboardState)}</p>
                     <p>lastKeyboardEvent: {String(this.state.lastKeyboardEvent)}</p>
                     <p>change count: {String(this.state.changeCount)}</p>

@@ -14,12 +14,12 @@ const mobile_events = new Set([
     "touchcancel",
 ]);
 const isMobile = ('ontouchstart' in document.documentElement && !!(navigator.userAgent.match(/Mobi/)));
-const isIos     = !!navigator.userAgent.match(/(iPhone|iPod|iPad)/);
+const isIOs     = !!navigator.userAgent.match(/(iPhone|iPod|iPad)/);
 
 
 export {
     checkAncestor,
     checkOwnershipToArea,
     isMobile,
-    isIos,
+    isIOs,
 }
