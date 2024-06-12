@@ -1,6 +1,6 @@
 import TaskManager from "../TaskManager";
 import { isMobile } from "../utils";
-import { execWhenResizeEnd, maxHeight, telegram } from "./utils";
+import { onResizeEnd, maxHeight, telegram } from "./utils";
 
 // private static class fields
 let lastEventVal = null;
@@ -31,7 +31,7 @@ export default class MKBController {
 
     static execWhenOpened (func) {
         TaskManager.setMacrotask(_ => {
-            if ( this.isOpened ) { execWhenResizeEnd(func); return; }
+            if ( this.isOpened ) { onResizeEnd(func, true); return; }
             this.execWhenOpened(func);
         });
     }
@@ -39,7 +39,7 @@ export default class MKBController {
         TaskManager.setMacrotask(_ => {
             if ( this.isClosed ) { func(); return; }
             this.execWhenClosed(func);
-        });
+        }, 10);
     }
 
     static makeOpenKeyboardEvent () {
