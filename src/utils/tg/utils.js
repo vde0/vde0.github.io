@@ -72,10 +72,10 @@ window.addEventListener("load", _ => {
             prevHeight = curHeight;
 
             if (!isResized)   {isResizing = false; return;}
-            isResizing = true;
-
+            
             if (!isResizing) duray=0;
             duray++; changeCount++;
+            isResizing = true;
 
             const evt = {height: telegram.viewportHeight};
 
@@ -83,7 +83,7 @@ window.addEventListener("load", _ => {
 
             const timerId = setInterval(_ => {
                 const isResizeEnd   = curHeight === prevHeight;
-                
+
                 if (!isResizeEnd) return;
                 clearInterval(timerId);
 
