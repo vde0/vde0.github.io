@@ -71,7 +71,7 @@ window.addEventListener("load", _ => {
             const isResized = curHeight !== prevHeight;
             prevHeight = curHeight;
 
-            if (curHeight === prevHeight)   {isResizing = false; return;}
+            if (!isResized)   {isResizing = false; return;}
             isResizing = true;
 
             if (!isResizing) duray=0;
