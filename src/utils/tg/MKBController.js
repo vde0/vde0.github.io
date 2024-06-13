@@ -13,12 +13,8 @@ export default class MKBController {
         if (!isMobile) throw Error("MKBController.open() may be called if only isMobile=true.");
         
         this.makeOpenKeyboardEvent();
-        lastEventVal = "openkeyboard";
 
-        onResizeEnd(_ => this.execWhenClosed(_ => {
-            this.makeCloseKeyboardEvent();
-            lastEventVal = "closekeyboard";
-        }), true);
+        onResizeEnd(_ => this.execWhenClosed(_ => this.makeCloseKeyboardEvent()), true);
     }
 
     static get isOpened () {
@@ -45,9 +41,13 @@ export default class MKBController {
     }
 
     static makeOpenKeyboardEvent () {
-        window.dispatchEvent( new Event("openkeyboard", {bubbles: true}) ); }
+        lastEventVal = "openkeyboard";
+        window.dispatchEvent( new Event("openkeyboard", {bubbles: true}) );
+    }
     static makeCloseKeyboardEvent () {
-        window.dispatchEvent( new Event("closekeyboard", {bubbles: true}) ); }
+        lastEventVal = "closekeyboard";
+        window.dispatchEvent( new Event("closekeyboard", {bubbles: true}) );
+    }
     
     constructor () { throw Error("MKBController is a static class.") }
 }
