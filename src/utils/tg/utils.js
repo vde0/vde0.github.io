@@ -95,25 +95,6 @@ window.addEventListener("load", _ => {
     }
 }, {once: true});
 
-// function execWhenResizeEnd (func) {
-
-//     let availableFails = 10;
-//     exec();
-
-//     function exec () {
-//         if (!isResizing) {
-//             if (availableFails-- > 0) { TaskManager.setMacrotask(exec); return; }
-//         }
-    
-//         const timerId = setInterval(_ => {
-//             if (isResizing) return;
-//             usefulChangeCount++;
-//             clearInterval(timerId);
-//             func();
-//         });
-//     }
-// }
-
 
 export {
     telegram,
