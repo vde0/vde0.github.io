@@ -54,7 +54,7 @@ function makeHandlerOnce (func) {
         func(evt);
     }
 
-    onceHandlers.add(onceHandler);
+    onceHandlers.set(func, onceHandler);
     return onceHandler;
 }
 
