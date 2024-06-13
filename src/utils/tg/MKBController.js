@@ -10,6 +10,8 @@ export default class MKBController {
     static get lastEvent () { return lastEventVal }
 
     static open () {
+        if (!isMobile) throw Error("MKBController.open() may be called if only isMobile=true.");
+        
         this.makeOpenKeyboardEvent();
         lastEventVal = "openkeyboard";
 

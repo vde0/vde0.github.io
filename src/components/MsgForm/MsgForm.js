@@ -30,16 +30,15 @@ export default class MsgForm extends React.Component {
         this.piston     = this.props.piston;
 
         this.classLineActions.initState();
-    }
-
-    componentDidMount () {
-        
-        this.props.focusHook.connect( this.updateFocus.bind(this) );
 
         if (isMobile) {
             window.addEventListener("openkeyboard", this.openKeyboardHandler);
             window.addEventListener("closekeyboard", this.closeKeyboardHandler);
         }
+    }
+    
+    componentDidMount () {
+        this.props.focusHook.connect( this.updateFocus.bind(this) );
     }
 
     componentWillUnmount () {
@@ -65,7 +64,7 @@ export default class MsgForm extends React.Component {
                 <textarea ref={el => this.msgFieldBlock = el}
                     className="msg-form__field msg-form__field_focused"
                     onInput={this.onInput}
-                    onFocus={_ => MKBController.open()}
+                    onFocus={_ => isMobile && MKBController.open()}
                     autoFocus
                     autoCapitalize="on"
                     autoComplete="false"
