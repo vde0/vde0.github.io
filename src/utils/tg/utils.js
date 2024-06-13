@@ -82,6 +82,7 @@ window.addEventListener("load", _ => {
             for (let handler of resizeHandlers.values()) handler(evt);
 
             const timerId = setInterval(_ => {
+                const curHeight     = telegram.viewportHeight;
                 const isResizeEnd   = curHeight === prevHeight;
 
                 if (!isResizeEnd) return;
