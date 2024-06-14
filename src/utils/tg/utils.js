@@ -95,11 +95,13 @@ window.addEventListener("load", _ => {
     let prevHeight = telegram.viewportHeight;
 
     telegram.onEvent("viewportChanged", _ => {
-        nativeChangeCount++;
         const curHeight = telegram.viewportHeight;
         const isResized = curHeight !== prevHeight;
-
+        prevHeight = curHeight;
+        
         (isResized ? sucCount++ : failCount++);
+        
+        nativeChangeCount++;
     }
 )});
 
