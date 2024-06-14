@@ -9,15 +9,6 @@ let usefulChangeCount = 0;
 let duray = 0;
 
 
-let maxHeight     = null;
-window.addEventListener("load", _ => {
-    maxHeight = telegram.viewportHeight;
-    telegram.onEvent("viewportChanged", _ => {
-        if (telegram.viewportHeight > maxHeight) maxHeight = telegram.viewportHeight;
-    });
-}, {once: true});
-
-
 const onceHandlers = new Map();
 const resizeHandlers = new Set();
 const resizeEndHandlers = new Set();
@@ -101,7 +92,6 @@ export {
     telegram,
     changeCount,
     usefulChangeCount,
-    maxHeight,
     duray,
 
     onResize,

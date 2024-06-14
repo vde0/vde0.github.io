@@ -1,7 +1,7 @@
 import React from 'react';
 import { checkOwnershipToArea, isMobile, isIOs } from '../../utils/utils';
 import * as tg from '../../utils/tg/utils';
-import MKBController from '../../utils/tg/MKBController';
+import MKBController, { maxHeight } from '../../utils/tg/MKBController';
 import Video from '../Video/Video';
 import Dialog from '../Dialog/Dialog';
 import './App.css';
@@ -135,7 +135,7 @@ export default class App extends React.Component {
             this.changeCount        = tg.changeCount;
             this.usefulChangeCount  = tg.usefulChangeCount;
             this.duray              = tg.duray;
-            this.maxHeight          = tg.maxHeight;
+            this.maxHeight          = maxHeight;
             this.windowHeight       = Math.round(window.innerHeight * 100) / 100;
             this.tgHeight           = Math.round(tg.telegram.viewportHeight * 100) / 100;
             this.tgStableHeight     = Math.round(tg.telegram.viewportStableHeight * 100) / 100;
@@ -154,7 +154,7 @@ export default class App extends React.Component {
     render () {
         return (
             <article className="app">
-                {this.showUpdateNum ? <p className="update-num-log">Update num: 62.8.1</p> : ""}
+                {this.showUpdateNum ? <p className="update-num-log">Update num: 62.9</p> : ""}
                 <div className={"content-log " + (!this.log ? "content-log_hidden" : "")}>
                     <p>Mobile: {String(isMobile)} | iOS: {String(isIOs)}</p>
                     <p>keyboard state: {String(this.state.keyboardState)}</p>

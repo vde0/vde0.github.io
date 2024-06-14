@@ -1,6 +1,14 @@
 import TaskManager from "../TaskManager";
 import { isMobile } from "../utils";
-import { onResizeEnd, maxHeight, telegram } from "./utils";
+import { onResizeEnd, telegram } from "./utils";
+
+let maxHeight     = null;
+window.addEventListener("load", _ => {
+    maxHeight = telegram.viewportHeight;
+    telegram.onEvent("viewportChanged", _ => {
+        if (telegram.viewportHeight > maxHeight) maxHeight = telegram.viewportHeight;
+    });
+}, {once: true});
 
 // private static class fields
 let lastEventVal = null;
@@ -51,3 +59,5 @@ export default class MKBController {
     
     constructor () { throw Error("MKBController is a static class.") }
 }
+
+export { maxHeight }
