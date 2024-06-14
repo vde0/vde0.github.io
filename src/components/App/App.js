@@ -115,6 +115,12 @@ export default class App extends React.Component {
                 this.setState({ keyboardState: this.keyboardState }); }
             if (this.state.lastKeyboardEvent !== this.lastKeyboardEvent) {
                 this.setState({ lastKeyboardEvent: this.lastKeyboardEvent }); }
+            if (this.state.sucs !== this.sucs) {
+                this.setState({ sucs: this.sucs }); }
+            if (this.state.fails !== this.fails) {
+                this.setState({ fails: this.fails }); }
+            if (this.state.nativeChangeCount !== this.nativeChangeCount) {
+                this.setState({ nativeChangeCount: this.nativeChangeCount }); }
             if (this.state.changeCount !== this.changeCount) {
                 this.setState({ changeCount: this.changeCount }); }
             if (this.state.usefulChangeCount !== this.usefulChangeCount) {
@@ -132,6 +138,9 @@ export default class App extends React.Component {
             
             this.keyboardState      = MKBController.isOpened;
             this.lastKeyboardEvent  = MKBController.lastEvent;
+            this.nativeChangeCount  = tg.nativeChangeCount;
+            this.sucs               = tg.sucCount;
+            this.fails              = tg.failCount;
             this.changeCount        = tg.changeCount;
             this.usefulChangeCount  = tg.usefulChangeCount;
             this.duray              = tg.duray;
@@ -154,11 +163,13 @@ export default class App extends React.Component {
     render () {
         return (
             <article className="app">
-                {this.showUpdateNum ? <p className="update-num-log">Update num: 62.9</p> : ""}
+                {this.showUpdateNum ? <p className="update-num-log">Update num: 62.10</p> : ""}
                 <div className={"content-log " + (!this.log ? "content-log_hidden" : "")}>
                     <p>Mobile: {String(isMobile)} | iOS: {String(isIOs)}</p>
                     <p>keyboard state: {String(this.state.keyboardState)}</p>
                     <p>lastKeyboardEvent: {String(this.state.lastKeyboardEvent)}</p>
+                    <p>sucs: {String(this.state.sucs)} | fails: {String(this.state.fails)}</p>
+                    <p>native change count: {String(this.state.nativeChangeCount)}</p>
                     <p>change count: {String(this.state.changeCount)}</p>
                     <p>useful change count: {String(this.state.usefulChangeCount)}</p>
                     <p>duray: {String(this.state.duray)}</p>

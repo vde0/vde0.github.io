@@ -87,12 +87,32 @@ window.addEventListener("load", _ => {
     }
 }, {once: true});
 
+let nativeChangeCount = 0;
+let sucCount = 0;
+let failCount = 0;
+window.addEventListener("load", _ => {
+
+    let prevHeight = telegram.viewportHeight;
+
+    telegram.onEvent("viewportChanged", _ => {
+        nativeChangeCount++;
+        const curHeight = telegram.viewportHeight;
+        const isResized = curHeight !== prevHeight;
+
+        (isResized ? sucCount++ : failCount++);
+    }
+)});
+
 
 export {
     telegram,
     changeCount,
     usefulChangeCount,
     duray,
+
+    nativeChangeCount,
+    sucCount,
+    failCount,
 
     onResize,
     onResizeEnd,
