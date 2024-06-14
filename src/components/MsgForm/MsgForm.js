@@ -85,7 +85,7 @@ export default class MsgForm extends React.Component {
         this.onSend(evt);
     }
 
-    reset() {
+    reset () {
         this.msgFormBlock.reset();
         queueMicrotask( _ => {
             this.msgFieldBlock.dispatchEvent( new Event("input", {bubbles: true}) );
