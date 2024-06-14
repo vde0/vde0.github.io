@@ -163,10 +163,10 @@ export default class App extends React.Component {
     render () {
         return (
             <article className="app">
-                {this.showUpdateNum ? <p className="update-num-log">Update num: 62.10</p> : ""}
+                {this.showUpdateNum ? <p className="update-num-log">Update num: 62.10.1</p> : ""}
                 <div className={"content-log " + (!this.log ? "content-log_hidden" : "")}>
                     <p>Mobile: {String(isMobile)} | iOS: {String(isIOs)}</p>
-                    <p>keyboard state: {String(this.state.keyboardState)}</p>
+                    <p>keyboard open state: {String(this.state.keyboardState)}</p>
                     <p>lastKeyboardEvent: {String(this.state.lastKeyboardEvent)}</p>
                     <p>sucs: {String(this.state.sucs)} | fails: {String(this.state.fails)}</p>
                     <p>native change count: {String(this.state.nativeChangeCount)}</p>
