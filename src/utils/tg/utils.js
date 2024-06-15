@@ -91,11 +91,11 @@ window.addEventListener("load", _ => {
 let startHeight = null;
 window.addEventListener("load", _ => {
 
-    onResizeEnd(_ => onResizeEnd(_ => {
+    setTimeout(_ => onResizeEnd(_ => {
         const rootDom = document.querySelector(":root");
         rootDom.style.setProperty("--tg-height", telegram.viewportStableHeight + "px");
         startHeight = telegram.viewportStableHeight;
-    }, true), true);
+    }, true), 50);
 
 }, {once: true});
 
