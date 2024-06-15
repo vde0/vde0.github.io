@@ -129,6 +129,8 @@ export default class App extends React.Component {
                 this.setState({ duray: this.duray }); }
             if (this.state.maxHeight !== this.maxHeight) {
                 this.setState({ maxHeight: this.maxHeight }); }
+            if (this.state.startHeight !== this.startHeight) {
+                this.setState({ startHeight: this.startHeight }); }
             if (this.state.windowHeight !== this.windowHeight) {
                 this.setState({ windowHeight: this.windowHeight }); }
             if (this.state.tgHeight !== this.tgHeight) {
@@ -145,6 +147,7 @@ export default class App extends React.Component {
             this.usefulChangeCount  = tg.usefulChangeCount;
             this.duray              = tg.duray;
             this.maxHeight          = maxHeight;
+            this.startHeight        = tg.startHeight;
             this.windowHeight       = Math.round(window.innerHeight * 100) / 100;
             this.tgHeight           = Math.round(tg.telegram.viewportHeight * 100) / 100;
             this.tgStableHeight     = Math.round(tg.telegram.viewportStableHeight * 100) / 100;
@@ -163,7 +166,7 @@ export default class App extends React.Component {
     render () {
         return (
             <article className="app">
-                {this.showUpdateNum ? <p className="update-num-log">Update num: 63.1.1</p> : ""}
+                {this.showUpdateNum ? <p className="update-num-log">Update num: 64</p> : ""}
                 <div className={"content-log " + (!this.log ? "content-log_hidden" : "")}>
                     <p>Mobile: {String(isMobile)} | iOS: {String(isIOs)}</p>
                     <p>keyboard open state: {String(this.state.keyboardState)}</p>
@@ -174,6 +177,7 @@ export default class App extends React.Component {
                     <p>useful change count: {String(this.state.usefulChangeCount)}</p>
                     <p>duray: {String(this.state.duray)}</p>
                     <p>maxHeight: {String(this.state.maxHeight)}</p>
+                    <p>startHeight: {String(this.state.startHeight)}</p>
                     <p>window height: {this.state.windowHeight}</p>
                     <p>web-app height: {this.state.tgHeight}</p>
                     <p>web-app stable-height: {this.state.tgStableHeight}</p>

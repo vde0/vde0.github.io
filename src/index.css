@@ -8,8 +8,9 @@
     --custom-blue: #54A9E9;
     --custom-orange: #FF8B49;
 
-    /* --tg-offset: 0pt; */
-    --tg-top: calc(100vh - var(--tg-viewport-height));
+    --tg-offset: 0pt;
+    --tg-height: var(--tg-viewport-stable-height);
+    --tg-top: calc(100vh - var(--tg-height));
     --tg-bottom: 0pt;
 
     --app-padding: 12pt;
@@ -52,7 +53,7 @@ input, button, textarea {
 }
 .root-document_placing_tg {
     position: fixed;
-    height: var(--tg-viewport-height);
+    height: var(--tg-height);
     top: var(--tg-top);
 }
 .root-document_no-scroll {
@@ -108,7 +109,7 @@ input, button, textarea {
 
 .content-log {
     position: fixed;
-    top: calc(var(--tg-top) + var(--tg-viewport-height) / 2);
+    top: calc(var(--tg-top) + var(--tg-height) / 2);
     transform: translateY(-50%);
     color: black;
     text-shadow: 2px 2px white;
