@@ -107,8 +107,8 @@ window.addEventListener("load", _ => {
         (isResized ? sucCount++ : failCount++);
         
         nativeChangeCount++;
-    }
-)});
+    });
+}, {once: true});
 
 
 export {
