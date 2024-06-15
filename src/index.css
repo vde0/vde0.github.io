@@ -9,7 +9,7 @@
     --custom-orange: #FF8B49;
 
     /* --tg-offset: 0pt; */
-    --tg-top: calc(100vh - var(--tg-viewport-stable-height));
+    --tg-top: calc(100vh - var(--tg-viewport-height));
     --tg-bottom: 0pt;
 
     --app-padding: 12pt;
