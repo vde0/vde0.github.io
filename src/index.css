@@ -52,7 +52,7 @@ input, button, textarea {
 }
 .root-document_placing_tg {
     position: fixed;
-    height: var(--tg-viewport-stable-height);
+    height: var(--tg-viewport-height);
     top: var(--tg-top);
 }
 .root-document_no-scroll {
@@ -108,7 +108,7 @@ input, button, textarea {
 
 .content-log {
     position: fixed;
-    top: calc(var(--tg-top) + var(--tg-viewport-stable-height) / 2);
+    top: calc(var(--tg-top) + var(--tg-viewport-height) / 2);
     transform: translateY(-50%);
     color: black;
     text-shadow: 2px 2px white;
