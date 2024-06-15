@@ -87,15 +87,22 @@ window.addEventListener("load", _ => {
     }
 }, {once: true});
 
+
+let startHeight = null;
+window.addEventListener("load", _ => {
+
+    onResizeEnd(_ => onResizeEnd(_ => {
+        const rootDom = document.querySelector(":root");
+        rootDom.style.setProperty("--tg-height", telegram.viewportStableHeight + "px");
+        startHeight = telegram.viewportStableHeight;
+    }, true), true);
+
+}, {once: true});
+
 let nativeChangeCount = 0;
 let sucCount = 0;
 let failCount = 0;
-let startHeight = 0;
 window.addEventListener("load", _ => {
-
-    const rootDom = document.querySelector(":root");
-    rootDom.style.setProperty("--tg-height", telegram.viewportStableHeight + "px");
-    startHeight = telegram.viewportStableHeight;
 
     let prevHeight = telegram.viewportHeight;
 
