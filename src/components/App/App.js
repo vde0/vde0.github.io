@@ -1,7 +1,7 @@
 import React from 'react';
 import { checkOwnershipToArea, isMobile, isIOs } from '../../utils/utils';
 import * as tg from '../../utils/tg/utils';
-import MKBController, { maxHeight } from '../../utils/tg/MKBController';
+import MKBController from '../../utils/tg/MKBController';
 import Video from '../Video/Video';
 import Dialog from '../Dialog/Dialog';
 import './App.css';
@@ -64,7 +64,7 @@ export default class App extends React.Component {
             changeCount: null,
             usefulChangeCount: null,
             duray: null,
-            maxHeight: null,
+            baseHeight: null,
             lastKeyboardEvent: null,
             windowHeight: Math.round(window.innerHeight * 100) / 100,
             tgHeight: Math.round(tg.telegram.viewportHeight * 100) / 100,
@@ -127,10 +127,10 @@ export default class App extends React.Component {
                 this.setState({ usefulChangeCount: this.usefulChangeCount }); }
             if (this.state.duray !== this.duray) {
                 this.setState({ duray: this.duray }); }
-            if (this.state.maxHeight !== this.maxHeight) {
-                this.setState({ maxHeight: this.maxHeight }); }
-            if (this.state.startHeight !== this.startHeight) {
-                this.setState({ startHeight: this.startHeight }); }
+            if (this.state.baseHeight !== this.baseHeight) {
+                this.setState({ baseHeight: this.baseHeight }); }
+            if (this.state.appHeight !== this.appHeight) {
+                this.setState({ appHeight: this.appHeight }); }
             if (this.state.windowHeight !== this.windowHeight) {
                 this.setState({ windowHeight: this.windowHeight }); }
             if (this.state.tgHeight !== this.tgHeight) {
@@ -146,8 +146,8 @@ export default class App extends React.Component {
             this.changeCount        = tg.changeCount;
             this.usefulChangeCount  = tg.usefulChangeCount;
             this.duray              = tg.duray;
-            this.maxHeight          = maxHeight;
-            this.startHeight        = tg.startHeight;
+            this.baseHeight         = tg.baseHeight;
+            this.appHeight          = tg.appHeight;
             this.windowHeight       = Math.round(window.innerHeight * 100) / 100;
             this.tgHeight           = Math.round(tg.telegram.viewportHeight * 100) / 100;
             this.tgStableHeight     = Math.round(tg.telegram.viewportStableHeight * 100) / 100;
@@ -166,7 +166,7 @@ export default class App extends React.Component {
     render () {
         return (
             <article className="app">
-                {this.showUpdateNum ? <p className="update-num-log">Update num: 64.1.2</p> : ""}
+                {this.showUpdateNum ? <p className="update-num-log">Update num: 65</p> : ""}
                 <div className={"content-log " + (!this.log ? "content-log_hidden" : "")}>
                     <p>Mobile: {String(isMobile)} | iOS: {String(isIOs)}</p>
                     <p>keyboard open state: {String(this.state.keyboardState)}</p>
@@ -176,8 +176,8 @@ export default class App extends React.Component {
                     <p>change count: {String(this.state.changeCount)}</p>
                     <p>useful change count: {String(this.state.usefulChangeCount)}</p>
                     <p>duray: {String(this.state.duray)}</p>
-                    <p>maxHeight: {String(this.state.maxHeight)}</p>
-                    <p>startHeight: {String(this.state.startHeight)}</p>
+                    <p>baseHeight: {String(this.state.baseHeight)}</p>
+                    <p>appHeight: {String(this.state.appHeight)}</p>
                     <p>window height: {this.state.windowHeight}</p>
                     <p>web-app height: {this.state.tgHeight}</p>
                     <p>web-app stable-height: {this.state.tgStableHeight}</p>
@@ -285,14 +285,14 @@ export default class App extends React.Component {
         const containerObj  = this.containers[containerName];
         const containerDom  = containerObj.dom;
 
-        containerObj.startHeight = containerDom.clientHeight
+        containerObj.appHeight = containerDom.clientHeight
         containerObj.computedTop = containerDom.offsetTop;
         
         containerObj.classLine.add("app__container_fixing-height");
         this.classLineActions.updateState(containerObj.stateName, "classLine", containerObj);
 
         queueMicrotask( _ => {
-            containerDom.style.setProperty("height", containerObj.startHeight + "px");
+            containerDom.style.setProperty("height", containerObj.appHeight + "px");
             containerDom.style.setProperty("top", containerObj.computedTop + "px");
         });
     }

@@ -1,4 +1,5 @@
 import TaskManager from "../TaskManager";
+import { isMobile } from "../utils";
 
 
 const telegram  = window.Telegram.WebApp;
@@ -6,7 +7,13 @@ const telegram  = window.Telegram.WebApp;
 let isResizing = false;
 let changeCount = 0;
 let usefulChangeCount = 0;
+let appHeight = 0;
 let duray = 0;
+
+function updateAppHeight () {
+    appHeight = telegram.viewportHeight;
+    rootDom.style.setProperty("--tg-height", appHeight + "px");
+}
 
 
 const onceHandlers = new Map();
@@ -50,9 +57,29 @@ function makeHandlerOnce (func) {
 }
 
 
+const rootDom = document.querySelector(":root");
+
+// window.addEventListener("load", _ => {
+//     TaskManager.setMacrotask(_ => rootDom.classList.add("root-document_placing_tg"));
+// }, {once: true});
+
+let baseHeight     = null;
 window.addEventListener("load", _ => {
-    let prevHeight = telegram.viewportHeight;
+    baseHeight = telegram.viewportHeight;
+    telegram.onEvent("viewportChanged", _ => {
+        if (telegram.viewportHeight > baseHeight) {
+            baseHeight = telegram.viewportHeight;
+        }
+    });
+}, {once: true});
+
+window.addEventListener("load", _ => {
+
     checkResize();
+
+    let prevHeight = telegram.viewportHeight;
+    const baseAvailableAmount = 10;
+    let availableFails = baseAvailableAmount;
 
     function checkResize () {
         TaskManager.setMacrotask(_ => {
@@ -62,42 +89,49 @@ window.addEventListener("load", _ => {
             const isResized = curHeight !== prevHeight;
             prevHeight = curHeight;
 
-            if (!isResized)   {isResizing = false; return;}
+            if (!isResized)   {
+                if (isResizing) checkResizeEnd();
+
+                isResizing = false;
+                return;
+            }
             
             if (!isResizing) duray=0;
             duray++; changeCount++;
             isResizing = true;
+            updateAppHeight();
 
-            const evt = {height: telegram.viewportHeight};
+            const evt = makeResizeEvent;
+            const handlerList = Array.from(resizeHandlers.values());
 
             for (let handler of resizeHandlers.values()) handler(evt);
-
-            const timerId = setInterval(_ => {
-                const curHeight     = telegram.viewportHeight;
-                const isResizeEnd   = curHeight === prevHeight;
-
-                if (!isResizeEnd) return;
-                clearInterval(timerId);
-
-                usefulChangeCount++;
-                const evt = {height: telegram.viewportHeight};
-                for (let handler of resizeEndHandlers.values()) handler(evt);
-            });
         });
+    }
+
+    function checkResizeEnd () {
+        TaskManager.setMacrotask(_ => {
+
+            if (isResizing) {availableFails = baseAvailableAmount; return;}
+            if (availableFails > 0) {availableFails--; checkResizeEnd(); return;}
+            availableFails = baseAvailableAmount;
+
+            usefulChangeCount++;
+            const evt = makeResizeEvent();
+            const handlerList = Array.from(resizeEndHandlers.values());
+
+            for (let handler of handlerList) handler(evt);
+        });
+    }
+
+    function makeResizeEvent () {
+        return {
+            height: telegram.viewportHeight,
+            diff: baseHeight - appHeight,
+            step: telegram.viewportHeight - prevHeight,
+        };
     }
 }, {once: true});
 
-
-let startHeight = null;
-window.addEventListener("load", _ => {
-
-    setTimeout(_ => onResizeEnd(_ => {
-        const rootDom = document.querySelector(":root");
-        rootDom.style.setProperty("--tg-height", telegram.viewportStableHeight + "px");
-        startHeight = telegram.viewportStableHeight;
-    }, true), 50);
-
-}, {once: true});
 
 let nativeChangeCount = 0;
 let sucCount = 0;
@@ -128,7 +162,8 @@ export {
     sucCount,
     failCount,
 
-    startHeight,
+    appHeight,
+    baseHeight,
 
     onResize,
     onResizeEnd,
