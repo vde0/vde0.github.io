@@ -108,6 +108,7 @@ export default class App extends React.Component {
             }
         });
         
+        tg.onResize(this.resizeHandler);
 
         if (this.log) setInterval(_ => {
 
@@ -155,6 +156,7 @@ export default class App extends React.Component {
     }
 
     componentWillUnmount () {
+        tg.offResize(this.resizeHandler);
         if (isMobile) {
             TaskManager.setMacrotask(_ => {
                 window.removeEventListener("openkeyboard", this.openKeyboardHandler);
@@ -165,8 +167,8 @@ export default class App extends React.Component {
 
     render () {
         return (
-            <article className="app">
-                {this.showUpdateNum ? <p className="update-num-log">Update num: 65.3</p> : ""}
+            <article className="app" ref={el => this.dom = el}>
+                {this.showUpdateNum ? <p className="update-num-log">Update num: 65.4</p> : ""}
                 <div className={"content-log " + (!this.log ? "content-log_hidden" : "")}>
                     <p>Mobile: {String(isMobile)} | iOS: {String(isIOs)}</p>
                     <p>keyboard open state: {String(this.state.keyboardState)}</p>
@@ -313,5 +315,9 @@ export default class App extends React.Component {
 
         this.contentClassLine.remove( "app__content_for-keyboard" );
         this.classLineActions.updateState("contentClassLine");
+    }
+
+    resizeHandler = (evt) => {
+        this.dom?.style.setProperty("height", (this.dom.clientHeight + evt.step) + "px");
     }
 }
