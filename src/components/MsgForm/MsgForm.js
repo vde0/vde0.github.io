@@ -10,10 +10,10 @@ import TaskManager from '../../utils/TaskManager';
 import ClassLineActions from '../../utils/react/ClassLineActions';
 
 
-let funcBridge = () => {};
-if (isMobile) tg.telegram.onEvent("viewportChanged", tg => {
-    funcBridge();
-});
+// let funcBridge = () => {};
+// if (isMobile) tg.telegram.onEvent("viewportChanged", tg => {
+//     funcBridge();
+// });
 
 export default class MsgForm extends React.Component {
 
@@ -27,7 +27,7 @@ export default class MsgForm extends React.Component {
         this.onSend     = this.props.onSend;
         this.onInput    = this.props.onInput;
 
-        this.piston     = this.props.piston;
+        // this.piston     = this.props.piston;
 
         this.classLineActions.initState();
 
@@ -43,8 +43,8 @@ export default class MsgForm extends React.Component {
 
     componentWillUnmount () {
         if (isMobile) {
-            this.piston.piston = null;
-            funcBridge = () => {};
+            // this.piston.piston = null;
+            // funcBridge = () => {};
 
             this.blur();
 
@@ -106,19 +106,19 @@ export default class MsgForm extends React.Component {
 
 
     openKeyboardHandler = (evt) => {
-        this.piston.piston = this.msgFormBlock;
+        // this.piston.piston = this.msgFormBlock;
         // this.piston.press();
         //
-        funcBridge = () => {
+        // funcBridge = () => {
             // this.piston.press();
-        };
+        // };
 
         if (isMobile) this.classLine.add("msg-form_mobile");
         this.classLineActions.updateState();
     }
     closeKeyboardHandler = (evt) => {
-        this.piston.piston = null;
-        funcBridge = () => {};
+        // this.piston.piston = null;
+        // funcBridge = () => {};
 
         if (isMobile) this.classLine.remove("msg-form_mobile");
         this.classLineActions.updateState();

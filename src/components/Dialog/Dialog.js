@@ -1,6 +1,6 @@
 import React from 'react';
 import { isMobile } from '../../utils/utils';
-import StickyPiston from '../../utils/StickyPiston';
+// import StickyPiston from '../../utils/StickyPiston';
 import * as tg from '../../utils/tg/utils';
 import './Dialog.css';
 import MsgForm from '../MsgForm/MsgForm';
@@ -120,7 +120,7 @@ export default class Dialog extends React.Component {
         super(props);
 
         this.classLineActions   = new ClassLineActions({context: this});
-        this.piston             = new StickyPiston();
+        // this.piston             = new StickyPiston();
 
         this.onSend         = this.onSend.bind(this);
         this.onInput        = this.onInput.bind(this);
@@ -145,9 +145,7 @@ export default class Dialog extends React.Component {
         this.props.data.blur    = this.blurMsgField.bind(this);
         this.props.data.focus   = this.focusMsgField.bind(this);
 
-        tg.onResize(evt => {
-            console.log("height: " + (evt.step));
-            this.dom?.style.setProperty("height", (this.dom.clientHeight + evt.step) + "px")});
+        tg.onResize(this.resizeHandler);
 
         // if (isMobile) {
         //     this.piston.movable = this.dom;
@@ -158,9 +156,9 @@ export default class Dialog extends React.Component {
 
     componentWillUnmount () {
         this.props.data.blur = () => {};
-        
+        tg.offResize(this.resizeHandler);
         if (isMobile) {
-            this.piston.movable = null;
+            // this.piston.movable = null;
             TaskManager.setMacrotask(_ => {
                 window.removeEventListener("closekeyboard", this.closeKeyboardHandler);
             }, 2);
@@ -234,5 +232,9 @@ export default class Dialog extends React.Component {
 
     closeKeyboardHandler = (evt) => {
         this.dom?.style.setProperty("height", "100%");
+    }
+
+    resizeHandler = (evt) => {
+        this.dom?.style.setProperty("height", (this.dom.clientHeight + evt.step) + "px");
     }
 }
