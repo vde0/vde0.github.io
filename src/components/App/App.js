@@ -167,8 +167,8 @@ export default class App extends React.Component {
 
     render () {
         return (
-            <article className="app" ref={el => this.dom = el}>
-                {this.showUpdateNum ? <p className="update-num-log">Update num: 65.4</p> : ""}
+            <article className="app">
+                {this.showUpdateNum ? <p className="update-num-log">Update num: 65.4.1</p> : ""}
                 <div className={"content-log " + (!this.log ? "content-log_hidden" : "")}>
                     <p>Mobile: {String(isMobile)} | iOS: {String(isIOs)}</p>
                     <p>keyboard open state: {String(this.state.keyboardState)}</p>
@@ -185,7 +185,7 @@ export default class App extends React.Component {
                     <p>web-app stable-height: {this.state.tgStableHeight}</p>
                 </div>
 
-                <section className={this.state.contentClassLine}>
+                <section className={this.state.contentClassLine} ref={el => this.dom = el}>
                     <div
                         className={this.state[ this.getContainerStateName("video") ]}
                         ref={el => this.containers["video"].dom = el}
