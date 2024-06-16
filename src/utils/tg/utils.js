@@ -59,9 +59,9 @@ function makeHandlerOnce (func) {
 
 const rootDom = document.querySelector(":root");
 
-// window.addEventListener("load", _ => {
-//     TaskManager.setMacrotask(_ => rootDom.classList.add("root-document_placing_tg"));
-// }, {once: true});
+window.addEventListener("load", _ => {
+    TaskManager.setMacrotask(_ => rootDom.classList.add("root-document_placing_tg"));
+}, {once: true});
 
 let baseHeight     = null;
 window.addEventListener("load", _ => {
