@@ -26,6 +26,8 @@
     
     bottom: var(--tg-bottom);
     left: var(--app-padding-left);
+
+    transform: translateY( calc(var(--tg-offset) * -1) );
 }
 
 .msg-form__field {

@@ -75,14 +75,6 @@ window.addEventListener("load", _ => {
         }
     });
 }, {once: true});
-let maxWindowHeight = 0;
-window.addEventListener("resize", evt => {
-    const curHeight = window.innerHeight;
-    if (curHeight > maxWindowHeight) {
-        maxWindowHeight = curHeight;
-        updateOffset();
-    }
-});
 
 function updateOffset () {
     baseOffset = window.innerHeight - baseHeight;
