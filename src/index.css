@@ -48,11 +48,11 @@ input, button, textarea {
 }
 
 .root-document_placing_fixed {
-    position: fixed;
+    position: absolute;
     top: 0;
 }
 .root-document_placing_tg {
-    position: fixed;
+    position: absolute;
     height: var(--tg-height);
     top: var(--tg-top);
 }
@@ -74,7 +74,7 @@ input, button, textarea {
     background-color: inherit;
 
     display: block;
-    position: fixed;
+    position: absolute;
     z-index: -1000;
 
     margin: 0;
@@ -108,7 +108,7 @@ input, button, textarea {
 
 
 .content-log {
-    position: fixed;
+    position: absolute;
     top: calc(var(--tg-top) + var(--tg-height) / 2);
     transform: translateY(-50%);
     color: black;
@@ -121,7 +121,7 @@ input, button, textarea {
     display: none;
 }
 .update-num-log {
-    position: fixed;
+    position: absolute;
     top: 0;
     color: black;
     text-shadow: 2px 2px white;
