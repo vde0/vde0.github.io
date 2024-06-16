@@ -6,8 +6,8 @@
     padding: 4pt 0;
     box-sizing: border-box;
     
-    border-top: soild 1px var(--tg-theme-text-color);
-    border-bottom: soild 1px var(--tg-theme-text-color);
+    border-top: solid 1px var(--tg-theme-text-color);
+    border-bottom: solid 1px var(--tg-theme-text-color);
     border-radius: 12px;
     -webkit-border-radius: 12px;
     -moz-border-radius: 12px;
