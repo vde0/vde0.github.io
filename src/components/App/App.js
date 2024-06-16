@@ -130,6 +130,8 @@ export default class App extends React.Component {
                 this.setState({ duray: this.duray }); }
             if (this.state.baseHeight !== this.baseHeight) {
                 this.setState({ baseHeight: this.baseHeight }); }
+            if (this.state.offset !== this.offset) {
+                this.setState({ offset: this.offset }); }
             if (this.state.appHeight !== this.appHeight) {
                 this.setState({ appHeight: this.appHeight }); }
             if (this.state.windowHeight !== this.windowHeight) {
@@ -149,6 +151,7 @@ export default class App extends React.Component {
             this.duray              = tg.duray;
             this.baseHeight         = tg.baseHeight;
             this.appHeight          = tg.appHeight;
+            this.offset             = tg.baseOffset;
             this.windowHeight       = Math.round(window.innerHeight * 100) / 100;
             this.tgHeight           = Math.round(tg.telegram.viewportHeight * 100) / 100;
             this.tgStableHeight     = Math.round(tg.telegram.viewportStableHeight * 100) / 100;
@@ -168,21 +171,22 @@ export default class App extends React.Component {
     render () {
         return (
             <article className="app">
-                {this.showUpdateNum ? <p className="update-num-log">Update num: 65.5</p> : ""}
+                {this.showUpdateNum ? <p className="update-num-log">Update num: 65.5.1</p> : ""}
                 <div className={"content-log " + (!this.log ? "content-log_hidden" : "")}>
                     <p>Mobile: {String(isMobile)} | iOS: {String(isIOs)}</p>
                     <p>keyboard open state: {String(this.state.keyboardState)}</p>
                     <p>lastKeyboardEvent: {String(this.state.lastKeyboardEvent)}</p>
-                    <p>sucs: {String(this.state.sucs)} | fails: {String(this.state.fails)}</p>
+                    {/* <p>sucs: {String(this.state.sucs)} | fails: {String(this.state.fails)}</p>
                     <p>native change count: {String(this.state.nativeChangeCount)}</p>
                     <p>change count: {String(this.state.changeCount)}</p>
                     <p>useful change count: {String(this.state.usefulChangeCount)}</p>
-                    <p>duray: {String(this.state.duray)}</p>
+                    <p>duray: {String(this.state.duray)}</p> */}
+                    <p>offset: {String(this.state.offset)}</p>
                     <p>baseHeight: {String(this.state.baseHeight)}</p>
                     <p>appHeight: {String(this.state.appHeight)}</p>
                     <p>window height: {this.state.windowHeight}</p>
                     <p>web-app height: {this.state.tgHeight}</p>
-                    <p>web-app stable-height: {this.state.tgStableHeight}</p>
+                    {/* <p>web-app stable-height: {this.state.tgStableHeight}</p> */}
                 </div>
 
                 <section className={this.state.contentClassLine} ref={el => this.dom = el}>

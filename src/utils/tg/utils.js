@@ -181,6 +181,7 @@ export {
 
     appHeight,
     baseHeight,
+    baseOffset,
 
     onResize,
     onResizeEnd,
