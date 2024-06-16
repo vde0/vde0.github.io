@@ -68,12 +68,21 @@ let baseHeight     = 0;
 let baseOffset     = 0;
 window.addEventListener("load", _ => {
     baseHeight = telegram.viewportHeight;
+    baseOffset     = window.innerHeight = baseHeight;
     telegram.onEvent("viewportChanged", _ => {
         if (telegram.viewportHeight > baseHeight) {
             baseHeight = telegram.viewportHeight;
             updateOffset();
         }
     });
+
+    let maxInnerHeight = 0;
+    window.addEventListener("resize", _ => {
+        if (window.innerHeight > maxInnerHeight) {
+            maxInnerHeight = window.innerHeight;
+            updateOffset();
+        }
+    })
 }, {once: true});
 
 function updateOffset () {
