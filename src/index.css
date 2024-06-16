@@ -10,8 +10,8 @@
 
     --tg-offset: 0pt;
     --tg-height: var(--tg-viewport-stable-height);
-    --tg-top: calc(100vh - var(--tg-height));
-    --tg-bottom: 0pt;
+    --tg-top: calc(100vh - var(--tg-height) - var(--tg-offset));
+    --tg-bottom: var(--tg-offset);
 
     --app-padding: 12pt;
     --app-padding-x: 8pt;

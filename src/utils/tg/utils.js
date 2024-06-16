@@ -63,15 +63,31 @@ window.addEventListener("load", _ => {
     TaskManager.setMacrotask(_ => rootDom.classList.add("root-document_placing_tg"));
 }, {once: true});
 
-let baseHeight     = null;
+
+let baseHeight     = 0;
+let baseOffset     = 0;
 window.addEventListener("load", _ => {
     baseHeight = telegram.viewportHeight;
     telegram.onEvent("viewportChanged", _ => {
         if (telegram.viewportHeight > baseHeight) {
             baseHeight = telegram.viewportHeight;
+            updateOffset();
         }
     });
 }, {once: true});
+let maxWindowHeight = 0;
+window.addEventListener("resize", evt => {
+    const curHeight = window.innerHeight;
+    if (curHeight > maxWindowHeight) {
+        maxWindowHeight = curHeight;
+        updateOffset();
+    }
+});
+
+function updateOffset () {
+    baseOffset = window.innerHeight - baseHeight;
+    rootDom.style.setProperty("--tg-offset", baseOffset + "px");
+}
 
 window.addEventListener("load", _ => {
 
@@ -87,7 +103,7 @@ window.addEventListener("load", _ => {
 
             const curHeight = telegram.viewportHeight;
             const isResized = curHeight !== prevHeight;
-            
+
             const evt = makeResizeEvent();
             prevHeight = curHeight;
 
