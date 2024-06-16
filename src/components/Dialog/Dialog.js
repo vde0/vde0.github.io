@@ -1,6 +1,7 @@
 import React from 'react';
 import { isMobile } from '../../utils/utils';
 import StickyPiston from '../../utils/StickyPiston';
+import * as tg from '../../utils/tg/utils';
 import './Dialog.css';
 import MsgForm from '../MsgForm/MsgForm';
 import MsgList from '../MsgList/MsgList';
@@ -144,11 +145,15 @@ export default class Dialog extends React.Component {
         this.props.data.blur    = this.blurMsgField.bind(this);
         this.props.data.focus   = this.focusMsgField.bind(this);
 
-        if (isMobile) {
-            this.piston.movable = this.dom;
+        tg.onResize(evt => {
+            console.log("height: " + (evt.step));
+            this.dom?.style.setProperty("height", (this.dom.clientHeight + evt.step) + "px")});
 
-            window.addEventListener("closekeyboard", this.closeKeyboardHandler);
-        }
+        // if (isMobile) {
+        //     this.piston.movable = this.dom;
+
+        //     window.addEventListener("closekeyboard", this.closeKeyboardHandler);
+        // }
     }
 
     componentWillUnmount () {

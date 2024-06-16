@@ -87,6 +87,8 @@ window.addEventListener("load", _ => {
 
             const curHeight = telegram.viewportHeight;
             const isResized = curHeight !== prevHeight;
+            
+            const evt = makeResizeEvent();
             prevHeight = curHeight;
 
             if (!isResized)   {
@@ -101,7 +103,6 @@ window.addEventListener("load", _ => {
             isResizing = true;
             updateAppHeight();
 
-            const evt = makeResizeEvent;
             const handlerList = Array.from(resizeHandlers.values());
 
             for (let handler of resizeHandlers.values()) handler(evt);

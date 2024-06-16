@@ -107,10 +107,10 @@ export default class MsgForm extends React.Component {
 
     openKeyboardHandler = (evt) => {
         this.piston.piston = this.msgFormBlock;
-        this.piston.press();
+        // this.piston.press();
         //
         funcBridge = () => {
-            this.piston.press();
+            // this.piston.press();
         };
 
         if (isMobile) this.classLine.add("msg-form_mobile");
