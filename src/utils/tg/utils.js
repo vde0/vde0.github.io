@@ -67,8 +67,8 @@ window.addEventListener("load", _ => {
 let baseHeight     = 0;
 let baseOffset     = 0;
 window.addEventListener("load", _ => {
-    baseHeight = telegram.viewportHeight;
-    baseOffset     = window.innerHeight = baseHeight;
+    baseHeight  = telegram.viewportHeight;
+    updateOffset();
     telegram.onEvent("viewportChanged", _ => {
         if (telegram.viewportHeight > baseHeight) {
             baseHeight = telegram.viewportHeight;
