@@ -11,6 +11,7 @@ export default class MKBController {
 
     static open () {
         if (!isMobile) throw Error("MKBController.open() may be called if only isMobile=true.");
+        if (lastEventVal === "openkeyboard") {console.log("fail"); return;}
         
         this.makeOpenKeyboardEvent();
 
@@ -41,10 +42,12 @@ export default class MKBController {
     }
 
     static makeOpenKeyboardEvent () {
+        if (lastEventVal === "openkeyboard") return;
         lastEventVal = "openkeyboard";
         window.dispatchEvent( new Event("openkeyboard", {bubbles: true}) );
     }
     static makeCloseKeyboardEvent () {
+        if (lastEventVal === "closekeyboard") return;
         lastEventVal = "closekeyboard";
         window.dispatchEvent( new Event("closekeyboard", {bubbles: true}) );
     }

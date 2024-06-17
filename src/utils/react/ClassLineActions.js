@@ -20,6 +20,31 @@ export default class ClassLineActions {
                 "ClassLine has incorrect type.");
             
             if (context.props.className) propContext[propName].load(context.props.className);
+
+            if (context.componentDidUpdate) {
+                const bindedUpdater = context.componentDidUpdate.bind(context);
+                context.componentDidUpdate = (prevProps, prevState) => {
+                    if (prevProps.className !== context.props.className) {
+                        (prevProps.className
+                            && context.classLine.substract(prevProps.className));
+                        (context.props.className
+                            && context.classLine.load(context.props.className));
+                        
+                        this.updateState(stateName, propName);
+                    }
+                    bindedUpdater(prevProps, prevState);
+                }
+            }
+            else context.componentDidUpdate = (prevProps, prevState) => {
+                if (prevProps.className !== context.props.className) {
+                    (prevProps.className
+                        && context.classLine.substract(prevProps.className));
+                    (context.props.className
+                        && context.classLine.load(context.props.className));
+                    
+                    this.updateState(stateName, propName);
+                }
+            }
         }
     }
 

@@ -1,5 +1,79 @@
 export default class ClassLine {
 
+    static genList (classList) {
+        let resultClassList = [];
+
+        if ( typeof(classList) === "string" ) {
+            resultClassList = classList;
+
+            resultClassList.trim();
+            resultClassList = resultClassList.split(" ");
+        }
+        else if ( Array.isArray(classList) ) {
+            console.log("array");
+            resultClassList = [...classList];
+        }
+        else if ( typeof(classList) === "object" ) {
+            console.log("object");
+            if ( !Array.isArray(classList.classList) ) throw SyntaxError;
+            resultClassList = [...classList.classList];
+        }
+        else    throw TypeError("invalig arg \"classList\" of the ClassLine.genList(): must be string, array or another ClassLine object");
+        
+        return resultClassList;
+    }
+    static genString (classList) {
+        let resultClassList = "";
+
+        if ( typeof(classList) === "string" ) {
+            resultClassList = classList;
+            resultClassList.trim();
+        }
+        else if ( Array.isArray(classList) ) {
+            resultClassList = classList.join(" ");
+        }
+        else if ( typeof(classList) === "object" ) {
+            if ( !Array.isArray(classList.classList) ) throw SyntaxError;
+            resultClassList = classList.classList.join(" ");
+        }
+        else    throw TypeError("invalig arg \"classList\" of the ClassLine.genString(): must be string, array or another ClassLine object");
+
+        return resultClassList;
+    }
+    static genClassLine (classList) {
+        let resultClassList = new ClassLine();
+
+        if ( typeof(classList) === "string" ) {
+            classes = classList;
+            classes.trim();
+
+            classes = classes.split(" ");
+            classes.forEach( className => resultClassList.add(className) );
+        }
+        else if ( Array.isArray(classList) ) {
+            classList.forEach( className => resultClassList.add(className) );
+        }
+        else if ( typeof(classList) === "object" ) {
+            if ( !Array.isArray(classList.classList) ) throw SyntaxError;
+            classList.classList.forEach( className => resultClassList.add(className) );
+        }
+        else    throw TypeError("invalig arg \"classList\" of the ClassLine.genClassLine(): must be string, array or another ClassLine object");
+
+        return resultClassList;
+    }
+
+    static diff (classList1, classList2) {
+        let diffArr = [];
+
+        const handledList1 = ClassLine.genList(classList1);
+        const handledList2 = ClassLine.genList(classList2);
+
+        handledList1.forEach(
+            className => !handledList2.includes(className) && diffArr.push(className));
+
+        return diffArr;
+    }
+
     classList = [];
 
     constructor (classList) {
@@ -41,21 +115,14 @@ export default class ClassLine {
     }
 
     load (classList) {
-        if ( typeof(classList) === "string" ) {
-            let newFragment = classList;
-            newFragment.trim();
+        const handledList = ClassLine.genList(classList);
+        handledList.forEach(className => this.add(className));
 
-            newFragment = newFragment.split(" ");
-            newFragment.forEach( className => this.add(className) );
-        }
-        else if ( Array.isArray(classList) ) {
-            classList.forEach( className => this.add(className) );
-        }
-        else if ( typeof(classList) === "object" ) {
-            if ( !Array.isArray(classList.classList) ) throw SyntaxError;
-            classList.classList.forEach( className => this.add(className) );
-        }
-        else    throw TypeError("invalig arg \"classList\" of the ClassLine.load(): must be string, array or another ClassLine object");
+        return this;
+    }
+    substract (classList) {
+        const handledList = ClassLine.genList(classList);
+        this.classList = this.classList.filter(className => !handledList.includes(className));
 
         return this;
     }

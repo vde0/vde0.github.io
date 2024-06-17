@@ -9,6 +9,7 @@ import ClassLine from '../../utils/ClassLine';
 import TaskManager from '../../utils/TaskManager';
 import UpdateHook from '../../utils/UpdateHook';
 import ClassLineActions from '../../utils/react/ClassLineActions';
+import MKBController from '../../utils/tg/MKBController';
 
 
 let userDB = {
@@ -120,21 +121,21 @@ export default class Dialog extends React.Component {
         super(props);
 
         this.classLineActions   = new ClassLineActions({context: this});
-        // this.piston             = new StickyPiston();
 
-        this.onSend         = this.onSend.bind(this);
-        this.onInput        = this.onInput.bind(this);
         this.onClickDialog  = this.onClickDialog.bind(this);
-
         this.focusHook      = new UpdateHook();
 
         this.state = {
             msgList: this.msgList,
             focusField: true,
+            msgFormShown: true,
             scrollDown: null,
             scrollDownUpdater: true,
         }
         this.classLineActions.initState();
+
+        window.addEventListener("openkeyboard", this.openKeyboardHandler);
+        window.addEventListener("closekeyboard", this.closeKeyboardHandler);
     }
 
     componentDidMount () {
@@ -142,27 +143,21 @@ export default class Dialog extends React.Component {
         this.scrollDown("instant");
         this.focusHook.on(true);
 
+        if (isMobile) MKBController.open();
+
         this.props.data.blur    = this.blurMsgField.bind(this);
         this.props.data.focus   = this.focusMsgField.bind(this);
 
         tg.onResize(this.resizeHandler);
-
-        // if (isMobile) {
-        //     this.piston.movable = this.dom;
-
-        //     window.addEventListener("closekeyboard", this.closeKeyboardHandler);
-        // }
     }
 
     componentWillUnmount () {
         this.props.data.blur = () => {};
         tg.offResize(this.resizeHandler);
-        if (isMobile) {
-            // this.piston.movable = null;
-            TaskManager.setMacrotask(_ => {
-                window.removeEventListener("closekeyboard", this.closeKeyboardHandler);
-            }, 2);
-        }
+        if (isMobile) TaskManager.setMacrotask(_ => {
+            window.removeEventListener("openkeyboard", this.openKeyboardHandler);
+            window.removeEventListener("closekeyboard", this.closeKeyboardHandler);
+        }, 2);
     }
 
     render () {
@@ -177,17 +172,22 @@ export default class Dialog extends React.Component {
                     scrollDown={this.state.scrollDown}
                     scrollDownUpdater={this.state.scrollDownUpdater}
                     msgList={this.state.msgList} />
-
-                <MsgForm
-                    className="dialog__msg-form"
-                    focusHook={this.focusHook}
-                    piston={this.piston} onInput={this.onInput} onSend={this.onSend} />
+                
+                {!isMobile
+                    ? <MsgForm
+                        className="dialog__msg-form"
+                        autoFocus={false}
+                        focusHook={this.focusHook} onSend={this.onSend} />
+                    : this.state.msgFormShown
+                        ? <div className="dialog__msg-form"></div>
+                        : ""
+                }
             </article>
         );
     }
 
 
-    onSend (evt) {
+    onSend = (evt) => {
         evt.preventDefault();
         
         if (!this.msgText) return;
@@ -201,9 +201,6 @@ export default class Dialog extends React.Component {
         this.setState({ msgList: this.msgList });
 
         TaskManager.setMacrotask( _ => this.scrollDown("smooth"), 1 );
-    }
-    onInput (evt) {
-        this.msgText = evt.target.value;
     }
     onClickDialog (evt) {
         this.blurMsgField();
@@ -230,7 +227,11 @@ export default class Dialog extends React.Component {
     }
 
 
+    openKeyboardHandler = (evt) => {
+        this.setState({msgFormShown: false});
+    }
     closeKeyboardHandler = (evt) => {
+        this.setState({msgFormShown: true});
         this.dom?.style.setProperty("height", "100%");
     }
 

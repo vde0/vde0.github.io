@@ -17,7 +17,7 @@
     align-items: stretch;
 }
 
-.msg-form_mobile {
+.msg-form_gui {
     position: absolute;
     
     height: calc(61px + 16pt);
@@ -25,7 +25,6 @@
     padding-top: 16pt;
     
     bottom: var(--tg-bottom);
-    left: var(--app-padding-left);
 
     transform: translateY( calc(var(--tg-offset) * -1) );
 }

@@ -10,11 +10,6 @@ import TaskManager from '../../utils/TaskManager';
 import ClassLineActions from '../../utils/react/ClassLineActions';
 
 
-// let funcBridge = () => {};
-// if (isMobile) tg.telegram.onEvent("viewportChanged", tg => {
-//     funcBridge();
-// });
-
 export default class MsgForm extends React.Component {
 
     classLine   = new ClassLine("msg-form");
@@ -24,10 +19,8 @@ export default class MsgForm extends React.Component {
 
         this.classLineActions = new ClassLineActions({context: this});
 
-        this.onSend     = this.props.onSend;
+        this.send     = this.props.sender;
         this.onInput    = this.props.onInput;
-
-        // this.piston     = this.props.piston;
 
         this.classLineActions.initState();
 
@@ -36,15 +29,9 @@ export default class MsgForm extends React.Component {
             window.addEventListener("closekeyboard", this.closeKeyboardHandler);
         }
     }
-    
-    componentDidMount () {
-        this.props.focusHook.connect( this.updateFocus.bind(this) );
-    }
 
     componentWillUnmount () {
         if (isMobile) {
-            // this.piston.piston = null;
-            // funcBridge = () => {};
 
             this.blur();
 
@@ -64,8 +51,8 @@ export default class MsgForm extends React.Component {
                 <textarea ref={el => this.msgFieldBlock = el}
                     className="msg-form__field msg-form__field_focused"
                     onInput={this.onInput}
-                    onFocus={_ => isMobile && MKBController.open()}
-                    autoFocus
+                    krot="krots"
+                    autoFocus={this.props.autoFocus}
                     autoCapitalize="on"
                     autoComplete="false"
                     spellCheck="true"
@@ -73,16 +60,21 @@ export default class MsgForm extends React.Component {
                 ></textarea>
                 <Btn
                     type="submit"
-                    onClick={this.onClick.bind(this)}
+                    onClick={this.onSend.bind(this)}
                     className="msg-form__send-btn"
                     content={<SendIc />} />
             </form>
         );
     }
 
-    onClick (evt) {
+    onInput (evt) {
+        this.msgText = evt.target.value;
+    }
+    onSend (evt) {
+        evt.preventDefault();
+
         this.reset();
-        this.onSend(evt);
+        this.send(this.msgText);
     }
 
     reset () {
@@ -106,21 +98,10 @@ export default class MsgForm extends React.Component {
 
 
     openKeyboardHandler = (evt) => {
-        // this.piston.piston = this.msgFormBlock;
-        // this.piston.press();
-        //
-        // funcBridge = () => {
-            // this.piston.press();
-        // };
-
-        if (isMobile) this.classLine.add("msg-form_mobile");
         this.classLineActions.updateState();
     }
     closeKeyboardHandler = (evt) => {
-        // this.piston.piston = null;
-        // funcBridge = () => {};
-
-        if (isMobile) this.classLine.remove("msg-form_mobile");
+        console.log("close by msgform");
         this.classLineActions.updateState();
     }
 }

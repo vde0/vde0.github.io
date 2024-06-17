@@ -7,39 +7,53 @@ import WhiteArrowRightIc from '../../icons/white-arrow-right.svg';
 import { isMobile } from '../../utils/utils';
 import TaskManager from '../../utils/TaskManager';
 import './BottomMenu.css';
+import GuiManager from '../../services/GuiManager';
+import ClassLineActions from '../../utils/react/ClassLineActions';
+import ClassLine from '../../utils/ClassLine';
 
 
 export default class BottomMenu extends React.Component {
 
+    classLine = new ClassLine("bottom-menu");
+
     constructor (props) {
         super(props);
 
-        this.onChatBtn      = this.props.data.onOpenDialog;
-        this.onAddUserBtn   = this.props.data.onAddUser;
-        this.onReportBtn    = this.props.data.onReport;
-        this.onNextBtn      = this.props.data.onNext;
+        GuiManager.initBottomMenu(this);
 
-        this.msgCount       = this.props.data.unreadedMsgCount;
+        this.state = {
+            [GuiManager.OPEN_DIALOG_HANDLER]: GuiManager.getMenuBtnHandler(
+                GuiManager.OPEN_DIALOG_HANDLER ),
+            [GuiManager.ADD_USER_HANDLER]: GuiManager.getMenuBtnHandler(
+                GuiManager.ADD_USER_HANDLER ),
+            [GuiManager.REPORT_HANDLER]: GuiManager.getMenuBtnHandler( GuiManager.REPORT_HANDLER ),
+            [GuiManager.NEXT_HANDLER]: GuiManager.getMenuBtnHandler( GuiManager.NEXT_HANDLER ),
+        };
+        
+        this.msgCount       = 1;
+
+        this.classLineActions = new ClassLineActions({context: this});
+        this.classLineActions.initState();
         
         this.btns = [
             {
                 mod: "msgs",
                 content: <MsgsIc className="btn__icon" />,
                 badge: {value: this.msgCount, color: "red"},
-                onClick: this.onChatBtn,
+                onClick: GuiManager.OPEN_DIALOG_HANDLER,
                 get classLine () { return "bottom-menu__btn bottom-menu__btn_mod_" + this.mod; },
             },
             {
                 mod: "add-user",
                 content: <AddUserIc className="btn__icon" />,
-                onClick: this.onAddUserBtn,
+                onClick: GuiManager.ADD_USER_HANDLER,
                 get classLine () { return "bottom-menu__btn bottom-menu__btn_mod_" + this.mod; },
             },
             {
                 mod: "report",
                 // content: <ReportIc className="btn__icon" />,
                 content: <img className="btn__icon" src={ReportIc} width="43" height="35" />,
-                onClick: this.onReportBtn,
+                onClick: GuiManager.REPORT_HANDLER,
                 get classLine () { return "bottom-menu__btn bottom-menu__btn_mod_" + this.mod; },
             },
             {
@@ -51,7 +65,7 @@ export default class BottomMenu extends React.Component {
                         <WhiteArrowRightIc className="btn__icon" />
                     </>
                 ),
-                onClick: this.onNextBtn,
+                onClick: GuiManager.NEXT_HANDLER,
                 get classLine () { return "bottom-menu__btn bottom-menu__btn_mod_" + this.mod; },
             },
         ];
@@ -59,7 +73,7 @@ export default class BottomMenu extends React.Component {
 
     render () {
         return (
-            <section className="bottom-menu">
+            <section className={this.state.classLine}>
                 {this.btns.map( btn => {
                     return <Btn
                         key={btn.mod}
@@ -67,7 +81,7 @@ export default class BottomMenu extends React.Component {
                         content={btn.content}
                         color={btn.color}
                         badge={btn.badge}
-                        onClick={btn.onClick} />
+                        onClick={this.state[btn.onClick]} />
                 } )}
             </section>
         );

@@ -11,6 +11,8 @@ import ClassLine from '../../utils/ClassLine';
 import TaskManager from '../../utils/TaskManager';
 import BottomMenu from '../BottomMenu/BottomMenu';
 import ClassLineActions from '../../utils/react/ClassLineActions';
+import Gui from '../Gui/Gui';
+import GuiManager from '../../services/GuiManager';
 
 
 export default class App extends React.Component {
@@ -47,7 +49,6 @@ export default class App extends React.Component {
         this.footerShown    = true;
 
         this.onRootClick        = this.onRootClick.bind(this);
-        this.hideFooter         = this.hideFooter.bind(this);
 
         this.props.rootHandler.setHandler("click", this.onRootClick);
 
@@ -82,17 +83,11 @@ export default class App extends React.Component {
             focus: () => {},
         };
         this.containers['dialog'].data = this.dialogData;
-
-        this.menuData = {
-            unreadedMsgCount: this.state.unreadedMsgCount,
-            onOpenDialog: this.onOpenDialog.bind(this),
-            onAddUser: this.onAddUser.bind(this),
-            onReport: this.onReport.bind(this),
-            onNext: this.onNext.bind(this),
-        }
     }
 
     componentDidMount () {
+
+        GuiManager.setMenuBtnHandler(GuiManager.OPEN_DIALOG_HANDLER, this.onOpenDialog.bind(this));
 
         if (isMobile) {
             window.addEventListener("openkeyboard", this.openKeyboardHandler);
@@ -171,7 +166,7 @@ export default class App extends React.Component {
     render () {
         return (
             <article className="app">
-                {this.showUpdateNum ? <p className="update-num-log">Update num: 65.7</p> : ""}
+                {this.showUpdateNum ? <p className="update-num-log">Update num: 66</p> : ""}
                 <div className={"content-log " + (!this.log ? "content-log_hidden" : "")}>
                     <p>Mobile: {String(isMobile)} | iOS: {String(isIOs)}</p>
                     <p>keyboard open state: {String(this.state.keyboardState)}</p>
@@ -207,9 +202,7 @@ export default class App extends React.Component {
                     </div>
                 </section>
 
-                <footer className={this.state.footerClassLine}>
-                    <BottomMenu data={this.menuData} />
-                </footer>
+                <Gui />
             </article>
         );
     }
@@ -256,23 +249,6 @@ export default class App extends React.Component {
         this.dialogData.focus();
     }
 
-    hideFooter () {
-        this.footerClassLine.add("app__footer_hidden");
-        this.classLineActions.updateState('footerClassLine');
-
-        this.footerShown = false;
-    }
-    showFooter () {
-        this.footerClassLine.remove("app__footer_hidden");
-        this.classLineActions.updateState('footerClassLine');
-
-        this.footerShown = true;
-    }
-    toggleFooter () {
-        if (this.footerShown)   this.hideFooter();
-        else                    this.showFooter();
-    }
-
 
     showContainer (containerName) {
         const containerObj  = this.containers[containerName];
@@ -309,14 +285,10 @@ export default class App extends React.Component {
 
 
     openKeyboardHandler = (evt) => {
-        this.hideFooter();
-
         this.contentClassLine.add( "app__content_for-keyboard" );
         this.classLineActions.updateState("contentClassLine");
     }
     closeKeyboardHandler = (evt) => {
-        this.showFooter();
-
         this.contentClassLine.remove( "app__content_for-keyboard" );
         this.classLineActions.updateState("contentClassLine");
     }
