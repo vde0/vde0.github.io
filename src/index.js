@@ -11,7 +11,7 @@ window.addEventListener("load", evt => {
     telegram.expand();
     const expandedEvt = new Event("expanded", {bubbles: true});
     if (isMobile)   onResizeEnd(_ => window.dispatchEvent( expandedEvt ), true);
-    else            window.dispatchEvent( expandedEvt );
+    else            TaskManager.setMacrotask(_ => window.dispatchEvent( expandedEvt ));
 }, {once: true});
 
 
