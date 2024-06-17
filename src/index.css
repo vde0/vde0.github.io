@@ -60,6 +60,8 @@ input, button, textarea {
 .root-document__page {
     font-family: "Open Sans", sans-serif;
     -webkit-text-size-adjust: none;
+
+    margin: 0;
 }
 .root-document__page::after {
     content: "";

@@ -6,8 +6,12 @@
 .gui__el {
     position: absolute;
     z-index: 10000;
-    left: var(--app-padding-left);
     width: var(--app-inner-width);
+    max-width: var(--container-max-width);
+
+    left: 0;
+    right: 0;
+    margin: auto;
 }
 
 .gui__el_hidden {
