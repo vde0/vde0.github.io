@@ -15,13 +15,5 @@ window.addEventListener("load", evt => {
 }, {once: true});
 
 
-const rootDOM   = document.getElementById("root");
-const root      = createRoot( document.getElementById("root") );
-
-const handlerWrapper = {
-    setHandler (eventName, handlerFunc) {
-        rootDOM.addEventListener(eventName, handlerFunc);
-    }
-};
-
-root.render(<App rootHandler={handlerWrapper} />);
+const root      = createRoot(document.getElementById( "root" ));
+root.render(<App />);

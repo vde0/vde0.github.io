@@ -48,9 +48,7 @@ export default class App extends React.Component {
         this.videoShown     = false;
         this.footerShown    = true;
 
-        this.onRootClick        = this.onRootClick.bind(this);
-
-        this.props.rootHandler.setHandler("click", this.onRootClick);
+        window.addEventListener("click", this.onRootClick);
 
         this.state = {
             unreadedMsgCount: 1,
@@ -93,7 +91,7 @@ export default class App extends React.Component {
 
     componentDidMount () {
 
-        GuiManager.setMenuBtnHandler(GuiManager.OPEN_DIALOG_HANDLER, this.onOpenDialog.bind(this));
+        GuiManager.setMenuBtnHandler(GuiManager.OPEN_DIALOG_HANDLER, this.onOpenDialog);
 
         if (isMobile) {
             window.addEventListener("openkeyboard", this.openKeyboardHandler);
@@ -167,7 +165,7 @@ export default class App extends React.Component {
     render () {
         return <>
             <article className="app">
-                {this.showUpdateNum ? <p className="update-num-log">Update num: 67.6</p> : ""}
+                {this.showUpdateNum ? <p className="update-num-log">Update num: 67.7</p> : ""}
                 <div className={"content-log " + (!this.log ? "content-log_hidden" : "")}>
                     <p>Mobile: {String(isMobile)} | iOS: {String(isIOs)}</p>
                     <p>keyboard open state: {String(this.state.keyboardState)}</p>
@@ -207,17 +205,17 @@ export default class App extends React.Component {
         </>;
     }
 
-    onOpenDialog (evt) {
+    onOpenDialog = (evt) => {
         this.toggleDialog();
     }
-    onAddUser (evt) {}
-    onReport (evt) {}
-    onNext (evt) {}
+    onAddUser = (evt) => {}
+    onReport = (evt) => {}
+    onNext = (evt) => {}
 
-    onRootClick (evt) {
+    onRootClick = (evt) => {
         const dialogSelector    = '.dialog';
         const btnSelector       = '.bottom-menu__btn_mod_msgs';
-
+        console.log("click");
         const el                = evt.target;
         const clickDialogCheck  = checkOwnershipToArea(el, dialogSelector);
         const clickMsgsBtnCheck = checkOwnershipToArea(el, btnSelector);
