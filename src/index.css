@@ -50,6 +50,7 @@ input, button, textarea {
     top: 0;
 }
 .root-document_placing_tg {
+    position: absolute;
     height: var(--tg-height);
 }
 .root-document_no-scroll {
