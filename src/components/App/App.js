@@ -165,9 +165,8 @@ export default class App extends React.Component {
 
     render () {
         return (
-            <>
             <article className="app">
-                {this.showUpdateNum ? <p className="update-num-log">Update num: 67.4.5</p> : ""}
+                {this.showUpdateNum ? <p className="update-num-log">Update num: 67.5</p> : ""}
                 <div className={"content-log " + (!this.log ? "content-log_hidden" : "")}>
                     <p>Mobile: {String(isMobile)} | iOS: {String(isIOs)}</p>
                     <p>keyboard open state: {String(this.state.keyboardState)}</p>
@@ -202,9 +201,9 @@ export default class App extends React.Component {
                         }
                     </div>
                 </section>
+
+                <Gui />
             </article>
-            <Gui />
-            </>
         );
     }
 

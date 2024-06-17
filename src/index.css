@@ -9,7 +9,7 @@
     --custom-orange: #FF8B49;
 
     --tg-offset: 0pt;
-    --tg-height: var(--tg-viewport-stable-height);
+    --tg-height: var(--tg-viewport-height);
     /* --tg-top: calc(100vh - var(--tg-height) - var(--tg-offset));
     --tg-bottom: var(--tg-offset); */
 
@@ -22,7 +22,7 @@
     --app-padding-right: var(--app-padding-x);
 
     --app-inner-width: calc(100% - var(--app-padding-left) - var(--app-padding-right));
-    --app-inner-height: calc(100% - var(--app-padding-top) - var(--app-padding-bottom));
+    --app-inner-height: calc(var(--tg-height) - var(--app-padding-top) - var(--app-padding-bottom));
 
     --app-bottom: var(--app-padding-bottom);
     --app-top: var(--app-padding-top);
