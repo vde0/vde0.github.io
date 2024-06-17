@@ -76,7 +76,7 @@ window.addEventListener("load", _ => {
         }
     });
 
-    let maxInnerHeight = 0;
+    let maxInnerHeight = window.innerHeight;
     window.addEventListener("resize", _ => {
         if (window.innerHeight > maxInnerHeight) {
             maxInnerHeight = window.innerHeight;
