@@ -25,6 +25,7 @@
     padding-top: 16pt;
     
     bottom: var(--tg-offset);
+    transform: translateY(calc(var(--tg-offset) * -1));
 }
 
 .msg-form__field {
