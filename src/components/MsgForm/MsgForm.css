@@ -24,7 +24,7 @@
     width: var(--app-inner-width);
     padding-top: 16pt;
     
-    bottom: var(--tg-bottom);
+    bottom: var(--tg-offset);
 
     transform: translateY( calc(var(--tg-offset) * -1) );
 }

@@ -10,8 +10,8 @@
 
     --tg-offset: 0pt;
     --tg-height: var(--tg-viewport-stable-height);
-    --tg-top: calc(100vh - var(--tg-height) - var(--tg-offset));
-    --tg-bottom: var(--tg-offset);
+    /* --tg-top: calc(100vh - var(--tg-height) - var(--tg-offset));
+    --tg-bottom: var(--tg-offset); */
 
     --app-padding: 12pt;
     --app-padding-x: 8pt;
@@ -39,11 +39,9 @@ input, button, textarea {
 
 
 .root-document {
-    position: relative;
-    margin: 0 auto;
     height: 100vh;
     width: 100%;
-
+    
     background-color: #171717;
 }
 
@@ -61,13 +59,8 @@ input, button, textarea {
 }
 
 .root-document__page {
-    margin: 0;
-
     font-family: "Open Sans", sans-serif;
     -webkit-text-size-adjust: none;
-
-    width: 100%;
-    height: 100%;
 }
 .root-document__page::after {
     content: "";
@@ -96,20 +89,9 @@ input, button, textarea {
     color: var(--tg-theme-text-color);
 }
 
-
-#root {
-    width: 100%;
-    height: 100%;
-
-    position: absolute;
-    top: 0;
-    left: 0;
-}
-
-
 .content-log {
     position: absolute;
-    top: calc(var(--tg-top) + var(--tg-height) / 2);
+    top: calc(var(--tg-height) / 2);
     transform: translateY(-50%);
     color: black;
     text-shadow: 2px 2px white;

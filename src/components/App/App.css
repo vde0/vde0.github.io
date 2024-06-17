@@ -9,6 +9,8 @@
     height: var(--app-inner-height);
     width: var(--app-inner-width);
     max-width: var(--container-max-width);
+
+    transform: translateY(calc(var(--tg-offset) * -1));
     
     padding: var(--app-padding-y) var(--app-padding-x);
     padding-top: var(--app-padding-top);
