@@ -83,6 +83,12 @@ export default class App extends React.Component {
             focus: () => {},
         };
         this.containers['dialog'].data = this.dialogData;
+
+        window.addEventListener("expanded", _ => {
+            for (let containerName of Object.keys( this.containers )) {
+                this.setContainerFixed(containerName);
+            }
+        }, {once: true});
     }
 
     componentDidMount () {
@@ -92,17 +98,7 @@ export default class App extends React.Component {
         if (isMobile) {
             window.addEventListener("openkeyboard", this.openKeyboardHandler);
             window.addEventListener("closekeyboard", this.closeKeyboardHandler);
-
-            tg.onResizeEnd(_ => {
-                for (let containerName of Object.keys( this.containers )) {
-                    this.setContainerFixed(containerName);
-                }
-            }, true);
-        } else      TaskManager.setMacrotask(_ => {
-            for (let containerName of Object.keys( this.containers )) {
-                this.setContainerFixed(containerName);
-            }
-        });
+        }
 
         for (let containerName of Object.keys( this.containers )) {
             this.hideContainer(containerName);
@@ -171,7 +167,7 @@ export default class App extends React.Component {
     render () {
         return (
             <article className="app">
-                {this.showUpdateNum ? <p className="update-num-log">Update num: 67.5.5</p> : ""}
+                {this.showUpdateNum ? <p className="update-num-log">Update num: 67.5.6</p> : ""}
                 <div className={"content-log " + (!this.log ? "content-log_hidden" : "")}>
                     <p>Mobile: {String(isMobile)} | iOS: {String(isIOs)}</p>
                     <p>keyboard open state: {String(this.state.keyboardState)}</p>
