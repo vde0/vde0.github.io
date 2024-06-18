@@ -10,7 +10,7 @@
     -webkit-border-radius: 12px;
     -moz-border-radius: 12px;
     
-    background-color: var(--tg-theme-bg-color);
+    /* background-color: var(--tg-theme-bg-color); */
 
     display: flex;
     gap: 6pt;

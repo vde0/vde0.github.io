@@ -46,7 +46,8 @@ export default class Gui extends React.Component {
     render () {
         return <div className="gui">
             {this.state.msgFormShown
-                ? <MsgForm autoFocus={true} className={this.state.msgFormClassLine} onSend={this.state.sender} onInput={this.onInput.bind(this)} />
+                ? <><MsgForm autoFocus={true} id={GuiManager.MSG_FORM_ATTR_ID} className={this.state.msgFormClassLine} onSend={this.state.sender} onInput={this.onInput.bind(this)}/><button onClick={this.onCancel.bind(this)} className="gui__cancel">cancel</button>
+                </>
                 : ""}
             <BottomMenu className={this.state.bottomMenuClassLine} />
         </div>;
@@ -55,6 +56,17 @@ export default class Gui extends React.Component {
     onInput (evt) {
         this.msgText = evt.target.value;
         GuiManager.updateMsgContent(this.msgText);
+    }
+
+    onCancel (evt) {
+        GuiManager.cancel();
+        // this.msgFormClassLine.add("gui__el_hidden");
+        this.bottomMenuClassLine.remove("gui__el_hidden");
+        this.classLineActions.updateState("bottomMenuClassLine");
+
+        // this.classLineActions.updateState("msgFormClassLine");
+        this.setState({msgFormShown: false});
+
     }
 
     openKeyboardHandler = (evt) => {
@@ -67,10 +79,10 @@ export default class Gui extends React.Component {
     }
     closeKeyboardHandler = (evt) => {
         // this.msgFormClassLine.add("gui__el_hidden");
-        this.bottomMenuClassLine.remove("gui__el_hidden");
-        this.classLineActions.updateState("bottomMenuClassLine");
+        // this.bottomMenuClassLine.remove("gui__el_hidden");
+        // this.classLineActions.updateState("bottomMenuClassLine");
 
         // this.classLineActions.updateState("msgFormClassLine");
-        this.setState({msgFormShown: false});
+        // this.setState({msgFormShown: false});
     }
 }

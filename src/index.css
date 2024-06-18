@@ -28,6 +28,8 @@
     --app-top: var(--app-padding-top);
 
     --container-max-width: 454px;
+
+    --bottom-menu-height: 36pt;
 }
 
 

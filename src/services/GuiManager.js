@@ -2,6 +2,14 @@
 let senderVal = () => {};
 let msgContent = "";
 
+const CANCEL                = Symbol("cancel");
+const subs = {
+    [CANCEL]: new Set(),
+}
+function execHandlers(updateName, event={}) {
+    for (let handler of subs[updateName].values()) handler(event);
+}
+
 const OPEN_DIALOG_HANDLER   = Symbol("open dialog");
 const ADD_USER_HANDLER      = Symbol("add user");
 const REPORT_HANDLER        = Symbol("report");
@@ -27,10 +35,15 @@ const updateMenuBtnHandler = (handlerName) => {
 
 export default class GuiManager {
 
+    static get CANCEL () { return CANCEL }
+    static cancel () { execHandlers(CANCEL) }
+
     static get OPEN_DIALOG_HANDLER () { return OPEN_DIALOG_HANDLER; }
     static get ADD_USER_HANDLER () { return ADD_USER_HANDLER; }
     static get REPORT_HANDLER () { return REPORT_HANDLER; }
     static get NEXT_HANDLER () { return NEXT_HANDLER; }
+
+    static get MSG_FORM_ATTR_ID () { return "guimsgform" };
 
     static linkMsgForm (sender) {
         senderVal = sender;
@@ -45,10 +58,15 @@ export default class GuiManager {
     static getMsgContent () {
         return msgContent;
     }
+
     static initGuiComponent (component) {
         guiComponent = component;
         updateGuiComponent();
     }
+    static focusMsgForm () {
+        guiComponent.focusMsgForm();
+    }
+
 
     static setMenuBtnHandler (handlerName, handler) {
         if ( !(handlerName in handlers) ) throw Error("Incorrect the handlerName arg.");
@@ -62,6 +80,9 @@ export default class GuiManager {
     static initBottomMenu (component) {
         bottomMenuComponent = component;
     }
+
+    static subsribe (eventName, handler) { subs[eventName].add(handler); }
+    static unsubcscrive (eventName, handler) { subs[eventName].delete(handler); }
 
     constructor () {
         throw Error("GuiManager is realized like Singleton.");

@@ -9,6 +9,8 @@
     width: 100%;
     height: 100%;
 
+    padding-bottom: 61px;
+
     border-top: solid 1px var(--tg-theme-text-color);
     border-bottom: solid 1px var(--tg-theme-text-color);
     border-radius: 12px;
@@ -25,3 +27,10 @@
 }
 
 .dialog__msg-form {}
+
+.dialog__label {
+    position: absolute;
+
+    height: 100%;
+    width: 100%;
+}

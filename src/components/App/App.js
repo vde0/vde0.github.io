@@ -24,6 +24,8 @@ export default class App extends React.Component {
 
         window.addEventListener("click", this.onRootClick);
 
+        GuiManager.subsribe( GuiManager.CANCEL, _ => this.hideDialog.bind( this ));
+
         this.state = {
             dialogShown: false,
             companionVideoShown: false,
@@ -124,7 +126,7 @@ export default class App extends React.Component {
     render () {
         return <>
             <article className="app">
-                {this.showUpdateNum ? <p className="update-num-log">Update num: 68.1</p> : ""}
+                {this.showUpdateNum ? <p className="update-num-log">Update num: 69</p> : ""}
                 <div className={"content-log " + (!this.log ? "content-log_hidden" : "")}>
                     <p>Mobile: {String(isMobile)} | iOS: {String(isIOs)}</p>
                     <p>keyboard open state: {String(this.state.keyboardState)}</p>

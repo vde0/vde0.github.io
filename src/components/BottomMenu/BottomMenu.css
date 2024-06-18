@@ -7,7 +7,7 @@
 
     bottom: 12pt;
     width: var(--app-inner-width);
-    height: 36pt;
+    height: var(--bottom-menu-height);
     
     border-radius: 16px;
     -webkit-border-radius: 16px;

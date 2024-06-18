@@ -48,6 +48,7 @@ export default class MsgForm extends React.Component {
                 className={this.state.classLine}>
                 
                 <textarea ref={el => this.msgFieldBlock = el}
+                    id={this.props.id}
                     className="msg-form__field msg-form__field_focused"
                     onInput={this.props.onInput}
                     krot="krots"
@@ -57,11 +58,13 @@ export default class MsgForm extends React.Component {
                     spellCheck="true"
                     wrap="soft"
                 ></textarea>
+                <label className="msg-from__label" htmlFor={this.props.id}>
                 <Btn
                     type="submit"
                     onClick={this.onSend.bind(this)}
                     className="msg-form__send-btn"
                     content={<SendIc />} />
+                </label>
             </form>
         );
     }

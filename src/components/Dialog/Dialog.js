@@ -71,12 +71,13 @@ export default class Dialog extends React.Component {
                 className={this.state.classLine}
                 ref={el => this.dom = el}
                 onClick={this.onClickDialog}>
-                
+                <label className="dialog__label" htmlFor={GuiManager.MSG_FORM_ATTR_ID}>
                 <MsgList
                     className="dialog__msg-list"
                     scrollDown={this.state.scrollDown}
                     scrollDownUpdater={this.state.scrollDownUpdater}
                     msgList={this.state.msgList} />
+                </label>
             </article>
         );
     }

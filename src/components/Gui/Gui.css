@@ -22,3 +22,14 @@
     transform: scale(-1);
     z-index: -1000;
 }
+
+.gui__cancel {
+    position: absolute;
+    top: 8pt;
+
+    width: 20px;
+    height: 10px;
+
+    border: 2px solid white;
+    border-radius: 5px;
+}
