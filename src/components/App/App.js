@@ -126,7 +126,7 @@ export default class App extends React.Component {
     render () {
         return <>
             <article className="app">
-                {this.showUpdateNum ? <p className="update-num-log">Update num: 69.2</p> : ""}
+                {this.showUpdateNum ? <p className="update-num-log">Update num: 69.3</p> : ""}
                 <div className={"content-log " + (!this.log ? "content-log_hidden" : "")}>
                     <p>Mobile: {String(isMobile)} | iOS: {String(isIOs)}</p>
                     <p>keyboard open state: {String(this.state.keyboardState)}</p>
@@ -163,8 +163,8 @@ export default class App extends React.Component {
                     ? <Dialog data={this.dialogData} />
                     : ""
                 }
+                <Gui />
             </article>
-            <Gui />
         </>;
     }
 
