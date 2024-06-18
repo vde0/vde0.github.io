@@ -53,12 +53,12 @@ export default class Dialog extends React.Component {
         // this.props.data.blur    = this.blurMsgField.bind(this);
         // this.props.data.focus   = this.focusMsgField.bind(this);
 
-        tg.onResize(this.resizeHandler);
+        // tg.onResize(this.resizeHandler);
     }
 
     componentWillUnmount () {
         // this.props.data.blur = () => {};
-        tg.offResize(this.resizeHandler);
+        // tg.offResize(this.resizeHandler);
         if (isMobile) TaskManager.setMacrotask(_ => {
             window.removeEventListener("openkeyboard", this.openKeyboardHandler);
             window.removeEventListener("closekeyboard", this.closeKeyboardHandler);
