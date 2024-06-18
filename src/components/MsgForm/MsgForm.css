@@ -27,6 +27,9 @@
     bottom: var(--tg-offset);
     transform: translateY(calc(var(--tg-offset) * -1));
 }
+.msg-form_gui-ios {
+    bottom: 34px;
+}
 
 .msg-form__field {
     display: block;

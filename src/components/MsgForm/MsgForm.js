@@ -1,7 +1,7 @@
 import React from 'react';
 import './MsgForm.css';
 import Btn from '../Btn/Btn';
-import { isMobile } from '../../utils/utils';
+import { isIOs, isMobile } from '../../utils/utils';
 import * as tg from '../../utils/tg/utils';
 import MKBController from '../../utils/tg/MKBController';
 import SendIc from '../../icons/to-send.svg';
@@ -19,6 +19,8 @@ export default class MsgForm extends React.Component {
 
     constructor (props) {
         super(props);
+
+        if (isIOs) this.classLine.add("msg-form_gui-ios");
 
         this.classLineActions = new ClassLineActions({context: this});
         this.classLineActions.initState();
