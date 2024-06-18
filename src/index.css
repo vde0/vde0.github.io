@@ -22,7 +22,7 @@
     --app-padding-right: var(--app-padding-x);
 
     --app-inner-width: calc(100% - var(--app-padding-left) - var(--app-padding-right));
-    --app-inner-height: calc(var(--tg-height) - var(--app-padding-top) - var(--app-padding-bottom));
+    --app-inner-height: calc(100% - var(--app-padding-top) - var(--app-padding-bottom));
 
     --app-bottom: var(--app-padding-bottom);
     --app-top: var(--app-padding-top);

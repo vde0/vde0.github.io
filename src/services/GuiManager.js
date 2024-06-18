@@ -1,5 +1,6 @@
 // private vars
 let senderVal = () => {};
+let msgContent = "";
 
 const OPEN_DIALOG_HANDLER   = Symbol("open dialog");
 const ADD_USER_HANDLER      = Symbol("add user");
@@ -37,6 +38,12 @@ export default class GuiManager {
     }
     static getSender () {
         return this.senderVal;
+    }
+    static updateMsgContent (msgText) {
+        msgContent = msgText;
+    }
+    static getMsgContent () {
+        return msgContent;
     }
     static initGuiComponent (component) {
         guiComponent = component;

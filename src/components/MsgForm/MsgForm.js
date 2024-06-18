@@ -8,20 +8,19 @@ import SendIc from '../../icons/to-send.svg';
 import ClassLine from '../../utils/ClassLine';
 import TaskManager from '../../utils/TaskManager';
 import ClassLineActions from '../../utils/react/ClassLineActions';
+import SessionManager from '../../services/SessionManager';
+import GuiManager from '../../services/GuiManager';
 
 
 export default class MsgForm extends React.Component {
 
     classLine   = new ClassLine("msg-form");
+    get send () { return this.props.onSend; }
 
     constructor (props) {
         super(props);
 
         this.classLineActions = new ClassLineActions({context: this});
-
-        this.send     = this.props.sender;
-        this.onInput    = this.props.onInput;
-
         this.classLineActions.initState();
 
         if (isMobile) {
@@ -50,7 +49,7 @@ export default class MsgForm extends React.Component {
                 
                 <textarea ref={el => this.msgFieldBlock = el}
                     className="msg-form__field msg-form__field_focused"
-                    onInput={this.onInput}
+                    onInput={this.props.onInput}
                     krot="krots"
                     autoFocus={this.props.autoFocus}
                     autoCapitalize="on"
@@ -67,14 +66,11 @@ export default class MsgForm extends React.Component {
         );
     }
 
-    onInput (evt) {
-        this.msgText = evt.target.value;
-    }
     onSend (evt) {
         evt.preventDefault();
-
+        
         this.reset();
-        this.send(this.msgText);
+        this.send(evt);
     }
 
     reset () {

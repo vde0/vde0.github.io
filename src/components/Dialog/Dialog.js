@@ -3,118 +3,20 @@ import { isMobile } from '../../utils/utils';
 // import StickyPiston from '../../utils/StickyPiston';
 import * as tg from '../../utils/tg/utils';
 import './Dialog.css';
-import MsgForm from '../MsgForm/MsgForm';
 import MsgList from '../MsgList/MsgList';
 import ClassLine from '../../utils/ClassLine';
 import TaskManager from '../../utils/TaskManager';
 import UpdateHook from '../../utils/UpdateHook';
 import ClassLineActions from '../../utils/react/ClassLineActions';
 import MKBController from '../../utils/tg/MKBController';
-
-
-let userDB = {
-    /// userID: {...}
-    555: {
-        name: "Mark",
-    },
-    201: {
-        name: "Собеседник",
-    },
-    92: {
-        name: "Shrek",
-    },
-    100: {
-        name: "Console",
-    },
-}
-
-let msgDB = {
-    /// msgID: {...}
-    add (msgBlock) {
-        const msgID = ++this.length;
-        this[msgID] = {...msgBlock};
-
-        return msgID;
-    },
-    length: 5,
-    1: {
-        userID: 555,
-        time: "15:06",
-        textContent: "Как дела?",
-    },
-    2: {
-        userID: 201,
-        time: "15:00",
-        textContent: "Норм. Уйди.",
-    },
-    3: {
-        userID: 555,
-        time: "15:06",
-        textContent: "Блин :( Ну вот. Ну блин :(",
-    },
-    4: {
-        userID: 555,
-        time: "15:06",
-        textContent: "Блин блинский :(",
-    },
-    5: {
-        userID: 201,
-        time: "15:00",
-        textContent: "Хыыыы!",
-    },
-}
-
-let chatDB = {
-    /// chatID: [msgID, msgID, ...]
-    add (msgID, chatID) {
-        this[chatID].push(msgID);
-    },
-    1: [1, 2, 3, 4, 5],
-}
-
-function getUserInfo (userID) {
-    return {...userDB[userID]};
-}
-
-function getMsg (msgID) {
-    return {...msgDB[msgID]};
-}
-
-function getChat (chatID) {
-    return [...chatDB[chatID]];
-}
-
-function sendMsg (msgBlock, chatID) {
-    const msgID = msgDB.add(msgBlock);
-    chatDB.add(msgID, chatID);
-}
+import SessionManager from '../../services/SessionManager';
+import GuiManager from '../../services/GuiManager';
+import Gui from '../Gui/Gui';
 
 
 export default class Dialog extends React.Component {
 
-    get userID () { return this.props.data.userID; }
-    get chatID () { return this.props.data.chatID; }
-    msgText     = "";
-
-    get msgList () {
-        let chat    = getChat(this.chatID);
-        chat        = chat.map( msgID => {
-            let msg     = getMsg(msgID);
-
-            if (msg.userID === this.userID) {
-                msg.classLine   = "msg-list__msg-block msg msg_user_current";
-                msg.name        = "Вы";
-            } else {
-                msg.classLine   = "msg-list__msg-block msg msg_user_companion";
-                msg.name        = getUserInfo(msg.userID).name;
-            }
-
-            return msg;
-        })
-
-        return chat;
-    };
-
+    msgList     = SessionManager.getMsgList();
     classLine   = new ClassLine("dialog");
 
     constructor (props) {
@@ -136,6 +38,9 @@ export default class Dialog extends React.Component {
 
         window.addEventListener("openkeyboard", this.openKeyboardHandler);
         window.addEventListener("closekeyboard", this.closeKeyboardHandler);
+
+        SessionManager.subscribe(SessionManager.MSG_RECEIVED, this.onReceiveMsg.bind(this));
+        GuiManager.linkMsgForm(this.onSend);
     }
 
     componentDidMount () {
@@ -145,14 +50,14 @@ export default class Dialog extends React.Component {
 
         if (isMobile) MKBController.open();
 
-        this.props.data.blur    = this.blurMsgField.bind(this);
-        this.props.data.focus   = this.focusMsgField.bind(this);
+        // this.props.data.blur    = this.blurMsgField.bind(this);
+        // this.props.data.focus   = this.focusMsgField.bind(this);
 
         tg.onResize(this.resizeHandler);
     }
 
     componentWillUnmount () {
-        this.props.data.blur = () => {};
+        // this.props.data.blur = () => {};
         tg.offResize(this.resizeHandler);
         if (isMobile) TaskManager.setMacrotask(_ => {
             window.removeEventListener("openkeyboard", this.openKeyboardHandler);
@@ -172,33 +77,15 @@ export default class Dialog extends React.Component {
                     scrollDown={this.state.scrollDown}
                     scrollDownUpdater={this.state.scrollDownUpdater}
                     msgList={this.state.msgList} />
-                
-                {!isMobile
-                    ? <MsgForm
-                        className="dialog__msg-form"
-                        autoFocus={false}
-                        focusHook={this.focusHook} onSend={this.onSend} />
-                    : this.state.msgFormShown
-                        ? <div className="dialog__msg-form"></div>
-                        : ""
-                }
             </article>
         );
     }
 
 
     onSend = (evt) => {
-        evt.preventDefault();
-        
-        if (!this.msgText) return;
-        
-        const msgBlock = {
-            userID: this.userID,
-            textContent: this.msgText,
-        }
-
-        sendMsg(msgBlock, this.chatID);
-        this.setState({ msgList: this.msgList });
+        const msgText = GuiManager.getMsgContent();
+        if (!msgText) return;
+        SessionManager.sendMsg(msgText);
 
         TaskManager.setMacrotask( _ => this.scrollDown("smooth"), 1 );
     }
@@ -237,5 +124,10 @@ export default class Dialog extends React.Component {
 
     resizeHandler = (evt) => {
         this.dom?.style.setProperty("height", (this.dom.clientHeight + evt.step) + "px");
+    }
+
+    onReceiveMsg (evt) {
+        this.msgList.push( SessionManager.getMsg(evt.msgId) );
+        this.setState({msgList: this.msgList});
     }
 }

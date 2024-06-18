@@ -46,10 +46,15 @@ export default class Gui extends React.Component {
     render () {
         return <div className="gui">
             {this.state.msgFormShown
-                ? <MsgForm autoFocus={true} className={this.state.msgFormClassLine} sender={this.state.sender} />
+                ? <MsgForm autoFocus={true} className={this.state.msgFormClassLine} onSend={this.state.sender} onInput={this.onInput.bind(this)} />
                 : ""}
             <BottomMenu className={this.state.bottomMenuClassLine} />
         </div>;
+    }
+
+    onInput (evt) {
+        this.msgText = evt.target.value;
+        GuiManager.updateMsgContent(this.msgText);
     }
 
     openKeyboardHandler = (evt) => {

@@ -10,12 +10,16 @@ export default class MKBController {
     static get lastEvent () { return lastEventVal }
 
     static open () {
-        if (!isMobile) throw Error("MKBController.open() may be called if only isMobile=true.");
-        if (lastEventVal === "openkeyboard") {console.log("fail"); return;}
-        
+        if (lastEventVal === "openkeyboard") return;
         this.makeOpenKeyboardEvent();
 
-        onResizeEnd(_ => this.execWhenClosed(_ => this.makeCloseKeyboardEvent()), true);
+        if (isMobile) {
+            onResizeEnd(_ => this.execWhenClosed(_ => this.makeCloseKeyboardEvent()), true);
+        }
+    }
+    static close () {
+        if (lastEventVal === "closekeyboard") return;
+        this.makeCloseKeyboardEvent();
     }
 
     static get isOpened () {

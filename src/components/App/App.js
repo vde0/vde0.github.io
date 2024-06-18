@@ -9,56 +9,27 @@ import './AppContainer.css';
 import './AppFooter.css';
 import ClassLine from '../../utils/ClassLine';
 import TaskManager from '../../utils/TaskManager';
-import BottomMenu from '../BottomMenu/BottomMenu';
 import ClassLineActions from '../../utils/react/ClassLineActions';
 import Gui from '../Gui/Gui';
 import GuiManager from '../../services/GuiManager';
 
 
 export default class App extends React.Component {
-
-    contentClassLine    = new ClassLine("app__content");
-    footerClassLine     = new ClassLine("app__footer");
-
-    containers  = {
-        // containerName: {...}
-        video: {
-            stateName: Symbol("videoClassLine"),
-            classLine: new ClassLine("app__container"),
-            dom: null,
-            data: null,
-        },
-        dialog: {
-            stateName: Symbol("dialogClassLine"),
-            classLine: new ClassLine("app__container"),
-            dom: null,
-            data: null,
-        },
-    };
     
     constructor (props) {
         super(props);
 
-        this.classLineActions = new ClassLineActions({context: this, makeClassLine: false});
-
         this.log            = true;
         this.showUpdateNum  = true;
-
-        this.dialogShown    = false;
-        this.videoShown     = false;
-        this.footerShown    = true;
 
         window.addEventListener("click", this.onRootClick);
 
         this.state = {
-            unreadedMsgCount: 1,
-
-            contentClassLine: this.contentClassLine.getLine(),
-            footerClassLine: this.footerClassLine.getLine(),
-
-            dialogShown: this.dialogShown,
-            videoShown: this.videoShown,
+            dialogShown: false,
+            companionVideoShown: false,
+            userVideoShown: false,
             
+            // logs
             keyboardState: null,
             changeCount: null,
             usefulChangeCount: null,
@@ -69,40 +40,29 @@ export default class App extends React.Component {
             tgHeight: Math.round(tg.telegram.viewportHeight * 100) / 100,
             tgStableHeight: Math.round(tg.telegram.viewportStableHeight * 100) / 100,
         };
-        for (let containerObj of Object.values( this.containers )) {
-            this.classLineActions.initState(containerObj.stateName, "classLine", containerObj);
-        }
-        
+        // for (let containerObj of Object.values( this.containers )) {
+        //     this.classLineActions.initState(containerObj.stateName, "classLine", containerObj);
+        // }
 
-        this.dialogData = {
-            userID: 555,
-            chatID: 1,
-            blur: () => {},
-            focus: () => {},
-        };
-        this.containers['dialog'].data = this.dialogData;
-
-        window.addEventListener("expanded", _ => {
-            for (let containerName of Object.keys( this.containers )) {
-                this.setContainerFixed(containerName);
-            }
-        }, {once: true});
+        // window.addEventListener("expanded", _ => {
+        //     for (let containerName of Object.keys( this.containers )) {
+        //         this.setContainerFixed(containerName);
+        //     }
+        // }, {once: true});
     }
 
     componentDidMount () {
 
         GuiManager.setMenuBtnHandler(GuiManager.OPEN_DIALOG_HANDLER, this.onOpenDialog);
 
-        if (isMobile) {
-            window.addEventListener("openkeyboard", this.openKeyboardHandler);
-            window.addEventListener("closekeyboard", this.closeKeyboardHandler);
-        }
+        // if (isMobile) {
+        //     window.addEventListener("openkeyboard", this.openKeyboardHandler);
+        //     window.addEventListener("closekeyboard", this.closeKeyboardHandler);
+        // }
 
-        for (let containerName of Object.keys( this.containers )) {
-            this.hideContainer(containerName);
-        }
-        
-        tg.onResize(this.resizeHandler);
+        // for (let containerName of Object.keys( this.containers )) {
+        //     this.hideContainer(containerName);
+        // }
 
         if (this.log) setInterval(_ => {
 
@@ -152,20 +112,19 @@ export default class App extends React.Component {
         });
     }
 
-    componentWillUnmount () {
-        tg.offResize(this.resizeHandler);
-        if (isMobile) {
-            TaskManager.setMacrotask(_ => {
-                window.removeEventListener("openkeyboard", this.openKeyboardHandler);
-                window.removeEventListener("closekeyboard", this.closeKeyboardHandler);
-            }, 2);
-        }
-    }
+    // componentWillUnmount () {
+    //     if (isMobile) {
+    //         TaskManager.setMacrotask(_ => {
+    //             window.removeEventListener("openkeyboard", this.openKeyboardHandler);
+    //             window.removeEventListener("closekeyboard", this.closeKeyboardHandler);
+    //         }, 2);
+    //     }
+    // }
 
     render () {
         return <>
             <article className="app">
-                {this.showUpdateNum ? <p className="update-num-log">Update num: 67.8</p> : ""}
+                {this.showUpdateNum ? <p className="update-num-log">Update num: 68</p> : ""}
                 <div className={"content-log " + (!this.log ? "content-log_hidden" : "")}>
                     <p>Mobile: {String(isMobile)} | iOS: {String(isIOs)}</p>
                     <p>keyboard open state: {String(this.state.keyboardState)}</p>
@@ -183,23 +142,25 @@ export default class App extends React.Component {
                     {/* <p>web-app stable-height: {this.state.tgStableHeight}</p> */}
                 </div>
 
-                <section className={this.state.contentClassLine} ref={el => this.dom = el}>
+                <section className="app__content" ref={el => this.dom = el}>
                     <div
-                        className={this.state[ this.getContainerStateName("video") ]}
-                        ref={el => this.containers["video"].dom = el}
-                    >   {!this.state.videoShown ? "" :
+                        className="app__container app__container_empty"
+                    >   {!this.state.companionVideoShown ? "" :
                         <Video empty />
                         }
                     </div>
                     <div
-                        className={this.state[ this.getContainerStateName("dialog") ]}
-                        ref={el => this.containers["dialog"].dom = el}
-                    >   
-                        {!this.state.dialogShown ? "" :
-                        <Dialog data={this.dialogData} />
+                        className="app__container app__container_empty"
+                    >   {!this.state.userVideoShown ? "" :
+                        <Video empty />
                         }
                     </div>
                 </section>
+                
+                {this.state.dialogShown
+                    ? <Dialog data={this.dialogData} />
+                    : ""
+                }
             </article>
             <Gui />
         </>;
@@ -215,29 +176,30 @@ export default class App extends React.Component {
     onRootClick = (evt) => {
         const dialogSelector    = '.dialog';
         const btnSelector       = '.bottom-menu__btn_mod_msgs';
-        console.log("click");
+        const msgFormSelector   = '.msg-form'
+        
         const el                = evt.target;
         const clickDialogCheck  = checkOwnershipToArea(el, dialogSelector);
         const clickMsgsBtnCheck = checkOwnershipToArea(el, btnSelector);
+        const clickMsgForm      = checkOwnershipToArea(el, msgFormSelector);
 
-        if (!clickDialogCheck && !clickMsgsBtnCheck) {
+        if (!clickDialogCheck && !clickMsgsBtnCheck && !clickMsgForm) {
             this.hideDialog();
         };
     }
 
     hideDialog () {
-        this.hideContainer("dialog");
         this.dialogShown = false;
+        MKBController.close();
         this.setState({dialogShown: this.dialogShown});
     }
     showDialog () {
-        this.showContainer("dialog");
         this.dialogShown = true;
         this.setState({dialogShown: this.dialogShown});
     }
     toggleDialog () {
-        if (this.dialogShown)   this.hideDialog();
-        else                    this.showDialog();
+        if (this.state.dialogShown) this.hideDialog();
+        else                        this.showDialog();
     }
 
     dialogBlur () {
@@ -248,50 +210,32 @@ export default class App extends React.Component {
     }
 
 
-    showContainer (containerName) {
-        const containerObj  = this.containers[containerName];
-        containerObj.classLine.remove("app__container_empty");
+    // showContainer (containerName) {
+    //     const containerObj  = this.containers[containerName];
+    //     containerObj.classLine.remove("app__container_empty");
         
-        this.classLineActions.updateState(containerObj.stateName, "classLine", containerObj);
-    }
-    hideContainer (containerName) {
-        const containerObj  = this.containers[containerName];
-        containerObj.classLine.add("app__container_empty");
+    //     this.classLineActions.updateState(containerObj.stateName, "classLine", containerObj);
+    // }
+    // hideContainer (containerName) {
+    //     const containerObj  = this.containers[containerName];
+    //     containerObj.classLine.add("app__container_empty");
 
-        this.classLineActions.updateState(containerObj.stateName, "classLine", containerObj);
-    }
+    //     this.classLineActions.updateState(containerObj.stateName, "classLine", containerObj);
+    // }
 
-    setContainerFixed (containerName) {
-        const containerObj  = this.containers[containerName];
-        const containerDom  = containerObj.dom;
+    // setContainerFixed (containerName) {
+    //     const containerObj  = this.containers[containerName];
+    //     const containerDom  = containerObj.dom;
 
-        containerObj.appHeight = containerDom.clientHeight
-        containerObj.computedTop = containerDom.offsetTop;
+    //     containerObj.appHeight = containerDom.clientHeight
+    //     containerObj.computedTop = containerDom.offsetTop;
         
-        containerObj.classLine.add("app__container_fixing-height");
-        this.classLineActions.updateState(containerObj.stateName, "classLine", containerObj);
+    //     containerObj.classLine.add("app__container_fixing-height");
+    //     this.classLineActions.updateState(containerObj.stateName, "classLine", containerObj);
 
-        queueMicrotask( _ => {
-            containerDom.style.setProperty("height", containerObj.appHeight + "px");
-            containerDom.style.setProperty("top", containerObj.computedTop + "px");
-        });
-    }
-
-    getContainerStateName (containerName) {
-        return this.containers[containerName]?.stateName;
-    }
-
-
-    openKeyboardHandler = (evt) => {
-        this.contentClassLine.add( "app__content_for-keyboard" );
-        this.classLineActions.updateState("contentClassLine");
-    }
-    closeKeyboardHandler = (evt) => {
-        this.contentClassLine.remove( "app__content_for-keyboard" );
-        this.classLineActions.updateState("contentClassLine");
-    }
-
-    resizeHandler = (evt) => {
-        this.dom?.style.setProperty("height", (this.dom.clientHeight + evt.step) + "px");
-    }
+    //     queueMicrotask( _ => {
+    //         containerDom.style.setProperty("height", containerObj.appHeight + "px");
+    //         containerDom.style.setProperty("top", containerObj.computedTop + "px");
+    //     });
+    // }
 }
