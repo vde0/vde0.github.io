@@ -96,6 +96,7 @@ input, button, textarea {
 .content-log {
     position: absolute;
     top: calc(var(--tg-height) / 2);
+    right: 16pt;
     transform: translateY(-50%);
     color: black;
     text-shadow: 2px 2px white;
@@ -109,6 +110,7 @@ input, button, textarea {
 .update-num-log {
     position: absolute;
     top: 0;
+    right: 16t;
     color: black;
     text-shadow: 2px 2px white;
     z-index: 10000;
