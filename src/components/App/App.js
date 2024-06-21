@@ -1,5 +1,5 @@
 import React from 'react';
-import { checkOwnershipToArea, isMobile, isIOs } from '../../utils/utils';
+import { checkOwnershipToArea, isMobile, isIOs, meter } from '../../utils/utils';
 import * as tg from '../../utils/tg/utils';
 import MKBController from '../../utils/tg/MKBController';
 import Video from '../Video/Video';
@@ -12,6 +12,7 @@ import TaskManager from '../../utils/TaskManager';
 import ClassLineActions from '../../utils/react/ClassLineActions';
 import Gui from '../Gui/Gui';
 import GuiManager from '../../services/GuiManager';
+import UnitComplex from '../UnitComplex/UnitComplex';
 
 
 export default class App extends React.Component {
@@ -32,6 +33,11 @@ export default class App extends React.Component {
             userVideoShown: false,
             
             // logs
+            dvh: null,
+            lvh: null,
+            svh: null,
+            vh: null,
+            percentHeight: null,
             keyboardState: null,
             changeCount: null,
             usefulChangeCount: null,
@@ -97,6 +103,23 @@ export default class App extends React.Component {
             if (this.state.tgStableHeight !== this.tgStableHeight) {
                 this.setState({ tgStableHeight: this.tgStableHeight }); }
             
+            if (this.state.dvh !== this.dvh) {
+                this.setState({ dvh: this.dvh }); }
+            if (this.state.lvh !== this.lvh) {
+                this.setState({ lvh: this.lvh }); }
+            if (this.state.svh !== this.svh) {
+                this.setState({ svh: this.svh }); }
+            if (this.state.vh !== this.vh) {
+                this.setState({ vh: this.vh }); }
+            if (this.state.percentHeight !== this.percentHeight) {
+                this.setState({ percentHeight: this.percentHeight }); }
+            
+            this.dvh            = meter.dvh;
+            this.lvh            = meter.lvh;
+            this.svh            = meter.svh;
+            this.vh             = meter.vh;
+            this.percentHeight  = meter.percent;
+            
             this.keyboardState      = MKBController.isOpened;
             this.lastKeyboardEvent  = MKBController.lastEvent;
             this.nativeChangeCount  = tg.nativeChangeCount;
@@ -126,16 +149,19 @@ export default class App extends React.Component {
     render () {
         return <>
             <article className="app">
-                {this.showUpdateNum ? <p className="update-num-log">Update num: 69.3.1</p> : ""}
+                {this.showUpdateNum ? <p className="update-num-log">Update num: 69.3.1-t</p> : ""}
                 <div className={"content-log " + (!this.log ? "content-log_hidden" : "")}>
-                    <p>Mobile: {String(isMobile)} | iOS: {String(isIOs)}</p>
+                    {/* <p>Mobile: {String(isMobile)} | iOS: {String(isIOs)}</p>
                     <p>keyboard open state: {String(this.state.keyboardState)}</p>
-                    <p>lastKeyboardEvent: {String(this.state.lastKeyboardEvent)}</p>
+                    <p>lastKeyboardEvent: {String(this.state.lastKeyboardEvent)}</p> */}
                     {/* <p>sucs: {String(this.state.sucs)} | fails: {String(this.state.fails)}</p>
                     <p>native change count: {String(this.state.nativeChangeCount)}</p>
                     <p>change count: {String(this.state.changeCount)}</p>
                     <p>useful change count: {String(this.state.usefulChangeCount)}</p>
                     <p>duray: {String(this.state.duray)}</p> */}
+                    <p>dvh: {String(this.state.dvh)} | lvh: {String(this.state.lvh)}</p>
+                    <p>svh: {String(this.state.svh)} | vh: {String(this.state.vh)}</p>
+                    <p>percent height: {String(this.state.percentHeight)}</p>
                     <p>offset: {String(this.state.offset)}</p>
                     <p>baseHeight: {String(this.state.baseHeight)}</p>
                     <p>appHeight: {String(this.state.appHeight)}</p>
@@ -165,6 +191,7 @@ export default class App extends React.Component {
                 }
                 <Gui />
             </article>
+            <UnitComplex />
         </>;
     }
 

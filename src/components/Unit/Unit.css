@@ -1,0 +1,140 @@
+.unit {
+    position: absolute;
+    display: block;
+
+    border: 3px solid #171717;
+    outline: 1px solid white;
+}
+
+
+.unit_v_top {
+    top: 0;
+}
+.unit_mode_l.unit_v_top {
+    top: 0lvh;
+}
+.unit_mode_s.unit_v_top {
+    top: 0svh;
+}
+.unit_mode_d.unit_v_top {
+    top: 0dvh;
+}
+.unit_mode_n.unit_v_top {
+    top: 0vh;
+}
+
+.unit_v_bottom {
+    bottom: 0;
+}
+.unit_mode_l.unit_v_bottom {
+    bottom: 0lvh;
+}
+.unit_mode_s.unit_v_bottom {
+    bottom: 0svh;
+}
+.unit_mode_d.unit_v_bottom {
+    bottom: 0dvh;
+}
+.unit_mode_n.unit_v_bottom {
+    bottom: 0vh;
+}
+
+.unit_v_middle {
+    top: calc(100% / 2);
+    transform: translateY(-50%);
+}
+.unit_mode_l.unit_v_middle {
+    top: calc(100lvh / 2);
+}
+.unit_mode_s.unit_v_middle {
+    top: calc(100svh / 2);
+}
+.unit_mode_d.unit_v_middle {
+    top: calc(100dvh / 2);
+}
+.unit_mode_n.unit_v_middle {
+    top: calc(100vh / 2);
+}
+
+
+.unit_h_left {
+    left: 0;
+}
+.unit_mode_l.unit_h_left {
+    left: 0lvw;
+}
+.unit_mode_s.unit_h_left {
+    left: 0svw;
+}
+.unit_mode_d.unit_h_left {
+    left: 0dvw;
+}
+.unit_mode_n.unit_h_left {
+    left: 0vw;
+}
+
+.unit_h_right {
+    right: 0;
+}
+.unit_mode_l.unit_h_right {
+    right: 0lvw;
+}
+.unit_mode_s.unit_h_right {
+    right: 0svw;
+}
+.unit_mode_d.unit_h_right {
+    right: 0dvw;
+}
+.unit_mode_n.unit_h_right {
+    right: 0vw;
+}
+
+.unit_h_middle {
+    left: calc(100% / 2);
+    transform: translateX(-50%);
+}
+.unit_mode_l.unit_h_middle {
+    left: calc(100lvw / 2);
+}
+.unit_mode_s.unit_h_middle {
+    left: calc(100svw / 2);
+}
+.unit_mode_d.unit_h_middle {
+    left: calc(100dvw / 2);
+}
+.unit_mode_n.unit_h_middle {
+    left: calc(100vw / 2);
+}
+
+
+.unit_size_large {
+    width: 50pt;
+    height: 50pt;
+}
+.unit_size_normal {
+    width: 30pt;
+    height: 30pt;
+}
+.unit_size_small{
+    width: 20pt;
+    height: 20pt;
+}
+
+.unit_color_blue {
+    background-color: #0BCCF4;
+}
+.unit_color_green {
+    background-color: #33CC34;
+}
+.unit_color_red {
+    background-color: #CF1717;
+}
+.unit_color_orange {
+    background-color: #F27C0D;
+}
+.unit_color_yellow {
+    background-color: #F2C70D;
+}
+.unit_color_purple {
+    background-color: #BF19E6;
+}

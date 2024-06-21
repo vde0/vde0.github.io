@@ -115,3 +115,24 @@ input, button, textarea {
     text-shadow: 2px 2px white;
     z-index: 10000;
 }
+
+
+.full-unit {
+    position: absolute;
+    display: block;
+}
+.full-unit_dvh {
+    height: 100dvh;
+}
+.full-unit_lvh {
+    height: 100lvh;
+}
+.full-unit_svh {
+    height: 100svh;
+}
+.full-unit_vh {
+    height: 100vh;
+}
+.full-unit_percent {
+    height: 100%;
+}
