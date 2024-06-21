@@ -12,10 +12,15 @@ const svhDiv        = document.createElement("div");
 const vhDiv         = document.createElement("div");
 const percentDiv    = document.createElement("div");
 
+dvhDiv.classList.add("full-unit");
 dvhDiv.classList.add("full-unit_dvh");
+lvhDiv.classList.add("full-unit");
 lvhDiv.classList.add("full-unit_lvh");
+svhDiv.classList.add("full-unit");
 svhDiv.classList.add("full-unit_svh");
+vhDiv.classList.add("full-unit");
 vhDiv.classList.add("full-unit_vh");
+percentDiv.classList.add("full-unit");
 percentDiv.classList.add("full-unit_percent");
 
 document.documentElement.append(dvhDiv);

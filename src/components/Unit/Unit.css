@@ -24,18 +24,23 @@
 }
 
 .unit_v_bottom {
-    bottom: 0;
+    top: 100%;
+    transform: translateY(-100%);
 }
 .unit_mode_l.unit_v_bottom {
-    bottom: 0lvh;
+    top: 100lvh;
+    /* bottom: 0lvh; */
 }
 .unit_mode_s.unit_v_bottom {
+    top: 100svh;
     bottom: 0svh;
 }
 .unit_mode_d.unit_v_bottom {
+    top: 100dvh;
     bottom: 0dvh;
 }
 .unit_mode_n.unit_v_bottom {
+    top: 100vh;
     bottom: 0vh;
 }
 
@@ -74,19 +79,20 @@
 }
 
 .unit_h_right {
-    right: 0;
+    left: 100%;
+    transform: translateX(-100%);
 }
 .unit_mode_l.unit_h_right {
-    right: 0lvw;
+    left: 100lvw;
 }
 .unit_mode_s.unit_h_right {
-    right: 0svw;
+    left: 100svw;
 }
 .unit_mode_d.unit_h_right {
-    right: 0dvw;
+    left: 100dvw;
 }
 .unit_mode_n.unit_h_right {
-    right: 0vw;
+    left: 100vw;
 }
 
 .unit_h_middle {
@@ -105,6 +111,12 @@
 .unit_mode_n.unit_h_middle {
     left: calc(100vw / 2);
 }
+
+
+.unit_h_right.unit_v_bottom { transform: translate(-100%, -100%); }
+.unit_h_right.unit_v_middle { transform: translate(-100%, -50%); }
+.unit_h_middle.unit_v_bottom { transform: translate(-50%, -100%); }
+.unit_h_middle.unit_v_middle { transform: translate(-50%, -50%); }
 
 
 .unit_size_large {
