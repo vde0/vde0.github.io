@@ -94,13 +94,6 @@ input, button, textarea {
 }
 
 
-#root {
-    position: absolute;
-    width: 100%;
-    height: 100dvh;
-}
-
-
 .content-log {
     position: absolute;
     top: calc(var(--tg-height) / 2);
