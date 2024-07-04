@@ -140,7 +140,7 @@ export default class App extends React.Component {
     render () {
         return <>
             <article className="app">
-                {this.showUpdateNum ? <p className="update-num-log">Update num: 71</p> : ""}
+                {this.showUpdateNum ? <p className="update-num-log">Update num: 71.1</p> : ""}
                 <div className={"content-log " + (!this.log ? "content-log_hidden" : "")}>
                     <p>Mobile: {String(isMobile)} | iOS: {String(isIOs)}</p>
                     {/* <p>keyboard open state: {String(this.state.keyboardState)}</p>
@@ -151,10 +151,10 @@ export default class App extends React.Component {
                     <p>useful change count: {String(this.state.usefulChangeCount)}</p>
                     <p>duray: {String(this.state.duray)}</p> */}
                     {/* <p>offset: {String(this.state.offset)}</p>
-                    <p>baseHeight: {String(this.state.baseHeight)}</p>
+                    <p>baseHeight: {String(this.state.baseHeight)}</p> */}
                     <p>appHeight: {String(this.state.appHeight)}</p>
                     <p>window height: {this.state.windowHeight}</p>
-                    <p>web-app height: {this.state.tgHeight}</p> */}
+                    {/* <p>web-app height: {this.state.tgHeight}</p> */}
                     <p>form top: {String(this.state.formTop)}</p>
                     <p>form bottom: {String(this.state.formBottom)}</p>
                     <p>form left: {String(this.state.formLeft)}</p>

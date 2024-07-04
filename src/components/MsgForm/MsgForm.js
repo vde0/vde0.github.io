@@ -53,6 +53,7 @@ export default class MsgForm extends React.Component {
                 <textarea ref={el => this.msgFieldBlock = el}
                     id={this.props.id}
                     className="msg-form__field msg-form__field_focused"
+                    onFocus={this.onFocus}
                     onInput={this.props.onInput}
                     krot="krots"
                     autoFocus={this.props.autoFocus}
@@ -77,6 +78,10 @@ export default class MsgForm extends React.Component {
         
         this.reset();
         this.send(evt);
+    }
+
+    onFocus = (evt) => {
+        // evt.target
     }
 
     reset () {

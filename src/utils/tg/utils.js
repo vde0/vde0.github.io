@@ -29,9 +29,9 @@ let pos = null;
 execWhenUnfound();
 const observedFormPos = {
     get top () { return pos.top },
-    get bottom () { return pos.bottom },
+    get bottom () { return pos.bottom ? window.innerHeight - pos.bottom : null },
     get left () { return pos.left },
-    get right () { return pos.right },
+    get right () { return pos.right ? window.innerWidth - pos.right : null },
 };
 function execWhenFound () {
     pos = getObservedForm().getBoundingClientRect();
@@ -48,6 +48,9 @@ setInterval(_ => {
     if (found && !actualFound) { execWhenUnfound(); found = false; }
 });
 window.addEventListener("scroll", _ => {
+    if ( checkObservedForm() ) execWhenFound();
+});
+window.addEventListener("resize", _ => {
     if ( checkObservedForm() ) execWhenFound();
 });
 
