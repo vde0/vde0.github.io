@@ -34,7 +34,7 @@ export default class Btn extends React.Component {
     render () {
         return(
             <button
-                type={this.props.type ? this.props.type : "button"}
+                type={this.props.type ?? "button"}
                 onClick={this.props.onClick}
                 className={this.classLine}
                 tabIndex={-1}
@@ -43,11 +43,11 @@ export default class Btn extends React.Component {
                     {this.props.content}
                 </div>
                 
-                {this.hasBadge ? (
+                {!!this.hasBadge && (
                     <div className={this.badgeClassLine}>
                         <span>{this.badgeContent}</span>
                     </div>
-                ) : ""}
+                )}
             </button>
         );
     }

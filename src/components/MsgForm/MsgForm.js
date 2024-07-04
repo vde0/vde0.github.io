@@ -25,10 +25,16 @@ export default class MsgForm extends React.Component {
         this.classLineActions = new ClassLineActions({context: this});
         this.classLineActions.initState();
 
+        this.textAreaRef = null
+
         if (isMobile) {
             window.addEventListener("openkeyboard", this.openKeyboardHandler);
             window.addEventListener("closekeyboard", this.closeKeyboardHandler);
         }
+    }
+
+    componentDidMount() {
+        this.textAreaRef?.current?.focus({scroll: false})
     }
 
     componentWillUnmount () {
@@ -50,13 +56,13 @@ export default class MsgForm extends React.Component {
                 className={this.state.classLine}
                 data-observed>
                 
-                <textarea ref={el => this.msgFieldBlock = el}
+                <textarea ref={this.textAreaRef}
                     id={this.props.id}
                     className="msg-form__field msg-form__field_focused"
                     onFocus={this.onFocus}
                     onInput={this.props.onInput}
                     krot="krots"
-                    autoFocus={this.props.autoFocus}
+                    // autoFocus={this.props.autoFocus}
                     autoCapitalize="on"
                     autoComplete="false"
                     spellCheck="true"
