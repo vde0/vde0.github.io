@@ -97,6 +97,20 @@ export default class App extends React.Component {
             if (this.state.tgStableHeight !== this.tgStableHeight) {
                 this.setState({ tgStableHeight: this.tgStableHeight }); }
             
+            if (this.state.formTop !== this.formTop) {
+                this.setState({ formTop: this.formTop }); }
+            if (this.state.formBottom !== this.formBottom) {
+                this.setState({ formBottom: this.formBottom }); }
+            if (this.state.formLeft !== this.formLeft) {
+                this.setState({ formLeft: this.formLeft }); }
+            if (this.state.formRight !== this.formRight) {
+                this.setState({ formRight: this.formRight }); }
+                
+            this.formTop        = tg.observedFormPos.top;
+            this.formBottom     = tg.observedFormPos.bottom;
+            this.formLeft       = tg.observedFormPos.left;
+            this.formRight      = tg.observedFormPos.right;
+            
             this.keyboardState      = MKBController.isOpened;
             this.lastKeyboardEvent  = MKBController.lastEvent;
             this.nativeChangeCount  = tg.nativeChangeCount;
@@ -126,21 +140,25 @@ export default class App extends React.Component {
     render () {
         return <>
             <article className="app">
-                {this.showUpdateNum ? <p className="update-num-log">Update num: 70</p> : ""}
+                {this.showUpdateNum ? <p className="update-num-log">Update num: 71</p> : ""}
                 <div className={"content-log " + (!this.log ? "content-log_hidden" : "")}>
                     <p>Mobile: {String(isMobile)} | iOS: {String(isIOs)}</p>
-                    <p>keyboard open state: {String(this.state.keyboardState)}</p>
-                    <p>lastKeyboardEvent: {String(this.state.lastKeyboardEvent)}</p>
+                    {/* <p>keyboard open state: {String(this.state.keyboardState)}</p>
+                    <p>lastKeyboardEvent: {String(this.state.lastKeyboardEvent)}</p> */}
                     {/* <p>sucs: {String(this.state.sucs)} | fails: {String(this.state.fails)}</p>
                     <p>native change count: {String(this.state.nativeChangeCount)}</p>
                     <p>change count: {String(this.state.changeCount)}</p>
                     <p>useful change count: {String(this.state.usefulChangeCount)}</p>
                     <p>duray: {String(this.state.duray)}</p> */}
-                    <p>offset: {String(this.state.offset)}</p>
+                    {/* <p>offset: {String(this.state.offset)}</p>
                     <p>baseHeight: {String(this.state.baseHeight)}</p>
                     <p>appHeight: {String(this.state.appHeight)}</p>
                     <p>window height: {this.state.windowHeight}</p>
-                    <p>web-app height: {this.state.tgHeight}</p>
+                    <p>web-app height: {this.state.tgHeight}</p> */}
+                    <p>form top: {String(this.state.formTop)}</p>
+                    <p>form bottom: {String(this.state.formBottom)}</p>
+                    <p>form left: {String(this.state.formLeft)}</p>
+                    <p>form right: {String(this.state.formRight)}</p>
                     {/* <p>web-app stable-height: {this.state.tgStableHeight}</p> */}
                 </div>
 

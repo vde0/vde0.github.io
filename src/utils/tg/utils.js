@@ -10,10 +10,46 @@ let usefulChangeCount = 0;
 let appHeight = 0;
 let duray = 0;
 
+
+
 function updateAppHeight () {
     appHeight = telegram.viewportHeight;
     rootDom.style.setProperty("--tg-height", appHeight + "px");
 }
+
+
+function getObservedForm () {
+    return document.querySelector("[data-observed]");
+}
+function checkObservedForm () {
+    return !!document.querySelector("[data-observed]");
+}
+
+let pos = null;
+execWhenUnfound();
+const observedFormPos = {
+    get top () { return pos.top },
+    get bottom () { return pos.bottom },
+    get left () { return pos.left },
+    get right () { return pos.right },
+};
+function execWhenFound () {
+    pos = getObservedForm().getBoundingClientRect();
+}
+function execWhenUnfound () {
+    pos = {top: null, bottom: null, left: null, right: null};
+}
+
+let found = false;
+setInterval(_ => {
+    const actualFound = checkObservedForm();
+
+    if (!found && actualFound) { execWhenFound(); found = true; }
+    if (found && !actualFound) { execWhenUnfound(); found = false; }
+});
+window.addEventListener("scroll", _ => {
+    if ( checkObservedForm() ) execWhenFound();
+});
 
 
 const onceHandlers = new Map();
@@ -60,6 +96,7 @@ function makeHandlerOnce (func) {
 const rootDom = document.querySelector(":root");
 
 window.addEventListener("load", _ => {
+    telegram.ready();
     TaskManager.setMacrotask(_ => rootDom.classList.add("root-document_placing_tg"));
 }, {once: true});
 
@@ -183,6 +220,8 @@ export {
     appHeight,
     baseHeight,
     baseOffset,
+
+    observedFormPos,
 
     onResize,
     onResizeEnd,

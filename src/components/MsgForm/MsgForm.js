@@ -47,7 +47,8 @@ export default class MsgForm extends React.Component {
         return (
             <form
                 ref={el => this.msgFormBlock = el}
-                className={this.state.classLine}>
+                className={this.state.classLine}
+                data-observed>
                 
                 <textarea ref={el => this.msgFieldBlock = el}
                     id={this.props.id}
