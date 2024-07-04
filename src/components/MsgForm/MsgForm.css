@@ -18,7 +18,7 @@
 }
 
 .msg-form_gui {
-    position: absolute;
+    position: fixed;
     
     height: calc(61px + 16pt);
     width: var(--app-inner-width);
