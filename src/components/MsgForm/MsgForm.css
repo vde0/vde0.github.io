@@ -24,7 +24,8 @@
     width: var(--app-inner-width);
     padding-top: 16pt;
     
-    bottom: var(--tg-offset);
+    /* bottom: var(--tg-offset); */
+    bottom: 0;
     transform: translateY(calc(var(--tg-offset) * -1));
 }
 .msg-form_gui-ios {
