@@ -4,7 +4,9 @@
 }
 
 .gui__el {
-    position: absolute;
+    position: fixed;
+    bottom: 0;
+
     z-index: 10000;
     width: var(--app-inner-width);
     max-width: var(--container-max-width);

@@ -18,14 +18,13 @@
 }
 
 .msg-form_gui {
-    position: fixed;
+    position: absolute;
     
     height: calc(61px + 16pt);
     width: var(--app-inner-width);
     padding-top: 16pt;
     
-    /* bottom: var(--tg-offset); */
-    bottom: 0;
+    bottom: var(--tg-offset);
     transform: translateY(calc(var(--tg-offset) * -1));
 }
 .msg-form_gui-ios {
