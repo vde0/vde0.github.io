@@ -1,3 +1,5 @@
-node_modules/
-src/
-temp/
+*
+!.gitignore
+!README.md
+!docs
+docs/*.js.LICENSE.txt
