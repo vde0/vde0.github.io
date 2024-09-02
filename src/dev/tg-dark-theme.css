@@ -1,0 +1,17 @@
+html {
+    --tg-color-scheme: "dark";
+    --tg-theme-bg-color:#212d3b;
+    --tg-theme-section-bg-color:#1d2733;
+    --tg-theme-secondary-bg-color:#151e27;
+    --tg-theme-text-color:#ffffff;
+    --tg-theme-hint-color:#7d8b99;
+    --tg-theme-link-color:#5eabe1;
+    --tg-theme-button-color:#50a8eb;
+    --tg-theme-button-text-color:#ffffff;
+    --tg-theme-header-bg-color:#242d39;
+    --tg-theme-accent-text-color:#64b5ef;
+    --tg-theme-section-header-text-color:#79c4fc;
+    --tg-theme-subtitle-text-color:#7b8790;
+    --tg-theme-destructive-text-color:#ee686f;
+    --tg-theme-section-separator-color:#0d1218;
+}
