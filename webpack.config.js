@@ -1,5 +1,5 @@
 module.exports = {
-    entry: './src/index.js',
+    entry: './src/app/entry/index.ts',
     output: {
         path: __dirname + '/docs/',
         filename: 'index_bundle.js',
@@ -8,7 +8,13 @@ module.exports = {
     module: {
         rules: [
             { test: /\.css$/, use: ['style-loader', 'css-loader'] },
-            { test: /\.js$/, use: 'babel-loader' },
+            // { test: /\.js$/, use: 'babel-loader' },
+            { test: /\.js$/, use: 'ts-loader' },
+            {
+                test: /\.tsx?$/,
+                use: 'ts-loader',
+                exclude: /node_modules/,
+            },
             {
                 test: /\.(png|jpg|jpeg|gif)$/i,
                 type: 'asset/resource',
