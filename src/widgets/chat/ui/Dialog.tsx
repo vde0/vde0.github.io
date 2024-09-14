@@ -1,9 +1,9 @@
 import React from 'react';
 import './Dialog.css';
-import MsgList from '../MsgList/MsgList';
-import UpdateHook from '../../shared/utils/UpdateHook';
-import SessionManager from '../../shared/services/SessionManager';
-import GuiManager from '../../shared/services/GuiManager';
+import MsgList from '../../../pages/MsgList/MsgList';
+import UpdateHook from '../../../shared/utils/UpdateHook';
+import SessionManager from '../../../shared/services/SessionManager';
+import GuiManager from '../../../shared/services/GuiManager';
 
 
 export default function Dialog (props: {empty?: boolean, data: any}): JSX.Element {

@@ -1,6 +1,6 @@
 import React from 'react';
 import Video from '../Video/Video';
-import Dialog from '../Dialog/Dialog';
+import Dialog from '../../widgets/chat/ui/Dialog';
 import Gui from '../Gui/Gui';
 import './App.css';
 import './AppContainer.css';
