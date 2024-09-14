@@ -23,6 +23,7 @@
   "homepage": "https://github.com/vde0/vde0.github.io#readme",
   "devDependencies": {
     "@babel/preset-react": "^7.24.1",
+    "@reduxjs/toolkit": "^2.2.7",
     "@svgr/webpack": "^8.1.0",
     "@types/react": "^18.3.5",
     "@types/react-dom": "^18.3.0",
