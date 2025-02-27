@@ -4,7 +4,7 @@
       "module": "esnext",
       "jsx": "react-jsx",
       "moduleResolution": "node",
-      "outDir": "./dist",
+      "outDir": "./docs",
       "rootDir": "./src",
       "strict": true,
       "esModuleInterop": true,

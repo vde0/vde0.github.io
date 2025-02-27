@@ -5,7 +5,7 @@ module.exports = {
   entry: './src/index.tsx', // Указываем точку входа
   output: {
     filename: 'bundle.js', // Название итогового бандла
-    path: path.resolve(__dirname, 'dist') // Папка для собранных файлов
+    path: path.resolve(__dirname, 'docs') // Папка для собранных файлов
   },
   plugins: [
     new HtmlWebpackPlugin({
@@ -25,7 +25,7 @@ module.exports = {
     ]
   },
   devServer: {
-    static: path.join(__dirname, 'dist'), // Указываем папку для сервера
+    static: path.join(__dirname, 'docs'), // Указываем папку для сервера
     compress: true,
     port: 9000
   }
