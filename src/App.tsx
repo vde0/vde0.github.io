@@ -1,10 +1,9 @@
-import React from 'react';
+import Main from './containers/Main';
+
 
 const App: React.FC = () => (
-    <div>
-      <h1>Hello, World!</h1>
-    </div>
+    <Main />
 );
 
 
-export default App;
+export default App
