@@ -1,7 +1,7 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-
+const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 
 module.exports = (env, argv) => {
 
@@ -23,7 +23,8 @@ module.exports = (env, argv) => {
       }),
     ].filter(Boolean),  // Убираем undefined (если не в продакшн),
     resolve: {
-      extensions: ['.ts', '.js', '.tsx'] // Указываем расширения, которые Webpack будет обрабатывать
+      extensions: ['.ts', '.js', '.tsx'], // Указываем расширения, которые Webpack будет обрабатывать
+      plugins: [new TsconfigPathsPlugin()]
     },
     module: {
       rules: [

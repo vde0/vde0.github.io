@@ -9,7 +9,13 @@
       "strict": true,
       "esModuleInterop": true,
       "skipLibCheck": true,
-      "forceConsistentCasingInFileNames": true
+      "forceConsistentCasingInFileNames": true,
+      "baseUrl": "./src",
+      "paths": {
+        "@containers/*": ["containers/*"],
+        "@components/*": ["components/*"],
+        "@types": ["types.d.ts"]
+      },
     },
     "include": [
       "src/**/*"
