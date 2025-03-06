@@ -14,6 +14,8 @@
       "paths": {
         "@containers/*": ["containers/*"],
         "@components/*": ["components/*"],
+        "@store/*": ["store/*"],
+        "@hooks/*": ["hooks/*"],
         "@types": ["types.d.ts"]
       },
     },
