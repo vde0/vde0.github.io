@@ -16,6 +16,7 @@ interface TextChatValue {
 }
 
 
+// init
 const CUR_USER: string = '1';
 const OUT_USER: string = '775';
 
@@ -27,9 +28,8 @@ const initTextChatValue: TextChatValue = {
     },
 };
 
-const TextChatContext = createContext<TextChatValue>( initTextChatValue );
 
-
+// Reducer func
 const textChatReducer: React.Reducer<TextChatState, TextChatAction> = (state, action) => {
     
     switch (action.type) {
@@ -74,10 +74,15 @@ const textChatReducer: React.Reducer<TextChatState, TextChatAction> = (state, ac
 };
 
 
+// Context obj
+const TextChatContext = createContext<TextChatValue | null>( null );
+
+
 interface TextChatProviderProps {
     children?: React.ReactNode,
 }
 
+// Provider obj
 const TextChatProvider: React.FC<TextChatProviderProps> = ({children}) => {
 
     const [chatState, dispatchChat] = useReducer(textChatReducer, initTextChatValue.state);
@@ -90,4 +95,5 @@ const TextChatProvider: React.FC<TextChatProviderProps> = ({children}) => {
 };
 
 
+export {TextChatContext};
 export default TextChatProvider;

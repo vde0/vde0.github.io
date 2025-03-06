@@ -12,18 +12,22 @@ interface ConnectValue {
 }
 
 
+// init
 const initConnectValue: ConnectValue = {
     state: { curUserId: '1', outUserId: '775'},
     next() {},
 };
 
-const ConnectContext = createContext<ConnectValue>( initConnectValue );
+
+// Context obj
+const ConnectContext = createContext<ConnectValue | null>( null );
 
 
 interface ConnectProviderProps {
     children?: React.ReactNode
 }
 
+// Provider obj
 const ConnectProvider: React.FC<ConnectProviderProps> = ({ children }) => {
     return (
         <ConnectContext value={initConnectValue}>
@@ -33,4 +37,5 @@ const ConnectProvider: React.FC<ConnectProviderProps> = ({ children }) => {
 };
 
 
+export {ConnectContext};
 export default ConnectProvider
