@@ -3,7 +3,7 @@ import { createContext, useReducer } from "react";
 
 interface TextChatState {
     chatData:   string[],
-    writing:    string,
+    write:      string,
 }
 type TextChatAction =
     | {type: "RESET"}
@@ -24,7 +24,7 @@ const initTextChatValue: TextChatValue = {
     dispatch(action) {},
     state: {
         chatData:   [CUR_USER, "Hey!", OUT_USER, "Hello."],
-        writing:    "",
+        write:    "",
     },
 };
 
@@ -36,7 +36,7 @@ const textChatReducer: React.Reducer<TextChatState, TextChatAction> = (state, ac
         case "RESET":
             return {
                 chatData:   [],
-                writing:    "",
+                write:      "",
             };
         case "ADD":
             if ( !action.data ) {
@@ -65,8 +65,8 @@ const textChatReducer: React.Reducer<TextChatState, TextChatAction> = (state, ac
                     "Incorrect action.data data type (needs string) of the \"WRITE\" action type");}
             
             return {
-                chatData: state.chatData,
-                writing: action.data,
+                chatData:   state.chatData,
+                write:      action.data,
             };
         default:
             throw new Error("Uknown action type");
