@@ -15,6 +15,7 @@
         "@containers/*": ["containers/*"],
         "@components/*": ["components/*"],
         "@store/*": ["store/*"],
+        "@hooks": ["hooks/"],
         "@hooks/*": ["hooks/*"],
         "@types": ["types.d.ts"]
       },
