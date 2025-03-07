@@ -29,8 +29,13 @@ interface ConnectProviderProps {
 
 // Provider obj
 const ConnectProvider: React.FC<ConnectProviderProps> = ({ children }) => {
+
+    const [connectState, setConnectState] = useState<ConnectState>(initConnectValue.state);
+
+    const nextHandler = () => {};
+
     return (
-        <ConnectContext value={initConnectValue}>
+        <ConnectContext value={{state: connectState, next: nextHandler}}>
             {children}
         </ConnectContext>
     );
