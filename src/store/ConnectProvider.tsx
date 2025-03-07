@@ -35,9 +35,9 @@ const ConnectProvider: React.FC<ConnectProviderProps> = ({ children }) => {
     const nextHandler = () => {};
 
     return (
-        <ConnectContext value={{state: connectState, next: nextHandler}}>
+        <ConnectContext.Provider value={{state: connectState, next: nextHandler}}>
             {children}
-        </ConnectContext>
+        </ConnectContext.Provider>
     );
 };
 
