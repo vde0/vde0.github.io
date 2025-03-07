@@ -1,19 +1,19 @@
 /** @jsxImportSource @emotion/react */
 import {css} from "@emotion/react";
-import {emCss} from "@types";
+import {EmCss} from "@types";
 
 
-interface btnProps {
+interface BtnProps {
     icon?: string,
 }
 
 // styles
-const makeBtnCss: emCss<btnProps>  = (props) => css`
+const makeBtnCss: EmCss<BtnProps>  = (props) => css`
     background-image: ${props.icon};
 `;
 
 // react component
-const Btn: React.FC<btnProps> = (props) => (
+const Btn: React.FC<BtnProps> = (props) => (
     <button css={makeBtnCss(props)}></button>
 );
 

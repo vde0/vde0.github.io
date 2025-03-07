@@ -1,17 +1,17 @@
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
-import { emCss } from "@types";
+import { EmCss } from "@types";
 import MsgItem from "./MsgItem";
 import { useMemo, useState, useRef } from "react";
 
 
-interface msgListProps {
+interface MsgListProps {
     correspondence: string[],
 }
 
-const msgListCss: emCss = css``;
+const msgListCss: EmCss = css``;
 
-const MsgList: React.FC<msgListProps> = ({ correspondence }) => {
+const MsgList: React.FC<MsgListProps> = ({ correspondence }) => {
 
     const msgCountRef   = useRef<number>(correspondence.length / 2);
     const sendersRef    = useRef<number[]>(

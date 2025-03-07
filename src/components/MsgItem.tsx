@@ -1,14 +1,14 @@
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
-import { emCss } from "@types";
+import { EmCss } from "@types";
 
 
-interface msgItemProps {
+interface MsgItemProps {
     id: number,
     text: string,
 }
 
-const MsgItem: React.FC<msgItemProps> = ({ id, text }) => (<section></section>);
+const MsgItem: React.FC<MsgItemProps> = ({ id, text }) => (<section></section>);
 
 
 export default MsgItem
