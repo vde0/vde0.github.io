@@ -9,7 +9,7 @@ interface User {
 
 export const useGetCurUser = (): User => {
     const contextValue = useContext(ConnectContext);
-    if (!contextValue) { throw new Error("useGetCurUser must be used within a Provider") }
+    if (!contextValue) { throw new Error("useGetCurUser() must be used within a ConnectProvider") }
 
     const {state: {curUserId}} = contextValue;
     return {id: curUserId};
@@ -17,7 +17,7 @@ export const useGetCurUser = (): User => {
 
 export const useGetOutUser = (): User => {
     const contextValue = useContext(ConnectContext);
-    if (!contextValue) { throw new Error("useGetOutUser must be used within a Provider") }
+    if (!contextValue) { throw new Error("useGetOutUser() must be used within a ConnectProvider") }
 
     const {state: {outUserId}} = contextValue;
     return {id: outUserId};
