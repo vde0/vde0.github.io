@@ -1,4 +1,4 @@
-import { ConnectContext } from "@store/ConnectProvider";
+import { ConnectContext } from "@store";
 import { useContext } from "react";
 
 
