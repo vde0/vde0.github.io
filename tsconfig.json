@@ -18,6 +18,7 @@
         "@store": ["store/"],
         "@hooks": ["hooks/"],
         "@hooks/*": ["hooks/*"],
+        "@utils": ["utils.ts"],
         "@types": ["types.d.ts"]
       },
     },
