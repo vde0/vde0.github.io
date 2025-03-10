@@ -3,7 +3,7 @@ import { css } from "@emotion/react";
 import Btn from "./Btn";
 
 
-const Interface: React.FC = () => (
+const Controller: React.FC = () => (
     <div>
         <Btn />
         <Btn />
@@ -12,4 +12,4 @@ const Interface: React.FC = () => (
     </div>
 );
 
-export default Interface
+export default Controller

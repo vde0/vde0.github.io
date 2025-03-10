@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
 import DisplayBox from "@components/DisplayBox";
-import Interface from "@components/Interface";
+import Controller from "@components/Controller";
 import VideoChat from "./VideoChat";
 import TextChat from "./TextChat";
 import { EmCss } from "@emotion/react"; // custom type
@@ -26,7 +26,7 @@ const Main: React.FC = () => {
             <DisplayBox>
                 <TextChat />
             </DisplayBox>
-            <Interface />
+            <Controller />
         </div>
     );
 };
