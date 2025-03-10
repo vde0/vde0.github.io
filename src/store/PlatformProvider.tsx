@@ -1,6 +1,6 @@
-import { webAppContext } from "@vkruglikov/react-telegram-web-app/lib/core";
+import { useWebApp } from "@vkruglikov/react-telegram-web-app";
 import { WebApp } from "@vkruglikov/react-telegram-web-app/lib/core/twa-types";
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 
 
 type PlatformState = "tdesktop" | "android" | "ios";
@@ -13,7 +13,7 @@ const PlatformContext = createContext<PlatformValue | null>(null);
 
 const PlatformProvider: React.FC<React.PropsWithChildren> = ({children}) => {
     
-    const webApp: WebApp | null = useContext(webAppContext);
+    const webApp: WebApp | null = useWebApp();
     const [platform, setPlatform] = useState<PlatformState>(DEFAULT_PLATFORM);
 
     useEffect(() => {
