@@ -2,16 +2,19 @@ import { webAppContext } from "@vkruglikov/react-telegram-web-app/lib/core";
 import { WebApp } from "@vkruglikov/react-telegram-web-app/lib/core/twa-types";
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 
-type PlatformState = "tdesktop" | "android" | "ios" | null;
+
+type PlatformState = "tdesktop" | "android" | "ios";
 type PlatformValue = [PlatformState, (s: PlatformState) => void];
 
-const PlatformContext = createContext<PlatformValue | null>(null);
 
+const DEFAULT_PLATFORM: PlatformState = "android";
+
+const PlatformContext = createContext<PlatformValue | null>(null);
 
 const PlatformProvider: React.FC<React.PropsWithChildren> = ({children}) => {
     
     const webApp: WebApp | null = useContext(webAppContext);
-    const [platform, setPlatform] = useState<PlatformState>(null);
+    const [platform, setPlatform] = useState<PlatformState>(DEFAULT_PLATFORM);
 
     useEffect(() => {
         const platformInit = webApp?.platform;
@@ -21,12 +24,12 @@ const PlatformProvider: React.FC<React.PropsWithChildren> = ({children}) => {
             || platformInit === "android"
             || platformInit === "ios"
             ? platformInit
-            : null);
+            : DEFAULT_PLATFORM);
     }, [webApp]);
 
     useEffect(() => {
-        if (webApp?.platform || webApp?.platform === null) {
-            webApp.platform = platform ? platform : "";
+        if (webApp?.platform) {
+            webApp.platform = platform;
         }
     }, [platform]);
 
@@ -40,7 +43,10 @@ const PlatformProvider: React.FC<React.PropsWithChildren> = ({children}) => {
 
 export default PlatformProvider
 // Context
-export { PlatformContext };
+export {
+    PlatformContext,
+    DEFAULT_PLATFORM,
+};
 // Types
 export {
     PlatformState,
