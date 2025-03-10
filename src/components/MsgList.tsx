@@ -1,12 +1,11 @@
 /** @jsxImportSource @emotion/react */
-import { css } from "@emotion/react";
-import { EmCss } from "@types";
+import { css, EmCss } from "@emotion/react";
 import MsgItem from "./MsgItem";
 import { useMemo, useState, useRef } from "react";
 
 
 interface MsgListProps {
-    correspondence: string[],
+    correspondence: string[];
 }
 
 const msgListCss: EmCss = css``;

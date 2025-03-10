@@ -1,10 +1,9 @@
 /** @jsxImportSource @emotion/react */
-import {css} from "@emotion/react";
-import {EmCss} from "@types";
+import { css, EmCss}  from "@emotion/react";
 
 
 interface BtnProps {
-    icon?: string,
+    icon?: string;
 }
 
 // styles

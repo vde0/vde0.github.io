@@ -8,8 +8,8 @@ type PlatformValue = [PlatformState, (s: PlatformState) => void];
 
 
 const DEFAULT_PLATFORM: PlatformState = "android";
-
 const PlatformContext = createContext<PlatformValue | null>(null);
+
 
 const PlatformProvider: React.FC<React.PropsWithChildren> = ({children}) => {
     

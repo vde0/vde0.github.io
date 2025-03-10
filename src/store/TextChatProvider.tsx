@@ -2,8 +2,8 @@ import { createContext, useReducer } from "react";
 
 
 interface TextChatState {
-    chatData:   string[],
-    write:      string,
+    chatData:   string[];
+    write:      string;
 }
 type TextChatAction =
     | {type: "RESET"}
@@ -11,8 +11,8 @@ type TextChatAction =
     | {type: "WRITE", data: string};
 
 interface TextChatValue {
-    dispatch: (action: TextChatAction) => void,
-    state: TextChatState,
+    dispatch: (action: TextChatAction) => void;
+    state: TextChatState;
 }
 
 
@@ -78,12 +78,8 @@ const textChatReducer: React.Reducer<TextChatState, TextChatAction> = (state, ac
 const TextChatContext = createContext<TextChatValue | null>( null );
 
 
-interface TextChatProviderProps {
-    children?: React.ReactNode,
-}
-
 // Provider obj
-const TextChatProvider: React.FC<TextChatProviderProps> = ({children}) => {
+const TextChatProvider: React.FC<React.PropsWithChildren> = ({children}) => {
 
     const [chatState, dispatchChat] = useReducer(textChatReducer, initTextChatValue.state);
 

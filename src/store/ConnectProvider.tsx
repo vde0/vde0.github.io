@@ -2,13 +2,13 @@ import { createContext, useState } from "react";
 
 
 interface ConnectState {
-    curUserId: string,
-    outUserId: string,
+    curUserId: string;
+    outUserId: string;
 }
 
 interface ConnectValue {
-    state: ConnectState,
-    next: () => void,
+    state: ConnectState;
+    next: () => void;
 }
 
 
@@ -23,12 +23,8 @@ const initConnectValue: ConnectValue = {
 const ConnectContext = createContext<ConnectValue | null>( null );
 
 
-interface ConnectProviderProps {
-    children?: React.ReactNode
-}
-
 // Provider obj
-const ConnectProvider: React.FC<ConnectProviderProps> = ({ children }) => {
+const ConnectProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
 
     const [connectState, setConnectState] = useState<ConnectState>(initConnectValue.state);
 

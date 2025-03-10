@@ -3,8 +3,8 @@ import { useContext } from "react";
 
 
 interface User {
-    id: string,
-    ip?: string,
+    id: string;
+    ip?: string;
 }
 
 export const useGetCurUser = (): User => {

@@ -4,11 +4,22 @@ import DisplayBox from "@components/DisplayBox";
 import Interface from "@components/Interface";
 import VideoChat from "./VideoChat";
 import TextChat from "./TextChat";
+import { EmCss } from "@emotion/react"; // custom type
 
+
+const mainCss: EmCss = css`
+    /* top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0; */
+
+    overflow: clip;
+`;
 
 const Main: React.FC = () => {
     return (
-        <div css={css`position: absolute`}>
+        <div className="container mx-auto bg-black text-white" css={mainCss}>
+            Main
             <DisplayBox>
                 <VideoChat />
             </DisplayBox>
