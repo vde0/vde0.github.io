@@ -1,9 +1,9 @@
-import { ConnectContext } from "./ConnectProvider";
-import { TextChatContext } from "./TextChatProvider";
-import { PlatformContext } from "./PlatformProvider";
+import { ConnectContext, ConnectState, ConnectValue } from "./ConnectProvider";
+import { TextChatContext, TextChatAction, TextChatState, TextChatValue } from "./TextChatProvider";
+import { PlatformContext, PlatformState, PlatformValue } from "./PlatformProvider";
 
 export {
-    ConnectContext,
-    TextChatContext,
-    PlatformContext,
+    ConnectContext, ConnectState, ConnectValue,
+    TextChatContext, TextChatAction, TextChatState, TextChatValue,
+    PlatformContext, PlatformState, PlatformValue,
 };

@@ -42,5 +42,10 @@ const ConnectProvider: React.FC<ConnectProviderProps> = ({ children }) => {
 };
 
 
-export {ConnectContext};
 export default ConnectProvider
+export {ConnectContext};
+// types
+export {
+    ConnectState,
+    ConnectValue,
+};

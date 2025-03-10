@@ -95,5 +95,11 @@ const TextChatProvider: React.FC<TextChatProviderProps> = ({children}) => {
 };
 
 
+export default TextChatProvider
 export {TextChatContext};
-export default TextChatProvider;
+// types
+export {
+    TextChatAction,
+    TextChatState,
+    TextChatValue,
+};
