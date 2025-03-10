@@ -10,6 +10,7 @@
       "esModuleInterop": true,
       "skipLibCheck": true,
       "forceConsistentCasingInFileNames": true,
+      "typeRoots": ["./node_modules/@types", "./@types"],
       "baseUrl": "./src",
       "paths": {
         "@containers/*": ["containers/*"],
@@ -18,12 +19,12 @@
         "@store": ["store/"],
         "@hooks": ["hooks/"],
         "@hooks/*": ["hooks/*"],
-        "@utils": ["utils.ts"],
-        "@types": ["types.d.ts"]
+        "@utils": ["utils.ts"]
       },
     },
     "include": [
-      "src/**/*"
+      "src/**/*",
+      "@types/*"
     ],
     "exclude": [
       "node_modules"
