@@ -1,4 +1,4 @@
-import { TextChatContext } from "@store/TextChatProvider";
+import { TextChatContext } from "@store";
 import { useContext } from "react";
 
 
