@@ -5,6 +5,7 @@ import Controller from "@components/Controller";
 import VideoChat from "./VideoChat";
 import TextChat from "./TextChat";
 import { EmCss } from "@emotion/react"; // custom type
+import { useWebApp } from "@vkruglikov/react-telegram-web-app";
 
 
 const mainCss: EmCss = css`
@@ -17,6 +18,10 @@ const mainCss: EmCss = css`
 `;
 
 const Main: React.FC = () => {
+
+    const webApp = useWebApp()
+    webApp?.ready();
+
     return (
         <div className="container mx-auto bg-black text-white" css={mainCss}>
             Main
