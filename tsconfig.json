@@ -15,11 +15,10 @@
       "paths": {
         "@containers/*": ["containers/*"],
         "@components/*": ["components/*"],
-        "@store/*": ["store/*"],
         "@store": ["store/"],
+        "@store/*": ["store/*"],
         "@hooks": ["hooks/"],
-        "@hooks/*": ["hooks/*"],
-        "@utils": ["utils.ts"]
+        "@hooks/*": ["hooks/*"]
       },
     },
     "include": [
