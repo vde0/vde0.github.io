@@ -26,12 +26,7 @@ const PlatformProvider: React.FC<React.PropsWithChildren> = ({children}) => {
             ? platformInit
             : DEFAULT_PLATFORM);
     }, [webApp]);
-
-    useEffect(() => {
-        if (webApp?.platform) {
-            webApp.platform = platform;
-        }
-    }, [platform]);
+    
 
     return (
         <PlatformContext.Provider value={[platform, setPlatform]}>
