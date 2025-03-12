@@ -5,34 +5,53 @@ import Controller from "@components/Controller";
 import VideoChat from "./VideoChat";
 import TextChat from "./TextChat";
 import { EmCss } from "@emotion/react"; // custom type
-import { useWebApp } from "@vkruglikov/react-telegram-web-app";
+import { MainButton, useWebApp } from "@vkruglikov/react-telegram-web-app";
+import { TWebApp } from "@vkruglikov/react-telegram-web-app/lib/core/twa-types"; // custom type
 
 
 const mainCss: EmCss = css`
-    /* top: 0;
-    left: 0;
+    top: 0;
     bottom: 0;
-    right: 0; */
+    /* top: var(--tg-content-safe-area-inset-top);
+    bottom: var(--tg-content-safe-area-inset-bottom); */
+    
+    left: 0;
+    right: 0;
 
+    max-height: var(--tg-viewport-stable-height);
     overflow: clip;
 `;
 
 const Main: React.FC = () => {
 
-    const webApp = useWebApp()
+    const webApp: TWebApp = useWebApp()
     webApp?.ready();
+    webApp?.lockOrientation();
+
 
     return (
-        <div className="container mx-auto bg-black text-white" css={mainCss}>
-            Main
+    <>
+    <div className="container absolute max-w-xl py-4 px-3 md:px-8 mx-auto bg-black text-white" css={mainCss}>
+
+        <section className="pb-19 h-full flex flex-col justify-evenly gap-4">
             <DisplayBox>
                 <VideoChat />
             </DisplayBox>
             <DisplayBox>
                 <TextChat />
             </DisplayBox>
+        </section>
+        
+        <div className="realtive w-full">
             <Controller />
         </div>
+
+    </div>
+    <MainButton 
+        text="CLICK ME"
+        onClick={() => console.log('Hello, I am button!')}
+    />
+    </>
     );
 };
 

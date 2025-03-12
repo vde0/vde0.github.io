@@ -4,12 +4,16 @@ import Btn from "./Btn";
 
 
 const Controller: React.FC = () => (
-    <div>
+    <section className="
+        flex items-stretch justify-between gap-3
+        absolute left-3 right-3 md:left-8 md:right-8 bottom-0
+        box-content h-15 py-4
+    ">
         <Btn />
         <Btn />
         <Btn />
         <Btn />
-    </div>
+    </section>
 );
 
 export default Controller

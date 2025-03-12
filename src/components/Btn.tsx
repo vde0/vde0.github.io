@@ -13,7 +13,7 @@ const makeBtnCss: EmCss<BtnProps>  = (props) => css`
 
 // react component
 const Btn: React.FC<BtnProps> = (props) => (
-    <button css={makeBtnCss(props)}></button>
+    <button className="block flex-grow-1 bg-sky-400" css={makeBtnCss(props)}></button>
 );
 
 
