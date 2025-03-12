@@ -8,7 +8,7 @@ const TextChat: React.FC = () => {
     const [msgHistory, dispathMsgHistory] = useMsgHistory();
 
     return (
-        <article>
+        <article className="h-full">
             <MsgList correspondence={msgHistory} />
             <MsgForm />
         </article>
