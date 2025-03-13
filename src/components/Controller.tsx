@@ -9,10 +9,9 @@ const Controller: React.FC = () => (
         absolute left-3 right-3 md:left-8 md:right-8 bottom-0
         box-content h-15 py-4
     ">
-        <Btn />
-        <Btn />
-        <Btn />
-        <Btn />
+        <Btn className="bg-blue-400" />
+        <Btn className="bg-blue-400" />
+        <Btn className="bg-blue-400"  />
     </section>
 );
 
