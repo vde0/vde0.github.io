@@ -18,7 +18,9 @@
         "@store": ["store/"],
         "@store/*": ["store/*"],
         "@hooks": ["hooks/"],
-        "@hooks/*": ["hooks/*"]
+        "@hooks/*": ["hooks/*"],
+        "@utils": ["utils/"],
+        "@utils/*": ["utils/*"]
       },
     },
     "include": [
