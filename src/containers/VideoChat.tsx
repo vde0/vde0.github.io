@@ -1,5 +1,10 @@
-const VideoChat: React.FC = () => {
-    return <></>
+import { PropsWithClassName } from "@types";
+
+const VideoChat: React.FC<PropsWithClassName> = ({ className }) => {
+    
+    return (
+        <section className={className}></section>
+    );
 };
 
 

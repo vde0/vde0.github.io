@@ -1,19 +1,14 @@
-/** @jsxImportSource @emotion/react */
-import { css, EmCss}  from "@emotion/react";
+import { PropsWithClassName } from "@types";
+import { PropsWithChildren } from "react";
 
 
-interface BtnProps {
-    icon?: string;
-}
-
-// styles
-const makeBtnCss: EmCss<BtnProps>  = (props) => css`
-    background-image: ${props.icon};
-`;
+type BtnProps = PropsWithClassName & PropsWithChildren;
 
 // react component
-const Btn: React.FC<BtnProps> = (props) => (
-    <button className="block flex-grow-1 bg-sky-400" css={makeBtnCss(props)}></button>
+const Btn: React.FC<BtnProps> = ({ className, children }) => (
+    <button className={f`py-3 px-2 text-center flex justify-center gap-4 ${className}`}>
+        {children}
+    </button>
 );
 
 

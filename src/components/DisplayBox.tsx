@@ -1,10 +1,19 @@
-/** @jsxImportSource @emotion/react */
-import { css } from "@emotion/react";
+import { PropsWithClassName } from "@types";
+import { PropsWithChildren } from "react";
 
 
-const DisplayBox: React.FC<{ children?: React.ReactNode }> = ({ children }) => (
-    <div className="w-full h-45 md:h-54 2xl:h-72 shrink-0 mx-auto bg-white mb-4" css={css``}>
-    {children}</div>
+type DisplayBoxProps = PropsWithChildren & PropsWithClassName;
+
+const DisplayBox: React.FC<DisplayBoxProps> = ({ children, className }) => (
+    <div
+        className={f`
+            w-full h-45 md:h-54 2xl:h-72 bg-white
+            shrink-0 mx-auto mb-4
+            ${className}
+        `}
+    >
+        {children}
+    </div>
 );
 
 
