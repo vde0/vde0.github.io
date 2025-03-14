@@ -1,8 +1,9 @@
 import { PropsWithClassName } from "@types";
+import { PropsWithFormStatus, provideFormStatus } from "@utils";
 import { PropsWithChildren } from "react";
 
 
-type BtnProps = PropsWithClassName & PropsWithChildren;
+type BtnProps = PropsWithClassName & PropsWithChildren & { type: string };
 
 // react component
 const Btn: React.FC<BtnProps> = ({ className, children }) => (
@@ -12,4 +13,12 @@ const Btn: React.FC<BtnProps> = ({ className, children }) => (
 );
 
 
+const FormedBtn     = provideFormStatus<BtnProps>(Btn);
+type FormedBtnProps = BtnProps & PropsWithFormStatus;
+
+
 export default Btn
+export {
+    FormedBtn,
+    BtnProps, FormedBtnProps,
+};
