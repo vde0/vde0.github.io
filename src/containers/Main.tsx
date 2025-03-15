@@ -8,6 +8,7 @@ import { EmCss } from "@emotion/react"; // custom type
 import { MainButton, useWebApp } from "@vkruglikov/react-telegram-web-app";
 import { TWebApp } from "@vkruglikov/react-telegram-web-app/lib/core/twa-types"; // custom type
 import { useEffect, useState } from "react";
+import { useMobileKeyboard } from "@hooks";
 
 
 const mainCss: EmCss = css`
@@ -25,7 +26,8 @@ const mainCss: EmCss = css`
 
 const Main: React.FC = () => {
 
-    const webApp: TWebApp = useWebApp()
+    const webApp: TWebApp           = useWebApp();
+    const keyboardStatus: boolean   = useMobileKeyboard();
 
     useEffect(() => {
         webApp?.ready();
@@ -50,9 +52,12 @@ const Main: React.FC = () => {
             </DisplayBox>
         </section>
         
-        <div className="realtive w-full">
-            <Controller onTextChat={() => { setIsTextChatShown(!isTextChatShown) }} />
-        </div>
+        { !keyboardStatus
+            ? <div className="realtive w-full">
+                <Controller onTextChat={() => { setIsTextChatShown(!isTextChatShown) }} />
+            </div>
+            : null
+        }
 
     </div>
     <MainButton 
