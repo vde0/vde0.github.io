@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import { css, EmCss } from "@emotion/react";
 import MsgItem from "./MsgItem";
-import { useMemo, useState, useRef } from "react";
+import { useRef } from "react";
 
 
 interface MsgListProps {

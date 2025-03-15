@@ -1,7 +1,6 @@
 import { useWebApp } from "@vkruglikov/react-telegram-web-app";
 import { WebApp } from "@vkruglikov/react-telegram-web-app/lib/core/twa-types";
 import { createContext, PropsWithChildren, useCallback, useEffect, useRef, useState } from "react"
-import { PlatformValue } from "./PlatformProvider";
 import { useCheckMobile, usePlatform } from "@hooks";
 
 

@@ -1,5 +1,5 @@
 import { bindProps } from "@utils";
-import { ButtonHTMLAttributes, PropsWithChildren } from "react";
+import { ButtonHTMLAttributes } from "react";
 
 
 type BtnProps = ButtonHTMLAttributes<HTMLButtonElement> & {
