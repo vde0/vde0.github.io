@@ -31,7 +31,9 @@ const Main: React.FC = () => {
 
     useEffect(() => {
         webApp?.ready();
-        webApp?.lockOrientation();
+        webApp?.lockOrientation?.();
+        webApp?.disableVerticalSwipes?.();
+        webApp?.requestFullscreen?.();
     });
 
     const [isTextChatShown, setIsTextChatShown] = useState<boolean>(false);
