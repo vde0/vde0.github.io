@@ -7,3 +7,5 @@ export {
     useWrite, useMsgHistory,
     usePlatform, useCheckMobile,
 };
+
+export * from "./useMobileKeyboard";
