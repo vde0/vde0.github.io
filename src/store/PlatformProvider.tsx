@@ -7,7 +7,7 @@ type PlatformState = "tdesktop" | "android" | "ios";
 type PlatformValue = [PlatformState, (s: PlatformState) => void];
 
 
-const DEFAULT_PLATFORM: PlatformState = "android";
+const DEFAULT_PLATFORM: PlatformState = "tdesktop";
 const PlatformContext = createContext<PlatformValue | null>(null);
 
 
