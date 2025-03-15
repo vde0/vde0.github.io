@@ -16,10 +16,12 @@ const MobileKeyboardProvider: React.FC<PropsWithChildren> = ({ children }) => {
     const maxHeightRef              = useRef<number>(900);
 
     const viewportChangedHandler = useCallback(() => {
+        console.log("maxHeight: " + maxHeightRef.current);
         setIsOpened( webApp.viewportStableHeight / maxHeightRef.current <= 0.8 );
     }, [webApp]);
 
     useEffect(() => {
+        console.log("call useEffect of MobileKeyboardProvider");
         if (!isMobile) {
             setIsOpened(false);
 
