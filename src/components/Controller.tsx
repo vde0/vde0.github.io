@@ -26,11 +26,11 @@ const Controller: React.FC<ContrtollerProps> = ({ onTextChat, onAddUser, onNext 
             absolute left-3 right-3 md:left-8 md:right-8 bottom-0
             box-content h-15 py-4
         ">  
-            // TextChat
+            {/* TextChat */}
             <Btn className="bg-blue-400" {...{[onTurn]: onTextChat}} />
-            // AddUser
+            {/* AddUser */}
             <Btn className="bg-blue-400" {...{[onTurn]: onAddUser}} />
-            // Next
+            {/* Next */}
             <Btn className="bg-blue-400" {...{[onTurn]: onNext}} />
         </section>
     )
