@@ -1,11 +1,8 @@
-import { PropsWithClassName } from "@types";
-import { bindProps, PropsWithFormStatus, provideFormStatus } from "@utils";
+import { bindProps } from "@utils";
 import { ButtonHTMLAttributes, PropsWithChildren } from "react";
 
 
-type BtnProps =
-    & PropsWithChildren
-    & ButtonHTMLAttributes<HTMLButtonElement>;
+type BtnProps = ButtonHTMLAttributes<HTMLButtonElement>;
 
 // react component
 const Btn: React.FC<BtnProps> = ({ className, children, type = "button", ...props }) => (
@@ -20,16 +17,14 @@ const Btn: React.FC<BtnProps> = ({ className, children, type = "button", ...prop
 
 
 // Specific Btns
-type FormedBtnProps     = BtnProps & PropsWithFormStatus;
-type SpecificBtnProps   = Omit<FormedBtnProps, "type">;
+type SpecificBtnProps   = Omit<BtnProps, "type">;
 
-const FormedBtn     = provideFormStatus<BtnProps>(Btn);
-const SubmitBtn     = bindProps<FormedBtnProps, {type: "submit"}>(FormedBtn, {type: "submit"});
-const ResetBtn      = bindProps<FormedBtnProps, {type: "reset"}>(FormedBtn, {type: "reset"});
+const SubmitBtn     = bindProps<BtnProps, {type: "submit"}>(Btn, {type: "submit"});
+const ResetBtn      = bindProps<BtnProps, {type: "reset"}>(Btn, {type: "reset"});
 
 
 export default Btn
 export {
-    FormedBtn, SubmitBtn, ResetBtn,
-    BtnProps, FormedBtnProps, SpecificBtnProps,
+    SubmitBtn, ResetBtn,
+    BtnProps, SpecificBtnProps,
 };

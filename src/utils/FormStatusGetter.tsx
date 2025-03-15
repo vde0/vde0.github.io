@@ -14,4 +14,4 @@ const FormStatusGetter: React.FC<{ ref: FormStatusRef }> = ({ ref }) => {
 };
 
 
-export { FormStatusGetter };
+export { FormStatusGetter, FormStatusRef };

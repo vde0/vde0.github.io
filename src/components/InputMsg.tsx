@@ -1,4 +1,3 @@
-import { PropsWithFormStatus, provideFormStatus } from "@utils";
 import { TextareaHTMLAttributes } from "react";
 
 
@@ -13,13 +12,7 @@ const InputMsg: React.FC<InputMsgProps> = ({ className, ...props }) => {
 };
 
 
-// Specific Inputs
-type    FormedInputMsgProps     = PropsWithFormStatus & InputMsgProps;
-const   FormedInputMsg          = provideFormStatus<InputMsgProps>(InputMsg);
-
-
 export default InputMsg
 export {
-    FormedInputMsg,
-    FormedInputMsgProps, InputMsgProps,
+   InputMsgProps,
 };
