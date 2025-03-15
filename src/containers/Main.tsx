@@ -7,7 +7,7 @@ import TextChat from "./TextChat";
 import { EmCss } from "@emotion/react"; // custom type
 import { MainButton, useWebApp } from "@vkruglikov/react-telegram-web-app";
 import { TWebApp } from "@vkruglikov/react-telegram-web-app/lib/core/twa-types"; // custom type
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 
 const mainCss: EmCss = css`
@@ -32,6 +32,8 @@ const Main: React.FC = () => {
         webApp?.lockOrientation();
     });
 
+    const [isTextChatShown, setIsTextChatShown] = useState<boolean>(false);
+
     return (
     <>
     <div className="container absolute max-w-xl py-4 px-3 md:px-8 mx-auto bg-black text-white" css={mainCss}>
@@ -41,12 +43,15 @@ const Main: React.FC = () => {
                 <VideoChat />
             </DisplayBox>
             <DisplayBox>
-                <TextChat />
+                { isTextChatShown
+                    ? <TextChat />
+                    : <VideoChat />
+                }
             </DisplayBox>
         </section>
         
         <div className="realtive w-full">
-            <Controller />
+            <Controller onTextChat={() => { setIsTextChatShown(!isTextChatShown) }} />
         </div>
 
     </div>
