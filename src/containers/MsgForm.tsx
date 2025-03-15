@@ -1,18 +1,23 @@
 import { SubmitBtn } from "@components/Btn";
 import InputMsg from "@components/InputMsg";
-import { useActionState } from "react";
+import { useCheckMobile } from "@hooks";
+import { useActionState, useEffect, useLayoutEffect, useState } from "react";
 
 
 const MsgForm: React.FC = () => {
 
     const [,,pending] = useActionState(() => {}, null);
 
+    const isMobile = useCheckMobile();
+    const [pos, setPos] = useState<"fixed" | "block">("block");
+    useLayoutEffect(() => { setPos(isMobile? "fixed" : "block") }, [isMobile]);
+
     return (
-        <form className="
-            fixed z-1 bg-green-400
+        <form className={`
+            ${pos} z-1 bg-green-400
             w-128 h-15 mx-auto
             box-content pb-1 pt-2 bottom-0
-            flex flex-row gap-1"
+            flex flex-row gap-1`}
         action="">
             <InputMsg disabled={pending} />
             <SubmitBtn
