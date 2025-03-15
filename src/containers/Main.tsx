@@ -7,6 +7,7 @@ import TextChat from "./TextChat";
 import { EmCss } from "@emotion/react"; // custom type
 import { MainButton, useWebApp } from "@vkruglikov/react-telegram-web-app";
 import { TWebApp } from "@vkruglikov/react-telegram-web-app/lib/core/twa-types"; // custom type
+import { useEffect } from "react";
 
 
 const mainCss: EmCss = css`
@@ -25,9 +26,11 @@ const mainCss: EmCss = css`
 const Main: React.FC = () => {
 
     const webApp: TWebApp = useWebApp()
-    webApp?.ready();
-    webApp?.lockOrientation();
 
+    useEffect(() => {
+        webApp?.ready();
+        webApp?.lockOrientation();
+    });
 
     return (
     <>
