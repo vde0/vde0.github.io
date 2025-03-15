@@ -2,7 +2,13 @@ import { bindProps } from "@utils";
 import { ButtonHTMLAttributes, PropsWithChildren } from "react";
 
 
-type BtnProps = ButtonHTMLAttributes<HTMLButtonElement>;
+type BtnProps = ButtonHTMLAttributes<HTMLButtonElement> & {
+    onTouchStart?: (e: React.TouchEvent<HTMLButtonElement>) => void;
+    onTouchEnd?: (e: React.TouchEvent<HTMLButtonElement>) => void;
+    onTouchMove?: (e: React.TouchEvent<HTMLButtonElement>) => void;
+    onTouchCancel?: (e: React.TouchEvent<HTMLButtonElement>) => void;
+    onTouch?: (e: React.TouchEvent<HTMLButtonElement>) => void;
+};
 
 // react component
 const Btn: React.FC<BtnProps> = ({ className, children, type = "button", ...props }) => (
