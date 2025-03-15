@@ -3,12 +3,14 @@ import { WebApp } from "@vkruglikov/react-telegram-web-app/lib/core/twa-types";
 import { createContext, PropsWithChildren, useCallback, useEffect, useRef, useState } from "react"
 
 
-const MobileKeyboardContext = createContext<boolean>(false);
+type MobileKeyboardValue = boolean;
+
+const MobileKeyboardContext = createContext<MobileKeyboardValue | null>(null);
 
 const MobileKeyboardProvider: React.FC<PropsWithChildren> = ({ children }) => {
 
     const webApp: WebApp            = useWebApp();
-    const [isOpened, setIsOpened]   = useState<boolean>(false);
+    const [isOpened, setIsOpened]   = useState<MobileKeyboardValue>(false);
     const maxHeightRef              = useRef<number>(900);
 
     const viewportChangedHandler = useCallback(() => {
@@ -33,4 +35,5 @@ const MobileKeyboardProvider: React.FC<PropsWithChildren> = ({ children }) => {
 export default MobileKeyboardProvider
 export {
     MobileKeyboardContext,
+    MobileKeyboardValue,
 };
