@@ -1,18 +1,25 @@
-import { PropsWithClassName } from "@types";
+import { PropsWithFormStatus, provideFormStatus } from "@utils";
+import { TextareaHTMLAttributes } from "react";
 
 
-type InputMsgProps = PropsWithClassName & {
+type InputMsgProps = Omit<TextareaHTMLAttributes<HTMLTextAreaElement>, "children">;
 
-};
+const InputMsg: React.FC<InputMsgProps> = ({ className, ...props }) => {
 
-const InputMsg: React.FC<InputMsgProps> = ({ className }) => {
     return <textarea
-        name=""
-        id=""
-        className={f`grow bg-[#2C2C2C] text-white p-2 text-xl ${className}`}
-    ></textarea>
+        {...props}
+        className={`grow bg-[#2C2C2C] text-white p-2 text-xl ${className}`}
+    />
 };
+
+
+// Specific Inputs
+type    FormedInputMsgProps     = PropsWithFormStatus & InputMsgProps;
+const   FormedInputMsg          = provideFormStatus<InputMsgProps>(InputMsg);
 
 
 export default InputMsg
-export { InputMsgProps };
+export {
+    FormedInputMsg,
+    FormedInputMsgProps, InputMsgProps,
+};
