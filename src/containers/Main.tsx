@@ -5,7 +5,7 @@ import Controller from "@components/Controller";
 import VideoChat from "./VideoChat";
 import TextChat from "./TextChat";
 import { EmCss } from "@emotion/react"; // custom type
-import { MainButton, useWebApp } from "@vkruglikov/react-telegram-web-app";
+import { useWebApp } from "@vkruglikov/react-telegram-web-app";
 import { TWebApp } from "@vkruglikov/react-telegram-web-app/lib/core/twa-types"; // custom type
 import { useEffect, useState } from "react";
 import { useMobileKeyboard } from "@hooks";
@@ -62,10 +62,6 @@ const Main: React.FC = () => {
         }
 
     </div>
-    <MainButton 
-        text="CLICK ME"
-        onClick={() => console.log('Hello, I am button!')}
-    />
     </>
     );
 };
