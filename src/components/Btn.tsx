@@ -7,7 +7,6 @@ type BtnProps = ButtonHTMLAttributes<HTMLButtonElement> & {
     onTouchEnd?: (e: React.TouchEvent<HTMLButtonElement>) => void;
     onTouchMove?: (e: React.TouchEvent<HTMLButtonElement>) => void;
     onTouchCancel?: (e: React.TouchEvent<HTMLButtonElement>) => void;
-    onTouch?: (e: React.TouchEvent<HTMLButtonElement>) => void;
 };
 
 // react component

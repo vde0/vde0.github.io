@@ -3,7 +3,7 @@ import { useCheckMobile } from "@hooks";
 import { useMemo } from "react";
 
 
-const MOBILE_HANDLER: keyof BtnProps = "onTouch";
+const MOBILE_HANDLER: keyof BtnProps = "onTouchEnd";
 const DESKTOP_HANDLER: keyof BtnProps = "onClick";
 
 
