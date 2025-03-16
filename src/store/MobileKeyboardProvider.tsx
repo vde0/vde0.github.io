@@ -29,7 +29,7 @@ const MobileKeyboardProvider: React.FC<PropsWithChildren> = ({ children }) => {
             maxHeightRef.current = webApp.viewportStableHeight;
             webApp.onEvent("viewportChanged", viewportChangedHandler);
 
-            return webApp.offEvent("viewportChanged", viewportChangedHandler);
+            return () => webApp.offEvent("viewportChanged", viewportChangedHandler);
         }
     }, [webApp, viewportChangedHandler]);
 
