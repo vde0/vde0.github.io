@@ -7,7 +7,7 @@ type PlatformState = "tdesktop" | "android" | "ios";
 type PlatformValue = [PlatformState, (s: PlatformState) => void];
 
 
-const DEFAULT_PLATFORM: PlatformState = "tdesktop";
+const DEFAULT_PLATFORM: PlatformState = "android";
 const PlatformContext = createContext<PlatformValue | null>(null);
 
 
@@ -30,6 +30,7 @@ const PlatformProvider: React.FC<React.PropsWithChildren> = ({children}) => {
 
     return (
         <PlatformContext.Provider value={[platform, setPlatform]}>
+            <div data-testid="state" className="invisible">{platform}</div>
             {children}
         </PlatformContext.Provider>
     );

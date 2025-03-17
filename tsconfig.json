@@ -16,12 +16,11 @@
       "paths": {
         "@containers/*": ["containers/*"],
         "@components/*": ["components/*"],
-        "@store": ["store/"],
         "@store/*": ["store/*"],
+        "@store": ["store/"],
         "@hooks": ["hooks/"],
-        "@hooks/*": ["hooks/*"],
         "@utils": ["utils/"],
-        "@utils/*": ["utils/*"]
+        "@test-utils": ["test-utils/"],
       },
     },
     "include": [
