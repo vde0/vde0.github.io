@@ -20,7 +20,9 @@ const MobileKeyboardProvider: React.FC<PropsWithChildren> = ({ children }) => {
     const [isOpened, setIsOpened]   = useState<MobileKeyboardValue>(false);
     const maxHeightRef              = useRef<number>(900);
 
-    debug["maxHeight"] = maxHeightRef;
+    debug["maxHeight"]  = maxHeightRef;
+    debug["isMobile"]   = isMobile;
+    debug["isOpened"]   = isOpened;
 
     console.log(`init isMobile: ${isMobile}`);
     console.log(`init isOpened: ${isOpened}`);
