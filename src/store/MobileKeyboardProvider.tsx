@@ -3,6 +3,7 @@ import { WebApp } from "@vkruglikov/react-telegram-web-app/lib/core/twa-types";
 import { createContext, PropsWithChildren, useCallback, useEffect, useLayoutEffect, useRef, useState } from "react"
 import { useCheckMobile, usePlatform } from "@hooks";
 
+
 if (!window.debug) window.debug = {};
 window.debug.mobileKeyboard = {};
 const debug = window.debug.mobileKeyboard;
