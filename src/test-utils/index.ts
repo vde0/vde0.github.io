@@ -1,8 +1,16 @@
 import { deepCopy } from "@utils";
-import { TWebApp } from "@vkruglikov/react-telegram-web-app/lib/core/twa-types";
+import { TEventData, TEventHandler, TEventType, TWebApp } from "@tg-types";
 
 
-const DEFAULT_WEBAPP = {
+let handlers: Partial<Record<TEventType, Map<TEventHandler, TEventHandler>>> = {};
+const dispatchTEvent = (
+    event: TEventType,
+    eventData: TEventData = { isStateStable: true }
+) => handlers[event]?.forEach(
+    (handler: TEventHandler) => handler(eventData)
+);
+
+const DEFAULT_WEBAPP: TWebApp = {
     platform: "android",
     initData: "",
     initDataUnsafe: {
@@ -36,16 +44,23 @@ const DEFAULT_WEBAPP = {
     ready () {},
     expand () {},
     close () {},
-    onEvent () {},
-    offEvent () {},
+    onEvent (event, handler) {
+        if (!handlers[event]) handlers[event] = new Map();
+        handlers[event].set(handler, handler.bind(window.Telegram.WebApp));
+    },
+    offEvent (event, handler) {
+        if (!handlers[event]) handlers[event] = new Map();
+        handlers[event].delete(handler);
+    },
 };
-
 
 const mockTelegram = (): void => {
     if (!window.Telegram) window.Telegram = { WebApp: {} as TWebApp };
     global.window.Telegram.WebApp = deepCopy(DEFAULT_WEBAPP, {depth: -1}) as TWebApp;
+    handlers = {};
 };
 
+
 export {
-    mockTelegram,
+    mockTelegram, dispatchTEvent
 };
