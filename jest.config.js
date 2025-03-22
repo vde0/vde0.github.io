@@ -19,6 +19,7 @@ module.exports = {
       "^@test-utils$": "<rootDir>/test-utils/",
       "^@hooks$": "<rootDir>/hooks/",
       "^@types$": "<rootDir>/@types/",
+      "^@tg-types$": "@types/tg",
     },
     testMatch: [
       '<rootDir>/**/*.test.tsx',  // Определяем шаблон для поиска тестов

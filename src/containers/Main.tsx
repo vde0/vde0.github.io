@@ -6,7 +6,7 @@ import VideoChat from "./VideoChat";
 import TextChat from "./TextChat";
 import { EmCss } from "@emotion/react"; // custom type
 import { useWebApp } from "@vkruglikov/react-telegram-web-app";
-import { TWebApp } from "@vkruglikov/react-telegram-web-app/lib/core/twa-types"; // custom type
+import { TWebApp } from "@tg-types"; // custom type
 import { useEffect, useLayoutEffect, useState } from "react";
 import { useMobileKeyboard } from "@hooks";
 

@@ -1,5 +1,5 @@
 import { useWebApp } from "@vkruglikov/react-telegram-web-app";
-import { WebApp } from "@vkruglikov/react-telegram-web-app/lib/core/twa-types";
+import { TWebApp } from "@tg-types";
 import { createContext, PropsWithChildren, useCallback, useEffect, useLayoutEffect, useRef, useState } from "react"
 import { useCheckMobile, usePlatform } from "@hooks";
 
@@ -15,7 +15,7 @@ const MobileKeyboardContext = createContext<MobileKeyboardValue | null>(null);
 
 const MobileKeyboardProvider: React.FC<PropsWithChildren> = ({ children }) => {
 
-    const webApp: WebApp            = useWebApp();
+    const webApp: TWebApp            = useWebApp();
     const isMobile: boolean         = useCheckMobile();
     const [isOpened, setIsOpened]   = useState<MobileKeyboardValue>(false);
     const maxHeightRef              = useRef<number>(900);

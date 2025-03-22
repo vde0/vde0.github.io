@@ -21,6 +21,7 @@
         "@hooks": ["hooks/"],
         "@utils": ["utils/"],
         "@test-utils": ["test-utils/"],
+        "@tg-types": ["../@types/tg"]
       },
     },
     "include": [

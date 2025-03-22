@@ -4,7 +4,7 @@ import { renderHook } from "@testing-library/react";
 import { WebAppProvider } from "@vkruglikov/react-telegram-web-app";
 import PlatformProvider from "@store/PlatformProvider";
 import { mockTelegram } from "@test-utils";
-import { TWebApp } from "@vkruglikov/react-telegram-web-app/lib/core/twa-types";
+import { TWebApp } from "@tg-types";
 
 
 const EXPECTED_PLATFORM:    PlatformState   = "android";
