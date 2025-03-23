@@ -2,7 +2,7 @@ import "@testing-library/jest-dom";
 import { render } from "@testing-library/react";
 import PlatformProvider, { PlatformState } from "@store/PlatformProvider";
 import { WebAppProvider } from "@vkruglikov/react-telegram-web-app";
-import { TWebApp } from "@vkruglikov/react-telegram-web-app/lib/core/twa-types";
+import { TWebApp } from "@tg-types";
 import { screen } from "@testing-library/react";
 import { mockTelegram } from "@test-utils";
 
