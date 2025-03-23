@@ -1,7 +1,7 @@
 import { useWebApp } from "@vkruglikov/react-telegram-web-app";
 import { TWebApp } from "@tg-types";
 import { createContext, PropsWithChildren, useCallback, useEffect, useLayoutEffect, useRef, useState } from "react"
-import { useCheckMobile, usePlatform } from "@hooks";
+import { useCheckMobile, useMaxHeight, usePlatform } from "@hooks";
 
 
 if (!window.debug) window.debug = {};
@@ -15,26 +15,21 @@ const MobileKeyboardContext = createContext<MobileKeyboardValue | null>(null);
 
 const MobileKeyboardProvider: React.FC<PropsWithChildren> = ({ children }) => {
 
-    const webApp: TWebApp            = useWebApp();
-    const isMobile: boolean         = useCheckMobile();
+    const webApp:       TWebApp     = useWebApp();
+    const isMobile:     boolean     = useCheckMobile();
     const [isOpened, setIsOpened]   = useState<MobileKeyboardValue>(false);
-    const maxHeightRef              = useRef<number>(900);
+    const maxHeight:    number      = useMaxHeight();
 
-    debug["maxHeight"]  = maxHeightRef;
+    debug["maxHeight"]  = maxHeight;
     debug["isMobile"]   = isMobile;
     debug["isOpened"]   = isOpened;
 
     console.log(`init isMobile: ${isMobile}`);
     console.log(`init isOpened: ${isOpened}`);
-    console.log(`init maxHeight: ${maxHeightRef.current}`);
+    console.log(`init maxHeight: ${maxHeight}`);
 
-    const viewportChangedHandler = useCallback(() => {
-        console.log("viewportChanged | maxHeight: " + maxHeightRef.current);
-        setIsOpened( webApp.viewportStableHeight / maxHeightRef.current <= 0.8 );
-    }, [webApp]);
-
-    // isOpened effect
-    useEffect(() => {
+    // isOpened setting
+    useLayoutEffect(() => {
         console.log("isOpened effect");
         if (!isMobile) {
             console.log("isOpened effect | The Desktop part");
@@ -43,13 +38,11 @@ const MobileKeyboardProvider: React.FC<PropsWithChildren> = ({ children }) => {
 
         } else {
             console.log("isOpened effect | The Mobile part");
-            maxHeightRef.current = webApp.viewportStableHeight;
-            console.log(`isOpened effect | maxHeight: ${maxHeightRef.current}`);
-            webApp.onEvent("viewportChanged", viewportChangedHandler);
-
-            return () => webApp.offEvent("viewportChanged", viewportChangedHandler);
+            const newIsOpened: boolean = webApp.viewportHeight / maxHeight <= 0.8;
+            console.log(`isOpened effect | isOpened: ${newIsOpened}`);
+            setIsOpened(newIsOpened);
         }
-    }, [webApp, viewportChangedHandler]);
+    }, [webApp, maxHeight]);
 
     return (
         <MobileKeyboardContext.Provider value={isOpened}>
@@ -57,7 +50,7 @@ const MobileKeyboardProvider: React.FC<PropsWithChildren> = ({ children }) => {
                 {String(isMobile)}
             </div>
             <div data-testid="maxHeight" className="invisible">
-                {maxHeightRef.current}
+                {maxHeight}
             </div>
             <div data-testid="isOpened" className="invisible">
                 {String(isOpened)}

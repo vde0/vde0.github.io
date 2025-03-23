@@ -1,15 +1,18 @@
 import '@testing-library/jest-dom';
 import MobileKeyboardProvider from '@store/MobileKeyboardProvider';
 import { PlatformState } from '@store/PlatformProvider';
-import { render, screen } from "@testing-library/react";
-import { mockTelegram } from '@test-utils';
-import { TWebApp } from '@vkruglikov/react-telegram-web-app/lib/core/twa-types';
+import { act, render, screen } from "@testing-library/react";
+import { dispatchTEvent, mockTelegram } from '@test-utils';
+import { TWebApp } from '@tg-types';
+import { checkMobile, defineMaxHeight, GetMaxHeight} from '@hooks';
+import { useState } from 'react';
 
 
+// CONSTS
 const MOBILE_PLATFORM:      PlatformState   = "android";
 const MOBILE_IS_MOBILE:     boolean         = true;
 const MOBILE_IS_OPENED:     boolean         = false;
-const MOBILE_MAX_HEIGHT:    number          = 1000;
+const MOBILE_MAX_HEIGHT:    number          = 1001;
 //
 const DESKTOP_PLATFORM:     PlatformState   = "tdesktop";
 const DESKTOP_IS_MOBILE:    boolean         = false;
@@ -17,40 +20,53 @@ const DESKTOP_IS_OPENED:    boolean         = false;
 const DESKTOP_MAX_HEIGHT:   number          = 900;
 
 
+// VARS
+let wapp: TWebApp;
+let getMaxHeight: GetMaxHeight;
+
+
+// MOCKS
 jest.mock('@vkruglikov/react-telegram-web-app', () => ({
-    useWebApp: jest.fn(),
+    useWebApp: jest.fn().mockImplementation( () => wapp ),
 }));
-import { useWebApp as useWebAppMock } from '@vkruglikov/react-telegram-web-app';
 
 jest.mock('@hooks', () => ({
-    useCheckMobile: jest.fn(),
+    ...jest.requireActual("@hooks"),
+    useCheckMobile: jest.fn().mockImplementation( () => checkMobile(wapp?.platform as PlatformState) ),
+    useMaxHeight: jest.fn().mockImplementation( () => {
+        const [maxHeight,] = useState<number>(
+            jest.requireActual("@hooks").useMaxHeight(getMaxHeight)
+        );
+
+        return maxHeight;
+    }),
 }));
-import { useCheckMobile as useCheckMobileMock } from '@hooks';
 
 
+// SETTING OF TEST MODE BY A PLATFORM
 type TestMode   = "mobile" | "desktop"
 const testSetup = (mode: TestMode): void => {
 
     if (mode === "mobile") {
-        wapp.platform               = MOBILE_PLATFORM;
-        wapp.viewportStableHeight   = MOBILE_MAX_HEIGHT;
-        (useCheckMobileMock as jest.Mock).mockReturnValue(true);
+        wapp.platform       = MOBILE_PLATFORM;
+        wapp.viewportHeight = MOBILE_MAX_HEIGHT;
+        act(() => dispatchTEvent("viewportChanged"));
     } else {
-        wapp.platform               = DESKTOP_PLATFORM;
-        wapp.viewportStableHeight   = DESKTOP_MAX_HEIGHT;
-        (useCheckMobileMock as jest.Mock).mockReturnValue(false);
+        wapp.platform       = DESKTOP_PLATFORM;
+        wapp.viewportHeight = DESKTOP_MAX_HEIGHT;
+        act(() => dispatchTEvent("viewportChanged"));
     }
 };
 
 
-let wapp: TWebApp;
-
+// TESTS
 describe("MobileKeyboardProvider", () => {
 
     beforeEach( () => {
         mockTelegram();
-        wapp = window.Telegram.WebApp;
-        (useWebAppMock as jest.Mock).mockReturnValue(wapp);
+        //
+        wapp            = window.Telegram.WebApp;
+        getMaxHeight    = defineMaxHeight();
     });
 
     // Mobile
@@ -76,8 +92,7 @@ describe("MobileKeyboardProvider", () => {
     test("M3. maxHeight", () => {
 
         testSetup("mobile");
-        const { rerender } = render(<MobileKeyboardProvider />);
-        rerender(<MobileKeyboardProvider />);
+        render(<MobileKeyboardProvider />);
 
         const maxHeight: number = Number( screen.getByTestId("maxHeight").textContent );
         expect(maxHeight).toBe(MOBILE_MAX_HEIGHT);
