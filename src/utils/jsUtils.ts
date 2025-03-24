@@ -3,6 +3,7 @@ import { BasicDataStruct } from "@types";
 export {
     Options as DeepCopyOptions,
     deepCopy, deepCopyArr, deepCopyDict,
+    wait
 };
 
 
@@ -73,3 +74,7 @@ function deepCopy<T extends BasicDataStruct> (
 
     return resultObj;
 }
+
+const wait = async (ms: number): Promise<void> => {
+    return new Promise( (resolve) => setTimeout(resolve, ms) );
+};
