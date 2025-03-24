@@ -1,34 +1,33 @@
-import { useContext, useEffect, useState } from "react";
-import { PlatformContext, PlatformState, PlatformValue } from "@store";
-
-const usePlatform = (): PlatformState => {
-    const context: PlatformValue | null = useContext(PlatformContext);
-    if (!context) {
-        throw new Error("usePlatform() must be used within a PlatformProvider");
-    }
-
-    return context[0];
+export {
+    usePlatform,
+    useCheckMobile,
+    checkMobile,
+    checkPlatform,
 };
 
 
-const checkMobile = (p: PlatformState): boolean => p !== "tdesktop";
+import { TPlatform, TWebApp } from "@tg-types";
+import { useWebApp } from "@vkruglikov/react-telegram-web-app";
+import { useState } from "react";
+
+
+const usePlatform = (): TPlatform => {
+    const wapp: TWebApp = useWebApp();
+    const [platform,]   = useState<TPlatform>( checkPlatform(wapp) );
+
+    return platform;
+};
+
 const useCheckMobile = (): boolean => {
-    const context: PlatformValue | null = useContext(PlatformContext);
-    if (!context) {
-        throw new Error("useCheckMobile() must be used within a PlatformProvider")
-    }
-
-    const platform: PlatformState   = context[0];
-    const [isMobile, setIsMobile]   = useState<boolean>( checkMobile(platform) );
-
-    useEffect(() => { setIsMobile( checkMobile(platform) ) }, [platform]);
+    const wapp: TWebApp = useWebApp();
+    const [isMobile,]   = useState<boolean>( checkMobile( checkPlatform(wapp) ) );
 
     return isMobile;
 };
 
 
-export {
-    usePlatform,
-    useCheckMobile,
-    checkMobile
-};
+function checkMobile (p: TPlatform): boolean { return p !== "tdesktop"; }
+
+function checkPlatform (webApp: TWebApp): TPlatform {
+    return webApp.platform;
+}
