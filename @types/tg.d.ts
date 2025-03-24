@@ -9,8 +9,8 @@ type TWebApp = WebApp & {
     lockOrientation?:        () => void;
     disableVerticalSwipes?:  () => void;
     requestFullscreen?:      () => void;
-    onEvent?: TgBindHandler,
-    offEvent?: TgBindHandler,
+    onEvent?: TBindHandler,
+    offEvent?: TBindHandler,
 };
 
 declare global {
@@ -20,8 +20,8 @@ declare global {
 }
 
 
-type TBindHandler  = (event: TgEventType, handler: TgEventHandler) => void;
-type TEventHandler = (data: TgEventData) => void;
+type TBindHandler  = (event: TEventType, handler: TEventHandler) => void;
+type TEventHandler = (this: TWebApp, data: TEventData) => void;
 type TEventData = { isStateStable: boolean };
 
 type TEventType =
