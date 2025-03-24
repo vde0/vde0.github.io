@@ -1,15 +1,38 @@
-import { MobileKeyboardContext, MobileKeyboardValue } from "@store/MobileKeyboardProvider"
-import { useContext } from "react"
+export { useMobileKeyboard, checkMobileKeyboard };
 
 
-const useMobileKeyboard = (): MobileKeyboardValue => {
-    const context: boolean | null = useContext(MobileKeyboardContext);
-    if (context === null) throw Error(
-        "The useMobileKeyboard hook must be called within a MobileKeyboardProvider"
-    );
+import { TEventHandler, TWebApp } from "@tg-types";
+import { useCallback, useLayoutEffect, useState } from "react"
+import { useMaxHeight } from "./useMaxHeight";
+import { useWebApp } from "@vkruglikov/react-telegram-web-app";
 
-    return context;
+
+type MobileKeyboard = boolean;
+
+
+const MK_COEF   = 0.8;
+
+
+const useMobileKeyboard = (): MobileKeyboard => {
+
+    const wapp:         TWebApp = useWebApp();
+    const maxHeight:    number  = useMaxHeight();
+    //
+    const [mkb, setMkb] = useState<MobileKeyboard>( checkMobileKeyboard(wapp, maxHeight) );
+
+    const vpChangedHandler      = useCallback<TEventHandler>(function () {
+        setMkb( checkMobileKeyboard(this, maxHeight) );
+    }, []);
+
+    useLayoutEffect(() => {
+        wapp.onEvent("viewportChanged", vpChangedHandler);
+        return () => wapp.offEvent("viewportChanged", vpChangedHandler)
+    }, [wapp, maxHeight]);
+
+    return mkb;
 }
 
 
-export { useMobileKeyboard };
+function checkMobileKeyboard (webApp: TWebApp, maxHeight: number): MobileKeyboard {
+    return webApp.viewportHeight / maxHeight <= MK_COEF;
+}
