@@ -1,5 +1,5 @@
 import Btn, { BtnProps } from "./Btn";
-import { useCheckMobile } from "@hooks";
+import { useIsMobile } from "@hooks";
 import { useMemo } from "react";
 
 
@@ -17,7 +17,7 @@ interface ContrtollerProps {
 
 const Controller: React.FC<ContrtollerProps> = ({ onTextChat, onAddUser, onNext }) => {
     
-    const isMobile  = useCheckMobile();
+    const isMobile  = useIsMobile();
     const onTurn    = useMemo<string>(() => isMobile ? MOBILE_HANDLER : DESKTOP_HANDLER, [isMobile]);
 
     return (
