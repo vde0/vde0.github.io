@@ -1,7 +1,7 @@
 import { WebApp } from "@vkruglikov/react-telegram-web-app/lib/core/twa-types";
 
 export {
-    TWebApp, TBindHandler, TEventHandler, TEventData, TEventType
+    TWebApp, TBindHandler, TEventHandler, TEventData, TEventType, TPlatform,
 };
 
 
@@ -11,6 +11,7 @@ type TWebApp = WebApp & {
     requestFullscreen?:      () => void;
     onEvent?: TBindHandler,
     offEvent?: TBindHandler,
+    platform?: TPlatform,
 };
 
 declare global {
@@ -19,6 +20,8 @@ declare global {
     };
 }
 
+
+type TPlatform = "tdesktop" | "android" | "ios";
 
 type TBindHandler  = (event: TEventType, handler: TEventHandler) => void;
 type TEventHandler = (this: TWebApp, data: TEventData) => void;
