@@ -3,7 +3,7 @@ export {
     definePlatform,
     GetPlatform,
     SetPlatform,
-    UpdateState, Updater,
+    Updater, Update, ChestOfUpdate,
 };
 
 
@@ -14,56 +14,55 @@ import { useLayoutEffect, useState } from "react";
 
 type GetPlatform    = (webApp: TWebApp) => TPlatform;
 type SetPlatform    = (nextPlatform: TPlatform, updateFunc: () => {}) => void;
-type SetUpdater     = (updateState: UpdateState, updater: Updater) => void;
 //
-type Updater        = (updateState: UpdateState) => void;
-type UpdateState    = boolean;
+type ChestOfUpdate  = {updater: Updater, update: Update};
+type Updater        = boolean;
+type Update         = (updater: Updater) => void;
 
 
-const [getPlatformVal, setPlatformVal, setUpdater] = definePlatform();
+const chestOfUpdate: ChestOfUpdate      = { updater: false, update: () => {} };
+const [getPlatformVal, setPlatformVal]  = definePlatform(chestOfUpdate);
 
 if (!window.debug) window.debug = {};
 window.debug.setPlatform = setPlatformVal;
 
 const usePlatform = (
-    getPl: GetPlatform = getPlatformVal,
-    setUp: SetUpdater = setUpdater
+    getPl: GetPlatform      = getPlatformVal,
+    chest: ChestOfUpdate    = chestOfUpdate
 ): TPlatform => {
 
     const wapp: TWebApp             = useWebApp();
     const [platform, setPlatform]   = useState<TPlatform>( getPl(wapp) );
 
-    const [updateState, updater]         = useState<boolean>(false);
-    setUp(updateState, updater);
+    const [updater, update]         = useState<boolean>(false);
+
+    useLayoutEffect(() => {
+        chest.updater   = updater;
+        chest.update    = update;
+    }, []);
 
     useLayoutEffect(() => {
         setPlatform( getPl(wapp) );
-    }, [updateState]);
+    }, [updater]);
 
     return platform;
 };
 
 
-function definePlatform (): [GetPlatform, SetPlatform, SetUpdater] {
+function definePlatform ( {updater, update}: ChestOfUpdate ): [GetPlatform, SetPlatform] {
 
-    let platformInChest:    TPlatform | null    = null;
-    let updaterInChest:     Updater             = () => {};
-    let updateStateInChest: UpdateState         = false;
+    let platform:   TPlatform | null    = null;
 
     const getPlatform: GetPlatform = (webApp) => {
         if (!webApp) throw Error("Missing the webApp arg.");
 
-        platformInChest = webApp.platform;
-        return platformInChest;
+        platform = webApp.platform;
+        return platform;
     };
     const setPlatform: SetPlatform = (nextPlatform) => {
-        platformInChest = nextPlatform;
-        updaterInChest(!updateStateInChest);
-    };
-    const setUpdater: SetUpdater = (updateState, updater) => {
-        updaterInChest      = updater;
-        updateStateInChest  = updateState;
+        platform = nextPlatform;
+        update(!updater);
     };
 
-    return [getPlatform, setPlatform, setUpdater];
+    return [getPlatform, setPlatform];
 }
