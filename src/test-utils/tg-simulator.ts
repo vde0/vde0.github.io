@@ -7,7 +7,7 @@ const dispatchTEvent = (
     event: TEventType,
     eventData: TEventData = { isStateStable: true }
 ) => handlers[event]?.forEach(
-    (handler: TEventHandler) => handler(eventData)
+    (handler: TEventHandler) => handler.bind(window.Telegram.WebApp)(eventData)
 );
 
 const DEFAULT_WEBAPP: TWebApp = {
