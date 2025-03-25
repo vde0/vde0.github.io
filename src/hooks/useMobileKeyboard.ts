@@ -5,6 +5,7 @@ import { TEventHandler, TWebApp } from "@tg-types";
 import { useCallback, useLayoutEffect, useState } from "react"
 import { useMaxHeight } from "./useMaxHeight";
 import { useWebApp } from "@vkruglikov/react-telegram-web-app";
+import { useIsMobile } from "./useIsMobile";
 
 
 type MobileKeyboard = boolean;
@@ -17,11 +18,20 @@ const useMobileKeyboard = (): MobileKeyboard => {
 
     const wapp:         TWebApp = useWebApp();
     const maxHeight:    number  = useMaxHeight();
+    const isMobile:     boolean = useIsMobile();
     //
-    const [mkb, setMkb] = useState<MobileKeyboard>( checkMobileKeyboard(wapp, maxHeight) );
+    const [mkb, setMkb] = useState<MobileKeyboard>(
+        isMobile
+        ? checkMobileKeyboard(wapp, maxHeight)
+        : false
+    );
 
     const vpChangedHandler      = useCallback<TEventHandler>(function () {
-        setMkb( checkMobileKeyboard(this, maxHeight) );
+        setMkb(
+            isMobile
+            ? checkMobileKeyboard(this, maxHeight)
+            : false
+        );
     }, []);
 
     useLayoutEffect(() => {
