@@ -60,7 +60,7 @@ const mockTelegram = (): void => {
     handlers = {};
 };
 
-const rushResizeTo      = (height: number): void => {
+const rushResizeTo      = async (height: number): Promise<void> => {
     if (height === window.Telegram?.WebApp.viewportHeight) return;
     const wapp: TWebApp         = window.Telegram.WebApp;
     wapp.viewportHeight         = height;
@@ -94,7 +94,15 @@ const smoothResizeTo    = async (
 };
 
 
+const getWebApp = (): TWebApp | null => (
+    window.Telegram?.WebApp
+    ? window.Telegram.WebApp
+    : null
+);
+
+
 export {
     mockTelegram, dispatchTEvent,
     rushResizeTo, smoothResizeTo,
+    getWebApp
 };
