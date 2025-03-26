@@ -1,5 +1,5 @@
 import "@testing-library/jest-dom";
-import { dispatchTEvent, mockTelegram } from "@test-utils";
+import { dispatchTEvent, mockTelegram, rushResizeTo } from "@test-utils";
 import { TWebApp } from "@tg-types";
 import { act, renderHook } from "@testing-library/react";
 import { defineMaxHeight, GetMaxHeight, useMaxHeight } from "@hooks";
@@ -40,12 +40,10 @@ describe("useMaxHeight", () => {
         const { result } = renderHook(() => useMaxHeight(getMaxHeight));
         expect(result.current).toBe(900);
 
-        (wapp as TWebApp).viewportHeight    = 1000;
-        act(() => dispatchTEvent("viewportChanged"));
+        act(() => rushResizeTo(1000));
         expect(result.current).toBe(1000);
 
-        (wapp as TWebApp).viewportHeight    = 800;
-        act(() => dispatchTEvent("viewportChanged"));
+        act(() => rushResizeTo(800));
         expect(result.current).toBe(1000);
     });
 });
