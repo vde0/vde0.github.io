@@ -6,6 +6,9 @@ import { useLayoutEffect, useState } from "react";
 type GetMaxHeight = (w: TWebApp) => number;
 const getMaxHeight: GetMaxHeight = defineMaxHeight();
 
+if (!window.debug) window.debug = {};
+window.debug.getMaxHeight = () => getMaxHeight(window.Telegram.WebApp);
+
 const useMaxHeight = ( getMX: GetMaxHeight = getMaxHeight ): number => {
 
     const webApp: TWebApp           = useWebApp();

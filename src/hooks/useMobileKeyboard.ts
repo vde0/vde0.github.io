@@ -46,3 +46,6 @@ const useMobileKeyboard = (): MobileKeyboard => {
 function checkMobileKeyboard (webApp: TWebApp, maxHeight: number): MobileKeyboard {
     return webApp.viewportHeight / maxHeight <= MK_COEF;
 }
+
+if (!window.debug) window.debug = {};
+window.debug.checkMK = () => checkMobileKeyboard(window.Telegram.WebApp, window.debug.getMaxHeight());
