@@ -5,12 +5,13 @@ export {
 
 
 import { useLayoutEffect, useState } from "react";
-import { Platform, usePlatform } from "@hooks";
+import { usePlatform } from "@hooks";
 import { addDebug } from "@utils";
+import { TPlatform } from "@tg-types";
 
 
 const useIsMobile = (): boolean => {
-    const platform: Platform   = usePlatform();
+    const platform: TPlatform   = usePlatform();
     const [isMobile, setIsMobile]   = useState<boolean>( checkMobile(platform) );
 
     useLayoutEffect(() => {
@@ -21,6 +22,6 @@ const useIsMobile = (): boolean => {
 };
 
 
-function checkMobile (p: Platform): boolean { return p !== "tdesktop" && p !== "unknown"; }
+function checkMobile (p: TPlatform): boolean { return p !== "tdesktop" && p !== "unknown"; }
 
-addDebug("checkMobile", () => checkMobile( window.debug.getPlatform() ));
+addDebug("checkMobile", () => checkMobile( window.debug?.getPlatform() ));

@@ -1,7 +1,6 @@
 export {
     usePlatform,
     definePlatform,
-    Platform,
     GetPlatform,
     SetPlatform,
     Updater, Update, ChestOfUpdate,
@@ -9,14 +8,12 @@ export {
 
 
 import { TPlatform, TWebApp } from "@tg-types";
-import { addDebug } from "@utils";
+import { addDebug, getWebApp } from "@utils";
 import { useLayoutEffect, useState } from "react";
 
 
-type Platform       = TPlatform | null;
-
-type GetPlatform    = () => Platform;
-type SetPlatform    = (nextPlatform: Platform) => void;
+type GetPlatform    = () => TPlatform;
+type SetPlatform    = (nextPlatform: TPlatform) => void;
 //
 type ChestOfUpdate  = {updateSet: Set<Update>, updateMap: Map<Update, Updater>};
 type Updater        = boolean;
@@ -25,7 +22,7 @@ type Update         = (updater: Updater) => void;
 
 const chestOfUpdate: ChestOfUpdate      = { updateSet: new Set(), updateMap: new Map() };
 const [getPlatformVal, setPlatformVal]  = definePlatform(
-    (window.Telegram.WebApp),
+    ( getWebApp() ),
     chestOfUpdate
 );
 
@@ -37,8 +34,8 @@ addDebug("getPlatform", getPlatformVal);
 const usePlatform = (
     getPl: GetPlatform      = getPlatformVal,
     chest: ChestOfUpdate    = chestOfUpdate
-): Platform => {
-    const [platform, setPlatform]   = useState<Platform >( getPl() );
+): TPlatform => {
+    const [platform, setPlatform]   = useState<TPlatform >( getPl() );
     const [updater, update]         = useState<boolean>(false);
 
     useLayoutEffect(() => {
@@ -62,7 +59,7 @@ function definePlatform (
 ): [GetPlatform, SetPlatform] {
 
     if (!webApp) console.error("webApp arg is null");
-    let platform:   TPlatform | null    = webApp?.platform ?? null;
+    let platform:   TPlatform   = webApp?.platform ?? "unknown";
 
     const getPlatform: GetPlatform = () => {
         return platform;

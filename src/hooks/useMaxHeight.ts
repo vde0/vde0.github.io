@@ -4,13 +4,13 @@ export { useMaxHeight, defineMaxHeight, GetMaxHeight };
 import { useWebApp } from "@vkruglikov/react-telegram-web-app";
 import { TWebApp } from "@tg-types"
 import { useLayoutEffect, useState } from "react";
-import { addDebug } from "@utils";
+import { addDebug, getWebApp } from "@utils";
 
 
-type GetMaxHeight = (w: TWebApp) => number;
-const getMaxHeight: GetMaxHeight = defineMaxHeight();
+type GetMaxHeight = () => number;
+const getMaxHeight: GetMaxHeight = defineMaxHeight( getWebApp() );
 
-addDebug("getMaxHeight", () => getMaxHeight(window.Telegram.WebApp));
+addDebug("getMaxHeight", getMaxHeight);
 
 
 const useMaxHeight = ( getMX: GetMaxHeight = getMaxHeight ): number => {
@@ -18,32 +18,30 @@ const useMaxHeight = ( getMX: GetMaxHeight = getMaxHeight ): number => {
     const webApp: TWebApp           = useWebApp();
     if (!webApp)    throw Error("webApp was undefined");
 
-    const [maxHeight, setMaxHeight] = useState<number>( getMX(webApp) );
+    const [maxHeight, setMaxHeight] = useState<number>( getMX() );
 
     useLayoutEffect(() => {
         webApp.onEvent("viewportChanged", vpChangedHandler);
         return () => webApp.offEvent("viewportChanged", vpChangedHandler);
     }, [webApp]);
 
-    function vpChangedHandler (this: TWebApp, { isStateStable }: { isStateStable: boolean }): void {
+    function vpChangedHandler ({ isStateStable }: { isStateStable: boolean }): void {
         if (!isStateStable) return;
-        setMaxHeight( getMX(this) );
+        setMaxHeight( getMX() );
     };
 
     return maxHeight;
 };
 
 
-function defineMaxHeight (): GetMaxHeight {
+function defineMaxHeight (webApp: TWebApp | null): GetMaxHeight {
 
-    let maxHeight: number | null  = null;
+    if (!webApp)    console.error("Missing the webApp arg.");
+    let maxHeight: number  = webApp?.viewportHeight ?? 0;
 
-    const getMaxHeight: GetMaxHeight = (wapp: TWebApp) => {
+    const getMaxHeight: GetMaxHeight = () => {
 
-        if (!wapp)  throw Error("Missing the wapp arg.");
-        if (maxHeight === null)     { maxHeight = wapp.viewportHeight; return maxHeight; }
-
-        const curHeight: number     = wapp.viewportHeight;
+        const curHeight: number     = webApp?.viewportHeight ?? maxHeight;
         maxHeight = curHeight > maxHeight ? curHeight : maxHeight;
         //
         return maxHeight;

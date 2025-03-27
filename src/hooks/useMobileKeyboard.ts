@@ -6,13 +6,13 @@ import { useCallback, useLayoutEffect, useState } from "react"
 import { useMaxHeight } from "./useMaxHeight";
 import { useWebApp } from "@vkruglikov/react-telegram-web-app";
 import { useIsMobile } from "./useIsMobile";
-import { addDebug } from "@utils";
+import { addDebug, getWebApp } from "@utils";
 
 
 type MobileKeyboard = boolean;
 
 
-const MK_COEF   = 0.8;
+const MK_COEF   = 0.85;
 
 
 const useMobileKeyboard = (): MobileKeyboard => {
@@ -44,9 +44,10 @@ const useMobileKeyboard = (): MobileKeyboard => {
 }
 
 
-function checkMobileKeyboard (webApp: TWebApp, maxHeight: number): MobileKeyboard {
+function checkMobileKeyboard (webApp: TWebApp | null, maxHeight: number): MobileKeyboard {
+    if (!webApp) { console.error("webApp is null or undefined"); return false; }
     return webApp.viewportHeight / maxHeight <= MK_COEF;
 }
 
 
-addDebug("checkMK", () => checkMobileKeyboard( window.Telegram.WebApp, window.debug.getMaxHeight() ));
+addDebug("checkMK", () => checkMobileKeyboard( getWebApp() , window.debug?.getMaxHeight() ));

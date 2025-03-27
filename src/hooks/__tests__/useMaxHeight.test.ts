@@ -4,6 +4,7 @@ import { TWebApp } from "@tg-types";
 import { act, renderHook } from "@testing-library/react";
 import { defineMaxHeight, GetMaxHeight, useMaxHeight } from "@hooks";
 import { useWebApp } from "@vkruglikov/react-telegram-web-app";
+import { getWebApp } from "@utils";
 
 jest.mock("@vkruglikov/react-telegram-web-app", () => ({
     useWebApp: jest.fn(),
@@ -11,16 +12,16 @@ jest.mock("@vkruglikov/react-telegram-web-app", () => ({
 
 
 let wapp: TWebApp | null = null;
-let getMaxHeight: GetMaxHeight = (tgWp: TWebApp) => 0;
+let getMaxHeight: GetMaxHeight = () => 0;
 
 describe("useMaxHeight", () => {
 
     beforeEach(() => {
         mockTelegram();
-        wapp            = window.Telegram.WebApp;
+        wapp            = getWebApp();
         if (!wapp) throw Error("wapp is null");
         (useWebApp as jest.Mock).mockReturnValue(wapp);
-        getMaxHeight    = defineMaxHeight();
+        getMaxHeight    = defineMaxHeight(wapp);
     });
 
     // 1000
