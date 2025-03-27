@@ -21,6 +21,6 @@ const useIsMobile = (): boolean => {
 };
 
 
-function checkMobile (p: Platform): boolean { return p !== "tdesktop"; }
+function checkMobile (p: Platform): boolean { return p !== "tdesktop" && p !== "unknown"; }
 
 addDebug("checkMobile", () => checkMobile( window.debug.getPlatform() ));
