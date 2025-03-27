@@ -21,7 +21,7 @@ declare global {
 }
 
 
-type TPlatform = "tdesktop" | "android" | "ios";
+type TPlatform = "tdesktop" | "android" | "ios" | "unknown";
 
 type TBindHandler  = (event: TEventType, handler: TEventHandler) => void;
 type TEventHandler = (this: TWebApp, data: TEventData) => void;
