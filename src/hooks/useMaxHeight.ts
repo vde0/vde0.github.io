@@ -1,13 +1,17 @@
+export { useMaxHeight, defineMaxHeight, GetMaxHeight };
+
+
 import { useWebApp } from "@vkruglikov/react-telegram-web-app";
 import { TWebApp } from "@tg-types"
 import { useLayoutEffect, useState } from "react";
+import { addDebug } from "@utils";
 
 
 type GetMaxHeight = (w: TWebApp) => number;
 const getMaxHeight: GetMaxHeight = defineMaxHeight();
 
-if (!window.debug) window.debug = {};
-window.debug.getMaxHeight = () => getMaxHeight(window.Telegram.WebApp);
+addDebug("getMaxHeight", () => getMaxHeight(window.Telegram.WebApp));
+
 
 const useMaxHeight = ( getMX: GetMaxHeight = getMaxHeight ): number => {
 
@@ -47,6 +51,3 @@ function defineMaxHeight (): GetMaxHeight {
 
     return getMaxHeight;
 };
-
-
-export { useMaxHeight, defineMaxHeight, GetMaxHeight };
