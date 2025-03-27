@@ -1,10 +1,12 @@
-import { BasicDataStruct } from "@types";
-
 export {
     Options as DeepCopyOptions,
     deepCopy, deepCopyArr, deepCopyDict,
-    wait
+    wait,
+    addDebug
 };
+
+
+import { BasicDataStruct } from "@types";
 
 
 type Options = {
@@ -78,3 +80,8 @@ function deepCopy<T extends BasicDataStruct> (
 const wait = async (ms: number): Promise<void> => {
     return new Promise( (resolve) => setTimeout(resolve, ms) );
 };
+
+function addDebug(prop: string, val: any) {
+    if (!window.debug) window.debug = {};
+    window.debug[prop] = val;
+}
