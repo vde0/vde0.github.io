@@ -1,6 +1,7 @@
 export {
     usePlatform,
     definePlatform,
+    Platform,
     GetPlatform,
     SetPlatform,
     Updater, Update, ChestOfUpdate,
@@ -8,60 +9,67 @@ export {
 
 
 import { TPlatform, TWebApp } from "@tg-types";
-import { useWebApp } from "@vkruglikov/react-telegram-web-app";
+import { addDebug } from "@utils";
 import { useLayoutEffect, useState } from "react";
 
 
-type GetPlatform    = (webApp: TWebApp) => TPlatform;
-type SetPlatform    = (nextPlatform: TPlatform, updateFunc: () => {}) => void;
+type Platform       = TPlatform | null;
+
+type GetPlatform    = () => Platform;
+type SetPlatform    = (nextPlatform: Platform) => void;
 //
-type ChestOfUpdate  = {updater: Updater, update: Update};
+type ChestOfUpdate  = {updateSet: Set<Update>, updateMap: Map<Update, Updater>};
 type Updater        = boolean;
 type Update         = (updater: Updater) => void;
 
 
-const chestOfUpdate: ChestOfUpdate      = { updater: false, update: () => {} };
-const [getPlatformVal, setPlatformVal]  = definePlatform(chestOfUpdate);
+const chestOfUpdate: ChestOfUpdate      = { updateSet: new Set(), updateMap: new Map() };
+const [getPlatformVal, setPlatformVal]  = definePlatform(
+    (window.Telegram.WebApp),
+    chestOfUpdate
+);
 
 if (!window.debug) window.debug = {};
-window.debug.setPlatform = setPlatformVal;
+addDebug("setPlatform", setPlatformVal);
+addDebug("getPlatform", getPlatformVal);
+
 
 const usePlatform = (
     getPl: GetPlatform      = getPlatformVal,
     chest: ChestOfUpdate    = chestOfUpdate
-): TPlatform => {
-
-    const wapp: TWebApp             = useWebApp();
-    const [platform, setPlatform]   = useState<TPlatform>( getPl(wapp) );
-
+): Platform => {
+    const [platform, setPlatform]   = useState<Platform >( getPl() );
     const [updater, update]         = useState<boolean>(false);
 
     useLayoutEffect(() => {
-        chest.updater   = updater;
-        chest.update    = update;
+        chest.updateSet.add(update);
+        chest.updateMap.set(update, updater);
+        return () => { chest.updateSet.delete(update); chest.updateMap.delete(update)};
     }, []);
 
     useLayoutEffect(() => {
-        setPlatform( getPl(wapp) );
+        setPlatform( getPl() );
     }, [updater]);
 
     return platform;
 };
 
 
-function definePlatform ( {updater, update}: ChestOfUpdate ): [GetPlatform, SetPlatform] {
+function definePlatform (
+    webApp: TWebApp | null,
+    {updateSet, updateMap}: ChestOfUpdate
 
-    let platform:   TPlatform | null    = null;
+): [GetPlatform, SetPlatform] {
 
-    const getPlatform: GetPlatform = (webApp) => {
-        if (!webApp) throw Error("Missing the webApp arg.");
+    if (!webApp) console.error("webApp arg is null");
+    let platform:   TPlatform | null    = webApp?.platform ?? null;
 
-        platform = webApp.platform;
+    const getPlatform: GetPlatform = () => {
         return platform;
     };
     const setPlatform: SetPlatform = (nextPlatform) => {
         platform = nextPlatform;
-        update(!updater);
+        updateSet.forEach( update => update( !updateMap.get(update) ) );
     };
 
     return [getPlatform, setPlatform];
