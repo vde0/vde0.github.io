@@ -1,12 +1,12 @@
 import { SubmitBtn } from "@components/Btn";
 import InputMsg from "@components/InputMsg";
 import { useIsMobile } from "@hooks";
-import { useActionState, useEffect, useLayoutEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 
 
 const MsgForm: React.FC = () => {
 
-    const [,,pending] = useActionState(() => {}, null);
+    const pending: boolean = true;
 
     const isMobile = useIsMobile();
     const [pos, setPos] = useState<"fixed" | "block">("block");
