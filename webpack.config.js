@@ -3,6 +3,9 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 
+const NGROK_URL = process.env.NGROK;
+
+
 module.exports = (env, argv) => {
 
   const isProduction = argv.mode === "production";
@@ -11,7 +14,36 @@ module.exports = (env, argv) => {
     entry: './src/index.tsx', // Указываем точку входа
     output: {
       filename: 'bundle.js', // Название итогового бандла
-      path: path.resolve(__dirname, 'docs') // Папка для собранных файлов
+      path: path.resolve(__dirname, 'docs'), // Папка для собранных файлов
+      publicPath: '/',
+    },
+    devServer: {
+      static: path.join(__dirname, 'docs'),
+      // compress: true,
+      hot: true,
+      port: 9000,
+      liveReload: true, // Включаем перезагрузку страницы при изменениях
+      headers: {
+        'Access-Control-Allow-Origin': '*', // Разрешаем все источники
+      },
+      client: {
+        webSocketURL: NGROK_URL
+          ? `wss://${NGROK_URL}/ws` // WebSocket URL для ngrok
+          : 'wss://localhost:9000/ws',
+      },
+      server: {
+        type: "https",
+        options: {
+          key: 'ssl/private.key',
+          cert: 'ssl/certificate.crt',
+        },
+      },
+      watchFiles: {
+        paths: ['docs/**/*'],
+        options: {
+          poll: true, // Включаем polling для отслеживания изменений
+        },
+      },
     },
     plugins: [
       new HtmlWebpackPlugin({
@@ -45,10 +77,5 @@ module.exports = (env, argv) => {
         },
       ]
     },
-    devServer: {
-      static: path.join(__dirname, 'docs'), // Указываем папку для сервера
-      compress: true,
-      port: 9000
-    }
   }
 };
