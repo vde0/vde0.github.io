@@ -12,13 +12,8 @@ import { useMobileKeyboard } from "@hooks";
 
 
 const mainCss: EmCss = css`
-    top: 0;
-    bottom: 0;
-    /* top: var(--tg-content-safe-area-inset-top);
-    bottom: var(--tg-content-safe-area-inset-bottom); */
-    
-    left: 0;
-    right: 0;
+    top: var(--tg-content-safe-area-inset-top);
+    bottom: var(--tg-content-safe-area-inset-bottom);
 
     max-height: var(--tg-viewport-stable-height);
     overflow: clip;
@@ -41,30 +36,34 @@ const Main: React.FC = () => {
     const [isTextChatShown, setIsTextChatShown] = useState<boolean>(false);
 
     return (
-    <>
-    <div className="container absolute max-w-xl py-4 px-3 md:px-8 mx-auto bg-black text-white" css={mainCss}>
+    <div className="w-full fixed px-3 md:px-8 box-border" css={mainCss}>
+        <section className="
+            container max-w-xl h-full
+            relative mx-auto bg-black text-white
+            flex flex-col
+        ">
 
-        <section className="pb-19 h-full flex flex-col justify-evenly gap-4">
-            <DisplayBox>
-                <VideoChat />
-            </DisplayBox>
-            <DisplayBox>
-                { isTextChatShown
-                    ? <TextChat />
-                    : <VideoChat />
-                }
-            </DisplayBox>
+            <section className="grow flex flex-col gap-10 py-8">
+                <DisplayBox className="">
+                    <VideoChat />
+                </DisplayBox>
+                <DisplayBox className="">
+                    { isTextChatShown
+                        ? <TextChat />
+                        : <VideoChat />
+                    }
+                </DisplayBox>
+            </section>
+            
+            { !keyboardStatus
+                ? <div className="shrink-0 h-24">
+                    <Controller onTextChat={() => { setIsTextChatShown(!isTextChatShown) }} />
+                </div>
+                : null
+            }
+
         </section>
-        
-        { !keyboardStatus
-            ? <div className="realtive w-full">
-                <Controller onTextChat={() => { setIsTextChatShown(!isTextChatShown) }} />
-            </div>
-            : null
-        }
-
     </div>
-    </>
     );
 };
 

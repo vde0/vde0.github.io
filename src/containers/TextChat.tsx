@@ -9,9 +9,9 @@ const TextChat: React.FC<PropsWithClassName> = ({ className }) => {
     const [msgHistory, dispathMsgHistory] = useMsgHistory();
 
     return (
-        <article className={"h-full" + " " + className}>
+        <article className={`h-full flex flex-col ${className}`}>
             <MsgList correspondence={msgHistory} />
-            <MsgForm />
+            <MsgForm className="mt-auto" />
         </article>
     );
 };

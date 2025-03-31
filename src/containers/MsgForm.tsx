@@ -1,28 +1,31 @@
 import { SubmitBtn } from "@components/Btn";
 import InputMsg from "@components/InputMsg";
-import { useIsMobile } from "@hooks";
+import { useIsMobile, useMobileKeyboard } from "@hooks";
+import { PropsWithClassName } from "@types";
 import { useEffect, useLayoutEffect, useState } from "react";
 
 
-const MsgForm: React.FC = () => {
+const MsgForm: React.FC<PropsWithClassName> = ({ className }) => {
 
-    const pending: boolean = true;
+    const pending: boolean = false;
 
-    const isMobile = useIsMobile();
-    const [pos, setPos] = useState<"fixed" | "block">("block");
-    useLayoutEffect(() => { setPos(isMobile? "fixed" : "block") }, [isMobile]);
+    const isMobile          = useIsMobile();
+    const isMobileKeyboard  = useMobileKeyboard();
+
+    const [pos, setPos] = useState<"absolute" | "block">("block");
+    useLayoutEffect(() => { setPos(isMobileKeyboard ? "absolute" : "block") }, [isMobileKeyboard]);
 
     return (
-        <form className={`
+        <form className={`${className}
             ${pos} z-1 bg-green-400
-            w-128 h-15 mx-auto
-            box-content pb-1 pt-2 bottom-0
-            flex flex-row gap-1`}
+            w-full h-15 mx-auto
+            border-content pb-1 pt-2
+            flex flex-row gap-1 bottom-0`}
         action="">
-            <InputMsg disabled={pending} />
+            <InputMsg className="grow" disabled={pending} />
             <SubmitBtn
                 disabled={pending}
-                className="bg-black border-1 border-gray-700"
+                className="bg-black border-1 border-gray-700 shrink-0 w-10"
             />
         </form>
     );

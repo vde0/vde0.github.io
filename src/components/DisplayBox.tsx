@@ -1,20 +1,30 @@
+/** @jsxImportSource @emotion/react */
+import { css } from "@emotion/react";
+import { useMaxHeight } from "@hooks";
 import { PropsWithClassName } from "@types";
-import { PropsWithChildren } from "react";
+import { PropsWithChildren, useEffect, useLayoutEffect, useRef } from "react";
 
 
 type DisplayBoxProps = PropsWithChildren & PropsWithClassName;
 
-const DisplayBox: React.FC<DisplayBoxProps> = ({ children, className }) => (
-    <div
-        className={`
-            w-full h-45 md:h-54 2xl:h-72 bg-white
-            shrink-0 mx-auto mb-4
-            ${className}
-        `}
-    >
-        {children}
-    </div>
-);
+const DisplayBox: React.FC<DisplayBoxProps> = ({ children, className }) => {
+    const maxHeight: number = useMaxHeight();
+
+    return (
+        <div
+            className={`
+                w-full
+                mx-auto bg-white
+                ${className}
+            `}
+            css={css`
+                height: ${maxHeight/3}px
+            `}
+        >
+            {children}
+        </div>
+    );
+};
 
 
 export default DisplayBox
