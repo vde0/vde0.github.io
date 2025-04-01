@@ -2,7 +2,7 @@ import { ConnectContext } from "@store";
 import { useContext } from "react";
 
 
-interface User {
+export interface User {
     id: string;
     ip?: string;
 }
