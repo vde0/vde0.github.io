@@ -31,7 +31,7 @@ const Main: React.FC = () => {
             webApp?.disableVerticalSwipes?.();
             webApp?.requestFullscreen?.();
         } catch (err) {}
-    });
+    }, []);
 
     const [isTextChatShown, setIsTextChatShown] = useState<boolean>(false);
 
