@@ -1,19 +1,27 @@
 import { SubmitBtn } from "@components/Btn";
 import InputMsg from "@components/InputMsg";
-import { useIsMobile, useMobileKeyboard } from "@hooks";
+import { useIsMobile, useMobileKeyboard, useWrite } from "@hooks";
 import { PropsWithClassName } from "@types";
-import { useEffect, useLayoutEffect, useState } from "react";
+import { ChangeEvent, ChangeEventHandler, MouseEvent, MouseEventHandler, useCallback, useEffect, useLayoutEffect, useMemo, useState } from "react";
 
 
 const MsgForm: React.FC<PropsWithClassName> = ({ className }) => {
 
     const pending: boolean = false;
 
-    const isMobile          = useIsMobile();
     const isMobileKeyboard  = useMobileKeyboard();
+
+    const [write, setWrite] = useWrite();
 
     const [pos, setPos] = useState<"absolute" | "block">("block");
     useLayoutEffect(() => { setPos(isMobileKeyboard ? "absolute" : "block") }, [isMobileKeyboard]);
+
+    const typeHandler = useCallback<ChangeEventHandler<HTMLTextAreaElement>>( function (evt) {
+        setWrite(evt.target?.value);
+    }, [] );
+    const submitHandler = useCallback<MouseEventHandler<HTMLButtonElement>>( function (evt) {
+        evt.preventDefault();
+    }, [] );
 
     return (
         <form className={`${className}
@@ -22,9 +30,13 @@ const MsgForm: React.FC<PropsWithClassName> = ({ className }) => {
             border-content pb-1 pt-2
             flex flex-row gap-1 bottom-0`}
         action="">
-            <InputMsg className="grow" disabled={pending} />
+            <InputMsg
+                disabled={pending}
+                className="grow"
+                onChange={typeHandler} value={write} />
             <SubmitBtn
                 disabled={pending}
+                onClick={submitHandler}
                 className="bg-black border-1 border-gray-700 shrink-0 w-10"
             />
         </form>
