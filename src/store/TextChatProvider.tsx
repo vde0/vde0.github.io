@@ -1,3 +1,4 @@
+import { addDebug } from "@utils";
 import { createContext, useReducer } from "react";
 
 
@@ -82,6 +83,8 @@ const TextChatContext = createContext<TextChatValue | null>( null );
 const TextChatProvider: React.FC<React.PropsWithChildren> = ({children}) => {
 
     const [chatState, dispatchChat] = useReducer(textChatReducer, initTextChatValue.state);
+
+    addDebug("chatData", {...chatState.chatData});
 
     return (
         <TextChatContext.Provider value={{dispatch: dispatchChat, state: chatState}}>
