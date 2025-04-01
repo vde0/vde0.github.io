@@ -5,23 +5,28 @@ import { PropsWithClassName } from "@types";
 import { ChangeEvent, ChangeEventHandler, MouseEvent, MouseEventHandler, useCallback, useEffect, useLayoutEffect, useMemo, useState } from "react";
 
 
-const MsgForm: React.FC<PropsWithClassName> = ({ className }) => {
+type MsgFormProps = PropsWithClassName & {
+    onPush?: (msgValue: string) => void;
+};
+
+const MsgForm: React.FC<MsgFormProps> = ({ className, onPush }) => {
 
     const pending: boolean = false;
-
+    //
     const isMobileKeyboard  = useMobileKeyboard();
-
     const [write, setWrite] = useWrite();
-
-    const [pos, setPos] = useState<"absolute" | "block">("block");
+    const [pos, setPos]     = useState<"absolute" | "block">("block");
     useLayoutEffect(() => { setPos(isMobileKeyboard ? "absolute" : "block") }, [isMobileKeyboard]);
 
     const typeHandler = useCallback<ChangeEventHandler<HTMLTextAreaElement>>( function (evt) {
         setWrite(evt.target?.value);
     }, [] );
+    //
     const submitHandler = useCallback<MouseEventHandler<HTMLButtonElement>>( function (evt) {
         evt.preventDefault();
-    }, [] );
+        onPush?.(write);
+        setWrite("");
+    }, [write] );
 
     return (
         <form className={`${className}
