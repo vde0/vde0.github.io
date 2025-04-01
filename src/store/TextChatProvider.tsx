@@ -57,9 +57,9 @@ const textChatReducer: React.Reducer<TextChatState, TextChatAction> = (state, ac
                 ...state
             };
         case "WRITE":
-            if ( !action.data ) {
+            if ( !action.data && typeof action.data !== "string") {
                 throw new TypeError(
-                    "Missed action.data (undefined) object of the \"WRITE\" action type");}
+                    "Missed action.data <string> of the \"WRITE\" action type");}
             if ( typeof(action.data) !== "string" ) {
                 throw new TypeError(
                     "Incorrect action.data data type (needs string) of the \"WRITE\" action type");}
