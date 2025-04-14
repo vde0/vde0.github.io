@@ -2,7 +2,8 @@ export {
     Options as DeepCopyOptions,
     deepCopy, deepCopyArr, deepCopyDict,
     wait,
-    addDebug
+    addDebug,
+    once,
 };
 
 
@@ -84,4 +85,9 @@ const wait = async (ms: number): Promise<void> => {
 function addDebug(prop: string, val: any) {
     if (!window.debug) window.debug = {};
     window.debug[prop] = val;
+}
+
+function once (callback: CallableFunction) {
+    let called = false;
+    return () => { if (called) return false; called = true; callback(); return true; };
 }
