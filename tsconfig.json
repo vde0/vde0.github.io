@@ -1,6 +1,6 @@
 {
     "compilerOptions": {
-      "target": "es5",
+      "target": "es2015",
       "module": "esnext",
       "jsx": "react-jsx",
       "moduleResolution": "node",
@@ -19,7 +19,9 @@
         "@store/*": ["store/*"],
         "@store": ["store/"],
         "@hooks": ["hooks/"],
-        "@utils": ["utils/"],
+        "@services": ["services"],
+        "@lib": ["lib/"],
+        "@utils": ["lib/utils/"],
         "@test-utils": ["test-utils/"],
         "@tg-types": ["../@types/tg"]
       },
