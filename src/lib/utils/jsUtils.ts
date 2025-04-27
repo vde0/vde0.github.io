@@ -4,6 +4,9 @@ export {
     wait,
     addDebug,
     once,
+    listen,
+    unlisten,
+    listenOnce,
 };
 
 
@@ -87,7 +90,26 @@ function addDebug(prop: string, val: any) {
     window.debug[prop] = val;
 }
 
-function once (callback: CallableFunction) {
+function once (callback: CallableFunction): () => boolean {
     let called = false;
-    return () => { if (called) return false; called = true; callback(); return true; };
+    return (...args) => { if (called) return false; called = true; callback(...args); return true; };
+}
+
+
+type OnType  = (event: string, listener: CallableFunction) => void;
+type OffType = (event: string, listener: CallableFunction) => void;
+type Events = { [key: string]: (...args: any[]) => void };
+function listen <K extends string = 'on'>(
+    master: Record<K, OnType>, events: Events, toolName: K = 'on' as K
+): void {
+    for (let event in events) (master[toolName])(event, events[event]);
+}
+function listenOnce <K extends string = 'once'>(
+    master: Record<K, OnType>, events: Events, toolName: K = 'once' as K
+): void {
+    for (let event in events) master[toolName](event, events[event]);
+}
+function unlisten <K extends string = 'off'>(
+    master: Record<K, OffType>, events: Events, toolName: K = 'off' as K): void {
+    for (let event in events) master[toolName](event, events[event]);
 }
