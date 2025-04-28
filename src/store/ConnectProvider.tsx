@@ -1,10 +1,13 @@
-import { Connect, ConnectInstance} from "api/signalling";
+import { Connection } from "services/Connection";
+import { whenLocalMedia } from "services/localMedia";
+import { addDebug } from "@utils";
+import { Peer, PEER_EVENTS } from "lib/webrtc";
 import { createContext, useCallback, useLayoutEffect, useRef, useState } from "react";
 
 
 type NextSignature = () => void;
 interface ConnectValue {
-    state: ConnectInstance | null;
+    state: Peer;
     next: NextSignature;
 }
 
@@ -16,23 +19,48 @@ const ConnectContext = createContext<ConnectValue | null>( null );
 // Provider obj
 const ConnectProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
 
-    const [connectState, setConnectState]   = useState<ConnectInstance | null>(null);
+    // === DATA ===
+    const connection                        = useRef<Connection>( new Connection() );
     const localMedia                        = useRef<MediaStream | null>(null);
+    const [connectState, setConnectState]   = useState<Peer>(connection.current.peer);
+    const [isClosed, setIsClosed]           = useState<boolean>(false);
     
-    const nextHandler: NextSignature = useCallback(() => {
-        if (!localMedia.current) return;
-        connectState?.close();
-        setConnectState( new Connect(localMedia.current) );
+    // === HELPERS ===
+    const updateConnection = useCallback(() => {
+        connection.current.stop();
+        connection.current = new Connection();
+        setConnectState(connection.current.peer);
+    }, []);
+    const writeLocalMedia = useCallback((media: MediaStream) => {
+        localMedia.current = media;
+        media.getTracks().forEach( track => connectState.addMediaTrack(track, media) );
+    }, [connectState]);
+    const remoteMediaHandler = useCallback(({streams: [stream]}: {streams: MediaStream[]}) => {
+        addDebug('remoteMedia', stream);
     }, [connectState]);
 
+    // === HANDLERS ===
+    const nextHandler: NextSignature = useCallback(() => {
+        updateConnection();
+        if (localMedia.current) writeLocalMedia(localMedia.current);
+    }, []);
+
+    // === EFFECTS ===
     useLayoutEffect(() => {
         let isMounted = true; // флаг для проверки
-        navigator.mediaDevices.getUserMedia({ video: true, audio: true })
-            .then(stream => { if (!isMounted) return; localMedia.current = stream; nextHandler(); })
-            .catch(err => { if (!isMounted) return; console.error("Error getting user media:", err)});
+        whenLocalMedia( (stream) => {
+            if (!isMounted) return;
+            writeLocalMedia(stream);
+            addDebug("localMedia", localMedia.current);
+        } );
         
         return () => { isMounted = false; };
     }, []);
+
+    useLayoutEffect(() => {
+        connectState?.on(PEER_EVENTS.MEDIA, remoteMediaHandler);
+        return () => connectState?.off(PEER_EVENTS.MEDIA, remoteMediaHandler);
+    }, [connectState]);
 
 
     return (
