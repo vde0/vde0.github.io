@@ -1,7 +1,7 @@
-import { Connection } from "services/Connection";
-import { whenLocalMedia } from "services/localMedia";
+import { Connection } from "@services/Connection";
+import { whenLocalMedia } from "@services/localMedia";
 import { addDebug } from "@utils";
-import { Peer, PEER_EVENTS } from "lib/webrtc";
+import { Peer, PEER_EVENTS } from "@lib/webrtc";
 import { createContext, useCallback, useLayoutEffect, useRef, useState } from "react";
 
 

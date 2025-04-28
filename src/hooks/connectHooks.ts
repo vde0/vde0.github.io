@@ -1,6 +1,6 @@
 import { ConnectContext, NextSignature } from "@store";
 import { whenLocalMedia } from "@services/localMedia";
-import { PEER_EVENTS } from "lib/webrtc";
+import { PEER_EVENTS } from "@lib/webrtc";
 import { useCallback, useContext, useLayoutEffect, useMemo, useState } from "react";
 
 
