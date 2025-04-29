@@ -7,11 +7,11 @@ import { useCallback } from "react";
 
 const TextChat: React.FC<PropsWithClassName> = ({ className }) => {
 
-    const [history, dispathHistory] = useMsgHistory();
+    const [history, dispatchHistory] = useMsgHistory();
 
     const pushMsgHandler = useCallback<(msgValue: string) => void>((msgValue) => {
         // dispathMsgHistory("ADD", [user.id, msgValue]);
-    }, [dispathHistory]);
+    }, [dispatchHistory]);
 
     return (
         <article className={`h-full flex flex-col ${className}`}>
