@@ -1,3 +1,4 @@
+import { MsgHistory, MsgItem, SymbolChatter } from "@lib/textchat-history";
 import { TextChatContext } from "@store";
 import { useContext } from "react";
 
@@ -14,9 +15,9 @@ export const useWrite = (): [string, SetWrite] => {
 };
 
 
-type DispatchMsgHistory = (actionType: "ADD" | "RESET", msgItem?: [string, string]) => void;
+type DispatchMsgHistory = (actionType: "ADD" | "RESET", msgItem?: [SymbolChatter, string]) => void;
 
-export const useMsgHistory = (): [string[], DispatchMsgHistory] => {
+export const useMsgHistory = (): [MsgItem[], DispatchMsgHistory] => {
 
     const contextValue = useContext(TextChatContext);
     if (!contextValue) { throw new Error("useMsgHistory() must be used within a TextChatProvider") }
@@ -34,5 +35,5 @@ export const useMsgHistory = (): [string[], DispatchMsgHistory] => {
         }
     };
 
-    return [state.chatData, dispatchAction];
+    return [state.chatData.getHistory(), dispatchAction];
 };

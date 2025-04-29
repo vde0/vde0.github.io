@@ -23,7 +23,6 @@ const ConnectProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
     const connection                        = useRef<Connection>( new Connection() );
     const localMedia                        = useRef<MediaStream | null>(null);
     const [connectState, setConnectState]   = useState<Peer>(connection.current.peer);
-    const [isClosed, setIsClosed]           = useState<boolean>(false);
     
     // === HELPERS ===
     const updateConnection = useCallback(() => {
@@ -35,15 +34,15 @@ const ConnectProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
         localMedia.current = media;
         media.getTracks().forEach( track => connectState.addMediaTrack(track, media) );
     }, [connectState]);
-    const remoteMediaHandler = useCallback(({streams: [stream]}: {streams: MediaStream[]}) => {
-        addDebug('remoteMedia', stream);
-    }, [connectState]);
 
     // === HANDLERS ===
     const nextHandler: NextSignature = useCallback(() => {
         updateConnection();
         if (localMedia.current) writeLocalMedia(localMedia.current);
     }, []);
+    const remoteMediaHandler = useCallback(({streams: [stream]}: {streams: MediaStream[]}) => {
+        addDebug('remoteMedia', stream);
+    }, [connectState]);
 
     // === EFFECTS ===
     useLayoutEffect(() => {

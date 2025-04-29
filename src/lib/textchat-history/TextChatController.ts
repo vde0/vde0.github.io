@@ -1,12 +1,12 @@
-import { MsgHistory, MsgItem } from "@utils";
+import { MsgHistory, MsgItem } from "@lib/textchat-history/MsgHistory";
 
 
 export type SymbolChatter = symbol;
 
 export type TextChatConstructor = new () => TextChatController;
 export interface TextChatController {
-    remoteSymbolChatter:  SymbolChatter;
-    localSymbolChatter:   SymbolChatter;
+    remoteChatter:  SymbolChatter;
+    localChatter:   SymbolChatter;
     length:         number;
 
     addMsg:         (chatter: SymbolChatter, msgText: string) => void;
@@ -18,16 +18,16 @@ export const TextChatController: TextChatConstructor = function () {
 
     const msgHistory:       MsgHistory  = new MsgHistory();
 
-    const remoteSymbolChatter:    SymbolChatter     = Symbol("REMOTE_CHATTER");
-    const localSymbolChatter:     SymbolChatter     = Symbol("LOCAL_CHATTER");
+    const remoteChatter:    SymbolChatter     = Symbol("REMOTE_CHATTER");
+    const localChatter:     SymbolChatter     = Symbol("LOCAL_CHATTER");
 
-    const checkIsKnownSymbolChatter = (chatter: SymbolChatter): boolean => (
-        chatter === remoteSymbolChatter || chatter === localSymbolChatter
+    const checkIsKnownChatter = (chatter: SymbolChatter): boolean => (
+        chatter === remoteChatter || chatter === localChatter
     );
 
     const instance: TextChatController = {
         addMsg (chatter, msgText) { 
-            if ( !checkIsKnownSymbolChatter(chatter) ) throw Error("Unknown chatter symbol provided.");
+            if ( !checkIsKnownChatter(chatter) ) throw Error("Unknown chatter symbol provided.");
             if ( typeof msgText !== "string" ) throw TypeError("msgText arg must be string.")
             msgHistory.add(chatter, msgText);
         },
@@ -37,8 +37,8 @@ export const TextChatController: TextChatConstructor = function () {
 
         get length () { return msgHistory.length; },
 
-        remoteSymbolChatter:  remoteSymbolChatter,
-        localSymbolChatter:   localSymbolChatter,
+        remoteChatter:  remoteChatter,
+        localChatter:   localChatter,
     };
     Object.freeze(instance);
 

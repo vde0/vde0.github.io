@@ -1,14 +1,15 @@
+import { SymbolChatter, TextChatController } from "@lib/textchat-history";
 import { addDebug } from "@utils";
 import { createContext, useReducer } from "react";
 
 
 interface TextChatState {
-    chatData:   string[];
+    chatData:   TextChatController;
     write:      string;
 }
 type TextChatAction =
     | {type: "RESET"}
-    | {type: "ADD", data: [string, string]}
+    | {type: "ADD", data: [SymbolChatter, string]}
     | {type: "WRITE", data: string};
 
 interface TextChatValue {
@@ -17,26 +18,13 @@ interface TextChatValue {
 }
 
 
-// init
-const CUR_USER: string = '1';
-const OUT_USER: string = '775';
-
-const initTextChatValue: TextChatValue = {
-    dispatch(action) {},
-    state: {
-        chatData:   [CUR_USER, "Hey!", OUT_USER, "Hello."],
-        write:    "",
-    },
-};
-
-
 // Reducer func
 const textChatReducer: React.Reducer<TextChatState, TextChatAction> = (state, action) => {
     
     switch (action.type) {
         case "RESET":
             return {
-                chatData:   [],
+                chatData:   new TextChatController(),
                 write:      "",
             };
         case "ADD":
@@ -53,7 +41,7 @@ const textChatReducer: React.Reducer<TextChatState, TextChatAction> = (state, ac
                 throw new TypeError(
                     "Invalid action.data[id: string, msgText: string]. Was taken incorrect data type for the \"ADD\" action type");}
             
-            state.chatData.push(...action.data);
+            state.chatData.addMsg(...action.data);
             return {
                 ...state
             };
@@ -82,7 +70,10 @@ const TextChatContext = createContext<TextChatValue | null>( null );
 // Provider obj
 const TextChatProvider: React.FC<React.PropsWithChildren> = ({children}) => {
 
-    const [chatState, dispatchChat] = useReducer(textChatReducer, initTextChatValue.state);
+    const [chatState, dispatchChat] = useReducer(textChatReducer, {
+        write: "",
+        chatData: new TextChatController(),
+    });
 
     addDebug("chatData", {...chatState.chatData});
 

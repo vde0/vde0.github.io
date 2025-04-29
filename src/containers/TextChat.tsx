@@ -1,23 +1,21 @@
 import MsgList from "@components/MsgList";
 import MsgForm from "./MsgForm";
-import { useGetCurUser, useMsgHistory } from "@hooks";
+import { useMsgHistory } from "@hooks";
 import { PropsWithClassName } from "@types";
 import { useCallback } from "react";
-import { User } from "@hooks";
 
 
 const TextChat: React.FC<PropsWithClassName> = ({ className }) => {
 
-    const [msgHistory, dispathMsgHistory] = useMsgHistory();
-    const user: User = useGetCurUser();
+    const [history, dispathHistory] = useMsgHistory();
 
     const pushMsgHandler = useCallback<(msgValue: string) => void>((msgValue) => {
-        dispathMsgHistory("ADD", [user.id, msgValue]);
-    }, [dispathMsgHistory]);
+        // dispathMsgHistory("ADD", [user.id, msgValue]);
+    }, [dispathHistory]);
 
     return (
         <article className={`h-full flex flex-col ${className}`}>
-            <MsgList correspondence={msgHistory} />
+            <MsgList correspondence={history} />
             <MsgForm className="mt-auto" onPush={pushMsgHandler} />
         </article>
     );
