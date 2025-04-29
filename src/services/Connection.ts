@@ -39,7 +39,10 @@ export const Connection: ConnectionConctructor = function (): Connection {
 
         listen(socket, {
             "accepttarget": ({ target: id, offer }: {target: string, offer: boolean}) => {target = id; if (offer) peer.start(); },
-            "acceptsdp": ({ sdp }: {sdp: RTCSessionDescription}) => peer.setRemoteSdp(sdp),
+            "acceptsdp": ({ sdp }: {sdp: RTCSessionDescription}) => {
+                console.log("REMOTE SDP", JSON.stringify(sdp));
+                peer.setRemoteSdp(sdp);
+            },
             "acceptice": ({ ice }: {ice: RTCIceCandidate}) => peer.addCandidate(ice),
         });
 

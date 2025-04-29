@@ -41,8 +41,8 @@ const ConnectProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
         updateConnection();
         if (localMedia.current) writeLocalMedia(localMedia.current);
     }, []);
-    const remoteMediaHandler = useCallback(({streams: [stream]}: {streams: MediaStream[]}) => {
-        addDebug('remoteMedia', stream);
+    const remoteMediaHandler = useCallback(({ media }: {media: MediaStream}) => {
+        addDebug('remoteMedia', media);
     }, [connectState]);
 
     // === EFFECTS ===

@@ -14,11 +14,11 @@ const VideoChat: React.FC<VideoChatProps> = ({ className, remote = false }) => {
     useEffect(() => {
         if (!ref.current) return;
         ref.current.srcObject = remote ? remoteMedia : localMedia;
-    }, [remoteMedia, remote]);
+    }, [localMedia, remoteMedia, remote]);
 
     return (
         <section className={className}>
-            <video ref={ref} autoPlay />
+            <video id={remote?"remoteVideo":"localVideo"} muted={!remote} ref={ref} autoPlay />
         </section>
     );
 };

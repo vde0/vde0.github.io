@@ -1,6 +1,7 @@
 import "webrtc-adapter";
 import freeice from "freeice";
 import { IListenerChest, ListenerChest } from "@utils";
+import * as sdpTransform from 'sdp-transform';
 
 
 // === ANNOTATION ===
@@ -71,6 +72,8 @@ export const Peer: PeerConstructor = function (config = DEFAULT_CONFIG) {
     let mediaTracks:    Map<string, MediaStreamTrack>       = new Map();
     let mediaStreams:   Map<string, MediaStream>            = new Map();
 
+    const candidateBuffer: RTCIceCandidate[] = [];
+
     // === LOCAL HELPERS / PRIVATE METHODS ===
     function initDataChannel (dc: RTCDataChannel) {
         dc.onmessage = (ev: MessageEvent) => listenerChest.exec(PEER_EVENTS.TEXT, ev);
@@ -82,6 +85,14 @@ export const Peer: PeerConstructor = function (config = DEFAULT_CONFIG) {
     function initMediaStream (stream: MediaStream) {
         mediaStreams.set(stream.id, stream);
         listenerChest.exec(PEER_EVENTS.MEDIA, { media: stream });
+    }
+    function doCandidateBuffer () {
+        try {
+            candidateBuffer.forEach( candidate => rtc.addIceCandidate(candidate) );
+        } catch (err: any) {
+            console.warn("ICE candidate failed:", err.message);
+        }
+        candidateBuffer.length = 0;
     }
 
     // === EXEC CODE ===
@@ -115,28 +126,47 @@ export const Peer: PeerConstructor = function (config = DEFAULT_CONFIG) {
         get rtc () { return rtc },
 
         // === CONNECT CONTROLLING ===
-        start () {
+        async start () {
+            if (isStarted) return;
             isStarted = true;
-            rtc.createOffer()
-                .then(offer => {
-                    rtc.setLocalDescription(offer);
-                    listenerChest.exec(PEER_EVENTS.SDP, { sdp: offer });
-                })
-                .catch(err => console.error("Error of offer generating:", err.message));
+
+            try {
+                const offer: RTCSessionDescriptionInit = await rtc.createOffer();
+
+                if (offer.sdp) {
+                    const res: sdpTransform.SessionDescription = sdpTransform.parse(offer.sdp);
+                    const videoMedia = res.media.find(m => m.type === "video");
+                    if (videoMedia) {
+                        videoMedia.rtp = videoMedia.rtp.filter(rtpItem => rtpItem.codec === "H264");
+                        const videoPayloads = videoMedia.rtp.map(rtpItem => rtpItem.payload);
+                        videoMedia.payloads = videoPayloads.join(" ");
+                        videoMedia.fmtp = videoMedia.fmtp?.filter(fmtpItem => videoPayloads.includes(fmtpItem.payload)) ?? [];
+                        videoMedia.rtcpFb = videoMedia.rtcpFb?.filter(rtcpFbItem => videoPayloads.includes(rtcpFbItem.payload)) ?? [];
+                    }
+
+                    offer.sdp = sdpTransform.write(res);
+                }
+
+                await rtc.setLocalDescription(offer);
+                listenerChest.exec(PEER_EVENTS.SDP, { sdp: offer });
+            } catch (err: any) { console.error("Error of offer generating:", err.message); }
         },
         stop () { rtc.close(); listenerChest.clear(); },
 
-        setRemoteSdp (sdp) {
-            rtc.setRemoteDescription(sdp);
-            if (!isStarted) rtc.createAnswer()
-                .then(answer => {
-                    rtc.setLocalDescription(answer);
-                    listenerChest.exec(PEER_EVENTS.SDP, { sdp: answer });
-                })
-                .catch(err => console.error("Error of answer generating:", err.message));
+        async setRemoteSdp (sdp) {
+            await rtc.setRemoteDescription(sdp);
+            doCandidateBuffer();
+
+            if (isStarted) return;
+            
+            try {
+                const answer: RTCSessionDescriptionInit = await rtc.createAnswer();
+                await rtc.setLocalDescription(answer);
+                listenerChest.exec(PEER_EVENTS.SDP, { sdp: answer });
+            } catch (err: any) { console.error("Error of answer generating:", err.message); }
         },
         addCandidate (ice) {
-            rtc.addIceCandidate(ice);
+            candidateBuffer.push(ice);
         },
 
         // === DATA CONTROLLING ===
