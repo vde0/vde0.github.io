@@ -28,6 +28,7 @@ const ConnectProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
     const updateConnection = useCallback(() => {
         connection.current.stop();
         connection.current = new Connection();
+        connection.current.start();
         setConnectState(connection.current.peer);
     }, []);
     const writeLocalMedia = useCallback((media: MediaStream) => {
@@ -51,6 +52,7 @@ const ConnectProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
             if (!isMounted) return;
             writeLocalMedia(stream);
             addDebug("localMedia", localMedia.current);
+            connection.current.start();
         } );
         
         return () => { isMounted = false; };

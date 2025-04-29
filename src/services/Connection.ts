@@ -1,6 +1,6 @@
 import { io, Socket } from "socket.io-client";
-import { addDebug, IListenerChest, ListenerChest, once } from "@utils";
-import { Peer, PEER_EVENTS } from "lib/webrtc";
+import { addDebug, IListenerChest, listen, ListenerChest, once } from "@utils";
+import { Peer, PEER_EVENTS, PeerEvent } from "lib/webrtc";
 
 
 // === GENERAL DATA ===
@@ -37,14 +37,18 @@ export const Connection: ConnectionConctructor = function (): Connection {
     const initSocket = (): void => {
         socket = io(SIGNAL_SERVER);
 
-        socket.on("accepttarget", ({ target: id, offer }) => { target = id; if (offer) peer.start(); });
-        socket.on("acceptsdp", ({ target, sdp }) => peer.setRemoteSdp(sdp) );
-        socket.on("acceptice", ({ target, ice }) => peer.addCandidate(ice) );
+        listen(socket, {
+            "accepttarget": ({ target: id, offer }: {target: string, offer: boolean}) => {target = id; if (offer) peer.start(); },
+            "acceptsdp": ({ sdp }: {sdp: RTCSessionDescription}) => peer.setRemoteSdp(sdp),
+            "acceptice": ({ ice }: {ice: RTCIceCandidate}) => peer.addCandidate(ice),
+        });
 
-        peer.on(PEER_EVENTS.SDP, ({ sdp }: {sdp: RTCSessionDescription}) => socket.emit("relaysdp", {target, sdp}));
-        peer.on(PEER_EVENTS.ICE, ({ candidate }: {candidate: RTCIceCandidate}) => socket.emit("relayice", {target, ice: candidate}));
-        peer.on(PEER_EVENTS.CONNECT, () => { socket.emit("success"); socket.disconnect(); });
-        peer.on(PEER_EVENTS.DISCONNECT, () => closeHandler());
+        listen<PeerEvent>(peer, {
+            [PEER_EVENTS.SDP]: ({ sdp }: {sdp: RTCSessionDescription}) => socket.emit("relaysdp", {target, sdp}),
+            [PEER_EVENTS.ICE]: ({ candidate }: {candidate: RTCIceCandidate}) => socket.emit("relayice", {target, ice: candidate}),
+            [PEER_EVENTS.CONNECT]: () => { socket.emit("success"); socket.disconnect(); },
+            [PEER_EVENTS.DISCONNECT]: () => closeHandler(),
+        });
     };
 
     // === RESULT INSTANCE ===
