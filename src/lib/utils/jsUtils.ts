@@ -96,20 +96,22 @@ function once (callback: CallableFunction): () => boolean {
 }
 
 
-type OnType  = (event: string, listener: CallableFunction) => void;
-type OffType = (event: string, listener: CallableFunction) => void;
-type Events = { [key: string]: (...args: any[]) => void };
-function listen <K extends string = 'on'>(
-    master: Record<K, OnType>, events: Events, toolName: K = 'on' as K
+type OnType<E extends string = string>  = (event: E, listener: CallableFunction) => void;
+type OffType<E extends string = string> = (event: E, listener: CallableFunction) => void;
+type Events<E extends string = string> = Partial<Record<E, CallableFunction>>;
+
+function listen <E extends string = string>(
+    master: Record<keyof any, any>, events: Events<E>, toolName: string = 'on'
 ): void {
-    for (let event in events) (master[toolName])(event, events[event]);
+    for (let event in events) master[toolName]?.(event, events[event]);
 }
-function listenOnce <K extends string = 'once'>(
-    master: Record<K, OnType>, events: Events, toolName: K = 'once' as K
+function listenOnce <E extends string = string>(
+    master: Record<keyof any, any>, events: Events<E>, toolName: string = 'once'
 ): void {
     for (let event in events) master[toolName](event, events[event]);
 }
-function unlisten <K extends string = 'off'>(
-    master: Record<K, OffType>, events: Events, toolName: K = 'off' as K): void {
+function unlisten <E extends string = string>(
+    master: Record<keyof any, any>, events: Events<E>, toolName: string = 'off'
+): void {
     for (let event in events) master[toolName](event, events[event]);
 }
