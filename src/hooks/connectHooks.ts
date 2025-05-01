@@ -23,9 +23,9 @@ export const useLocalVideo = (): MediaStream | null => {
         whenLocalMedia( stream => {
             setLocalVideo(stream);
             if (!isMounted) return;
-            // const video = new MediaStream();
-            // stream.getVideoTracks().forEach(track => video.addTrack);
-            // setLocalMedia(video);
+            const video = new MediaStream();
+            stream.getVideoTracks().forEach(track => video.addTrack(track));
+            setLocalVideo(video);
         } );
         return () => { isMounted = false; };
     }, []);
