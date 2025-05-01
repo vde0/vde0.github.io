@@ -12,7 +12,18 @@ const execHandlers = (stream: MediaStream): void => {
 };
 
 const lazyInit = once( (): void => {
-    navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+    navigator.mediaDevices.getUserMedia({
+        video : {
+            frameRate : {
+                ideal : 10,
+                max : 15
+            },
+            width : 1280,
+            height : 720,
+            facingMode : "user"
+        },
+        audio: true,
+    })
     .then(stream => { localMedia = stream; execHandlers(stream) })
     .catch(err => { console.error("Error getting local media stream:", err) });
 } );
