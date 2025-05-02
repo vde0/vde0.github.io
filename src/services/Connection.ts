@@ -29,6 +29,8 @@ export const Connection: ConnectionConctructor = function (): Connection {
     let target: string;
     let isStarted = false;
 
+    addDebug("peer", peer);
+
     const closeHandler = (): void => {
         socket?.disconnect();
         peer.stop();

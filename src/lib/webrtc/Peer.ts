@@ -96,6 +96,9 @@ export const Peer: PeerConstructor = function (config = DEFAULT_CONFIG) {
     }
 
     // === EXEC CODE ===
+    rtc.onconnectionstatechange = () => {
+        console.log("CONNECTION STATE:", rtc.connectionState);
+    }
     rtc.onicecandidate = (ev: RTCPeerConnectionIceEvent) => listenerChest.exec(PEER_EVENTS.ICE, ev);
     rtc.onconnectionstatechange = ev => {
         const connectionState: RTCPeerConnectionState= rtc.connectionState;
