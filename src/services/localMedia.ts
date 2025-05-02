@@ -18,9 +18,10 @@ const lazyInit = once( (): void => {
                 ideal : 10,
                 max : 15
             },
-            width : 1280,
-            height : 720,
-            facingMode : "user"
+            width: { ideal: 1280 },
+            height: { ideal: 720 },
+            aspectRatio:{ ideal: 16/9 },
+            facingMode : { exact: 'user' },
         },
         audio: true,
     })
