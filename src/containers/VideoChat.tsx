@@ -23,7 +23,7 @@ const VideoChat: React.FC<VideoChatProps> = ({ className, remote = false }) => {
 
     return (
         <section className={className}>
-            <video className="aspect-video object-cover block w-full h-auto" id={remote?"remoteVideo":"localVideo"} ref={ref} playsInline muted={true} />
+            <video className="scale-x-[-1] aspect-video object-cover block w-full h-auto" id={remote?"remoteVideo":"localVideo"} ref={ref} playsInline muted={true} />
         </section>
     );
 };
