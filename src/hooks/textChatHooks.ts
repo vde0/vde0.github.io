@@ -1,39 +1,52 @@
-import { MsgHistory, MsgItem, SymbolChatter } from "@lib/textchat-history";
+import { MsgItem, SymbolChatter } from "@lib/textchat-history";
 import { TextChatContext } from "@store";
-import { useContext } from "react";
+import { useCallback, useContext, useMemo } from "react";
 
 
-type SetWrite       = (newMsg: string) => void;
+type Send       = (msgText: string) => void;
+type SetWrite   = (msgText: string) => void;
 
 export const useWrite = (): [string, SetWrite] => {
     const contextValue = useContext(TextChatContext);
     if (!contextValue) { throw new Error("useWrite() must be used within a TextChatProvider") }
 
-    const {state: {write}, dispatch} = contextValue;
+    const { state: {write}, dispatch } = contextValue;
+    const setWrite = useCallback<SetWrite>(msgText => dispatch({ type: "WRITE", data: msgText }), []);
 
-    return [write, (msg) => { dispatch({ type: "WRITE", data: msg }) }];
+    return [write, setWrite];
 };
 
-
-type DispatchMsgHistory = (actionType: "ADD" | "RESET", msgItem?: [SymbolChatter, string]) => void;
-
-export const useMsgHistory = (): [MsgItem[], DispatchMsgHistory] => {
+export const useMsgHistory = (): MsgItem[] => {
 
     const contextValue = useContext(TextChatContext);
     if (!contextValue) { throw new Error("useMsgHistory() must be used within a TextChatProvider") }
 
-    const {state, dispatch} = contextValue;
+    const { state } = contextValue;
+    const history = useMemo<MsgItem[]>(() => state.chatData.getHistory(), [contextValue]);
 
-    const dispatchAction: DispatchMsgHistory = (actionType, msgItem) => {
-        switch (actionType) {
+    return history;
+};
 
-            case "ADD": {
-                if (!msgItem) throw new Error("Missed msgItem");
-                dispatch({ type: actionType, data: msgItem }); break;
-            }
-            case "RESET":   dispatch({ type: actionType }); break;
-        }
-    };
+export const useLocalChatter = (): [SymbolChatter, Send] => {
+    const contextValue = useContext(TextChatContext);
+    if (!contextValue) { throw new Error("useLocalChatter() must be used within a TextChatProvider") }
 
-    return [state.chatData.getHistory(), dispatchAction];
+    const send = useCallback<Send>(msgText => contextValue.dispatch({
+        type: "ADD",
+        data: [contextValue.state.chatData.localChatter, msgText],
+    }), [contextValue.state.chatData.localChatter]);
+
+    return [contextValue.state.chatData.localChatter, send];
+};
+
+export const useRemoteChatter = (): [SymbolChatter, Send] => {
+    const contextValue = useContext(TextChatContext);
+    if (!contextValue) { throw new Error("useRemoteChatter() must be used within a TextChatProvider") }
+
+    const send = useCallback<Send>(msgText => contextValue.dispatch({
+        type: "ADD",
+        data: [contextValue.state.chatData.remoteChatter, msgText],
+    }), [contextValue.state.chatData.remoteChatter]);
+    
+    return [contextValue.state.chatData.remoteChatter, send];
 };
