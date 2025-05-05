@@ -8,17 +8,17 @@ import * as sdpTransform from 'sdp-transform';
 export type Peer = IListenerChest<PeerEvent> & {
     rtc: RTCPeerConnection;
 
-    start   (): void;
+    start   (startConfig?: StartConfig, ...args: any[]): void;
     stop    (): void;
     send    (msgText: string, channelName: string): void;
 
     setRemoteSdp (sdp: RTCSessionDescription): void;
     addCandidate (ice: RTCIceCandidate): void;
 
-    addDataChannel  (label: string, config?: DataChannelConfig): boolean;
+    addDataChannel  (name: string, config?: DataChannelConfig):     boolean;
     addMediaTrack   (track: MediaStreamTrack, stream: MediaStream): boolean;
 
-    getDataChannel  (label: string):    RTCDataChannel | null;
+    getDataChannel  (name: string):     RTCDataChannel | null;
     getMediaTrack   (id: string):       MediaStreamTrack | null;
     getMediaStream  (id: string):       MediaStream | null;
 
@@ -29,6 +29,7 @@ export type Peer = IListenerChest<PeerEvent> & {
 
 export type PeerConstructor = new (config?: RTCConfiguration) => Peer;
 export type PeerEvent = 'media' | 'text' | 'connect' | 'disconnect' | 'sdp' | 'ice';
+export type StartConfig = (...args: any[]) => void;
 
 export interface DataChannelConfig {
     reliable?: boolean; // default: true
@@ -64,9 +65,9 @@ Object.freeze(PEER_EVENTS);
 export const Peer: PeerConstructor = function (config = DEFAULT_CONFIG) {
 
     // === PRIVATE FIELDS ===
-    const rtc: RTCPeerConnection = new RTCPeerConnection(config);
-    const listenerChest: IListenerChest<PeerEvent> = new ListenerChest<PeerEvent>();
-    let isStarted: boolean = false;
+    const rtc:              RTCPeerConnection           = new RTCPeerConnection(config);
+    const listenerChest:    IListenerChest<PeerEvent>   = new ListenerChest<PeerEvent>();
+    let isStarted:          boolean                     = false;
 
     let dataChannels:   Map<string, RTCDataChannel>         = new Map();
     let mediaTracks:    Map<string, MediaStreamTrack>       = new Map();
@@ -80,7 +81,7 @@ export const Peer: PeerConstructor = function (config = DEFAULT_CONFIG) {
         dataChannels.set(dc.label, dc);
     }
     function initMediaTrack (track: MediaStreamTrack) {
-        mediaTracks.set(track.id, track); 
+        mediaTracks.set(track.id, track);
     }
     function initMediaStream (stream: MediaStream) {
         mediaStreams.set(stream.id, stream);
@@ -129,9 +130,11 @@ export const Peer: PeerConstructor = function (config = DEFAULT_CONFIG) {
         get rtc () { return rtc },
 
         // === CONNECT CONTROLLING ===
-        async start () {
+        async start (startConfig, ...args) {
             if (isStarted) return;
             isStarted = true;
+
+            startConfig?.(...args);
 
             try {
                 const offer: RTCSessionDescriptionInit = await rtc.createOffer();

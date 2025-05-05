@@ -1,6 +1,6 @@
 import { io, Socket } from "socket.io-client";
-import { addDebug, IListenerChest, listen, ListenerChest, once } from "@utils";
-import { Peer, PEER_EVENTS, PeerEvent } from "lib/webrtc";
+import { addDebug, listen } from "@utils";
+import { Peer, PEER_EVENTS, PeerEvent, StartConfig } from "lib/webrtc";
 
 
 // === GENERAL DATA ===
@@ -9,38 +9,39 @@ export const SIGNAL_SERVER = process.env.SIGNAL ?? 'https://vde0.chat';
 
 
 // === TYPES ===
-export type ConnectionConctructor = new () => Connection;
-export type ConnectionEvent = 'media' | 'text' | 'connect' | 'disconnect';
-export type Connection = IListenerChest<ConnectionEvent> & {
-    start(): void;
-    stop(): void;
-    peer: Peer;
-    isStarted: boolean;
+export type ConnectionConctructor = new (peer: Peer) => Connection;
+export interface Connection {
+    signal          ():                                         void;
+    updatePeer      (peer: Peer):                               void;
+    setStartConfig  (startConfig: StartConfig, ...args: any[]): void;
 }
 
 
 // === FABRIC OF CONNECTION ===
-export const Connection: ConnectionConctructor = function (): Connection {
+export const Connection: ConnectionConctructor = function (peer: Peer): Connection {
 
     // === PRIVATE FIELDS AND METHODS ===
-    const listenerChest = new ListenerChest<ConnectionEvent>();
-    const peer: Peer = new Peer();
     let socket: Socket;
     let target: string;
-    let isStarted = false;
 
-    addDebug("peer", peer);
+    let config:     StartConfig | undefined;
+    let configArgs: any[]   = [];
 
-    const closeHandler = (): void => {
-        socket?.disconnect();
+
+    const stopPeer      = (): void => {
         peer.stop();
-        listenerChest.clear();
+        config              = undefined;
+        configArgs.length   = 0;
+        configArgs          = [];
     };
-    const initSocket = (): void => {
+    const initSocket    = (): void => {
         socket = io(SIGNAL_SERVER);
 
         listen(socket, {
-            "accepttarget": ({ target: id, offer }: {target: string, offer: boolean}) => {target = id; if (offer) peer.start(); },
+            "accepttarget": ({ target: id, offer }: {target: string, offer: boolean}) => {
+                target = id;
+                if (offer) peer.start(config, ...configArgs);
+            },
             "acceptsdp": ({ sdp }: {sdp: RTCSessionDescription}) => {
                 console.log("REMOTE SDP", JSON.stringify(sdp));
                 peer.setRemoteSdp(sdp);
@@ -52,22 +53,26 @@ export const Connection: ConnectionConctructor = function (): Connection {
             [PEER_EVENTS.SDP]: ({ sdp }: {sdp: RTCSessionDescription}) => socket.emit("relaysdp", {target, sdp}),
             [PEER_EVENTS.ICE]: ({ candidate }: {candidate: RTCIceCandidate}) => socket.emit("relayice", {target, ice: candidate}),
             [PEER_EVENTS.CONNECT]: () => { socket.emit("success"); socket.disconnect(); },
-            [PEER_EVENTS.DISCONNECT]: () => closeHandler(),
+            [PEER_EVENTS.DISCONNECT]: () => { socket.disconnect(); stopPeer() },
         });
     };
 
     // === RESULT INSTANCE ===
     return {
-        ...listenerChest as IListenerChest<ConnectionEvent>,
-        get peer () { return peer },
-        get isStarted () { return isStarted },
-        start () {
-            if (isStarted) return;
-            isStarted = true;
+        signal () {
+            if (peer.rtc.connectionState !== "new") throw Error (
+                "Connection.signal() should be with correct \"new\" Peer."
+            );
+            socket?.disconnect();
             initSocket();
         },
-        stop () {
-            closeHandler();
+        updatePeer (argPeer) {
+            stopPeer();
+            peer = argPeer;
+        },
+        setStartConfig (startConfig, ...args) {
+            config      = startConfig;
+            configArgs  = args;
         },
     };
 } as unknown as ConnectionConctructor;
