@@ -8,7 +8,6 @@ export interface IListenerChest<E extends string = string> {
     off (event: E, listener: CallableFunction): void;
     onOnce (event: E, listener: CallableFunction): void;
     exec (event: E, data?: any): void;
-    clear (): void;
 }
 export type ListenerMap<E extends string = string> = Map<E, Set<CallableFunction>>;
 
@@ -31,7 +30,6 @@ export class ListenerChest<E extends string = string> implements IListenerChest<
         this.off    = this.off.bind(this);
         this.onOnce = this.onOnce.bind(this);
         this.exec   = this.exec.bind(this);
-        this.clear  = this.clear.bind(this);
     }
 
     _init (): void {
@@ -67,10 +65,5 @@ export class ListenerChest<E extends string = string> implements IListenerChest<
         this._init();
         const listenerMap: ListenerMap<E> = privateContext.get(this, 'listenerMap') as ListenerMap<E>;
         listenerMap.get(event)?.forEach( listener => listener(data) );
-    }
-    clear (): void {
-        this._init();
-        const listenerMap: ListenerMap<E> = privateContext.get(this, 'listenerMap') as ListenerMap<E>;
-        listenerMap.clear();
     }
 }
