@@ -1,13 +1,18 @@
 import { Connection } from "@services/Connection";
 import { whenLocalMedia } from "@services/localMedia";
 import { addDebug } from "@utils";
-import { Peer, PEER_EVENTS } from "@lib/webrtc";
-import { createContext, useCallback, useLayoutEffect, useRef, useState } from "react";
+import { Peer, PEER_EVENTS, StartConfig } from "@lib/webrtc";
+import { createContext, useCallback, useContext, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { CHAT_HISTORY_EVENTS, MsgItem } from "@lib/chat-history";
+import { ChatContext, ChatValue } from "./ChatProvider";
+
+
+export const CHAT_NAME = "CHAT";
 
 
 type NextSignature = () => void;
 interface ConnectValue {
-    state: Peer;
+    peer: Peer;
     next: NextSignature;
 }
 
@@ -20,52 +25,62 @@ const ConnectContext = createContext<ConnectValue | null>( null );
 const ConnectProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
 
     // === DATA ===
-    const connection                        = useRef<Connection>( new Connection() );
-    const localMedia                        = useRef<MediaStream | null>(null);
-    const [connectState, setConnectState]   = useState<Peer>(connection.current.peer);
+    const [peer, setPeer]   = useState<Peer>( new Peer() );
+    const textChat          = useContext(ChatContext);
+    const connection        = useRef<Connection>( new Connection(peer) );
+
+    if (textChat === null) throw Error("TextChatContext must be used within ChatProvider.");
+    const { chatUnit }: ChatValue = textChat;
+
+    const startConfig = useCallback<StartConfig>(() => peer.addDataChannel(CHAT_NAME), [peer]);
     
     // === HELPERS ===
-    const updateConnection = useCallback(() => {
-        connection.current.stop();
-        connection.current = new Connection();
-        connection.current.start();
-        setConnectState(connection.current.peer);
-    }, []);
-    const writeLocalMedia = useCallback((media: MediaStream) => {
-        localMedia.current = media;
-        media.getTracks().forEach( track => connectState.addMediaTrack(track, media) );
-    }, [connectState]);
+    const next = useCallback(() => {
+        const newPeer = new Peer();
+        setPeer(newPeer);
+
+        whenLocalMedia( media => media.getTracks().forEach(track => newPeer.addMediaTrack(track, media)) );
+        whenLocalMedia( media => addDebug("localMedia", media) );
+
+        connection.current.updatePeer(newPeer);
+        connection.current.setStartConfig(startConfig);
+
+        connection.current.signal();
+    }, [startConfig]);
 
     // === HANDLERS ===
-    const nextHandler: NextSignature = useCallback(() => {
-        updateConnection();
-        if (localMedia.current) writeLocalMedia(localMedia.current);
-    }, []);
     const remoteMediaHandler = useCallback(({ media }: {media: MediaStream}) => {
+        chatUnit.setMedia(chatUnit.remoteChatter, media);
         addDebug('remoteMedia', media);
-    }, [connectState]);
+    }, []);
+    const sendHandler = useCallback(({ user, text }: MsgItem) => {
+        if (user !== chatUnit.remoteChatter) return;
+        peer.send(text, "Chat");
+    }, [peer, chatUnit]);
+    const receiveHandler = useCallback(({ data }: {data: string}) => {
+        chatUnit.history.add(data, chatUnit.remoteChatter);
+    }, [chatUnit]);
 
     // === EFFECTS ===
-    useLayoutEffect(() => {
-        let isMounted = true; // флаг для проверки
-        whenLocalMedia( (stream) => {
-            if (!isMounted) return;
-            writeLocalMedia(stream);
-            addDebug("localMedia", localMedia.current);
-            connection.current.start();
-        } );
-        
-        return () => { isMounted = false; };
-    }, []);
+    useLayoutEffect(() => next(), []);
 
     useLayoutEffect(() => {
-        connectState?.on(PEER_EVENTS.MEDIA, remoteMediaHandler);
-        return () => connectState?.off(PEER_EVENTS.MEDIA, remoteMediaHandler);
-    }, [connectState]);
+        peer.on(PEER_EVENTS.MEDIA, remoteMediaHandler);
+        return () => peer.off(PEER_EVENTS.MEDIA, remoteMediaHandler);
+    }, [peer, remoteMediaHandler]);
+
+    useEffect(() => {
+        chatUnit.history.on(CHAT_HISTORY_EVENTS.ADD, sendHandler);
+        return () => chatUnit.history.off(CHAT_HISTORY_EVENTS.ADD, sendHandler);
+    }, [chatUnit, sendHandler]);
+    useEffect(() => {
+        peer.on(PEER_EVENTS.TEXT, receiveHandler);
+        return () => peer.off(PEER_EVENTS.TEXT, receiveHandler);
+    }, [peer, receiveHandler]);
 
 
     return (
-        <ConnectContext.Provider value={{state: connectState, next: nextHandler}}>
+        <ConnectContext.Provider value={{ peer, next }}>
             {children}
         </ConnectContext.Provider>
     );
