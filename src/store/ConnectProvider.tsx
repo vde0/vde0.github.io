@@ -53,7 +53,7 @@ const ConnectProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
         chatUnit.setMedia(chatUnit.remoteChatter, media);
         addDebug('remoteMedia', media);
     }, []);
-    const sendHandler = useCallback(({ user, text }: MsgItem) => {
+    const sendHandler = useCallback(({ chatter: user, text }: MsgItem) => {
         if (user !== chatUnit.remoteChatter) return;
         peer.send(text, "Chat");
     }, [peer, chatUnit]);

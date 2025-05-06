@@ -11,7 +11,7 @@ Object.freeze(CHAT_HISTORY_EVENTS);
 
 export interface MsgItem {
     text: MsgText;
-    user: Chatter;
+    chatter: Chatter;
     toString (): string;
 }
 export type Chatter     = Symbol | string;
@@ -26,9 +26,9 @@ export type ChatHistory =  Iterable<MsgItem> & IListenerChest<ChatHistoryEvent> 
     tail    (quant: number):                MsgItem[];
     getAllHistory ():                       MsgItem[];
 
-    add     (msg: MsgText, user: Chatter):  MsgId;
-    delete  (msgId: MsgId):                 boolean;
-    clear   ():                             void;
+    add     (msg: MsgText, chatter: Chatter):   MsgId;
+    delete  (msgId: MsgId):                     boolean;
+    clear   ():                                 void;
 
     length: number;
     forEach         ( callback: ForEachCallback ):  void;
@@ -51,15 +51,15 @@ export const ChatHistory: ChatHistoryConstructor = function () {
     const listenerChest:    IListenerChest<ChatHistoryEvent> = new ListenerChest();
     
     // === FUNCS 1 LVL ===
-    const make      = (text: MsgText, user: Chatter):   MsgItem => ({ text, user, toString () { return text; } });
+    const make      = (text: MsgText, chatter: Chatter):   MsgItem => ({ text, chatter, toString () { return text; } });
     const length    = ():                               number  => msgMap.size;
     
     const has       = (msgId: MsgId):   boolean         => msgMap.has(msgId);
     const get       = (msgId: MsgId):   MsgItem | null  => msgMap.get(msgId) ?? null;
 
-    const add       = (text: MsgText, user: Chatter):   number => {
+    const add       = (text: MsgText, chatter: Chatter):   number => {
 
-        const item      = make(text, user);
+        const item      = make(text, chatter);
         msgMap.set(++lastMsgId, item);
 
         listenerChest.exec(CHAT_HISTORY_EVENTS.ADD, { item });
@@ -70,12 +70,12 @@ export const ChatHistory: ChatHistoryConstructor = function () {
         const item      = msgMap.get(msgId);
         const result    = msgMap.delete(msgId);
 
-        item && listenerChest.exec("delete", { item });
+        item && listenerChest.exec(CHAT_HISTORY_EVENTS.DELETE, { item });
         return result;
     };
     const clear     = ():                                void => {
         msgMap.clear();
-        listenerChest.exec("clear");
+        listenerChest.exec(CHAT_HISTORY_EVENTS.CLEAR);
     };
 
     // === ITERATORS ===
@@ -143,11 +143,11 @@ export const ChatHistory: ChatHistoryConstructor = function () {
     // === RESULT INSTANCE ===
     const instance: ChatHistory = {
         ...listenerChest,
-        add (msgText, user) {
-            checkChatterType(user);
+        add (msgText, chatter) {
+            checkChatterType(chatter);
             checkMsgType(msgText);
 
-            return add(msgText, user);
+            return add(msgText, chatter);
         },
         delete (msgId) {
             if ( typeof msgId !== "number" ) throw TypeError("msgId must be number.");

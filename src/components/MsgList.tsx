@@ -19,7 +19,7 @@ const MsgList: React.FC<MsgListProps> = ({ correspondence }) => {
     return (
         <section css={msgListCss} >
             {correspondence.map( (sMsgItem, index) => <MsgItem
-                sender={sMsgItem.user as SymbolChatter} text={sMsgItem.text} key={index} /> )}
+                sender={sMsgItem.chatter as SymbolChatter} text={sMsgItem.text} key={index} /> )}
         </section>
 )};
 
