@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
-import { SymbolChatter } from "@lib/textchat-history";
+import { SymbolChatter } from "@services/DuoChatUnit";
 
 
 interface MsgItemProps {

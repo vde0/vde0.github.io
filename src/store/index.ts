@@ -1,2 +1,2 @@
 export * from "./ConnectProvider";
-export * from "./TextChatProvider";
+export * from "./ChatProvider";

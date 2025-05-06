@@ -2,7 +2,8 @@
 import { css, EmCss } from "@emotion/react";
 import MsgItem from "./MsgItem";
 import { useRef } from "react";
-import { MsgItem as SemanticMsgItem, SymbolChatter } from "@lib/textchat-history";
+import { MsgItem as SemanticMsgItem } from "@lib/chat-history";
+import { SymbolChatter } from "@services/DuoChatUnit";
 
 
 interface MsgListProps {

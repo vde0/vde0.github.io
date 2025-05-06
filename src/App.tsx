@@ -1,6 +1,6 @@
 import React from 'react';
 import Main from './containers/Main';
-import TextChatProvider from '@store/TextChatProvider';
+import TextChatProvider from '@store/ChatProvider';
 import ConnectProvider from '@store/ConnectProvider';
 import { WebAppProvider } from '@vkruglikov/react-telegram-web-app';
 
