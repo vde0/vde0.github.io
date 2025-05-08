@@ -25,7 +25,7 @@ export const useChatHistory = (): ChatHistory => {
 
 export const useChatFeed = (): MsgItem[] => {
     const { chatUnit }      = getChatContext();
-    const [feed, setFeed]   = useState<MsgItem[]>([]);
+    const [feed, setFeed]   = useState<MsgItem[]>( chatUnit.history.tail(100) );
 
     useEffect(() => {
         const update = () => setFeed( chatUnit.history.tail(100) );

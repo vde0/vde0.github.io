@@ -31,52 +31,58 @@ const ConnectProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
 
     if (textChat === null) throw Error("TextChatContext must be used within ChatProvider.");
     const { chatUnit }: ChatValue = textChat;
-
-    const startConfig = useCallback<StartConfig>(() => peer.addDataChannel(CHAT_NAME), [peer]);
     
     // === HELPERS ===
     const next = useCallback(() => {
         const newPeer = new Peer();
         setPeer(newPeer);
 
-        whenLocalMedia( media => media.getTracks().forEach(track => newPeer.addMediaTrack(track, media)) );
-        whenLocalMedia( media => addDebug("localMedia", media) );
-
         connection.current.updatePeer(newPeer);
-        connection.current.setStartConfig(startConfig);
-
-        connection.current.signal();
-    }, [startConfig]);
-
-    // === HANDLERS ===
-    const remoteMediaHandler = useCallback(({ media }: {media: MediaStream}) => {
-        chatUnit.setMedia(chatUnit.remoteChatter, media);
-        addDebug('remoteMedia', media);
     }, []);
-    const sendHandler = useCallback(({ chatter: user, text }: MsgItem) => {
-        if (user !== chatUnit.remoteChatter) return;
-        peer.send(text, "Chat");
-    }, [peer, chatUnit]);
-    const receiveHandler = useCallback(({ data }: {data: string}) => {
-        chatUnit.history.add(data, chatUnit.remoteChatter);
-    }, [chatUnit]);
 
     // === EFFECTS ===
-    useLayoutEffect(() => next(), []);
+    // Signalling
+    useEffect(() => {
+        whenLocalMedia(media => {
+            const startConfig = () => peer.addDataChannel(CHAT_NAME);
+    
+            media.getTracks().forEach(track => peer.addMediaTrack(track, media));
+            addDebug("localMedia", media);
+    
+            connection.current.setStartConfig(startConfig);
+    
+            console.log("peer state:", peer.rtc.connectionState);
+            connection.current.signal();
+        });
+    }, [peer]);
 
     useLayoutEffect(() => {
+        const remoteMediaHandler = ({ media }: {media: MediaStream}) => {
+            chatUnit.setMedia(chatUnit.remoteChatter, media);
+            addDebug('remoteMedia', media);
+        };
+
         peer.on(PEER_EVENTS.MEDIA, remoteMediaHandler);
         return () => peer.off(PEER_EVENTS.MEDIA, remoteMediaHandler);
-    }, [peer, remoteMediaHandler]);
+    }, [peer, chatUnit]);
 
     useEffect(() => {
+        const sendHandler = ({item: { chatter, text }}: {item: MsgItem}) => {
+            if (chatter !== chatUnit.localChatter) return;
+            peer.send(text, CHAT_NAME);
+        };
+
         chatUnit.history.on(CHAT_HISTORY_EVENTS.ADD, sendHandler);
         return () => chatUnit.history.off(CHAT_HISTORY_EVENTS.ADD, sendHandler);
-    }, [chatUnit, sendHandler]);
+    }, [peer, chatUnit]);
     useEffect(() => {
+        const receiveHandler = ({ data }: {data: string}) => {
+            chatUnit.history.add(data, chatUnit.remoteChatter);
+        };
+
         peer.on(PEER_EVENTS.TEXT, receiveHandler);
         return () => peer.off(PEER_EVENTS.TEXT, receiveHandler);
-    }, [peer, receiveHandler]);
+    }, [peer, chatUnit]);
 
 
     return (
