@@ -157,7 +157,7 @@ export const Peer: PeerConstructor = function (config = DEFAULT_CONFIG) {
                 listenerChest.exec(PEER_EVENTS.SDP, { sdp: offer });
             } catch (err: any) { console.error("Error of offer generating:", err.message); }
         },
-        stop () { rtc.close(); listenerChest.clear(); },
+        stop () { rtc.close(); listenerChest.offAll(); },
 
         async setRemoteSdp (sdp) {
             await rtc.setRemoteDescription(sdp);
