@@ -17,7 +17,7 @@ const TextChat: React.FC<PropsWithClassName> = ({ className }) => {
 
     return (
         <article className={`h-full flex flex-col ${className}`}>
-            <MsgList correspondence={feed} />
+            <MsgList history={feed} />
             <MsgForm className="mt-auto" onPush={pushMsgHandler} />
         </article>
     );
