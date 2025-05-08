@@ -1,5 +1,5 @@
 import { CHAT_HISTORY_EVENTS, ChatHistory, MsgItem } from "@lib/chat-history";
-import { listen, unlisten } from "@lib/utils";
+import { addDebug, listen, unlisten } from "@lib/utils";
 import { DUO_CHAT_UNIT_EVENTS, DuoChatUnit, MediaEventPayload, SymbolChatter } from "@services/DuoChatUnit";
 import { ChatContext, ChatValue } from "@store";
 import { useCallback, useContext, useEffect, useState } from "react";
@@ -42,6 +42,8 @@ export const useChatFeed = (): MsgItem[] => {
             [CHAT_HISTORY_EVENTS.CLEAR]:    update,
         });
     }, [chatUnit]);
+
+    addDebug("feed", feed);
 
     return feed;
 };
