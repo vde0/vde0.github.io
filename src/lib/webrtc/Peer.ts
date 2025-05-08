@@ -77,6 +77,7 @@ export const Peer: PeerConstructor = function (config = DEFAULT_CONFIG) {
 
     // === LOCAL HELPERS / PRIVATE METHODS ===
     function initDataChannel (dc: RTCDataChannel) {
+        
         dc.onmessage = (ev: MessageEvent) => listenerChest.exec(PEER_EVENTS.TEXT, ev);
         dataChannels.set(dc.label, dc);
     }
@@ -132,9 +133,10 @@ export const Peer: PeerConstructor = function (config = DEFAULT_CONFIG) {
         // === CONNECT CONTROLLING ===
         async start (startConfig, ...args) {
             if (isStarted) return;
-            isStarted = true;
 
             startConfig?.(...args);
+            isStarted = true;
+
 
             try {
                 const offer: RTCSessionDescriptionInit = await rtc.createOffer();
@@ -176,7 +178,9 @@ export const Peer: PeerConstructor = function (config = DEFAULT_CONFIG) {
         },
 
         // === DATA CONTROLLING ===
-        send (msgText, name) { dataChannels.get(name)?.send(msgText); },
+        send (msgText, name) {
+            dataChannels.get(name)?.send(msgText);
+        },
         addDataChannel (name, config) {
             if (isStarted) return false;
             initDataChannel( rtc.createDataChannel(name, config) );
