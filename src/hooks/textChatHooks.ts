@@ -1,7 +1,7 @@
 import { CHAT_HISTORY_EVENTS, ChatHistory, MsgItem } from "@lib/chat-history";
 import { listen, unlisten } from "@lib/utils";
-import { DUO_CHAT_UNIT_EVENTS, MediaEventPayload, SymbolChatter } from "@services/DuoChatUnit";
-import { ChatContext } from "@store";
+import { DUO_CHAT_UNIT_EVENTS, DuoChatUnit, MediaEventPayload, SymbolChatter } from "@services/DuoChatUnit";
+import { ChatContext, ChatValue } from "@store";
 import { useCallback, useContext, useEffect, useState } from "react";
 
 
@@ -9,28 +9,22 @@ type Send       = (msgText: string) => void;
 type SetWrite   = (msgText: string) => void;
 
 export const useWrite = (): [string, SetWrite] => {
-    const context = useContext(ChatContext);
-    if (!context) { throw new Error("useWrite() must be used within a TextChatProvider") }
-
-    const { writeState } = context;
-
+    const { writeState } = getChatContext();
     return writeState;
 };
 
+export const useChatUnit = (): DuoChatUnit => {
+    const { chatUnit } = getChatContext();
+    return chatUnit;
+};
+
 export const useChatHistory = (): ChatHistory => {
-    const context = useContext(ChatContext);
-    if (!context) { throw new Error("useMsgHistory() must be used within a TextChatProvider") }
-
-    const { chatUnit } = context;
-
+    const { chatUnit } = getChatContext();
     return chatUnit.history;
 };
 
 export const useChatFeed = (): MsgItem[] => {
-    const context = useContext(ChatContext);
-    if (!context) { throw new Error("useChatFeed() must be used within a TextChatProvider") }
-
-    const { chatUnit }      = context;
+    const { chatUnit }      = getChatContext();
     const [feed, setFeed]   = useState<MsgItem[]>([]);
 
     useEffect(() => {
@@ -52,13 +46,10 @@ export const useChatFeed = (): MsgItem[] => {
     return feed;
 };
 
-export const useLocalChatter = (): [SymbolChatter, Send, MediaStream | undefined] => {
-    const context = useContext(ChatContext);
-    if (!context) { throw new Error("useLocalChatter() must be used within a TextChatProvider") }
-
-    const { chatUnit }  = context;
-    const [localMedia, setLocalMedia] = useState<MediaStream | undefined>(
-        chatUnit.getMedia(chatUnit.localChatter)
+export const useLocalChatter = (): [SymbolChatter, Send, MediaStream | null] => {
+    const { chatUnit }  = getChatContext();
+    const [localMedia, setLocalMedia] = useState<MediaStream | null>(
+        chatUnit.getMedia(chatUnit.localChatter) ?? null
     );
 
     const send = useCallback<Send>(msgText => (
@@ -78,13 +69,10 @@ export const useLocalChatter = (): [SymbolChatter, Send, MediaStream | undefined
     return [chatUnit.localChatter, send, localMedia];
 };
 
-export const useRemoteChatter = (): [SymbolChatter, Send, MediaStream | undefined] => {
-    const context = useContext(ChatContext);
-    if (!context) { throw new Error("useRemoteChatter() must be used within a TextChatProvider") }
-
-    const { chatUnit }                  = context;
-    const [remoteMedia, setRemoteMedia] = useState<MediaStream | undefined>(
-        chatUnit.getMedia(chatUnit.remoteChatter)
+export const useRemoteChatter = (): [SymbolChatter, Send, MediaStream | null] => {
+    const { chatUnit }                  = getChatContext();
+    const [remoteMedia, setRemoteMedia] = useState<MediaStream | null>(
+        chatUnit.getMedia(chatUnit.remoteChatter) ?? null
     );
 
     const send = useCallback<Send>(msgText => (
@@ -105,10 +93,7 @@ export const useRemoteChatter = (): [SymbolChatter, Send, MediaStream | undefine
 };
 
 export const useLastMsg = (): MsgItem | null => {
-    const context = useContext(ChatContext);
-    if (!context) { throw new Error("useLastMsg() must be used within a TextChatProvider") }
-
-    const { chatUnit }          = context;
+    const { chatUnit }          = getChatContext();
     const [lastMsg, setLastMsg] = useState<MsgItem | null>(null);
 
     const update    = useCallback( ({ item }: {item: MsgItem}) => setLastMsg(item), [] );
@@ -120,4 +105,21 @@ export const useLastMsg = (): MsgItem | null => {
     }, [chatUnit]);
 
     return lastMsg;
+};
+
+
+// === HELPERS ===
+function getChatContext (hookName?: string): ChatValue {
+
+    // === SUCCESS ===
+    const context: ChatValue | null = useContext(ChatContext);
+    if (context) return context;
+
+    // === FAIL ===
+    let errMsg: string = "";
+
+    if (hookName)   errMsg = `${hookName} must be used within a ChatProvider.`;
+    else            errMsg = "useContext(ChatContect) should be called within the ChatProvider.";
+
+    throw new Error(errMsg);
 };

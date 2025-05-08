@@ -1,4 +1,4 @@
-import { useLocalVideo, useRemoteMedia } from "@hooks";
+import { useLocalChatter, useRemoteChatter } from "@hooks";
 import { addDebug } from "@lib/utils";
 import { PropsWithClassName } from "@types";
 import { useEffect, useRef } from "react";
@@ -8,9 +8,9 @@ type VideoChatProps = PropsWithClassName & { remote?: boolean };
 
 const VideoChat: React.FC<VideoChatProps> = ({ className, remote = false }) => {
     
-    const ref           = useRef<HTMLVideoElement | null>(null)
-    const remoteMedia   = useRemoteMedia();
-    const localMedia    = useLocalVideo();
+    const ref               = useRef<HTMLVideoElement | null>(null);
+    const [,,remoteMedia]   = useRemoteChatter();
+    const [,,localMedia]    = useLocalChatter();
 
     useEffect(() => {
         if (!ref.current) return;
