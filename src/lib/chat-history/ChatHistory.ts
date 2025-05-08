@@ -24,7 +24,7 @@ export type ChatHistory =  Iterable<MsgItem> & IListenerChest<ChatHistoryEvent> 
     get     (msgId: MsgId):                 MsgItem | null;
     head    (quant: number):                MsgItem[];
     tail    (quant: number):                MsgItem[];
-    getAllHistory ():                       MsgItem[];
+    getAll  ():                             MsgItem[];
 
     add     (msg: MsgText, chatter: Chatter):   MsgId;
     delete  (msgId: MsgId):                     boolean;
@@ -45,30 +45,40 @@ export const ChatHistory: ChatHistoryConstructor = function () {
     // === STORE ===
     const msgMap:           Map<MsgId, MsgItem> = new Map();
     let thisChatHistory:    ChatHistory;
-    let firstMsgId:         MsgId               = 0;
-    let lastMsgId:          MsgId               = firstMsgId;
+    let firstMsgId:         MsgId               = -1;
+    let lastMsgId:          MsgId               = -1;
 
     const listenerChest:    IListenerChest<ChatHistoryEvent> = new ListenerChest();
     
     // === FUNCS 1 LVL ===
-    const make      = (text: MsgText, chatter: Chatter):   MsgItem => ({ text, chatter, toString () { return text; } });
-    const length    = ():                               number  => msgMap.size;
+    const make      = (text: MsgText, chatter: Chatter):    MsgItem => ({ text, chatter, toString () { return text; } });
+    const length    = ():                                   number  => msgMap.size;
     
     const has       = (msgId: MsgId):   boolean         => msgMap.has(msgId);
     const get       = (msgId: MsgId):   MsgItem | null  => msgMap.get(msgId) ?? null;
 
     const add       = (text: MsgText, chatter: Chatter):   number => {
-
+        console.log("ADD", text);
         const item      = make(text, chatter);
         msgMap.set(++lastMsgId, item);
+
+        if (firstMsgId === -1) firstMsgId = lastMsgId;
 
         listenerChest.exec(CHAT_HISTORY_EVENTS.ADD, { item });
         return lastMsgId;
     };
     const remove    = (msgId: MsgId):                   boolean => {
 
+        if (msgId === firstMsgId) firstMsgId    = findMsgByCount(firstMsgId, 1);
+        if (msgId === lastMsgId)  lastMsgId     = findMsgByCount(lastMsgId, -1);
+
         const item      = msgMap.get(msgId);
         const result    = msgMap.delete(msgId);
+
+        if ( length() === 0 ) {
+            firstMsgId  = -1;
+            lastMsgId   = -1;
+        }
 
         item && listenerChest.exec(CHAT_HISTORY_EVENTS.DELETE, { item });
         return result;
@@ -81,14 +91,14 @@ export const ChatHistory: ChatHistoryConstructor = function () {
     // === ITERATORS ===
     function* msgIdIterator (start: MsgId, quant: number): Generator<MsgId> {
         if ( !has(start) ) return;
-
+        
         const msgArr: MsgId[] = Array.from( msgMap.keys() );
 
         const   changer:    number              = quant > -1 ? +1 : -1;
         let     curIndex:   number | undefined  = msgArr.find(id => id === start);
         let     count:      number              = Math.abs(quant);
 
-        if (!curIndex) return;
+        if (typeof curIndex === "undefined") return;
 
 
         while (count > 0 && curIndex >= 0 && curIndex <= msgArr.length -1 ) {
@@ -111,10 +121,11 @@ export const ChatHistory: ChatHistoryConstructor = function () {
 
     // === FUNCS 2 LVL ===
     const findMsgByCount = (start: MsgId, count: number): MsgId => {
-        if ( !has(start) ) { console.error("'start' isn't existing MsgId."); return -1; }
-
+        if ( !checkStartArg(start) ) return -1;
+        
         let     result:     MsgId = -1;
         for (let msgId of msgIdIterator(start, count)) result = msgId;
+        
         return result;
     };
     const forEach   = (
@@ -122,7 +133,7 @@ export const ChatHistory: ChatHistoryConstructor = function () {
         start: MsgId    = firstMsgId,
         quant: number   = length()
     ): void => {
-        if ( !has(start) ) { return console.error("'start' isn't existing MsgId."); }
+        checkStartArg(start);
 
         for (let msgId of msgIdIterator(start, quant)) {
             callback( get(msgId)!, msgId, thisChatHistory );
@@ -133,12 +144,18 @@ export const ChatHistory: ChatHistoryConstructor = function () {
         start: MsgId    = firstMsgId,
         quant: number   = length()
     ): T[] => {
-        if ( !has(start) ) { console.error("'start' isn't existing MsgId."); return []; }
+        if ( !checkStartArg(start) ) return [];
 
         const result: T[] = [];
         forEach( (...args) => result.push(callback(...args)), start, quant );
         return result;
     };
+
+    // === HELPERS ===
+    function checkStartArg (start: MsgId): boolean {
+        if ( !has(start) ) { console.error(`'start' arg(=${start}) isn't existing MsgId.`); return false; }
+        return true;
+    }
 
     // === RESULT INSTANCE ===
     const instance: ChatHistory = {
@@ -152,20 +169,12 @@ export const ChatHistory: ChatHistoryConstructor = function () {
         delete (msgId) {
             if ( typeof msgId !== "number" ) throw TypeError("msgId must be number.");
 
-            if (msgId === firstMsgId) firstMsgId    = findMsgByCount(firstMsgId, 1) as MsgId;
-            if (msgId === lastMsgId)  lastMsgId     = findMsgByCount(lastMsgId, -1) as MsgId;
-
-            if ( length() === 0 ) {
-                firstMsgId  = -1;
-                lastMsgId   = -1;
-            }
-
             return remove(msgId);
         },
-        clear()     { clear();          },
-        has (msgId) { return has(msgId) },
-        get (msgId) { return get(msgId) },
-        getAllHistory () { return map<MsgItem>( msgItem => msgItem ) },
+        clear   ()      { clear();                                  },
+        has     (msgId) { return has(msgId)                         },
+        get     (msgId) { return get(msgId)                         },
+        getAll  ()      { return map<MsgItem>( msgItem => msgItem ) },
         head (quant) { return map<MsgItem>( msgItem => msgItem, firstMsgId, quant ) },
         tail (quant) {
             return map<MsgItem>(
