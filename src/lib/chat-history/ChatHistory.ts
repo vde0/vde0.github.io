@@ -19,7 +19,7 @@ export type MsgText     = string;
 export type MsgId       = number;
 
 export type ChatHistoryConstructor = new () => ChatHistory;
-export type ChatHistory =  Iterable<MsgItem> & IListenerChest<ChatHistoryEvent> & {    
+export type ChatHistory = Iterable<MsgItem> & IListenerChest<ChatHistoryEvent> & {    
     has     (msgId: MsgId):                 boolean;
     get     (msgId: MsgId):                 MsgItem | null;
     head    (quant: number):                MsgItem[];
@@ -153,7 +153,7 @@ export const ChatHistory: ChatHistoryConstructor = function () {
 
     // === HELPERS ===
     function checkStartArg (start: MsgId): boolean {
-        if ( !has(start) ) { console.error(`'start' arg(=${start}) isn't existing MsgId.`); return false; }
+        if ( !has(start) ) { console.warn(`'start' arg(=${start}) isn't existing MsgId.`); return false; }
         return true;
     }
 
