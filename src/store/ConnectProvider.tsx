@@ -50,8 +50,6 @@ const ConnectProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
             addDebug("localMedia", media);
     
             connection.current.setStartConfig(startConfig);
-    
-            console.log("peer state:", peer.rtc.connectionState);
             connection.current.signal();
         });
     }, [peer]);
