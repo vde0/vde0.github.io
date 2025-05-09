@@ -121,7 +121,7 @@ function getChatContext (hookName?: string): ChatValue {
     let errMsg: string = "";
 
     if (hookName)   errMsg = `${hookName} must be used within a ChatProvider.`;
-    else            errMsg = "useContext(ChatContect) should be called within the ChatProvider.";
+    else            errMsg = "useContext(ChatContext) should be called within the ChatProvider.";
 
     throw new Error(errMsg);
 };

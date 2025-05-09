@@ -12,8 +12,9 @@ export const CHAT_NAME = "CHAT";
 
 type NextSignature = () => void;
 interface ConnectValue {
-    peer: Peer;
-    next: NextSignature;
+    peer:       Peer;
+    next:       NextSignature;
+    connection: Connection;
 }
 
 
@@ -41,17 +42,15 @@ const ConnectProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
     }, []);
 
     // === EFFECTS ===
-    // Signalling
+    // Peer Setting
     useEffect(() => {
         whenLocalMedia(media => {
-            const startConfig = () => peer.addDataChannel(CHAT_NAME);
-    
             media.getTracks().forEach(track => peer.addMediaTrack(track, media));
             addDebug("localMedia", media);
-    
-            connection.current.setStartConfig(startConfig);
-            connection.current.signal();
         });
+
+        const startConfig = () => peer.addDataChannel(CHAT_NAME);
+        connection.current.setStartConfig(startConfig);
     }, [peer]);
 
     useLayoutEffect(() => {
@@ -84,7 +83,7 @@ const ConnectProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
 
 
     return (
-        <ConnectContext.Provider value={{ peer, next }}>
+        <ConnectContext.Provider value={{ peer, next, connection: connection.current }}>
             {children}
         </ConnectContext.Provider>
     );
