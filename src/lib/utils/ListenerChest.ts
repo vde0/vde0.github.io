@@ -6,6 +6,7 @@ import { once } from "@utils";
 export interface IListenerChest<E extends string = string> {
     on (event: E, listener: CallableFunction): void;
     off (event: E, listener: CallableFunction): void;
+    when (event: E, checker: () => boolean, listener: CallableFunction, data?: any): void;
     onOnce (event: E, listener: CallableFunction): void;
     offAll (): void;
     exec (event: E, data?: any): void;
@@ -54,6 +55,10 @@ export class ListenerChest<E extends string = string> implements IListenerChest<
         if ( listenerMap.has(event) && listenerMap.get(event)!.size === 0 ) {
             listenerMap.delete(event);
         }
+    }
+    when (event: E, checker: () => boolean, listener: CallableFunction, data?: any): void {
+        if ( !checker() ) { this.onOnce(event, listener); return; }
+        listener(data);
     }
     onOnce (event: E, listener: CallableFunction): void {
         const onceListener = (data: any): void => {
