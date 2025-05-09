@@ -3,3 +3,4 @@ export * from "./jsUtils";
 export * from "./tg";
 export * from "./ListenerChest";
 export * from "./privateContext";
+export * from "./accessor";
