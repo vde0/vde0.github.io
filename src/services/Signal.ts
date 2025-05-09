@@ -9,8 +9,8 @@ export const SIGNAL_SERVER = process.env.SIGNAL ?? 'https://vde0.chat';
 
 
 // === TYPES ===
-export type ConnectionConctructor = new (peer: Peer) => Connection;
-export interface Connection {
+export type SignalConstructor = new (peer: Peer) => Signal;
+export interface Signal {
     signal          ():                                         void;
     updatePeer      (peer: Peer):                               void;
     setStartConfig  (startConfig: StartConfig, ...args: any[]): void;
@@ -18,7 +18,7 @@ export interface Connection {
 
 
 // === FABRIC OF CONNECTION ===
-export const Connection: ConnectionConctructor = function (peer: Peer): Connection {
+export const Signal: SignalConstructor = function (peer: Peer): Signal {
 
     // === PRIVATE FIELDS AND METHODS ===
     let socket: Socket;
@@ -75,4 +75,4 @@ export const Connection: ConnectionConctructor = function (peer: Peer): Connecti
             configArgs  = args;
         },
     };
-} as unknown as ConnectionConctructor;
+} as unknown as SignalConstructor;

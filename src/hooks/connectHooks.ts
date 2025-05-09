@@ -1,5 +1,5 @@
 import { Peer } from "@lib/webrtc";
-import { Connection } from "@services/Connection";
+import { Signal } from "@services/Signal";
 import { ConnectContext, ConnectValue, NextSignature } from "@store";
 import { useContext } from "react";
 
@@ -16,7 +16,7 @@ export const usePeer = (): Peer => {
     return peer;
 };
 
-export const useConnection = (): Connection => {
+export const useConnection = (): Signal => {
 
     const { connection } = getConnectContext("useConnection");
     return connection;

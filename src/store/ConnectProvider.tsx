@@ -1,4 +1,4 @@
-import { Connection } from "@services/Connection";
+import { Signal } from "@services/Signal";
 import { whenLocalMedia } from "@services/localMedia";
 import { addDebug } from "@utils";
 import { Peer, PEER_EVENTS, StartConfig } from "@lib/webrtc";
@@ -14,7 +14,7 @@ type NextSignature = () => void;
 interface ConnectValue {
     peer:       Peer;
     next:       NextSignature;
-    connection: Connection;
+    connection: Signal;
 }
 
 
@@ -28,7 +28,7 @@ const ConnectProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
     // === DATA ===
     const [peer, setPeer]   = useState<Peer>( new Peer() );
     const textChat          = useContext(ChatContext);
-    const connection        = useRef<Connection>( new Connection(peer) );
+    const connection        = useRef<Signal>( new Connection(peer) );
 
     if (textChat === null) throw Error("TextChatContext must be used within ChatProvider.");
     const { chatUnit }: ChatValue = textChat;
@@ -39,6 +39,7 @@ const ConnectProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
         setPeer(newPeer);
 
         connection.current.updatePeer(newPeer);
+        connection.current.signal
     }, []);
 
     // === EFFECTS ===
