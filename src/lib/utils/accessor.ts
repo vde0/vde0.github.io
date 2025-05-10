@@ -8,8 +8,8 @@ Object.freeze(ACCESSOR_EVENTS);
 
 
 export type Accessor<F extends string> = IListenerChest<AccessorEvent> & {
-    set         (flagName: F):  void;
-    reset       (flagName: F):  void;
+    set         (flagName: F):  boolean;
+    reset       (flagName: F):  boolean;
     getState    ():             boolean;
 };
 
@@ -26,37 +26,44 @@ export function makeAccessor <F extends string = string> (flagList: F[]): Access
     let state:      boolean                         = false;
 
     // HELPERS
-    function checkFlagName (flagName: F): void {
+    function checkFlagName (flagName: F): boolean {
         if ( typeof flagName !== "string" ) throw TypeError("flagName must be string");
-        if ( !flagSet.has(flagName) ) throw Error(
+        if ( !flagSet.has(flagName) ) {
+            console.error(
             `flagName (=${flagName}) isn't exist for Accessor`
-        );
+            );
+            return false;
+        }
+        return true;
     }
 
-    function updateAccess () {
+    function updateAccess (): boolean {
         if      (rest.size === 0 && state === false) {
             state = true;
             listener.exec(ACCESSOR_EVENTS.ACCESS);
+            return true;
         }
         else if (rest.size !== 0 && state === true) {
             state = false;
             listener.exec(ACCESSOR_EVENTS.DENIED);
+            return true;
         }
+        return false;
     };
 
     const instance: Accessor<F> = {
         ...listener,
         set (flagName) {
-            checkFlagName(flagName);
+            if ( !checkFlagName(flagName) ) return false;
 
             rest.delete(flagName);
-            updateAccess();
+            return updateAccess();
         },
         reset (flagName) {
-            checkFlagName(flagName);
+            if ( !checkFlagName(flagName) ) return false;
 
             rest.add(flagName);
-            updateAccess();
+            return updateAccess();
         },
 
         getState () { return state },
