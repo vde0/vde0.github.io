@@ -1,80 +1,122 @@
-import { makePrivateContext, PrivateContext } from "@utils";
-import { once } from "@utils";
+import { PrivateContext } from "@utils";
+
+
+export const LISTENER_CHEST_API: (keyof IListenerChestApi<Record<string, any>>)[] = [
+    'on', 'off', 'once', 'offAll', 'exec'
+] as const;
+Object.freeze(LISTENER_CHEST_API);
+
+// === HELPERS ===
+function doApi<I extends IListenerChestApi<Record<string, any>>> (
+    action: (methodName: keyof I) => void,
+    context: I
+): void {
+    for (let methodName of LISTENER_CHEST_API) {
+        if (typeof context[methodName] === "function") action(methodName);
+    }
+}
 
 
 // === TYPES ===
-export interface IListenerChest<E extends string = string> {
-    on (event: E, listener: CallableFunction): void;
-    off (event: E, listener: CallableFunction): void;
-    when (event: E, checker: () => boolean, listener: CallableFunction, data?: any): void;
-    onOnce (event: E, listener: CallableFunction): void;
-    offAll (): void;
-    exec (event: E, data?: any): void;
+export interface IListenerChestApi <M extends Record<string, any>> {
+    on      <K extends keyof M>                 (event: K, listener: Listener<M[K]>):   void;
+    off     <K extends keyof M>                 (event: K, listener: Listener<M[K]>):   void;
+    once    <K extends keyof M>                 (event: K, listener: Listener<M[K]>):   void;
+    offAll                                      ():                                     void;
+    exec    <K extends keyof M>                 (event: K, data: M[K]):                 void;
+    exec    <K extends EventsWithoutData<M>>    (event: K):                             void;
 }
-export type ListenerMap<E extends string = string> = Map<E, Set<CallableFunction>>;
+export interface IListenerChest <M extends Record<string, any>> extends IListenerChestApi<M> {
+    implement                                   (obj: object):                          void;
+    api:                                                                                IListenerChestApi<M>;
+}
+
+export type ListenerMap <M extends Record<string, unknown>> = { [K in keyof M]?: Set< Listener<M[K]> > };
+export type Listener    <D>                                 = (data: D) => void;
+
+export type EventsWithData <M extends Record<PropertyKey, any>> = {
+    [K in keyof M]: M[K] extends undefined ? never : K;
+}[keyof M];
+export type EventsWithoutData <M extends Record<PropertyKey, any>> = {
+    [K in keyof M]: M[K] extends undefined ? K : never;
+}[keyof M];
 
 
 // === PRIVATE CONTEXT ===
-let privateContext: PrivateContext<IListenerChest, PrivateProps>;
-const lazyInit = once( () => (privateContext = makePrivateContext<IListenerChest, PrivateProps>()) );
+const privateContext = new PrivateContext<IListenerChestApi<Record<string, unknown>>, PrivateProps>();
 
 interface PrivateProps {
-    listenerMap:    ListenerMap<string>;
-    context:        object;
+    listenerMap:        ListenerMap<Record<string, unknown>>;
+    context:            object;
 }
 
 
 // === CLASS DEFINITION ===
-export class ListenerChest<E extends string = string> implements IListenerChest<E> {
+export class ListenerChestApi<M extends Record<string, any> = Record<string, any>> implements IListenerChestApi<M> {
 
-    constructor () {
-        this.on     = this.on.bind(this);
-        this.off    = this.off.bind(this);
-        this.onOnce = this.onOnce.bind(this);
-        this.exec   = this.exec.bind(this);
-    }
-
-    _init (): void {
-        lazyInit();
-        if ( !privateContext.has(this, 'listenerMap') ) {
-            privateContext.set(this, 'listenerMap', new Map() as ListenerMap<E>);
-        }
+    constructor (api?: ListenerChestApi<M>) {
+        !api && privateContext.set<'listenerMap'>(this, 'listenerMap', {});
+        
+        doApi<ListenerChestApi<M>>((methodName) => {
+            this[methodName] = api
+                ? (api[methodName] as Function).bind(this) as any
+                : (this[methodName] as Function).bind(this) as any
+        }, this);
     }
 
     // === API FRAGMENT ===
-    on (event: E, listener: CallableFunction): void {
-        this._init();
-        const listenerMap: ListenerMap<E> = privateContext.get(this, 'listenerMap') as ListenerMap<E>;
-        if ( !listenerMap.has(event) )  listenerMap.set(event, new Set());
-        listenerMap.get(event)!.add(listener);
+    on      <K extends keyof M>                 (event: K, listener: Listener<M[K]>):   void {
+        const listenerMap: ListenerMap<M> = privateContext.get<'listenerMap'>(this, 'listenerMap')!;
+        if ( !(event in listenerMap) )  listenerMap[event] = new Set();
+        listenerMap[event]!.add(listener);
     }
-    off (event: E, listener: CallableFunction): void {
-        this._init();
-        const listenerMap: ListenerMap<E> = privateContext.get(this, 'listenerMap') as ListenerMap<E>;
-        listenerMap.get(event)?.delete(listener);
-        if ( listenerMap.has(event) && listenerMap.get(event)!.size === 0 ) {
-            listenerMap.delete(event);
+    off     <K extends keyof M>                 (event: K, listener: Listener<M[K]>):   void {
+        const listenerMap: ListenerMap<M> = privateContext.get<'listenerMap'>(this, 'listenerMap')!;
+        listenerMap[event]?.delete(listener);
+        if ( (event in listenerMap) && listenerMap[event]!.size === 0 ) {
+            delete listenerMap[event];
         }
     }
-    when (event: E, checker: () => boolean, listener: CallableFunction, data?: any): void {
-        if ( !checker() ) { this.onOnce(event, listener); return; }
-        listener(data);
-    }
-    onOnce (event: E, listener: CallableFunction): void {
-        const onceListener = (data: any): void => {
-            listener(data);
+    once    <K extends keyof M>                 (event: K, listener: Listener<M[K]>):   void {
+        const listenerMap: ListenerMap<M> = privateContext.get<'listenerMap'>(this, 'listenerMap')!;
+        if (event in listenerMap) return;
+
+        const onceListener: Listener<M[K]> = () => {
+            this.off(event, listener);
             this.off(event, onceListener);
-        }
+        };
+
+        this.on(event, listener);
         this.on(event, onceListener);
     }
-    offAll(): void {
-        this._init();
-        const listenerMap: ListenerMap<E> = privateContext.get(this, 'listenerMap') as ListenerMap<E>;
-        listenerMap.clear();
+    offAll                                      ():                                     void {
+        privateContext.set<'listenerMap'>(this, 'listenerMap', {});
     }
-    exec (event: E, data?: any): void {
-        this._init();
-        const listenerMap: ListenerMap<E> = privateContext.get(this, 'listenerMap') as ListenerMap<E>;
-        listenerMap.get(event)?.forEach( listener => listener(data) );
+    exec    <K extends keyof M>                 (event: K, data: M[K]):                 void;
+    exec    <K extends EventsWithoutData<M>>    (event: K):                             void;
+    exec    <K extends keyof M>                 (event: K, data?: M[K]):                void {
+        const listenerMap: ListenerMap<M> = privateContext.get<'listenerMap'>(this, 'listenerMap')!;
+        listenerMap[event]?.forEach( listener => listener(data as M[K]) );
+    }
+}
+
+export class ListenerChest<M extends Record<string, any> = Record<string, any>> extends ListenerChestApi<M> implements IListenerChest<M> {
+
+    static implementTo<O extends IListenerChest<Record<string, any>>> (obj: O, api: O) {
+
+        doApi<typeof api>(methodName => obj[methodName] = api[methodName], api);
+    };
+
+    api: IListenerChestApi<M>;
+
+    implement (obj: typeof this['api']): void {
+
+        doApi<typeof this.api>(methodName => (obj[methodName] as any) = this.api[methodName], this.api);
+    }
+
+    constructor (api?: IListenerChestApi<M>) {
+        super(api);
+        if (!api)   this.api = new ListenerChestApi<M>(this);
+        else        this.api = api;
     }
 }
