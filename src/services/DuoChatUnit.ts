@@ -1,22 +1,23 @@
 import { ChatHistory } from "@lib/chat-history/ChatHistory";
-import { IListenerChest, ListenerChest } from "@lib/utils";
+import { EventKeys, IListenerChest, ListenerChest } from "@lib/pprinter-tools";
 
 
-export const DUO_CHAT_UNIT_EVENTS: DuoChatUnitEvents = {
-    MEDIA: "media",
-};
+export const DUO_CHAT_UNIT_EVENTS: EventKeys<DuoChatUnitEvent> = {
+    MEDIA:  'media',
+} as const;
 Object.freeze(DUO_CHAT_UNIT_EVENTS);
-
 
 export type SymbolChatter       = symbol;
 export type MediaEventPayload   = { chatter: SymbolChatter, media: MediaStream };
-export type DuoChatUnitEvent    = 'media';
-export type DuoChatUnitEvents   = {
-    MEDIA: 'media';
+
+
+export type DuoChatUnitEvent    = keyof DuoChatUnitEventMap;
+export type DuoChatUnitEventMap = {
+    'media': MediaEventPayload;
 };
 
 export type DuoChatUnitConstructor = new () => DuoChatUnit;
-export type DuoChatUnit = IListenerChest<DuoChatUnitEvent> & {
+export type DuoChatUnit = IListenerChest<DuoChatUnitEventMap> & {
     remoteChatter:  SymbolChatter;
     localChatter:   SymbolChatter;
 
@@ -35,7 +36,7 @@ export const DuoChatUnit: DuoChatUnitConstructor = function () {
     const localChatter:     SymbolChatter   = Symbol("LOCAL_CHATTER");
 
     const mediaMap:         Map<SymbolChatter, MediaStream>     = new Map();
-    const listener:         IListenerChest<DuoChatUnitEvent>    = new ListenerChest();
+    const listener:         IListenerChest<DuoChatUnitEventMap> = new ListenerChest();
 
     const instance: DuoChatUnit = {
         ...listener,

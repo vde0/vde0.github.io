@@ -1,11 +1,30 @@
 import "webrtc-adapter";
 import freeice from "freeice";
-import { IListenerChest, ListenerChest } from "@utils";
+import { EventKeys, IListenerChest, ListenerChest } from "@lib/pprinter-tools";
 import * as sdpTransform from 'sdp-transform';
 
 
+// === MODULE VARS / STATIC FIELDS ===
+export const DEFAULT_CONFIG: RTCConfiguration = {
+    iceServers: freeice(), // Automatically generate ICE servers using freeice
+    iceTransportPolicy: "all", // Allow using all possible transport paths for ICE
+};
+export const PEER_EVENTS: EventKeys<PeerEvent> = {
+    MEDIA:      "media",
+    TEXT:       "text",
+    CONNECT:    "connect",
+    DISCONNECT: "disconnect",
+    SDP:        "sdp",
+    ICE:        "ice",
+} as const;
+
+// === LOCKING ===
+Object.freeze(DEFAULT_CONFIG);
+Object.freeze(PEER_EVENTS);
+
+
 // === ANNOTATION ===
-export type Peer = IListenerChest<PeerEvent> & {
+export type Peer = IListenerChest<PeerEventMap> & {
     rtc: RTCPeerConnection;
 
     start   (startConfig?: StartConfig, ...args: any[]): void;
@@ -27,10 +46,6 @@ export type Peer = IListenerChest<PeerEvent> & {
     getMediaStreamIds       (): string[];
 }
 
-export type PeerConstructor = new (config?: RTCConfiguration) => Peer;
-export type PeerEvent = 'media' | 'text' | 'connect' | 'disconnect' | 'sdp' | 'ice';
-export type StartConfig = (...args: any[]) => void;
-
 export interface DataChannelConfig {
     reliable?: boolean; // default: true
     ordered?: boolean; // default: true
@@ -41,33 +56,28 @@ export interface DataChannelConfig {
     id?: number; // default: undefined
 }
 
+export type PeerConstructor = new (config?: RTCConfiguration) => Peer;
+export type StartConfig = (...args: any[]) => void;
 
-// === MODULE VARS / STATIC FIELDS ===
-export const DEFAULT_CONFIG: RTCConfiguration = {
-    iceServers: freeice(), // Automatically generate ICE servers using freeice
-    iceTransportPolicy: "all", // Allow using all possible transport paths for ICE
-};
-export const PEER_EVENTS: {[key: string]: PeerEvent} = {
-    MEDIA:      "media",
-    TEXT:       "text",
-    CONNECT:    "connect",
-    DISCONNECT: "disconnect",
-    SDP:        "sdp",
-    ICE:        "ice",
-};
 
-// === LOCKING ===
-Object.freeze(DEFAULT_CONFIG);
-Object.freeze(PEER_EVENTS);
+export type PeerEvent       = keyof PeerEventMap;
+export type PeerEventMap    = {
+    media:      { media: MediaStream },
+    text:       MessageEvent,
+    connect:    { connectionState: RTCPeerConnectionState },
+    disconnect: { connectionState: RTCPeerConnectionState },
+    sdp:        { sdp: RTCSessionDescriptionInit },
+    ice:        RTCPeerConnectionIceEvent,
+};
 
 
 // === CONSTRUCTOR ===
 export const Peer: PeerConstructor = function (config = DEFAULT_CONFIG) {
 
     // === PRIVATE FIELDS ===
-    const rtc:              RTCPeerConnection           = new RTCPeerConnection(config);
-    const listenerChest:    IListenerChest<PeerEvent>   = new ListenerChest<PeerEvent>();
-    let isStarted:          boolean                     = false;
+    const   rtc:            RTCPeerConnection               = new RTCPeerConnection(config);
+    const   listenerChest:  IListenerChest<PeerEventMap>    = new ListenerChest<PeerEventMap>();
+    let     isStarted:      boolean                         = false;
 
     let dataChannels:   Map<string, RTCDataChannel>         = new Map();
     let mediaTracks:    Map<string, MediaStreamTrack>       = new Map();

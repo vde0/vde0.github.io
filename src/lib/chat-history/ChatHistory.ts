@@ -1,11 +1,11 @@
-import { IListenerChest, ListenerChest } from "@lib/utils";
+import { EventKeys, IListenerChest, ListenerChest } from "@lib/pprinter-tools";
 
 
-export const CHAT_HISTORY_EVENTS: { [key: string]: ChatHistoryEvent } = {
+export const CHAT_HISTORY_EVENTS: EventKeys<ChatHistoryEvent> = {
     ADD:        "add",
     DELETE:     "delete",
     CLEAR:      "clear",
-};
+} as const;
 Object.freeze(CHAT_HISTORY_EVENTS);
 
 
@@ -19,7 +19,7 @@ export type MsgText     = string;
 export type MsgId       = number;
 
 export type ChatHistoryConstructor = new () => ChatHistory;
-export type ChatHistory = Iterable<MsgItem> & IListenerChest<ChatHistoryEvent> & {    
+export type ChatHistory = Iterable<MsgItem> & IListenerChest<ChatHistoryEventMap> & {    
     has     (msgId: MsgId):                 boolean;
     get     (msgId: MsgId):                 MsgItem | null;
     head    (quant: number):                MsgItem[];
@@ -34,7 +34,15 @@ export type ChatHistory = Iterable<MsgItem> & IListenerChest<ChatHistoryEvent> &
     forEach         ( callback: ForEachCallback ):  void;
     map <T = any>   ( callback: MapCallback<T> ):   T[];
 }
-export type ChatHistoryEvent = 'add' | 'delete' | 'clear';
+
+
+export type ChatHistoryEvent = keyof ChatHistoryEventMap;
+export type ChatHistoryEventMap = {
+    add:    { item: MsgItem };
+    delete: { item: MsgItem };
+    clear:  undefined;
+};
+
 
 type MapCallback<T>     = (msgItem: MsgItem, msgId: MsgId, thisChatHistory: ChatHistory) => T;
 type ForEachCallback    = (msgItem: MsgItem, msgId: MsgId, thisChatHistory: ChatHistory) => void;
@@ -48,7 +56,7 @@ export const ChatHistory: ChatHistoryConstructor = function () {
     let firstMsgId:         MsgId               = -1;
     let lastMsgId:          MsgId               = -1;
 
-    const listenerChest:    IListenerChest<ChatHistoryEvent> = new ListenerChest();
+    const listenerChest:    IListenerChest<ChatHistoryEventMap> = new ListenerChest();
     
     // === FUNCS 1 LVL ===
     const make      = (text: MsgText, chatter: Chatter):    MsgItem => ({ text, chatter, toString () { return text; } });
