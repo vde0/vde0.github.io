@@ -1,5 +1,6 @@
 import { useLocalChatter, useRemoteChatter } from "@hooks";
 import { addDebug } from "@lib/utils";
+import { ACC_FLAGS, ChatSignalHub } from "@services/ChatSignalHub";
 import { PropsWithClassName } from "@types";
 import { useEffect, useRef } from "react";
 
@@ -32,6 +33,7 @@ const VideoChat: React.FC<VideoChatProps> = ({ className, remote = false }) => {
             console.log("HANDLER EXEC");
             if ( !video.current ) return;
             video.current.play();
+            ChatSignalHub.signalAccessor.set(ACC_FLAGS.PLAY_REMOTE_VIDEO);
 
             if ( !poster.current ) return;
             poster.current.hidden = true;
