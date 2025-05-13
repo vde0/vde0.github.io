@@ -12,6 +12,7 @@ Object.freeze(CHAT_HISTORY_EVENTS);
 export interface MsgItem {
     text: MsgText;
     chatter: Chatter;
+    read: boolean;
     toString (): string;
 }
 export type Chatter     = Symbol | string;
@@ -59,7 +60,7 @@ export const ChatHistory: ChatHistoryConstructor = function () {
     const listenerChest:    IListenerChest<ChatHistoryEventMap> = new ListenerChest();
     
     // === FUNCS 1 LVL ===
-    const make      = (text: MsgText, chatter: Chatter):    MsgItem => ({ text, chatter, toString () { return text; } });
+    const make      = (text: MsgText, chatter: Chatter):    MsgItem => ({ text, chatter, read: false, toString () { return text; } });
     const length    = ():                                   number  => msgMap.size;
     
     const has       = (msgId: MsgId):   boolean         => msgMap.has(msgId);
