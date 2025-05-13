@@ -17,6 +17,7 @@ import { addDebug } from "@lib/utils";
  * 
  * updatePeer()
  * onUpdatePeer()
+ * offUpdatePeer()
  * getChatUnit()
  * getSignal()
  * getPeer()
@@ -83,7 +84,8 @@ function updatePeer () {
     chest.exec("updatepeer", newPeer);
 }
 
-function onUpdatePeer (listener: (peerArg: Peer) => void) { chest.on("updatepeer", listener) }
+function onUpdatePeer   (listener: (peerArg: Peer) => void) { chest.on("updatepeer", listener) }
+function offUpdatePeer  (listener: (peerArg: Peer) => void) { chest.off("updatepeer", listener) }
 
 function getChatUnit () { return chatUnit   }
 function getPeer     () { return peer       }
@@ -122,6 +124,7 @@ export const ChatSignalHub = {
 
     updatePeer,
     onUpdatePeer,
+    offUpdatePeer,
     getChatUnit,
     getPeer,
     getSignal,
