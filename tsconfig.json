@@ -22,6 +22,7 @@
         "@services/*": ["services/*"],
         "@lib/*": ["lib/*"],
         "@utils": ["lib/utils/"],
+        "@pprinter-tools": ["lib/pprinter-tools"],
         "@test-utils": ["test-utils/"],
         "@tg-types": ["../@types/tg"]
       },

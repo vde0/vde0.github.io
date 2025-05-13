@@ -1,4 +1,4 @@
-import { IListenerChest, IListenerChestApi, ListenerChest, ListenerChestApi } from "./ListenerChest";
+import { IListenerChest, ListenerChest } from "./ListenerChest";
 import { IPrivateContext, PrivateContext } from "./PrivateContext";
 
 export const ACCESSOR_EVENTS = {
@@ -8,7 +8,7 @@ export const ACCESSOR_EVENTS = {
 Object.freeze(ACCESSOR_EVENTS);
 
 
-export type IAccessor<F extends string> = IListenerChestApi<AccessorEventMap> & {
+export type IAccessor<F extends string> = IListenerChest<AccessorEventMap> & {
     set         (flagName: F):  boolean;
     reset       (flagName: F):  boolean;
     getState    ():             boolean;
@@ -19,26 +19,26 @@ export type AccessorEventMap    = Record<AccessorEventName, undefined>;
 
 const privateContext = new PrivateContext<IAccessor<string>, PrivateProps>();
 
-type PrivateProps = {
+interface PrivateProps {
     rest:       Set<string>;
     flagSet:    Set<string>;
-    listener:   IListenerChest<AccessorEventMap>;
+    chest:      IListenerChest<AccessorEventMap>;
     state:      boolean;
 
     checkFlagName (flagName: string): boolean;
     updateAccess (): boolean;
-};
+}
 
 
-export class Accessor <F extends string = string> extends ListenerChestApi<AccessorEventMap> implements IAccessor<F> {
+export class Accessor <F extends string = string> implements IAccessor<F> {
 
     constructor (flagList: F[]) {
-        super();
 
         const privatePlace: Partial<PrivateProps> = {
             rest:       new Set(flagList),
             flagSet:    new Set(flagList),
             state:      false,
+            chest:      new ListenerChest<AccessorEventMap>(),
             checkFlagName (this: IAccessor<F>, flagName) {
                 if ( typeof flagName !== "string" ) throw TypeError("flagName must be string");
 
@@ -53,17 +53,18 @@ export class Accessor <F extends string = string> extends ListenerChestApi<Acces
                 return true;
             },
             updateAccess (this: IAccessor<F>) {
-                const rest = privateContext.get(this, "rest")!;
-                const state = privateContext.get(this, "state")!;
-
+                const rest      = privateContext.get(this, "rest")!;
+                const state     = privateContext.get(this, "state")!;
+                const chest     = privateContext.get(this, "chest")!;
+                
                 if      (rest.size === 0 && state === false) {
                     privateContext.set(this, "state", true);
-                    this.exec(ACCESSOR_EVENTS.ACCESS);
+                    chest.exec(ACCESSOR_EVENTS.ACCESS);
                     return true;
                 }
                 else if (rest.size !== 0 && state === true) {
                     privateContext.set(this, "state", false);
-                    this.exec(ACCESSOR_EVENTS.DENIED);
+                    chest.exec(ACCESSOR_EVENTS.DENIED);
                     return true;
                 }
                 return false;
@@ -72,6 +73,12 @@ export class Accessor <F extends string = string> extends ListenerChestApi<Acces
         
         privateContext.set<keyof PrivateProps>(this, privatePlace);
     }
+
+    get on      (): IListenerChest<AccessorEventMap>['on']       { return privateContext.get(this, "chest")!.on      }
+    get off     (): IListenerChest<AccessorEventMap>['off']      { return privateContext.get(this, "chest")!.off     }
+    get once    (): IListenerChest<AccessorEventMap>['once']     { return privateContext.get(this, "chest")!.once    }
+    get offAll  (): IListenerChest<AccessorEventMap>['offAll']   { return privateContext.get(this, "chest")!.offAll  }
+    get exec    (): IListenerChest<AccessorEventMap>['exec']     { return privateContext.get(this, "chest")!.exec    }
 
     set (flagName: F): boolean {
         const checkFlagName = privateContext.get(this, "checkFlagName")!;
