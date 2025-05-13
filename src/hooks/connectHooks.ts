@@ -1,40 +1,20 @@
 import { Peer } from "@lib/webrtc";
+import { ChatSignalHub } from "@services/ChatSignalHub";
 import { Signal } from "@services/Signal";
-import { ConnectContext, ConnectValue, NextSignature } from "@store";
-import { useContext } from "react";
+import { useEffect, useState } from "react";
 
-
-export const useNext = (): NextSignature => {
-
-    const { next } = getConnectContext("useNext");
-    return next;
-};
 
 export const usePeer = (): Peer => {
 
-    const { peer } = getConnectContext("usePeer");
+    const [peer, setPeer] = useState(ChatSignalHub.getPeer());
+
+    useEffect(() => {
+        const updatePeerHandler = (peerArg: Peer): void => setPeer(peerArg);
+        ChatSignalHub.onUpdatePeer(updatePeerHandler);
+        return () => ChatSignalHub.offUpdatePeer(updatePeerHandler);
+    }, []);
+
     return peer;
 };
 
-export const useConnection = (): Signal => {
-
-    const { connection } = getConnectContext("useConnection");
-    return connection;
-};
-
-
-// === HELPERS ===
-function getConnectContext (hookName?: string): ConnectValue {
-
-    // === SUCCESS ===
-    const context: ConnectValue | null = useContext(ConnectContext);
-    if (context) return context;
-
-    // === FAIL ===
-    let errMsg: string = "";
-
-    if (hookName)   errMsg = `${hookName} must be used within a ConnectProvider.`;
-    else            errMsg = "useContext(ConnectContext) should be called within the ConnectProvider.";
-
-    throw new Error(errMsg);
-};
+export const useSignal = (): Signal => { return ChatSignalHub.getSignal() };

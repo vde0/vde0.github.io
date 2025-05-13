@@ -1,5 +1,6 @@
 import { CHAT_HISTORY_EVENTS, ChatHistory, MsgItem } from "@lib/chat-history";
 import { addDebug, listen, unlisten } from "@lib/utils";
+import { ChatSignalHub } from "@services/ChatSignalHub";
 import { DUO_CHAT_UNIT_EVENTS, DuoChatUnit, MediaEventPayload, SymbolChatter } from "@services/DuoChatUnit";
 import { ChatContext, ChatValue } from "@store";
 import { useCallback, useContext, useEffect, useState } from "react";
@@ -8,23 +9,14 @@ import { useCallback, useContext, useEffect, useState } from "react";
 type Send       = (msgText: string) => void;
 type SetWrite   = (msgText: string) => void;
 
-export const useWrite = (): [string, SetWrite] => {
-    const { writeState } = getChatContext();
-    return writeState;
-};
+export const useWrite = (): [string, SetWrite] => { return getChatContext() };
 
-export const useChatUnit = (): DuoChatUnit => {
-    const { chatUnit } = getChatContext();
-    return chatUnit;
-};
+export const useChatUnit = (): DuoChatUnit => { return ChatSignalHub.getChatUnit() };
 
-export const useChatHistory = (): ChatHistory => {
-    const { chatUnit } = getChatContext();
-    return chatUnit.history;
-};
+export const useChatHistory = (): ChatHistory => { return ChatSignalHub.getChatUnit().history };
 
 export const useChatFeed = (): MsgItem[] => {
-    const { chatUnit }      = getChatContext();
+    const chatUnit          = ChatSignalHub.getChatUnit();
     const [feed, setFeed]   = useState<MsgItem[]>( chatUnit.history.tail(100) );
 
     useEffect(() => {
@@ -49,8 +41,8 @@ export const useChatFeed = (): MsgItem[] => {
 };
 
 export const useLocalChatter = (): [SymbolChatter, Send, MediaStream | null] => {
-    const { chatUnit }  = getChatContext();
-    const [localMedia, setLocalMedia] = useState<MediaStream | null>(
+    const chatUnit                      = ChatSignalHub.getChatUnit();
+    const [localMedia, setLocalMedia]   = useState<MediaStream | null>(
         chatUnit.getMedia(chatUnit.localChatter) ?? null
     );
 
@@ -72,7 +64,7 @@ export const useLocalChatter = (): [SymbolChatter, Send, MediaStream | null] => 
 };
 
 export const useRemoteChatter = (): [SymbolChatter, Send, MediaStream | null] => {
-    const { chatUnit }                  = getChatContext();
+    const chatUnit                      = ChatSignalHub.getChatUnit();
     const [remoteMedia, setRemoteMedia] = useState<MediaStream | null>(
         chatUnit.getMedia(chatUnit.remoteChatter) ?? null
     );
@@ -95,12 +87,11 @@ export const useRemoteChatter = (): [SymbolChatter, Send, MediaStream | null] =>
 };
 
 export const useLastMsg = (): MsgItem | null => {
-    const { chatUnit }          = getChatContext();
+    const chatUnit              = ChatSignalHub.getChatUnit();
     const [lastMsg, setLastMsg] = useState<MsgItem | null>(null);
 
-    const update    = useCallback( ({ item }: {item: MsgItem}) => setLastMsg(item), [] );
-
     useEffect(() => {
+        const update = ({ item }: {item: MsgItem}) => setLastMsg(item);
 
         chatUnit.history.on(CHAT_HISTORY_EVENTS.ADD, update);
         return () => chatUnit.history.off(CHAT_HISTORY_EVENTS.ADD, update);
