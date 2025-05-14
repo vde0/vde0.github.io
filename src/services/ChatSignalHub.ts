@@ -73,9 +73,9 @@ function receiveHandler ({ data }: {data: string}) {
     chatUnit.history.add(data, chatUnit.remoteChatter);
 }
 
-const remoteMediaHandler = ({ media }: {media: MediaStream}) => {
+function remoteMediaHandler ({ media }: {media: MediaStream}) {
     setRemoteMedia(media);
-};
+}
 
 // === API FUNCS ===
 function updatePeer () {
