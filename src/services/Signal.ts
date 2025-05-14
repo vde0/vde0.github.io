@@ -67,6 +67,7 @@ export const Signal: SignalConstructor = function (peer: Peer): Signal {
             initSocket();
         },
         updatePeer (argPeer) {
+            if (argPeer === peer) return;
             stopPeer();
             peer = argPeer;
         },
