@@ -10,21 +10,21 @@ type VideoChatProps = PropsWithClassName & { remote?: boolean };
 const VideoChat: React.FC<VideoChatProps> = ({ className, remote = false }) => {
 
     if ( !className ) className = "";
+
+    const useChatter = remote ? useRemoteChatter : useLocalChatter;
     
-    const video             = useRef<HTMLVideoElement | null>(null);
-    const poster            = useRef<HTMLDivElement | null>(null);
-    const [,,remoteMedia]   = useRemoteChatter();
-    const [,,localMedia]    = useLocalChatter();
+    const video     = useRef<HTMLVideoElement | null>(null);
+    const poster    = useRef<HTMLDivElement | null>(null);
+    const [,,media] = useChatter();
 
     useEffect(() => {
         if (!video.current) return;
-        video.current.srcObject = remote ? remoteMedia : localMedia;
+        video.current.srcObject = media;
         video.current.getAttribute("id") && addDebug(video.current.getAttribute("id") as string, video.current);
-    }, [localMedia, remoteMedia, remote]);
+    }, [media]);
 
     useEffect(() => {
-        if ( !remote ) return;
-        if ( !(poster.current && video.current) ) return;
+        if ( !(remote && poster.current) ) return;
 
         console.log("USER GESTURE EFFECT");
         console.log(poster.current);
@@ -43,7 +43,12 @@ const VideoChat: React.FC<VideoChatProps> = ({ className, remote = false }) => {
         poster.current.onclick      = handler;
 
         return () => { console.log("OFF HANDLER"); if (poster.current) { poster.current.ontouchend = null; poster.current.onclick = null; } };
-    }, [video.current, poster.current]);
+    }, [poster.current]);
+
+    useEffect(() => {
+        console.log("MOUNTED VIDEO ELEMENT", video.current);
+        if (video.current) video.current.onpause = () => video.current?.load() || video.current?.play();
+    }, [video.current]);
 
     return (
         <section className={className + " relative"}>
