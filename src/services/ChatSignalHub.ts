@@ -38,8 +38,6 @@ let peer:       Peer        = new Peer();
 let signal:     Signal      = new Signal(peer);
 let chatUnit:   DuoChatUnit = new DuoChatUnit();
 
-const startConfig = () => peer.addDataChannel(CHAT_NAME);
-
 addDebug("chatUnit", chatUnit);
 
 // === API EVENT SYSTEM ===
@@ -54,13 +52,11 @@ signalAccessor.on("access", () => {
 const chest = new ListenerChest<{'updatepeer': Peer}>();
 
 
-// === EXEC CODE ===
+// === START SETTINGS ===
+const startConfig = () => peer.addDataChannel(CHAT_NAME);
+
 signal.setStartConfig(startConfig);
-
 chatUnit.history.on("add", sendHandler);
-whenLocalMedia(media => setLocalMedia(media));
-
-initPeer(peer);
 
 
 // === HANDLERS ===
@@ -118,6 +114,8 @@ function initPeer (peerArg: Peer): void {
     peer.on(PEER_EVENTS.TEXT, receiveHandler);
     peer.on(PEER_EVENTS.MEDIA, remoteMediaHandler);
     peer.on(PEER_EVENTS.DISCONNECT, peerDisconnectHandler);
+
+    whenLocalMedia(media => setLocalMedia(media));
 
     signalAccessor.set(ACC_FLAGS.PEER);
     whenAccess.when("ready", () => signal.signal());
