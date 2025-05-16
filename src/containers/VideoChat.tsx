@@ -26,12 +26,9 @@ const VideoChat: React.FC<VideoChatProps> = ({ className, remote = false }) => {
     useEffect(() => {
         if ( !(remote && poster.current) ) return;
 
-        console.log("USER GESTURE EFFECT");
-        console.log(poster.current);
-
         const handler = () => {
-            console.log("HANDLER EXEC");
-            if ( !video.current ) return;
+            if ( !video.current?.paused ) return;
+            console.log("USER GESTURE EFFECT");
             video.current.play();
             ChatSignalHub.signalAccessor.set(ACC_FLAGS.PLAY_REMOTE_VIDEO);
 
@@ -42,8 +39,8 @@ const VideoChat: React.FC<VideoChatProps> = ({ className, remote = false }) => {
         poster.current.ontouchend   = handler;
         poster.current.onclick      = handler;
 
-        return () => { console.log("OFF HANDLER"); if (poster.current) { poster.current.ontouchend = null; poster.current.onclick = null; } };
-    }, [poster.current]);
+        return () => { if (poster.current) { poster.current.ontouchend = null; poster.current.onclick = null; } };
+    }, []);
 
     useEffect(() => {
         console.log("MOUNTED VIDEO ELEMENT", video.current);

@@ -77,6 +77,11 @@ function remoteMediaHandler ({ media }: {media: MediaStream}) {
     setRemoteMedia(media);
 }
 
+function peerDisconnectHandler () {
+    console.log("GLOBAL DISCONNECT HANDLER");
+    updatePeer();
+}
+
 // === API FUNCS ===
 function updatePeer () {
     const newPeer = new Peer();
@@ -107,10 +112,12 @@ function setRemoteMedia (media: MediaStream): void {
 
 function initPeer (peerArg: Peer): void {
     peer = peerArg;
+    addDebug("peer", peer);
 
     signal.updatePeer(peer);
     peer.on(PEER_EVENTS.TEXT, receiveHandler);
     peer.on(PEER_EVENTS.MEDIA, remoteMediaHandler);
+    peer.on(PEER_EVENTS.DISCONNECT, peerDisconnectHandler);
 
     signalAccessor.set(ACC_FLAGS.PEER);
     whenAccess.when("ready", () => signal.signal());

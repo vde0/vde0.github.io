@@ -79,6 +79,9 @@ export const Peer: PeerConstructor = function (config = DEFAULT_CONFIG) {
     const   listenerChest:  IListenerChest<PeerEventMap>    = new ListenerChest<PeerEventMap>();
     let     isStarted:      boolean                         = false;
 
+    const initClose = rtc.close.bind(rtc);
+    rtc.close = () => { console.log("CLOSE RTC"); initClose(); };
+
     let dataChannels:   Map<string, RTCDataChannel>         = new Map();
     let mediaTracks:    Map<string, MediaStreamTrack>       = new Map();
     let mediaStreams:   Map<string, MediaStream>            = new Map();
@@ -169,7 +172,7 @@ export const Peer: PeerConstructor = function (config = DEFAULT_CONFIG) {
                 listenerChest.exec(PEER_EVENTS.SDP, { sdp: offer });
             } catch (err: any) { console.error("Error of offer generating:", err.message); }
         },
-        stop () { rtc.close(); listenerChest.offAll(); },
+        stop () { console.log("STOP PEER"); rtc.close(); listenerChest.offAll(); },
 
         async setRemoteSdp (sdp) {
             await rtc.setRemoteDescription(sdp);

@@ -29,6 +29,7 @@ export const Signal: SignalConstructor = function (peer: Peer): Signal {
 
 
     const stopPeer      = (): void => {
+        console.log("STOP PEER BY SIGNAL");
         peer.stop();
         config              = undefined;
         configArgs.length   = 0;
@@ -53,7 +54,7 @@ export const Signal: SignalConstructor = function (peer: Peer): Signal {
             [PEER_EVENTS.SDP]: ({ sdp }: {sdp: RTCSessionDescription}) => socket.emit("relaysdp", {target, sdp}),
             [PEER_EVENTS.ICE]: ({ candidate }: {candidate: RTCIceCandidate}) => socket.emit("relayice", {target, ice: candidate}),
             [PEER_EVENTS.CONNECT]: () => { socket.emit("success"); socket.disconnect(); },
-            [PEER_EVENTS.DISCONNECT]: () => { socket.disconnect(); stopPeer() },
+            [PEER_EVENTS.DISCONNECT]: () => { console.log("PEER DISCONNECT"); socket.disconnect(); stopPeer() },
         });
     };
 
@@ -68,6 +69,7 @@ export const Signal: SignalConstructor = function (peer: Peer): Signal {
         },
         updatePeer (argPeer) {
             if (argPeer === peer) return;
+            console.log("UPDATE PEER");
             stopPeer();
             peer = argPeer;
         },
