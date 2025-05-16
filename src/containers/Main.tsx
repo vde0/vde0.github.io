@@ -9,6 +9,8 @@ import { useWebApp } from "@vkruglikov/react-telegram-web-app";
 import { TWebApp } from "@tg-types"; // custom type
 import { useLayoutEffect, useState } from "react";
 import { useMobileKeyboard } from "@hooks";
+import { Peer } from "@lib/webrtc";
+import { ChatSignalHub } from "@services/ChatSignalHub";
 
 
 const mainCss: EmCss = css`
@@ -25,6 +27,9 @@ const Main: React.FC = () => {
     const keyboardStatus: boolean   = useMobileKeyboard();
 
     useLayoutEffect(() => {
+
+        ChatSignalHub.takePeer( new Peer() );
+
         try {
             webApp?.ready();
             webApp?.lockOrientation?.();

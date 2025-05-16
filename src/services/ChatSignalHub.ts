@@ -15,7 +15,7 @@ import { addDebug } from "@lib/utils";
  * signalAccessor: Accessor by pprinter-tools
  * whenAccess: When by pprinter-tools
  * 
- * updatePeer()
+ * takePeer()
  * onUpdatePeer()
  * offUpdatePeer()
  * getChatUnit()
@@ -59,6 +59,29 @@ signal.setStartConfig(startConfig);
 chatUnit.history.on("add", sendHandler);
 
 
+// === API FUNCS ===
+function onUpdatePeer   (listener: (peerArg: Peer) => void) { chest.on("updatepeer", listener) }
+function offUpdatePeer  (listener: (peerArg: Peer) => void) { chest.off("updatepeer", listener) }
+
+function getChatUnit () { return chatUnit   }
+function getPeer     () { return peer       }
+function getSignal   () { return signal     }
+
+function takePeer (peerArg: Peer): void {
+    peer = peerArg;
+    addDebug("peer", peer);
+
+    signal.updatePeer(peer);
+    peer.on(PEER_EVENTS.TEXT, receiveHandler);
+    peer.on(PEER_EVENTS.MEDIA, remoteMediaHandler);
+
+    whenLocalMedia(media => setLocalMedia(media));
+
+    signalAccessor.set(ACC_FLAGS.PEER);
+    whenAccess.when("ready", () => signal.signal());
+}
+
+
 // === HANDLERS ===
 function sendHandler ({item: { chatter, text }}: {item: MsgItem}) {
     if (chatter !== chatUnit.localChatter) return;
@@ -70,27 +93,9 @@ function receiveHandler ({ data }: {data: string}) {
 }
 
 function remoteMediaHandler ({ media }: {media: MediaStream}) {
-    setRemoteMedia(media);
+    chatUnit.setMedia(chatUnit.remoteChatter, media);
+    addDebug('remoteMedia', media)
 }
-
-function peerDisconnectHandler () {
-    console.log("GLOBAL DISCONNECT HANDLER");
-    updatePeer();
-}
-
-// === API FUNCS ===
-function updatePeer () {
-    const newPeer = new Peer();
-    initPeer( newPeer );
-    chest.exec("updatepeer", newPeer);
-}
-
-function onUpdatePeer   (listener: (peerArg: Peer) => void) { chest.on("updatepeer", listener) }
-function offUpdatePeer  (listener: (peerArg: Peer) => void) { chest.off("updatepeer", listener) }
-
-function getChatUnit () { return chatUnit   }
-function getPeer     () { return peer       }
-function getSignal   () { return signal     }
 
 
 // === HELPERS ===
@@ -101,25 +106,6 @@ function setLocalMedia (media: MediaStream): void {
     addDebug("localMedia", media);
     signalAccessor.set(ACC_FLAGS.LOCAL_MEDIA);
 }
-function setRemoteMedia (media: MediaStream): void {
-    chatUnit.setMedia(chatUnit.remoteChatter, media);
-    addDebug('remoteMedia', media);
-}
-
-function initPeer (peerArg: Peer): void {
-    peer = peerArg;
-    addDebug("peer", peer);
-
-    signal.updatePeer(peer);
-    peer.on(PEER_EVENTS.TEXT, receiveHandler);
-    peer.on(PEER_EVENTS.MEDIA, remoteMediaHandler);
-    peer.on(PEER_EVENTS.DISCONNECT, peerDisconnectHandler);
-
-    whenLocalMedia(media => setLocalMedia(media));
-
-    signalAccessor.set(ACC_FLAGS.PEER);
-    whenAccess.when("ready", () => signal.signal());
-}
 
 
 // === EXPORT API ===
@@ -127,7 +113,7 @@ export const ChatSignalHub = {
     signalAccessor,
     whenAccess,
 
-    updatePeer,
+    takePeer,
     onUpdatePeer,
     offUpdatePeer,
     getChatUnit,
