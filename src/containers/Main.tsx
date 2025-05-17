@@ -49,10 +49,10 @@ const Main: React.FC = () => {
         ">
 
             <section className="grow flex flex-col gap-10 py-8">
-                <DisplayBox className="">
+                <DisplayBox className="flex items-center overflow-hidden">
                     <VideoChat remote />
                 </DisplayBox>
-                <DisplayBox className="">
+                <DisplayBox className="flex items-center overflow-hidden">
                     { isTextChatShown
                         ? <TextChat />
                         : <VideoChat />

@@ -34,8 +34,8 @@ export const ACC_FLAGS = {
 Object.freeze(ACC_FLAGS);
 
 // === INNER FIELDS ===
-let peer:       Peer        = new Peer();
-let signal:     Signal      = new Signal(peer);
+let peer:       Peer | null = null;
+let signal:     Signal      = new Signal();
 let chatUnit:   DuoChatUnit = new DuoChatUnit();
 
 addDebug("chatUnit", chatUnit);
@@ -53,7 +53,7 @@ const chest = new ListenerChest<{'updatepeer': Peer}>();
 
 
 // === START SETTINGS ===
-const startConfig = () => peer.addDataChannel(CHAT_NAME);
+const startConfig = () => {console.log("START CONFIG");peer!.addDataChannel(CHAT_NAME);}
 
 signal.setStartConfig(startConfig);
 chatUnit.history.on("add", sendHandler);
@@ -84,11 +84,13 @@ function takePeer (peerArg: Peer): void {
 
 // === HANDLERS ===
 function sendHandler ({item: { chatter, text }}: {item: MsgItem}) {
+    console.log("SEND HANDLER");
     if (chatter !== chatUnit.localChatter) return;
-    peer.send(text, CHAT_NAME);
+    peer!.send(text, CHAT_NAME);
 }
 
 function receiveHandler ({ data }: {data: string}) {
+    console.log("RECEIVE HANDLER");
     chatUnit.history.add(data, chatUnit.remoteChatter);
 }
 
@@ -100,7 +102,7 @@ function remoteMediaHandler ({ media }: {media: MediaStream}) {
 
 // === HELPERS ===
 function setLocalMedia (media: MediaStream): void {
-    media.getTracks().forEach(track => peer.addMediaTrack(track, media));
+    media.getTracks().forEach(track => peer!.addMediaTrack(track, media));
     chatUnit.setMedia(chatUnit.localChatter, media);
     
     addDebug("localMedia", media);

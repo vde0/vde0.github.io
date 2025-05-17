@@ -4,7 +4,7 @@ import { Signal } from "@services/Signal";
 import { useEffect, useState } from "react";
 
 
-export const usePeer = (): Peer => {
+export const usePeer = (): Peer | null => {
 
     const [peer, setPeer] = useState(ChatSignalHub.getPeer());
 

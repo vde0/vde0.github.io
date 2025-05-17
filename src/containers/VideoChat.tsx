@@ -48,14 +48,20 @@ const VideoChat: React.FC<VideoChatProps> = ({ className, remote = false }) => {
     }, [video.current]);
 
     return (
-        <section className={className + " relative"}>
-            <video
-                autoPlay ref={video} playsInline muted={!remote}
-                id={remote?"remoteVideo":"localVideo"}
-                className="scale-x-[-1] aspect-video object-cover block w-full h-auto" />
+        <section className={className + " relative aspect-video overflow-clip w-full h-auto"}>
+                <video
+                    autoPlay ref={video} playsInline muted={!remote}
+                    id={remote?"remoteVideo":"localVideo"}
+                    className="scale-x-[-1] aspect-video w-full h-full object-cover [object-position:center_center] block"
+                />
             {remote
-            ?   <div ref={poster} className="absolute top-0 bottom-0 left-0 right-0">
-                    <span className="block text-gray-950">TAP ME</span>
+            ?   <div ref={poster} className="
+                    absolute
+                    top-0 bottom-0 left-0 right-0
+                    bg-gray-900/75
+                    flex justify-center items-center"
+                >
+                    <span className="block text-white font-bold text-lg font-stretch-extra-expanded">TAP ME</span>
                 </div>
             :   ""
             }
