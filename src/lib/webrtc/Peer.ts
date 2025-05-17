@@ -90,7 +90,7 @@ export const Peer: PeerConstructor = function (config = DEFAULT_CONFIG) {
 
     // === LOCAL HELPERS / PRIVATE METHODS ===
     function initDataChannel (dc: RTCDataChannel) {
-        
+        console.log("INIT DATA CHANNEL:", dc.label);
         dc.onmessage = (ev: MessageEvent) => listenerChest.exec(PEER_EVENTS.TEXT, ev);
         dataChannels.set(dc.label, dc);
     }
@@ -146,7 +146,8 @@ export const Peer: PeerConstructor = function (config = DEFAULT_CONFIG) {
         // === CONNECT CONTROLLING ===
         async start (startConfig, ...args) {
             if (isStarted) return;
-
+            console.log("START PPER");
+            console.log(startConfig);
             startConfig?.(...args);
             isStarted = true;
 
