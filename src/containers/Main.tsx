@@ -44,7 +44,7 @@ const Main: React.FC = () => {
     <div className="w-full fixed px-3 md:px-8 box-border" css={mainCss}>
         <section className="
             container max-w-xl h-full
-            relative mx-auto bg-black text-white
+            relative mx-auto text-white
             flex flex-col
         ">
 
