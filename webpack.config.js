@@ -66,6 +66,10 @@ module.exports = (env, argv) => {
     module: {
       rules: [
         {
+          test: /\.(png|jpe?g|gif|svg|webp)$/i,
+          type: 'asset/resource', // или 'asset/inline' или 'asset'
+        },
+        {
           test: /\.tsx?$/, // Обрабатываем все файлы с расширением .ts
           use: 'ts-loader', // Используем ts-loader для компиляции TypeScript в JavaScript
           exclude: /node_modules/ // Исключаем папку node_modules
