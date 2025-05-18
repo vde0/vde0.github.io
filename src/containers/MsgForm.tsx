@@ -3,6 +3,7 @@ import InputMsg from "@components/InputMsg";
 import { useIsMobile, useMobileKeyboard, useWrite } from "@hooks";
 import { PropsWithClassName } from "@types";
 import { ChangeEvent, ChangeEventHandler, MouseEvent, MouseEventHandler, useCallback, useEffect, useLayoutEffect, useMemo, useState } from "react";
+import send from "../assets/icon/send.svg";
 
 
 type MsgFormProps = PropsWithClassName & {
@@ -30,20 +31,22 @@ const MsgForm: React.FC<MsgFormProps> = ({ className, onPush }) => {
 
     return (
         <form className={`${className}
-            ${pos} z-1 bg-green-400
+            ${pos} z-1
             w-full h-15 mx-auto
             border-content pb-1 pt-2
             flex flex-row gap-1 bottom-0`}
         action="">
             <InputMsg
                 disabled={pending}
-                className="grow"
+                className="grow bg-gray text-white rounded-xl focus:border focus:border-light-blue"
                 onChange={typeHandler} value={write} />
             <SubmitBtn
                 disabled={pending}
                 onClick={submitHandler}
-                className="bg-black border-1 border-gray-700 shrink-0 w-10"
-            />
+                className="bg-gray rounded-lg shrink-0 w-10"
+            >
+                <img src={send} className="block h-full scale-200 relative right-1" />
+            </SubmitBtn>
         </form>
     );
 };
