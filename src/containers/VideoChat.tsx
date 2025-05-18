@@ -67,12 +67,12 @@ const VideoChat: React.FC<VideoChatProps> = ({ className, remote = false }) => {
     }, [video.current]);
 
     return (
-        <section className={videoChatClassName + " relative w-full"}>
+        <section className={videoChatClassName + " relative w-full h-full bg-white rounded-xl flex items-center overflow-clip"}>
             <Video
                 poster={empty_video}
                 autoPlay ref={video} playsInline muted={!remote}
                 id={remote?"remoteVideo":"localVideo"}
-                className="scale-x-[-1] aspect-video w-full h-full object-cover [object-position:center_center] block"
+                className="scale-x-[-1] aspect-video w-full h-full object-fit [object-position:center_center] block"
             />
             {remote && <div ref={poster} className="
                 absolute

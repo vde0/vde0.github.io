@@ -14,7 +14,7 @@ const DisplayBox: React.FC<DisplayBoxProps> = ({ children, className }) => {
         <div
             className={`
                 w-full
-                mx-auto bg-white
+                mx-auto
                 ${className}
             `}
             css={css`

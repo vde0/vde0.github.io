@@ -50,7 +50,7 @@ const VideoChat = forwardRef<HTMLVideoElement | null, VideoProps>(({ className, 
     }, []);
 
     return (
-        <section className={"relative aspect-video overflow-clip w-full h-auto"}>
+        <section className={"relative aspect-video overflow-clip w-full h-full"}>
             <video {...props}
                 ref={videoRef}
                 className={`${videoClassName}
@@ -61,7 +61,7 @@ const VideoChat = forwardRef<HTMLVideoElement | null, VideoProps>(({ className, 
             }/>
             {poster && <img src={poster} ref={posterRef}
                 className="
-                    block absolute mx-auto
+                    block absolute m-auto
                     top-0 bottom-0 left-0 right-0
                 "
             />}
