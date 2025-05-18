@@ -4,6 +4,7 @@ import MsgItem from "./MsgItem";
 import { useState } from "react";
 import { MsgItem as SemanticMsgItem } from "@lib/chat-history";
 import { SymbolChatter } from "@services/DuoChatUnit";
+import { ChatSignalHub } from "@services/ChatSignalHub";
 
 
 interface MsgListProps {
@@ -17,10 +18,17 @@ const MsgList: React.FC<MsgListProps> = ({ history }) => {
     const msgCount   = useState<number>(history.length);
 
     return (
-        <section css={msgListCss} >
-            {history.map( (sMsgItem, index) => (
-                <MsgItem sender={sMsgItem.chatter as SymbolChatter} text={sMsgItem.text} key={index} />
-            ) )}
+        <section css={msgListCss} className="px-2" >
+            {history.map( (sMsgItem, index) => {
+                const [sender, direction] = sMsgItem.chatter === ChatSignalHub.getChatUnit().localChatter
+                    ? ["Вы", "right" as 'right']
+                    : ["Собеседник", "left" as 'left']
+                ;
+
+                return (
+                    <MsgItem sender={sender} text={sMsgItem.text} direction={direction} key={index} />
+                )
+            } )}
         </section>
 )};
 

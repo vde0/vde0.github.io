@@ -67,7 +67,7 @@ const VideoChat: React.FC<VideoChatProps> = ({ className, remote = false }) => {
     }, [video.current]);
 
     return (
-        <section className={videoChatClassName + " relative w-full h-full bg-white rounded-xl flex items-center overflow-clip"}>
+        <section className={videoChatClassName + " relative w-full h-full bg-cloud rounded-xl flex items-center overflow-clip"}>
             <Video
                 poster={empty_video}
                 autoPlay ref={video} playsInline muted={!remote}
