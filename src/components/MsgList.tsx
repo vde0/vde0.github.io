@@ -3,7 +3,6 @@ import { css, EmCss } from "@emotion/react";
 import MsgItem from "./MsgItem";
 import { useState } from "react";
 import { MsgItem as SemanticMsgItem } from "@lib/chat-history";
-import { SymbolChatter } from "@services/DuoChatUnit";
 import { ChatSignalHub } from "@services/ChatSignalHub";
 
 

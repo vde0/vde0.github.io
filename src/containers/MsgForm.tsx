@@ -1,8 +1,8 @@
 import { SubmitBtn } from "@components/Btn";
 import InputMsg from "@components/InputMsg";
-import { useIsMobile, useMobileKeyboard, useWrite } from "@hooks";
+import { useMobileKeyboard, useWrite } from "@hooks";
 import { PropsWithClassName } from "@types";
-import { ChangeEvent, ChangeEventHandler, MouseEvent, MouseEventHandler, useCallback, useEffect, useLayoutEffect, useMemo, useState } from "react";
+import { ChangeEventHandler, MouseEventHandler, useCallback, useLayoutEffect, useState } from "react";
 import send from "../assets/icon/send.svg";
 
 

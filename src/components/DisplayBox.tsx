@@ -2,7 +2,7 @@
 import { css } from "@emotion/react";
 import { useMaxHeight } from "@hooks";
 import { PropsWithClassName } from "@types";
-import { PropsWithChildren, useEffect, useLayoutEffect, useRef } from "react";
+import { PropsWithChildren } from "react";
 
 
 type DisplayBoxProps = PropsWithChildren & PropsWithClassName;

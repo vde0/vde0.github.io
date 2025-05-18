@@ -1,4 +1,4 @@
-import { AnyDict, EventsWithoutData, Listener, ListenerDict, Method, MethodKey, UnknownDict } from "./general";
+import { AnyDict, EventsWithoutData, Listener, ListenerDict, MethodKey, UnknownDict } from "./general";
 import { doApi } from "./helpers";
 import { PrivateContext } from "./PrivateContext";
 

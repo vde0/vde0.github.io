@@ -1,5 +1,5 @@
 import { IListenerChest, ListenerChest } from "./ListenerChest";
-import { IPrivateContext, PrivateContext } from "./PrivateContext";
+import { PrivateContext } from "./PrivateContext";
 
 export const ACCESSOR_EVENTS = {
     ACCESS: 'access',

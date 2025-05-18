@@ -1,8 +1,3 @@
-/** @jsxImportSource @emotion/react */
-import { css } from "@emotion/react";
-import { SymbolChatter } from "@services/DuoChatUnit";
-
-
 interface MsgItemProps {
     direction: 'left' | 'right';
     sender: string,
