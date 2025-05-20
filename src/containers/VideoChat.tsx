@@ -7,9 +7,9 @@ import empty_video from "../assets/img/empty_video.png";
 import Video from "@components/Video";
 
 
-type VideoChatProps = PropsWithClassName & { remote?: boolean };
+type VideoChatProps = PropsWithClassName & { remote: boolean, hidden?: boolean };
 
-const VideoChat: React.FC<VideoChatProps> = ({ className, remote = false }) => {
+const VideoChat: React.FC<VideoChatProps> = ({ className, remote, hidden=false }) => {
 
     const videoChatClassName = className ?? "";
 
@@ -67,7 +67,7 @@ const VideoChat: React.FC<VideoChatProps> = ({ className, remote = false }) => {
     }, [video.current]);
 
     return (
-        <section className={videoChatClassName + " relative w-full h-full bg-cloud rounded-xl flex items-center overflow-clip"}>
+        <section hidden={hidden} className={videoChatClassName + " relative w-full h-full bg-cloud rounded-xl flex items-center overflow-clip"}>
             <Video
                 poster={empty_video}
                 autoPlay ref={video} playsInline muted={!remote}

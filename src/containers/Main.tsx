@@ -53,16 +53,14 @@ const Main: React.FC = () => {
                     <VideoChat remote />
                 </DisplayBox>
                 <DisplayBox className="flex items-center overflow-hidden">
-                    { isTextChatShown
-                        ? <TextChat />
-                        : <VideoChat />
-                    }
+                    <TextChat hidden={!isTextChatShown} />
+                    <VideoChat remote={false} hidden={isTextChatShown} />
                 </DisplayBox>
             </section>
             
             { !keyboardStatus
                 ? <div className="shrink-0 h-24">
-                    <Controller onTextChat={() => { setIsTextChatShown(!isTextChatShown) }} />
+                    <Controller onTextChat={() => { console.log("TEXT CHAT SHOWN:", !isTextChatShown); setIsTextChatShown(!isTextChatShown) }} />
                 </div>
                 : null
             }

@@ -5,7 +5,12 @@ import { PropsWithClassName } from "@types";
 import { useCallback } from "react";
 
 
-const TextChat: React.FC<PropsWithClassName> = ({ className }) => {
+
+interface TextChatProps extends PropsWithClassName {
+    hidden?: boolean;
+}
+
+const TextChat: React.FC<TextChatProps> = ({ className, hidden=false }) => {
 
     const feed      = useChatFeed();
     const history   = useChatHistory();
@@ -16,7 +21,7 @@ const TextChat: React.FC<PropsWithClassName> = ({ className }) => {
     }, [chatUnit, history]);
 
     return (
-        <article className={`h-full w-full flex flex-col ${className}`}>
+        <article hidden={hidden} className={`h-full w-full flex flex-col ${className}`}>
             <MsgList history={feed} />
             <MsgForm className="mt-auto" onPush={pushMsgHandler} />
         </article>

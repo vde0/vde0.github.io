@@ -5,7 +5,7 @@ type VideoProps = VideoHTMLAttributes<HTMLVideoElement> & {
     mirror?:    boolean;
 };
 
-const VideoChat = forwardRef<HTMLVideoElement | null, VideoProps>(({ className, mirror = false, poster, ...props }, ref) => {
+const VideoChat = forwardRef<HTMLVideoElement | null, VideoProps>(({ className, hidden=false, mirror=false, poster, ...props }, ref) => {
 
     const videoRef  = useRef<HTMLVideoElement | null>(null);
     const posterRef = useRef<HTMLImageElement | null>(null);
@@ -50,7 +50,7 @@ const VideoChat = forwardRef<HTMLVideoElement | null, VideoProps>(({ className, 
     }, []);
 
     return (
-        <section className={"relative aspect-video overflow-clip w-full h-full"}>
+        <section hidden={hidden} className={"relative aspect-video overflow-clip w-full h-full"}>
             <video {...props}
                 ref={videoRef}
                 className={`${videoClassName}
