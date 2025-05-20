@@ -1,7 +1,10 @@
 import { createContext, useState } from "react";
 
 
-type ChatValue = [string, React.Dispatch<React.SetStateAction<string>>];
+type ChatValue = {
+    write:  [string, React.Dispatch<React.SetStateAction<string>>];
+    unread: [number, React.Dispatch<React.SetStateAction<number>>];
+};
 
 
 // Context obj
@@ -11,10 +14,11 @@ const ChatContext = createContext<ChatValue | null>( null );
 // Provider obj
 const ChatProvider: React.FC<React.PropsWithChildren> = ({children}) => {
 
-    const writeState    = useState<string>( "" );
+    const write     = useState<string>( "" );
+    const unread    = useState<number>( 0 );
 
     return (
-        <ChatContext.Provider value={ writeState }>
+        <ChatContext.Provider value={{ write, unread }}>
             {children}
         </ChatContext.Provider>
     );

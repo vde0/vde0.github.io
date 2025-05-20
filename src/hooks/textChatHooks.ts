@@ -9,7 +9,8 @@ import { useCallback, useContext, useEffect, useState } from "react";
 type Send       = (msgText: string) => void;
 type SetWrite   = (msgText: string) => void;
 
-export const useWrite = (): [string, SetWrite] => { return getChatContext() };
+export const useWrite = (): ChatValue['write'] => { return getChatContext()["write"] };
+export const useUnread = (): ChatValue['unread'] => { return getChatContext()["unread"] };
 
 export const useChatUnit = (): DuoChatUnit => { return ChatSignalHub.getChatUnit() };
 
