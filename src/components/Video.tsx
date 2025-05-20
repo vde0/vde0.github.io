@@ -5,7 +5,7 @@ type VideoProps = VideoHTMLAttributes<HTMLVideoElement> & {
     mirror?:    boolean;
 };
 
-const VideoChat = forwardRef<HTMLVideoElement | null, VideoProps>(({ className, hidden=false, mirror=false, poster, ...props }, ref) => {
+const Video = forwardRef<HTMLVideoElement | null, VideoProps>(({ className, hidden=false, mirror=false, poster, ...props }, ref) => {
 
     const videoRef  = useRef<HTMLVideoElement | null>(null);
     const posterRef = useRef<HTMLImageElement | null>(null);
@@ -70,4 +70,4 @@ const VideoChat = forwardRef<HTMLVideoElement | null, VideoProps>(({ className, 
 });
 
 
-export default VideoChat
+export default Video
