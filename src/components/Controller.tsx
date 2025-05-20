@@ -29,12 +29,12 @@ const Controller: React.FC<ContrtollerProps> = ({ onTextChat, onAddUser, onNext 
             absolute bottom-0
             box-content w-full h-15 py-4
         ">  
-            {/* TextChat */}
-            <Btn className="bg-gray flex-grow-1 rounded-xl" {...{[onTurn]: onTextChat}}>
-                <img className="block" src={add_user} />
-            </Btn>
             {/* AddUser */}
             <Btn className="bg-gray flex-grow-1 rounded-xl" {...{[onTurn]: onAddUser}}>
+                <img className="block" src={add_user} />
+            </Btn>
+            {/* TextChat */}
+            <Btn className="bg-gray flex-grow-1 rounded-xl" {...{[onTurn]: onTextChat}}>
                 <img className="block" src={dialogue} />
             </Btn>
             {/* Next */}
