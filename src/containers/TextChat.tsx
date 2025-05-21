@@ -23,7 +23,7 @@ const TextChat: React.FC<TextChatProps> = ({ className, hidden=false }) => {
     return (
         <article hidden={hidden} className={`h-full w-full flex flex-col ${className}`}>
             <MsgList history={feed} />
-            <MsgForm className="mt-auto" onPush={pushMsgHandler} />
+            <MsgForm className="mt-auto shrink-0" onPush={pushMsgHandler} />
         </article>
     );
 };

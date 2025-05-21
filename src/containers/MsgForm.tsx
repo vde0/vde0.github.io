@@ -33,7 +33,7 @@ const MsgForm: React.FC<MsgFormProps> = ({ className, onPush }) => {
         <form className={`${className}
             ${pos} z-1
             w-full h-15 mx-auto
-            border-content pb-1 pt-2
+            border-content pb-1 pt-2 bg-black
             flex flex-row gap-1 bottom-0`}
         action="">
             <InputMsg

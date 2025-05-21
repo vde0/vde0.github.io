@@ -17,7 +17,7 @@ const MsgList: React.FC<MsgListProps> = ({ history }) => {
     const msgCount   = useState<number>(history.length);
 
     return (
-        <section css={msgListCss} className="px-2" >
+        <section css={msgListCss} className="px-2 overflow-scroll" >
             {history.map( (sMsgItem, index) => {
                 const [sender, direction] = sMsgItem.chatter === ChatSignalHub.getChatUnit().localChatter
                     ? ["Вы", "right" as 'right']
