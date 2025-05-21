@@ -61,10 +61,7 @@ const VideoChat: React.FC<VideoChatProps> = ({ className, remote, hidden=false }
             poster.current.onclick      = null;
         };
     }, []);
-
-    useEffect(() => {
-        console.log("MOUNTED VIDEO ELEMENT", video.current);
-    }, [video.current]);
+    
 
     return (
         <section hidden={hidden} className={videoChatClassName + " relative w-full h-full bg-cloud rounded-xl flex items-center overflow-clip"}>
