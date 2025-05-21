@@ -7,10 +7,13 @@ import TextChat from "./TextChat";
 import { EmCss } from "@emotion/react"; // custom type
 import { useWebApp } from "@vkruglikov/react-telegram-web-app";
 import { TWebApp } from "@tg-types"; // custom type
-import { useLayoutEffect, useState } from "react";
-import { useMobileKeyboard } from "@hooks";
+import { useEffect, useLayoutEffect, useState } from "react";
+import { useChatHistory, useMobileKeyboard, useUnread } from "@hooks";
 import { Peer } from "@lib/webrtc";
 import { ChatSignalHub } from "@services/ChatSignalHub";
+import { ChatHistory, ChatHistoryEventMap } from "@lib/chat-history";
+import { Listener } from "@lib/pprinter-tools";
+import { ChatValue } from "@store/ChatProvider";
 
 
 const mainCss: EmCss = css`
@@ -23,8 +26,11 @@ const mainCss: EmCss = css`
 
 const Main: React.FC = () => {
 
-    const webApp: TWebApp           = useWebApp();
-    const keyboardStatus: boolean   = useMobileKeyboard();
+    const webApp:               TWebApp             = useWebApp();
+    const keyboardStatus:       boolean             = useMobileKeyboard();
+    const chatHistory:          ChatHistory         = useChatHistory();
+    const [unread, setUnread]:  ChatValue['unread'] = useUnread();
+    const [isTextChatShown, setIsTextChatShown]     = useState<boolean>(false);
 
     useLayoutEffect(() => {
 
@@ -38,7 +44,21 @@ const Main: React.FC = () => {
         } catch (err) {}
     }, []);
 
-    const [isTextChatShown, setIsTextChatShown] = useState<boolean>(false);
+    useEffect(() => {
+        const addMsgHandler: Listener<ChatHistoryEventMap['add']> = () => {
+            console.log("INCREMENT UNREAD");
+            console.log("TEXT CHAT SHOW", isTextChatShown);
+            if (!isTextChatShown) setUnread(unread +1);
+        };
+        chatHistory.on('add', addMsgHandler);
+
+        return () => chatHistory.off('add', addMsgHandler);
+    }, [isTextChatShown, unread]);
+
+    useEffect(() => {
+        if (isTextChatShown) setUnread(0);
+    }, [isTextChatShown]);
+
 
     return (
     <div className="w-full fixed px-3 md:px-8 box-border" css={mainCss}>
