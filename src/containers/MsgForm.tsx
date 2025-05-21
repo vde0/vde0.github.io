@@ -2,7 +2,7 @@ import { SubmitBtn } from "@components/Btn";
 import InputMsg from "@components/InputMsg";
 import { useMobileKeyboard, useWrite } from "@hooks";
 import { PropsWithClassName } from "@types";
-import { ChangeEventHandler, MouseEventHandler, useCallback, useLayoutEffect, useState } from "react";
+import { ChangeEventHandler, MouseEventHandler, useCallback, useLayoutEffect, useRef, useState } from "react";
 import send from "../assets/icon/send.svg";
 
 
@@ -17,7 +17,8 @@ const MsgForm: React.FC<MsgFormProps> = ({ className, onPush }) => {
     const isMobileKeyboard  = useMobileKeyboard();
     const [write, setWrite] = useWrite();
     const [pos, setPos]     = useState<"absolute" | "block">("block");
-    useLayoutEffect(() => { setPos(isMobileKeyboard ? "absolute" : "block") }, [isMobileKeyboard]);
+    const inputRef          = useRef<HTMLTextAreaElement | null>(null);
+
 
     const typeHandler = useCallback<ChangeEventHandler<HTMLTextAreaElement>>( function (evt) {
         setWrite(evt.target?.value);
@@ -25,9 +26,14 @@ const MsgForm: React.FC<MsgFormProps> = ({ className, onPush }) => {
     //
     const submitHandler = useCallback<MouseEventHandler<HTMLButtonElement>>( function (evt) {
         evt.preventDefault();
+        inputRef.current?.focus();
         onPush?.(write);
         setWrite("");
     }, [write] );
+
+
+    useLayoutEffect(() => { setPos(isMobileKeyboard ? "absolute" : "block") }, [isMobileKeyboard]);
+
 
     return (
         <form className={`${className}
@@ -37,6 +43,7 @@ const MsgForm: React.FC<MsgFormProps> = ({ className, onPush }) => {
             flex flex-row gap-1 bottom-0`}
         action="">
             <InputMsg
+                ref={inputRef}
                 disabled={pending}
                 className="grow bg-gray text-white rounded-xl focus:border focus:border-light-blue"
                 onChange={typeHandler} value={write} />
