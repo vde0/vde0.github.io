@@ -78,12 +78,11 @@ const Main: React.FC = () => {
                 </DisplayBox>
             </section>
             
-            { !keyboardStatus
-                ? <div className="shrink-0 h-24">
-                    <Controller onTextChat={() => { console.log("TEXT CHAT SHOWN:", !isTextChatShown); setIsTextChatShown(!isTextChatShown) }} />
-                </div>
-                : null
-            }
+            <div hidden={keyboardStatus} className="shrink-0 h-24">
+                <Controller
+                    onTextChat={() => { console.log("TEXT CHAT SHOWN:", !isTextChatShown); setIsTextChatShown(!isTextChatShown) }}
+                />
+            </div>
 
         </section>
     </div>
