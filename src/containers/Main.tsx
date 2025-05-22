@@ -79,7 +79,7 @@ const Main: React.FC = () => {
         ">
 
             <section className={`grow flex flex-col gap-10 pt-8 ${keyboardStatus?"pb-0":"pb-8"} absolute top-0 bottom-0 w-full`}>
-                <DisplayBox className="flex items-center overflow-hidden">
+                <DisplayBox className="flex items-center overflow-hidden shrink-0">
                     <VideoChat remote />
                 </DisplayBox>
                 <DisplayBox className="flex items-center overflow-hidden">
