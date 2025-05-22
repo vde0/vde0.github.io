@@ -8,12 +8,13 @@ import { EmCss } from "@emotion/react"; // custom type
 import { useWebApp } from "@vkruglikov/react-telegram-web-app";
 import { TWebApp } from "@tg-types"; // custom type
 import { useEffect, useLayoutEffect, useState } from "react";
-import { useChatHistory, useMobileKeyboard, useUnread } from "@hooks";
+import { useChatHistory, useChatUnit, useMobileKeyboard, useUnread } from "@hooks";
 import { Peer } from "@lib/webrtc";
 import { ChatSignalHub } from "@services/ChatSignalHub";
 import { ChatHistory, ChatHistoryEventMap } from "@lib/chat-history";
 import { Listener } from "@lib/pprinter-tools";
 import { ChatValue } from "@store/ChatProvider";
+import { DuoChatUnit } from "@services/DuoChatUnit";
 
 
 const mainCss: EmCss = css`
@@ -29,8 +30,17 @@ const Main: React.FC = () => {
     const webApp:               TWebApp             = useWebApp();
     const keyboardStatus:       boolean             = useMobileKeyboard();
     const chatHistory:          ChatHistory         = useChatHistory();
+    const chatUnit:             DuoChatUnit         = useChatUnit();
     const [unread, setUnread]:  ChatValue['unread'] = useUnread();
     const [isTextChatShown, setIsTextChatShown]     = useState<boolean>(false);
+
+
+    useEffect(() => {
+        chatHistory.add("Привет", chatUnit.localChatter);
+        chatHistory.add("Чо не здороваешься, руки обоссали?", chatUnit.localChatter);
+        chatHistory.add("Пошёл нахуй", chatUnit.remoteChatter);
+        chatHistory.add("САМ ИДИ!", chatUnit.localChatter);
+    }, []);
 
     useLayoutEffect(() => {
 
@@ -68,7 +78,7 @@ const Main: React.FC = () => {
             flex flex-col
         ">
 
-            <section className="grow flex flex-col gap-10 py-8">
+            <section className={`grow flex flex-col gap-10 pt-8 ${keyboardStatus?"pb-0":"pb-8"} absolute top-0 bottom-0 w-full`}>
                 <DisplayBox className="flex items-center overflow-hidden">
                     <VideoChat remote />
                 </DisplayBox>

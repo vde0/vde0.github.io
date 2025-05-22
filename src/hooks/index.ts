@@ -4,3 +4,5 @@ export * from "./usePlatform";
 export * from "./useIsMobile";
 export * from "./useMobileKeyboard";
 export * from "./useMaxHeight";
+export * from "./useChangedHeight";
+export * from "./useResizeEl";
