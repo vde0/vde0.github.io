@@ -88,7 +88,7 @@ const Main: React.FC = () => {
                 </DisplayBox>
             </section>
             
-            <div hidden={keyboardStatus} className="shrink-0 h-24">
+            <div style={{ display: keyboardStatus?"none":"block" }} className="shrink-0 h-24">
                 <Controller
                     onTextChat={() => { console.log("TEXT CHAT SHOWN:", !isTextChatShown); setIsTextChatShown(!isTextChatShown) }}
                 />

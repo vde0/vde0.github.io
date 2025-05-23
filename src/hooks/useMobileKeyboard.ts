@@ -12,7 +12,7 @@ import { addDebug, getWebApp } from "@utils";
 type MobileKeyboard = boolean;
 
 
-const MK_COEF   = 0.85;
+const MK_COEF   = 0.95;
 
 
 const useMobileKeyboard = (): MobileKeyboard => {
