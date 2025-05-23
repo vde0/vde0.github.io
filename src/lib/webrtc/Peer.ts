@@ -6,8 +6,29 @@ import * as sdpTransform from 'sdp-transform';
 
 // === MODULE VARS / STATIC FIELDS ===
 export const DEFAULT_CONFIG: RTCConfiguration = {
-    iceServers: freeice(), // Automatically generate ICE servers using freeice
-    iceTransportPolicy: "all", // Allow using all possible transport paths for ICE
+    iceServers: [
+        ...freeice(),
+
+        // Metered.ca — TURN (бесплатен для тестов, требует ограничений по трафику/частоте)
+        {
+            urls: "turn:global.relay.metered.ca:443",
+            username: "openrelayproject",
+            credential: "openrelayproject"
+        },
+        {
+            urls: "turn:relay.metered.ca:80",
+            username: "openrelayproject",
+            credential: "openrelayproject"
+        },
+
+        // Backup TURN (anon.turn.ovh) — нестабильно, использовать с осторожностью
+        {
+            urls: "turn:turn.anyfirewall.com:443?transport=tcp",
+            username: "webrtc",
+            credential: "webrtc"
+        }
+    ],
+    iceTransportPolicy: "all",
 };
 export const PEER_EVENTS: EventKeys<PeerEvent> = {
     MEDIA:      "media",
