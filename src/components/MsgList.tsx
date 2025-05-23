@@ -14,7 +14,7 @@ interface MsgListProps {
 const msgListCss: EmCss = css``;
 
 const MsgList = forwardRef<HTMLElement, MsgListProps>(({ history }, ref) => {
-    const listRef       = useRef<HTMLElement | null>(null);
+    const listRef       = useRef<HTMLUListElement | null>(null);
 
 
     useEffect(() => {
@@ -26,7 +26,7 @@ const MsgList = forwardRef<HTMLElement, MsgListProps>(({ history }, ref) => {
 
 
     return (
-        <section ref={listRef} css={msgListCss} className="px-2" >
+        <ul ref={listRef} css={msgListCss} className="px-2" >
             {history.map( (sMsgItem, index) => {
                 const [sender, direction] = sMsgItem.chatter === ChatSignalHub.getChatUnit().localChatter
                     ? ["Вы", "right" as 'right']
@@ -35,10 +35,12 @@ const MsgList = forwardRef<HTMLElement, MsgListProps>(({ history }, ref) => {
                 
 
                 return (
-                    <MsgItem sender={sender} text={sMsgItem.text} direction={direction} key={index} />
+                    <li className={`${index===history.length-1?"mb-0":"mb-2"}`}>
+                        <MsgItem sender={sender} text={sMsgItem.text} direction={direction} key={index} />
+                    </li>
                 )
             } )}
-        </section>
+        </ul>
 )});
 
 
