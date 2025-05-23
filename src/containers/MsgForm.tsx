@@ -45,7 +45,7 @@ const MsgForm: React.FC<MsgFormProps> = ({ className, onPush }) => {
             <InputMsg
                 ref={inputRef}
                 disabled={pending}
-                className="grow bg-gray text-white rounded-xl focus:border focus:border-light-blue"
+                className="grow"
                 onChange={typeHandler} value={write} />
             <SubmitBtn
                 disabled={pending}

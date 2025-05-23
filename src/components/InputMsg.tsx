@@ -8,7 +8,8 @@ const InputMsg = forwardRef<HTMLTextAreaElement, InputMsgProps>(({ className, ..
     return <textarea
         {...props}
         ref={inputRef}
-        className={`p-2 text-xl outline-0 ${className}`}
+        style={{ resize: "none" }}
+        className={`p-2 text-xl outline-0 bg-gray text-white rounded-xl focus:border focus:border-light-blue ${className}`}
     />
 });
 
