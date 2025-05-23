@@ -2,7 +2,7 @@ export { useMobileKeyboard, checkMobileKeyboard };
 
 
 import { TEventHandler, TWebApp } from "@tg-types";
-import { useCallback, useLayoutEffect, useState } from "react"
+import { useEffect, useLayoutEffect, useState } from "react"
 import { useMaxHeight } from "./useMaxHeight";
 import { useWebApp } from "@vkruglikov/react-telegram-web-app";
 import { useIsMobile } from "./useIsMobile";
@@ -27,18 +27,21 @@ const useMobileKeyboard = (): MobileKeyboard => {
         : false
     );
 
-    const vpChangedHandler      = useCallback<TEventHandler>(function () {
-        setMkb(
-            isMobile
-            ? checkMobileKeyboard(this, maxHeight)
-            : false
-        );
-    }, []);
 
-    useLayoutEffect(() => {
+    useEffect(() => {
+
+        const vpChangedHandler: TEventHandler = function () {
+            setMkb(
+                isMobile
+                ? checkMobileKeyboard(this, maxHeight)
+                : false
+            );
+        };
+
         wapp.onEvent("viewportChanged", vpChangedHandler);
         return () => wapp.offEvent("viewportChanged", vpChangedHandler)
-    }, [wapp, maxHeight]);
+    }, [wapp, maxHeight, isMobile]);
+
 
     return mkb;
 }
@@ -50,4 +53,4 @@ function checkMobileKeyboard (webApp: TWebApp | null, maxHeight: number): Mobile
 }
 
 
-addDebug("checkMK", () => checkMobileKeyboard( getWebApp() , window.debug?.getMaxHeight() ));
+addDebug("checkMK", () => checkMobileKeyboard( getWebApp() , window.debug?.maxHeight ));
