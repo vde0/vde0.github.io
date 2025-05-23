@@ -57,17 +57,19 @@ export class ListenerChest<M extends UnknownDict = AnyDict> implements IListener
     // === API FRAGMENT ===
     on      <E extends keyof M>                 (event: E, listener: Listener<M[E]>):   void {
         const listenerDict: ListenerDict<M> = privateContext.get(this, "listenerDict")!;
-        if ( !(event in listenerDict) )  listenerDict[event] = new Set();
-        listenerDict[event]!.add(listener);
+        if ( listenerDict[event] === undefined )  listenerDict[event] = new Set();
+        listenerDict[event].add(listener);
     }
     off     <E extends keyof M>                 (event: E, listener: Listener<M[E]>):   void {
         const listenerDict: ListenerDict<M>     = privateContext.get(this, "listenerDict")!;
         const onceSet:      Set<Listener<M[E]>> = privateContext.get(this, "onceSet")!;
 
-        listenerDict[event]?.delete(listener);
+        if ( listenerDict[event] === undefined ) return;
+
+        listenerDict[event].delete(listener);
         onceSet.delete(listener);
 
-        if ( listenerDict[event]!.size === 0 ) {
+        if ( listenerDict[event].size === 0 ) {
             delete listenerDict[event];
         }
     }
