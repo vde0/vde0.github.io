@@ -27,6 +27,7 @@ const MsgForm: React.FC<MsgFormProps> = ({ className, onPush }) => {
     const submitHandler = useCallback<MouseEventHandler<HTMLButtonElement>>( function (evt) {
         evt.preventDefault();
         inputRef.current?.focus();
+        if (write === "") return;
         onPush?.(write);
         setWrite("");
     }, [write] );
