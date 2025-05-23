@@ -14,7 +14,7 @@ const MsgItem: React.FC<MsgItemProps> = ({ sender, text, direction }) => (
         <p className="text-white">{text}</p>
         <div className={`
             absolute w-0 h-0 bottom-0
-            border-t-transparent border-4
+            border-t-transparent border-3
             ${direction==="left"
                 ?"border-gray border-l-transparent right-full"
                 :"border-light-blue border-r-transparent left-full"
