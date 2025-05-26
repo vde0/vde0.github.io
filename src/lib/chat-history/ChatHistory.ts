@@ -75,7 +75,6 @@ export const ChatHistory: ChatHistoryConstructor = function () {
         checkChatterType(chatter);
         checkMsgType(text);
 
-        console.log("ADD", text);
         const item      = make(text, chatter);
         msgMap.set(++lastMsgId, item);
 

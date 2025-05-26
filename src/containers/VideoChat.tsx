@@ -30,7 +30,6 @@ const VideoChat: React.FC<VideoChatProps> = ({ className, remote, hidden=false }
         addDebug(remote?"remoteVide":"localVideo", video.current);
 
         if ( !(remote && poster.current) ) return;
-        console.log("REMOTE EFFECT");
 
         // === HANDLERS ===
         const pauseHandler = (evt: Event) => {
@@ -38,9 +37,7 @@ const VideoChat: React.FC<VideoChatProps> = ({ className, remote, hidden=false }
             (evt.target as HTMLVideoElement)?.play();
         };
         const tapHandler = () => {
-            console.log("TAP", video.current);
             if ( !video.current?.paused ) return;
-            console.log("USER GESTURE EFFECT");
             video.current.play();
             ChatSignalHub.signalAccessor.set(ACC_FLAGS.PLAY_REMOTE_VIDEO);
 

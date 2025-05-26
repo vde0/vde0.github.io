@@ -13,7 +13,6 @@ const Video = forwardRef<HTMLVideoElement | null, VideoProps>(({ className, hidd
     const videoClassName = className ?? "";
 
     useEffect(() => {
-        console.log("VIDEO REF", ref);
         if ( !(videoRef.current) ) throw Error(
             "'Video' component has not rendered at DOM."
         );

@@ -29,7 +29,6 @@ export const Signal: SignalConstructor = function (peer?: Peer | null): Signal {
 
 
     const stopPeer      = (): void => {
-        console.log("STOP PEER BY SIGNAL");
         peer?.stop();
     };
     const initSocket    = (): void => {
@@ -37,13 +36,11 @@ export const Signal: SignalConstructor = function (peer?: Peer | null): Signal {
 
         listen(socket, {
             "accepttarget": ({ target: id, offer }: {target: string, offer: boolean}) => {
-                offer && console.log("OFFER");
                 target = id;
                 if (offer) peer!.start(config, ...configArgs);
             },
             "acceptsdp": ({ sdp }: {sdp: RTCSessionDescription}) => {
                 if (!peer) return;
-                console.log("REMOTE SDP", JSON.stringify(sdp));
                 peer.setRemoteSdp(sdp);
             },
             "acceptice": ({ ice }: {ice: RTCIceCandidate}) => peer!.addCandidate(ice),
@@ -53,7 +50,7 @@ export const Signal: SignalConstructor = function (peer?: Peer | null): Signal {
             [PEER_EVENTS.SDP]: ({ sdp }: {sdp: RTCSessionDescription}) => socket.emit("relaysdp", {target, sdp}),
             [PEER_EVENTS.ICE]: ({ candidate }: {candidate: RTCIceCandidate}) => socket.emit("relayice", {target, ice: candidate}),
             [PEER_EVENTS.CONNECT]: () => { socket.emit("success"); socket.disconnect(); },
-            [PEER_EVENTS.DISCONNECT]: () => { console.log("PEER DISCONNECT"); socket.disconnect(); stopPeer() },
+            [PEER_EVENTS.DISCONNECT]: () => { socket.disconnect(); stopPeer() },
         });
     };
 
@@ -70,12 +67,10 @@ export const Signal: SignalConstructor = function (peer?: Peer | null): Signal {
         },
         updatePeer (argPeer) {
             if (argPeer === peer) return;
-            console.log("UPDATE PEER");
             stopPeer();
             peer = argPeer;
         },
         setStartConfig (startConfig, ...args) {
-            console.log("SET START CONFIG");
             config      = startConfig;
             configArgs  = args;
         },
