@@ -30,23 +30,12 @@ export const DEFAULT_CONFIG: RTCConfiguration = {
     ],
     iceTransportPolicy: "all",
 };
-export const PEER_EVENTS: EventKeys<PeerEvent> = {
-    MEDIA:      "media",
-    TEXT:       "text",
-    CONNECT:    "connect",
-    DISCONNECT: "disconnect",
-    SDP:        "sdp",
-    ICE:        "ice",
-} as const;
-
-// === LOCKING ===
-Object.freeze(DEFAULT_CONFIG);
-Object.freeze(PEER_EVENTS);
 
 
 // === ANNOTATION ===
 export type Peer = IListenerChest<PeerEventMap> & {
     rtc: RTCPeerConnection;
+    state: RTCPeerConnection['connectionState'];
 
     start   (startConfig?: StartConfig, ...args: any[]): void;
     stop    (): void;
@@ -81,15 +70,38 @@ export type PeerConstructor = new (config?: RTCConfiguration) => Peer;
 export type StartConfig = (...args: any[]) => void;
 
 
+export const PEER_EVENTS: EventKeys<PeerEvent> = {
+    CLOSED:         "closed",
+    CONNECTED:      "connected",
+    CONNECTING:     "connecting",
+    DISCONNECTED:   "disconnected",
+    FAILED:         "failed",
+    NEW:            "new",
+
+    UPDATED:        "updated",
+
+    MEDIA:          "media",
+    TEXT:           "text",
+    SDP:            "sdp",
+    ICE:            "ice",
+} as const;
+
 export type PeerEvent       = keyof PeerEventMap;
 export type PeerEventMap    = {
-    media:      { media: MediaStream },
-    text:       MessageEvent,
-    connect:    { connectionState: RTCPeerConnectionState },
-    disconnect: { connectionState: RTCPeerConnectionState },
-    sdp:        { sdp: RTCSessionDescriptionInit },
-    ice:        RTCPeerConnectionIceEvent,
+    [E in RTCPeerConnectionState]: undefined;
+} & {
+    media:      { media: MediaStream };
+    text:       MessageEvent;
+    sdp:        { sdp: RTCSessionDescriptionInit };
+    ice:        RTCPeerConnectionIceEvent;
+
+    updated:    { state: RTCPeerConnectionState };
 };
+
+
+// === LOCKING ===
+Object.freeze(DEFAULT_CONFIG);
+Object.freeze(PEER_EVENTS);
 
 
 // === CONSTRUCTOR ===
@@ -133,16 +145,9 @@ export const Peer: PeerConstructor = function (config = DEFAULT_CONFIG) {
     // === EXEC CODE ===
     rtc.onicecandidate = (ev: RTCPeerConnectionIceEvent) => listenerChest.exec(PEER_EVENTS.ICE, ev);
     rtc.onconnectionstatechange = ev => {
-        const connectionState: RTCPeerConnectionState= rtc.connectionState;
-        switch (connectionState) {
-            case "closed":
-            case "disconnected":
-                listenerChest.exec(PEER_EVENTS.DISCONNECT, { connectionState });
-                break;
-            case "connected":
-                listenerChest.exec(PEER_EVENTS.CONNECT, { connectionState });
-                break;
-        }
+        const connectionState: RTCPeerConnectionState = rtc.connectionState;
+        listenerChest.exec( PEER_EVENTS.UPDATED, { state: connectionState } );
+        listenerChest.exec( connectionState );
     };
     rtc.ondatachannel = (ev: RTCDataChannelEvent) => {
         initDataChannel(ev.channel);
@@ -159,6 +164,7 @@ export const Peer: PeerConstructor = function (config = DEFAULT_CONFIG) {
 
         // === RTC OBJECT ===
         get rtc () { return rtc },
+        get state () { return rtc.connectionState },
 
         // === CONNECT CONTROLLING ===
         async start (startConfig, ...args) {

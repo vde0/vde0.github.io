@@ -49,8 +49,8 @@ export const Signal: SignalConstructor = function (peer?: Peer | null): Signal {
         listen<PeerEvent>(peer!, {
             [PEER_EVENTS.SDP]: ({ sdp }: {sdp: RTCSessionDescription}) => socket.emit("relaysdp", {target, sdp}),
             [PEER_EVENTS.ICE]: ({ candidate }: {candidate: RTCIceCandidate}) => socket.emit("relayice", {target, ice: candidate}),
-            [PEER_EVENTS.CONNECT]: () => { socket.emit("success"); socket.disconnect(); },
-            [PEER_EVENTS.DISCONNECT]: () => { socket.disconnect(); stopPeer() },
+            [PEER_EVENTS.CONNECTED]: () => { socket.emit("success"); socket.disconnect(); },
+            [PEER_EVENTS.DISCONNECTED]: () => { socket.disconnect(); stopPeer() },
         });
     };
 

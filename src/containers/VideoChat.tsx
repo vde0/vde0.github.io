@@ -1,8 +1,8 @@
-import { useIsMobile, useLocalChatter, useRemoteChatter } from "@hooks";
+import { useIsMobile, useLocalChatter, usePeerState, useRemoteChatter } from "@hooks";
 import { addDebug } from "@lib/utils";
 import { ACC_FLAGS, ChatSignalHub } from "@services/ChatSignalHub";
 import { PropsWithClassName } from "@types";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import empty_video from "../assets/img/empty_video.png";
 import Video from "@components/Video";
 
@@ -11,20 +11,48 @@ type VideoChatProps = PropsWithClassName & { remote: boolean, hidden?: boolean }
 
 const VideoChat: React.FC<VideoChatProps> = ({ className, remote, hidden=false }) => {
 
-    const videoChatClassName = className ?? "";
-
-    const useChatter = remote ? useRemoteChatter : useLocalChatter;
+    const videoChatClassName    = className ?? "";
+    const useChatter            = remote ? useRemoteChatter : useLocalChatter;
     
-    const video     = useRef<HTMLVideoElement | null>(null);
-    const poster    = useRef<HTMLDivElement | null>(null);
-    const [,,media] = useChatter();
-    const isMobile  = useIsMobile();
+    const video             = useRef<HTMLVideoElement | null>(null);
+    const poster            = useRef<HTMLDivElement | null>(null);
+    const [,,media]         = useChatter();
+    const isMobile          = useIsMobile();
+    const peerState         = usePeerState();
+    const [show, setShow]   = useState<boolean>(false);
+
 
     useEffect(() => {
         if (!video.current) return;
         video.current.srcObject = media;
         video.current.getAttribute("id") && addDebug(video.current.getAttribute("id") as string, video.current);
     }, [media]);
+
+    useEffect(() => {
+        if (!remote) return;
+
+        if ( peerState === "connected" )    setShow(true);
+        else                                setShow(false);
+    }, [peerState, remote]);
+
+    useEffect(() => {
+        if (remote) return;
+        if (!video.current) return;
+
+        video.current.onplaying = () => setShow(true);
+        video.current.onwaiting = () => setShow(false);
+        video.current.onended   = () => setShow(false);
+        video.current.onstalled = () => setShow(false);
+
+        return () => {
+            if (!video.current) return;
+
+            video.current.onplaying = () => setShow(true);
+            video.current.onwaiting = () => setShow(false);
+            video.current.onended   = () => setShow(false);
+            video.current.onstalled = () => setShow(false);
+        };
+    }, [remote]);
 
     useEffect(() => {
         addDebug(remote?"remoteVide":"localVideo", video.current);
@@ -61,13 +89,17 @@ const VideoChat: React.FC<VideoChatProps> = ({ className, remote, hidden=false }
     
 
     return (
-        <section hidden={hidden} className={videoChatClassName + " relative w-full h-full bg-cloud rounded-xl flex items-center overflow-clip"}>
+        <section hidden={hidden} className={videoChatClassName + " relative w-full h-full rounded-xl flex items-center overflow-clip"}>
             <Video
-                poster={empty_video}
+                show={show}
                 autoPlay ref={video} playsInline muted={!remote}
                 id={remote?"remoteVideo":"localVideo"}
                 className="scale-x-[-1] aspect-video w-full h-full object-fit [object-position:center_center] block"
-            />
+            >   
+                <div className="absolute top-0 bottom-0 left-0 right-0 bg-cloud">
+                    <img src={empty_video} className="block top-0 bottom-0 left-0 right-0 absolute m-auto"/>
+                </div>
+            </Video>
             {remote && <div ref={poster} className="
                 absolute
                 top-0 bottom-0 left-0 right-0

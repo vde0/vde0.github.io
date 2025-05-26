@@ -59,12 +59,12 @@ const Main: React.FC = () => {
     useEffect(() => {
         if (!peer) return; 
 
-        const updatePeerHandler: Listener<PeerEventMap['disconnect']> = () => {
+        const updatePeerHandler: Listener<PeerEventMap['disconnected']> = () => {
             ChatSignalHub.takePeer( new Peer() );
         };
 
-        peer.once("disconnect", updatePeerHandler);
-        return () => peer.off("disconnect", updatePeerHandler);
+        peer.once("disconnected", updatePeerHandler);
+        return () => peer.off("disconnected", updatePeerHandler);
     }, [peer]);
 
     useEffect(() => {

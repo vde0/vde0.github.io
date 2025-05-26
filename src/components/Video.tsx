@@ -1,50 +1,38 @@
-import { forwardRef, useEffect, useRef, VideoHTMLAttributes } from "react";
+import { forwardRef, PropsWithChildren, useEffect, useRef, VideoHTMLAttributes } from "react";
 
 
-type VideoProps = VideoHTMLAttributes<HTMLVideoElement> & {
+type VideoProps = VideoHTMLAttributes<HTMLVideoElement> & PropsWithChildren & {
     mirror?:    boolean;
+    show?:      boolean;
 };
 
-const Video = forwardRef<HTMLVideoElement | null, VideoProps>(({ className, hidden=false, mirror=false, poster, ...props }, ref) => {
+const Video = forwardRef<HTMLVideoElement | null, VideoProps>(({ className, children, hidden=false, show=true, mirror=false, ...props }, ref) => {
+    
+    const videoClassName    = className ?? "";
 
-    const videoRef  = useRef<HTMLVideoElement | null>(null);
-    const posterRef = useRef<HTMLImageElement | null>(null);
+    const videoRef          = useRef<HTMLVideoElement | null>(null);
 
-    const videoClassName = className ?? "";
 
+    // === REF DEFINE ===
     useEffect(() => {
         if ( !(videoRef.current) ) throw Error(
             "'Video' component has not rendered at DOM."
         );
 
-        const pauseHandler  = () => posterRef.current!.hidden = false;
-        const playHandler   = () => posterRef.current!.hidden = true;
+        if ( !ref ) return;
 
-        if (ref) {
-            if (typeof ref === "function") {
-                ref(videoRef.current);
-            } else {
-                ref.current = videoRef.current;
-            }
-        }
-
-        if (poster) {
-            videoRef.current!.addEventListener("waiting", pauseHandler); 
-            videoRef.current!.addEventListener("playing", playHandler);
+        if (typeof ref === "function") {
+            ref(videoRef.current);
+        } else {
+            ref.current = videoRef.current;
         }
 
         return () => {
-            if (ref) {
-                if (typeof ref === "function") {
-                    ref(null);
-                } else {
-                    ref.current = null;
-                }
+            if (typeof ref === "function") {
+                ref(null);
+            } else {
+                ref.current = null;
             }
-
-            if (!poster) return;
-            videoRef.current?.removeEventListener("pause", pauseHandler); 
-            videoRef.current?.removeEventListener("play", playHandler); 
         };
     }, []);
 
@@ -58,12 +46,7 @@ const Video = forwardRef<HTMLVideoElement | null, VideoProps>(({ className, hidd
                     object-cover [object-position:center_center] block
                 `
             }/>
-            {poster && <img src={poster} ref={posterRef}
-                className="
-                    block absolute m-auto
-                    top-0 bottom-0 left-0 right-0
-                "
-            />}
+            {!show && children}
         </section>
     );
 });
