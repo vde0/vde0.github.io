@@ -8,8 +8,8 @@ import { EmCss } from "@emotion/react"; // custom type
 import { useWebApp } from "@vkruglikov/react-telegram-web-app";
 import { TWebApp } from "@tg-types"; // custom type
 import { useEffect, useLayoutEffect, useState } from "react";
-import { useChatHistory, useChatUnit, useMobileKeyboard, useUnread } from "@hooks";
-import { Peer } from "@lib/webrtc";
+import { useChatHistory, useChatUnit, useMobileKeyboard, usePeer, useUnread } from "@hooks";
+import { Peer, PeerEventMap } from "@lib/webrtc";
 import { ChatSignalHub } from "@services/ChatSignalHub";
 import { ChatHistory, ChatHistoryEventMap } from "@lib/chat-history";
 import { Listener } from "@lib/pprinter-tools";
@@ -22,12 +22,14 @@ const mainCss: EmCss = css`
     bottom: var(--tg-content-safe-area-inset-bottom);
 
     max-height: var(--tg-viewport-stable-height);
+    min-height: 80%;
     overflow: clip;
 `;
 
 const Main: React.FC = () => {
 
     const webApp:               TWebApp             = useWebApp();
+    const peer:                 Peer | null         = usePeer();
     const keyboardStatus:       boolean             = useMobileKeyboard();
     const chatHistory:          ChatHistory         = useChatHistory();
     const chatUnit:             DuoChatUnit         = useChatUnit();
@@ -36,15 +38,15 @@ const Main: React.FC = () => {
 
 
     useEffect(() => {
+        ChatSignalHub.takePeer( new Peer() );
+
         chatHistory.add("Привет", chatUnit.localChatter);
         chatHistory.add("Чо не здороваешься, руки обоссали?", chatUnit.localChatter);
         chatHistory.add("Пошёл нахуй", chatUnit.remoteChatter);
         chatHistory.add("САМ ИДИ!", chatUnit.localChatter);
     }, []);
 
-    useLayoutEffect(() => {
-
-        ChatSignalHub.takePeer( new Peer() );
+    useEffect(() => {
 
         try {
             webApp?.ready();
@@ -55,9 +57,18 @@ const Main: React.FC = () => {
     }, []);
 
     useEffect(() => {
+        if (!peer) return; 
+
+        const updatePeerHandler: Listener<PeerEventMap['disconnect']> = () => {
+            ChatSignalHub.takePeer( new Peer() );
+        };
+
+        peer.once("disconnect", updatePeerHandler);
+        return () => peer.off("disconnect", updatePeerHandler);
+    }, [peer]);
+
+    useEffect(() => {
         const addMsgHandler: Listener<ChatHistoryEventMap['add']> = () => {
-            console.log("INCREMENT UNREAD");
-            console.log("TEXT CHAT SHOW", isTextChatShown);
             if (!isTextChatShown) setUnread(unread +1);
         };
         chatHistory.on('add', addMsgHandler);
@@ -90,6 +101,7 @@ const Main: React.FC = () => {
             
             <div style={{ display: keyboardStatus?"none":"block" }} className="shrink-0 h-24">
                 <Controller
+                    onNext={() => { console.log("NEXT"); ChatSignalHub.takePeer( new Peer() ); }}
                     onTextChat={() => { console.log("TEXT CHAT SHOWN:", !isTextChatShown); setIsTextChatShown(!isTextChatShown) }}
                 />
             </div>

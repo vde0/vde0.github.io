@@ -101,7 +101,7 @@ export const Peer: PeerConstructor = function (config = DEFAULT_CONFIG) {
     let     isStarted:      boolean                         = false;
 
     const initClose = rtc.close.bind(rtc);
-    rtc.close = () => { console.log("CLOSE RTC"); initClose(); };
+    rtc.close = () => { initClose(); };
 
     let dataChannels:   Map<string, RTCDataChannel>         = new Map();
     let mediaTracks:    Map<string, MediaStreamTrack>       = new Map();
@@ -111,7 +111,6 @@ export const Peer: PeerConstructor = function (config = DEFAULT_CONFIG) {
 
     // === LOCAL HELPERS / PRIVATE METHODS ===
     function initDataChannel (dc: RTCDataChannel) {
-        console.log("INIT DATA CHANNEL:", dc.label);
         dc.onmessage = (ev: MessageEvent) => listenerChest.exec(PEER_EVENTS.TEXT, ev);
         dataChannels.set(dc.label, dc);
     }
@@ -132,9 +131,6 @@ export const Peer: PeerConstructor = function (config = DEFAULT_CONFIG) {
     }
 
     // === EXEC CODE ===
-    rtc.onconnectionstatechange = () => {
-        console.log("CONNECTION STATE:", rtc.connectionState);
-    }
     rtc.onicecandidate = (ev: RTCPeerConnectionIceEvent) => listenerChest.exec(PEER_EVENTS.ICE, ev);
     rtc.onconnectionstatechange = ev => {
         const connectionState: RTCPeerConnectionState= rtc.connectionState;
@@ -167,8 +163,6 @@ export const Peer: PeerConstructor = function (config = DEFAULT_CONFIG) {
         // === CONNECT CONTROLLING ===
         async start (startConfig, ...args) {
             if (isStarted) return;
-            console.log("START PPER");
-            console.log(startConfig);
             startConfig?.(...args);
             isStarted = true;
 
@@ -194,7 +188,7 @@ export const Peer: PeerConstructor = function (config = DEFAULT_CONFIG) {
                 listenerChest.exec(PEER_EVENTS.SDP, { sdp: offer });
             } catch (err: any) { console.error("Error of offer generating:", err.message); }
         },
-        stop () { console.log("STOP PEER"); rtc.close(); listenerChest.offAll(); },
+        stop () { rtc.close(); listenerChest.offAll(); },
 
         async setRemoteSdp (sdp) {
             await rtc.setRemoteDescription(sdp);

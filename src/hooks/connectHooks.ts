@@ -6,10 +6,12 @@ import { useEffect, useState } from "react";
 
 export const usePeer = (): Peer | null => {
 
-    const [peer, setPeer] = useState(ChatSignalHub.getPeer());
+    const [peer, setPeer] = useState( ChatSignalHub.getPeer() );
 
     useEffect(() => {
-        const updatePeerHandler = (peerArg: Peer): void => setPeer(peerArg);
+        const updatePeerHandler = (peerArg: Peer): void => {
+            setPeer(peerArg);
+        };
         ChatSignalHub.onUpdatePeer(updatePeerHandler);
         return () => ChatSignalHub.offUpdatePeer(updatePeerHandler);
     }, []);

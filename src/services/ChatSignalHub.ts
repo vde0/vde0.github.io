@@ -53,7 +53,7 @@ const chest = new ListenerChest<{'updatepeer': Peer}>();
 
 
 // === START SETTINGS ===
-const startConfig = () => {console.log("START CONFIG");peer!.addDataChannel(CHAT_NAME);}
+const startConfig = () => { peer!.addDataChannel(CHAT_NAME) }
 
 signal.setStartConfig(startConfig);
 chatUnit.history.on("add", sendHandler);
@@ -79,18 +79,18 @@ function takePeer (peerArg: Peer): void {
 
     signalAccessor.set(ACC_FLAGS.PEER);
     whenAccess.when("ready", () => signal.signal());
+
+    chest.exec("updatepeer", peerArg);
 }
 
 
 // === HANDLERS ===
 function sendHandler ({item: { chatter, text }}: {item: MsgItem}) {
-    console.log("SEND HANDLER");
     if (chatter !== chatUnit.localChatter) return;
     peer!.send(text, CHAT_NAME);
 }
 
 function receiveHandler ({ data }: {data: string}) {
-    console.log("RECEIVE HANDLER");
     chatUnit.history.add(data, chatUnit.remoteChatter);
 }
 
