@@ -1,40 +1,33 @@
 import { Listener } from "@lib/pprinter-tools";
 import { Peer, PeerEventMap } from "@lib/webrtc";
-import { ChatSignalHub } from "@services/ChatSignalHub";
 import { Signal } from "@services/Signal";
-import { useEffect, useState } from "react";
+import { ConnectionContext, ConnectionCValue } from "@store/ConnectionProvider";
+import { useContext, useEffect, useState } from "react";
 
 
-export const usePeer = (): Peer | null => {
+export const useConnection = (): ConnectionCValue => { return getConnectionContext() };
 
-    const [peer, setPeer] = useState( ChatSignalHub.getPeer() );
+export const usePeer = (): Peer => {
 
-    useEffect(() => {
-        const updatePeerHandler = (peerArg: Peer): void => {
-            setPeer(peerArg);
-        };
-        ChatSignalHub.onUpdatePeer(updatePeerHandler);
-        return () => ChatSignalHub.offUpdatePeer(updatePeerHandler);
-    }, []);
-
-    return peer;
+    const [connection] = getConnectionContext();
+    return connection.peer;
 };
 
-export const useSignal = (): Signal => { return ChatSignalHub.getSignal() };
+export const useSignal = (): Signal => {
+
+    const [connection] = getConnectionContext();
+    return connection.signal;
+};
 
 
-export const usePeerState = (): RTCPeerConnection["connectionState"] | null => {
+export const usePeerState = (): RTCPeerConnection["connectionState"] => {
 
-    const peer: Peer | null         = usePeer();
-    const [peerState, setPeerState] = useState<RTCPeerConnection["connectionState"] | null>(
-        peer?.state ?? null
-    );
+    const peer: Peer                = usePeer();
+    const [peerState, setPeerState] = useState<RTCPeerConnection["connectionState"]>(peer.getState());
 
     useEffect(() => {
-        if (!peer) return;
-
-        setPeerState( peer.state );
-
+        setPeerState( peer.getState() );
+        
         const updatePeerState: Listener<PeerEventMap['updated']> = ({ state }) => {
             setPeerState(state);
         };
@@ -44,4 +37,21 @@ export const usePeerState = (): RTCPeerConnection["connectionState"] | null => {
     }, [peer]);
 
     return peerState;
+};
+
+
+// === HELPERS ===
+function getConnectionContext (hookName?: string): ConnectionCValue {
+
+    // === SUCCESS ===
+    const context: ConnectionCValue | null = useContext(ConnectionContext);
+    if (context) return context;
+
+    // === FAIL ===
+    let errMsg: string = "";
+
+    if (hookName)   errMsg = `${hookName} must be used within a ConnectionProvider`;
+    else            errMsg = "useContext(ConnectionContext) should be called within the ConnectionProvider";
+
+    throw new Error(errMsg);
 };

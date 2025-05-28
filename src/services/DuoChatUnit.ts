@@ -1,5 +1,6 @@
 import { ChatHistory } from "@lib/chat-history/ChatHistory";
 import { EventKeys, IListenerChest, ListenerChest } from "@lib/pprinter-tools";
+import { addDebug } from "@lib/utils";
 
 
 export const DUO_CHAT_UNIT_EVENTS: EventKeys<DuoChatUnitEvent> = {
@@ -45,6 +46,8 @@ export const DuoChatUnit: DuoChatUnitConstructor = function () {
         localChatter,
 
         setMedia (chatter, media)   {
+            if (chatter === localChatter) addDebug('localMedia', media);
+            if (chatter === remoteChatter) addDebug('remoteMedia', media);
             listener.exec(DUO_CHAT_UNIT_EVENTS.MEDIA, { chatter, media });
             mediaMap.set(chatter, media);
         },

@@ -1,6 +1,6 @@
-import { useIsMobile, useLocalChatter, usePeerState, useRemoteChatter } from "@hooks";
+import { useConnection, useIsMobile, useLocalChatter, usePeerState, useRemoteChatter } from "@hooks";
 import { addDebug } from "@lib/utils";
-import { ACC_FLAGS, ChatSignalHub } from "@services/ChatSignalHub";
+import { ACC_FLAGS } from "@services/Connection";
 import { PropsWithClassName } from "@types";
 import { useEffect, useRef, useState } from "react";
 import empty_video from "../assets/img/empty_video.png";
@@ -20,7 +20,14 @@ const VideoChat: React.FC<VideoChatProps> = ({ className, remote, hidden=false }
     const isMobile          = useIsMobile();
     const peerState         = usePeerState();
     const [show, setShow]   = useState<boolean>(false);
+    const [connection]      = useConnection();
 
+    const [unlocked, setUnlocked] = useState(false);
+
+    useEffect(() => {
+        if (!remote || !unlocked) return;
+        connection.signalAccessor.set(ACC_FLAGS.PLAY_REMOTE_VIDEO);
+    }, [connection, unlocked, remote]);
 
     useEffect(() => {
         if (!video.current) return;
@@ -67,7 +74,8 @@ const VideoChat: React.FC<VideoChatProps> = ({ className, remote, hidden=false }
         const tapHandler = () => {
             if ( !video.current?.paused ) return;
             video.current.play();
-            ChatSignalHub.signalAccessor.set(ACC_FLAGS.PLAY_REMOTE_VIDEO);
+            setUnlocked(true);
+            connection.signalAccessor.set(ACC_FLAGS.PLAY_REMOTE_VIDEO);
 
             if ( !poster.current ) return;
             poster.current.hidden = true;

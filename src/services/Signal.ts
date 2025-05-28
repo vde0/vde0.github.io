@@ -1,6 +1,6 @@
 import { io, Socket } from "socket.io-client";
-import { addDebug, listen } from "@utils";
-import { Peer, PEER_EVENTS, PeerEvent, StartConfig } from "lib/webrtc";
+import { EventKeys, IListenerChest, ListenerChest } from "@lib/pprinter-tools";
+import { addDebug, listen } from "@lib/utils";
 
 
 // === GENERAL DATA ===
@@ -9,70 +9,90 @@ export const SIGNAL_SERVER = process.env.SIGNAL ?? 'https://vde0.chat';
 
 
 // === TYPES ===
-export type SignalConstructor = new (peer?: Peer | null) => Signal;
-export interface Signal {
-    signal          ():                                         void;
-    updatePeer      (peer: Peer):                               void;
-    setStartConfig  (startConfig: StartConfig, ...args: any[]): void;
-}
+export type SignalConstructor = new () => Signal;
+export type Signal = IListenerChest<SignalEventMap> & {
+    start       ():                                                         void;
+    stop        ():                                                         void;
+
+    relayIce    (ice: RTCIceCandidate | null):                              void;
+    relaySdp    (sdp: RTCSessionDescription | RTCSessionDescriptionInit):   void;
+};
+
+
+export type SignalEventMap = {
+    'start':        undefined;
+    'stop':         undefined;
+    'setconfig':    undefined;
+
+    'offer':    undefined,
+    'sdp':      {sdp: RTCSessionDescription | RTCSessionDescriptionInit},
+    'ice':      {ice: RTCIceCandidate | null},
+};
+export type SignalEvent = keyof SignalEventMap;
+export const SIGNAL_EVENTS: EventKeys<SignalEvent> = {
+    START:         "start",
+    STOP:           "stop",
+    SETCONFIG:      "setconfig",
+
+    OFFER:  "offer",
+    SDP:    "sdp",
+    ICE:    "ice",
+} as const;
+Object.freeze(SIGNAL_EVENTS);
 
 
 // === FABRIC OF CONNECTION ===
-export const Signal: SignalConstructor = function (peer?: Peer | null): Signal {
+export const Signal: SignalConstructor = function (): Signal {
 
     // === PRIVATE FIELDS AND METHODS ===
     let socket: Socket;
     let target: string;
 
-    let config:     StartConfig | undefined;
-    let configArgs: any[]   = [];
+    let state:      'new' | 'started' | 'stopped'   = "new";
 
+    const chest:    IListenerChest<SignalEventMap>  = new ListenerChest();
 
-    const stopPeer      = (): void => {
-        peer?.stop();
-    };
-    const initSocket    = (): void => {
+    const signal    = (): void => {
         socket = io(SIGNAL_SERVER);
 
         listen(socket, {
-            "accepttarget": ({ target: id, offer }: {target: string, offer: boolean}) => {
+            accepttarget: ({ target: id, offer }: {target: string, offer: boolean}) => {
                 target = id;
-                if (offer) peer!.start(config, ...configArgs);
+                offer && chest.exec(SIGNAL_EVENTS.OFFER);
             },
-            "acceptsdp": ({ sdp }: {sdp: RTCSessionDescription}) => {
-                if (!peer) return;
-                peer.setRemoteSdp(sdp);
+            acceptsdp: ({ sdp }: {sdp: RTCSessionDescription | RTCSessionDescriptionInit}) => {
+                chest.exec(SIGNAL_EVENTS.SDP, {sdp});
             },
-            "acceptice": ({ ice }: {ice: RTCIceCandidate}) => peer!.addCandidate(ice),
-        });
-
-        listen<PeerEvent>(peer!, {
-            [PEER_EVENTS.SDP]: ({ sdp }: {sdp: RTCSessionDescription}) => socket.emit("relaysdp", {target, sdp}),
-            [PEER_EVENTS.ICE]: ({ candidate }: {candidate: RTCIceCandidate}) => socket.emit("relayice", {target, ice: candidate}),
-            [PEER_EVENTS.CONNECTED]: () => { socket.emit("success"); socket.disconnect(); },
-            [PEER_EVENTS.DISCONNECTED]: () => { socket.disconnect(); stopPeer() },
+            acceptice: ({ ice }: {ice: RTCIceCandidate | null}) => {
+                chest.exec(SIGNAL_EVENTS.ICE, {ice});
+            },
         });
     };
 
+
+    chest.once("start", () => { signal(); });
+
+
     // === RESULT INSTANCE ===
     return {
-        signal () {
-            if (!peer) return;
+        ...chest,
+        start ()    {
+            if (state !== "new") return;
+            state = "started";
+            chest.exec(SIGNAL_EVENTS.START);
+        },
+        stop ()      {
+            if (state !== "started") return;
+            state = "stopped";
+            socket.emit("success");
+            chest.exec(SIGNAL_EVENTS.STOP);
+        },
 
-            if (peer.rtc.connectionState !== "new") throw Error (
-                "Connection.signal() should be with correct \"new\" Peer."
-            );
-            socket?.disconnect();
-            initSocket();
+        relaySdp (sdp) {
+            socket.emit("relaysdp", { target, sdp });
         },
-        updatePeer (argPeer) {
-            if (argPeer === peer) return;
-            stopPeer();
-            peer = argPeer;
-        },
-        setStartConfig (startConfig, ...args) {
-            config      = startConfig;
-            configArgs  = args;
+        relayIce (ice) {
+            socket.emit("relayice", { target, ice })
         },
     };
 } as unknown as SignalConstructor;

@@ -42,7 +42,7 @@ const Video = forwardRef<HTMLVideoElement | null, VideoProps>(({ className, chil
                 ref={videoRef}
                 className={`${videoClassName}
                     ${mirror ? "scale-x-[-1]" : ""}
-                    aspect-video w-full h-full
+                    aspect-video w-full
                     object-cover [object-position:center_center] block
                 `
             }/>

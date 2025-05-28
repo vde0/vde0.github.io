@@ -1,21 +1,26 @@
 import React from 'react';
 import Main from './containers/Main';
-import TextChatProvider from '@store/ChatProvider';
+import ChatProvider from '@store/ChatProvider';
 import { WebAppProvider } from '@vkruglikov/react-telegram-web-app';
+import { ConnectionProvider } from '@store/ConnectionProvider';
 
 
-const MemoMain              = React.memo( Main );
-const MemoTextChatProvider  = React.memo( TextChatProvider );
+const MemoMain                  = React.memo( Main );
+const MemoChatProvider          = React.memo( ChatProvider );
+const MemoConnectionProvider    = React.memo( ConnectionProvider );
+
 
 
 const App: React.FC = () => (
     <WebAppProvider>
 
-    <MemoTextChatProvider>
+    <MemoChatProvider>
+    <MemoConnectionProvider>
 
         <MemoMain />
 
-    </MemoTextChatProvider>
+    </MemoConnectionProvider>
+    </MemoChatProvider>
 
     </WebAppProvider>
 );

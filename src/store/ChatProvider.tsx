@@ -1,14 +1,14 @@
 import { createContext, useState } from "react";
 
 
-type ChatValue = {
+type ChatCValue = {
     write:  [string, React.Dispatch<React.SetStateAction<string>>];
     unread: [number, React.Dispatch<React.SetStateAction<number>>];
 };
 
 
 // Context obj
-const ChatContext = createContext<ChatValue | null>( null );
+const ChatContext = createContext<ChatCValue | null>( null );
 
 
 // Provider obj
@@ -29,5 +29,5 @@ export default ChatProvider
 export { ChatContext };
 // types
 export {
-    ChatValue,
+    ChatCValue
 };

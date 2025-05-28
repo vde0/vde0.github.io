@@ -1,40 +1,40 @@
-import { CHAT_HISTORY_EVENTS, ChatHistory, MsgItem } from "@lib/chat-history";
+import { CHAT_HISTORY_EVENTS, ChatHistory, ChatHistoryEventMap, MsgItem } from "@lib/chat-history";
 import { addDebug, listen, unlisten } from "@lib/utils";
-import { ChatSignalHub } from "@services/ChatSignalHub";
-import { DUO_CHAT_UNIT_EVENTS, DuoChatUnit, MediaEventPayload, SymbolChatter } from "@services/DuoChatUnit";
-import { ChatContext, ChatValue } from "@store";
+import { DUO_CHAT_UNIT_EVENTS, DuoChatUnit, DuoChatUnitEventMap, MediaEventPayload, SymbolChatter } from "@services/DuoChatUnit";
+import { ChatContext, ChatCValue, ConnectionContext, ConnectionCValue } from "@store";
 import { useCallback, useContext, useEffect, useState } from "react";
+import { useConnection } from "./connectHooks";
+import { Listener } from "@lib/pprinter-tools";
 
 
 type Send       = (msgText: string) => void;
-type SetWrite   = (msgText: string) => void;
 
-export const useWrite = (): ChatValue['write'] => { return getChatContext()["write"] };
-export const useUnread = (): ChatValue['unread'] => { return getChatContext()["unread"] };
+export const useWrite = (): ChatCValue['write'] => { return getChatContext()["write"] };
+export const useUnread = (): ChatCValue['unread'] => { return getChatContext()["unread"] };
 
-export const useChatUnit = (): DuoChatUnit => { return ChatSignalHub.getChatUnit() };
+export const useChatUnit = (): DuoChatUnit => { return useConnection()[0].chatUnit };
 
-export const useChatHistory = (): ChatHistory => { return ChatSignalHub.getChatUnit().history };
+export const useChatHistory = (): ChatHistory => { return useConnection()[0].chatUnit.history };
 
 export const useChatFeed = (): MsgItem[] => {
-    const chatUnit          = ChatSignalHub.getChatUnit();
-    const [feed, setFeed]   = useState<MsgItem[]>( chatUnit.history.tail(100) );
+    const history          = useChatHistory();
+    const [feed, setFeed]   = useState<MsgItem[]>( history.tail(100) );
 
     useEffect(() => {
-        const update = () => setFeed( chatUnit.history.tail(100) );
+        const update: Listener<ChatHistory['add' | 'delete' | 'clear']> = () => setFeed( history.tail(100) );
 
-        listen(chatUnit.history, {
+        listen(history, {
             [CHAT_HISTORY_EVENTS.ADD]:      update,
             [CHAT_HISTORY_EVENTS.DELETE]:   update,
             [CHAT_HISTORY_EVENTS.CLEAR]:    update,
         });
 
-        return () => unlisten(chatUnit.history, {
+        return () => unlisten(history, {
             [CHAT_HISTORY_EVENTS.ADD]:      update,
             [CHAT_HISTORY_EVENTS.DELETE]:   update,
             [CHAT_HISTORY_EVENTS.CLEAR]:    update,
         });
-    }, [chatUnit]);
+    }, [history]);
 
     addDebug("feed", feed);
 
@@ -42,7 +42,7 @@ export const useChatFeed = (): MsgItem[] => {
 };
 
 export const useLocalChatter = (): [SymbolChatter, Send, MediaStream | null] => {
-    const chatUnit                      = ChatSignalHub.getChatUnit();
+    const chatUnit                      = useChatUnit();
     const [localMedia, setLocalMedia]   = useState<MediaStream | null>(
         chatUnit.getMedia(chatUnit.localChatter) ?? null
     );
@@ -52,7 +52,7 @@ export const useLocalChatter = (): [SymbolChatter, Send, MediaStream | null] => 
     ), [chatUnit]);
 
     useEffect(() => {
-        const update = ({ chatter, media }: {chatter: SymbolChatter, media: MediaStream}) => {
+        const update: Listener<DuoChatUnitEventMap['media']> = ({ chatter, media }) => {
             if (chatter !== chatUnit.localChatter) return;
             setLocalMedia(media);
         };
@@ -65,7 +65,7 @@ export const useLocalChatter = (): [SymbolChatter, Send, MediaStream | null] => 
 };
 
 export const useRemoteChatter = (): [SymbolChatter, Send, MediaStream | null] => {
-    const chatUnit                      = ChatSignalHub.getChatUnit();
+    const chatUnit                      = useChatUnit();
     const [remoteMedia, setRemoteMedia] = useState<MediaStream | null>(
         chatUnit.getMedia(chatUnit.remoteChatter) ?? null
     );
@@ -75,7 +75,7 @@ export const useRemoteChatter = (): [SymbolChatter, Send, MediaStream | null] =>
     ), [chatUnit]);
 
     useEffect(() => {
-        const update = ({ chatter, media }: MediaEventPayload) => {
+        const update: Listener<DuoChatUnitEventMap['media']> = ({ chatter, media }) => {
             if (chatter !== chatUnit.remoteChatter) return;
             setRemoteMedia(media);
         };
@@ -87,33 +87,19 @@ export const useRemoteChatter = (): [SymbolChatter, Send, MediaStream | null] =>
     return [chatUnit.remoteChatter, send, remoteMedia];
 };
 
-export const useLastMsg = (): MsgItem | null => {
-    const chatUnit              = ChatSignalHub.getChatUnit();
-    const [lastMsg, setLastMsg] = useState<MsgItem | null>(null);
-
-    useEffect(() => {
-        const update = ({ item }: {item: MsgItem}) => setLastMsg(item);
-
-        chatUnit.history.on(CHAT_HISTORY_EVENTS.ADD, update);
-        return () => chatUnit.history.off(CHAT_HISTORY_EVENTS.ADD, update);
-    }, [chatUnit]);
-
-    return lastMsg;
-};
-
 
 // === HELPERS ===
-function getChatContext (hookName?: string): ChatValue {
+function getChatContext (hookName?: string): ChatCValue {
 
     // === SUCCESS ===
-    const context: ChatValue | null = useContext(ChatContext);
+    const context: ChatCValue | null = useContext(ChatContext);
     if (context) return context;
 
     // === FAIL ===
     let errMsg: string = "";
 
-    if (hookName)   errMsg = `${hookName} must be used within a ChatProvider.`;
-    else            errMsg = "useContext(ChatContext) should be called within the ChatProvider.";
+    if (hookName)   errMsg = `${hookName} must be used within a ChatProvide.`;
+    else            errMsg = "useContext(ChatContext) should be called within the ChatProvider";
 
     throw new Error(errMsg);
-};
+}

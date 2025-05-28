@@ -3,8 +3,7 @@ import { css, EmCss } from "@emotion/react";
 import MsgItem from "./MsgItem";
 import { forwardRef, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { MsgItem as SemanticMsgItem } from "@lib/chat-history";
-import { ChatSignalHub } from "@services/ChatSignalHub";
-import { useChatHistory } from "@hooks";
+import { useChatHistory, useChatUnit } from "@hooks";
 
 
 interface MsgListProps {
@@ -14,7 +13,9 @@ interface MsgListProps {
 const msgListCss: EmCss = css``;
 
 const MsgList = forwardRef<HTMLElement, MsgListProps>(({ history }, ref) => {
+
     const listRef       = useRef<HTMLUListElement | null>(null);
+    const chatUnit      = useChatUnit();
 
 
     useEffect(() => {
@@ -28,7 +29,7 @@ const MsgList = forwardRef<HTMLElement, MsgListProps>(({ history }, ref) => {
     return (
         <ul ref={listRef} css={msgListCss} className="px-2" >
             {history.map( (sMsgItem, index) => {
-                const [sender, direction] = sMsgItem.chatter === ChatSignalHub.getChatUnit().localChatter
+                const [sender, direction] = sMsgItem.chatter === chatUnit.localChatter
                     ? ["Вы", "right" as 'right']
                     : ["Собеседник", "left" as 'left']
                 ;
