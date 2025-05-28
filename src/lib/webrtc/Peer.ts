@@ -35,14 +35,14 @@ export const DEFAULT_CONFIG: RTCConfiguration = {
 // === ANNOTATION ===
 export type Peer = IListenerChest<PeerEventMap> & {
     rtc: RTCPeerConnection;
-    state: RTCPeerConnection['connectionState'];
+    getState(): RTCPeerConnection['connectionState'];
 
-    start   (startConfig?: StartConfig, ...args: any[]): void;
+    start   (): void;
     stop    (): void;
     send    (msgText: string, channelName: string): void;
 
-    setRemoteSdp (sdp: RTCSessionDescription): void;
-    addCandidate (ice: RTCIceCandidate): void;
+    setRemoteSdp (sdp: RTCSessionDescription | RTCSessionDescriptionInit): void;
+    addCandidate (ice: RTCIceCandidate | null): void;
 
     addDataChannel  (name: string, config?: DataChannelConfig):     boolean;
     addMediaTrack   (track: MediaStreamTrack, stream: MediaStream): boolean;
@@ -67,7 +67,6 @@ export interface DataChannelConfig {
 }
 
 export type PeerConstructor = new (config?: RTCConfiguration) => Peer;
-export type StartConfig = (...args: any[]) => void;
 
 
 export const PEER_EVENTS: EventKeys<PeerEvent> = {
@@ -80,6 +79,9 @@ export const PEER_EVENTS: EventKeys<PeerEvent> = {
 
     UPDATED:        "updated",
 
+    START:          "start",
+    STOP:           "stop",
+
     MEDIA:          "media",
     TEXT:           "text",
     SDP:            "sdp",
@@ -91,9 +93,12 @@ export type PeerEventMap    = {
     [E in RTCPeerConnectionState]: undefined;
 } & {
     media:      { media: MediaStream };
-    text:       MessageEvent;
+    text:       { label: RTCDataChannel['label'], data: string };
     sdp:        { sdp: RTCSessionDescriptionInit };
     ice:        RTCPeerConnectionIceEvent;
+
+    start:      undefined;
+    stop:       undefined;
 
     updated:    { state: RTCPeerConnectionState };
 };
@@ -109,29 +114,29 @@ export const Peer: PeerConstructor = function (config = DEFAULT_CONFIG) {
 
     // === PRIVATE FIELDS ===
     const   rtc:            RTCPeerConnection               = new RTCPeerConnection(config);
-    const   listenerChest:  IListenerChest<PeerEventMap>    = new ListenerChest<PeerEventMap>();
+    const   chest:          IListenerChest<PeerEventMap>    = new ListenerChest<PeerEventMap>();
     let     isStarted:      boolean                         = false;
-
-    const initClose = rtc.close.bind(rtc);
-    rtc.close = () => { initClose(); };
 
     let dataChannels:   Map<string, RTCDataChannel>         = new Map();
     let mediaTracks:    Map<string, MediaStreamTrack>       = new Map();
     let mediaStreams:   Map<string, MediaStream>            = new Map();
 
-    const candidateBuffer: RTCIceCandidate[] = [];
+    const candidateBuffer:  (RTCIceCandidate | null)[]      = [];
 
     // === LOCAL HELPERS / PRIVATE METHODS ===
     function initDataChannel (dc: RTCDataChannel) {
-        dc.onmessage = (ev: MessageEvent) => listenerChest.exec(PEER_EVENTS.TEXT, ev);
-        dataChannels.set(dc.label, dc);
+        const label = dc.label;
+        dc.onmessage = (ev: MessageEvent<string>) => chest.exec(PEER_EVENTS.TEXT, {
+            label, data: ev.data
+        });
+        dataChannels.set(label, dc);
     }
     function initMediaTrack (track: MediaStreamTrack) {
         mediaTracks.set(track.id, track);
     }
     function initMediaStream (stream: MediaStream) {
         mediaStreams.set(stream.id, stream);
-        listenerChest.exec(PEER_EVENTS.MEDIA, { media: stream });
+        chest.exec(PEER_EVENTS.MEDIA, { media: stream });
     }
     function doCandidateBuffer () {
         try {
@@ -142,13 +147,14 @@ export const Peer: PeerConstructor = function (config = DEFAULT_CONFIG) {
         candidateBuffer.length = 0;
     }
 
+    function execUpdateState () {
+        chest.exec( PEER_EVENTS.UPDATED, { state: rtc.connectionState } );
+        chest.exec( rtc.connectionState );
+    }
+
     // === EXEC CODE ===
-    rtc.onicecandidate = (ev: RTCPeerConnectionIceEvent) => listenerChest.exec(PEER_EVENTS.ICE, ev);
-    rtc.onconnectionstatechange = ev => {
-        const connectionState: RTCPeerConnectionState = rtc.connectionState;
-        listenerChest.exec( PEER_EVENTS.UPDATED, { state: connectionState } );
-        listenerChest.exec( connectionState );
-    };
+    rtc.onicecandidate = (ev: RTCPeerConnectionIceEvent) => chest.exec(PEER_EVENTS.ICE, ev);
+    rtc.onconnectionstatechange = execUpdateState;
     rtc.ondatachannel = (ev: RTCDataChannelEvent) => {
         initDataChannel(ev.channel);
     };
@@ -160,18 +166,18 @@ export const Peer: PeerConstructor = function (config = DEFAULT_CONFIG) {
     // === INSTANCE ===
     const peerInstance: Peer = {
         // === LISTENERS CONTROLLING ===
-        ...listenerChest,
+        ...chest,
 
         // === RTC OBJECT ===
-        get rtc () { return rtc },
-        get state () { return rtc.connectionState },
+        rtc,
+        getState () { return rtc.connectionState },
 
         // === CONNECT CONTROLLING ===
-        async start (startConfig, ...args) {
+        async start () {
             if (isStarted) return;
-            startConfig?.(...args);
             isStarted = true;
 
+            chest.exec("start");
 
             try {
                 const offer: RTCSessionDescriptionInit = await rtc.createOffer();
@@ -191,10 +197,16 @@ export const Peer: PeerConstructor = function (config = DEFAULT_CONFIG) {
                 }
 
                 await rtc.setLocalDescription(offer);
-                listenerChest.exec(PEER_EVENTS.SDP, { sdp: offer });
+                chest.exec(PEER_EVENTS.SDP, { sdp: offer });
             } catch (err: any) { console.error("Error of offer generating:", err.message); }
         },
-        stop () { rtc.close(); listenerChest.offAll(); },
+        stop () {
+            chest.exec("stop");
+            chest.once(PEER_EVENTS.CLOSED, () => chest.offAll());
+            rtc.close();
+
+            execUpdateState();
+        },
 
         async setRemoteSdp (sdp) {
             await rtc.setRemoteDescription(sdp);
@@ -205,7 +217,7 @@ export const Peer: PeerConstructor = function (config = DEFAULT_CONFIG) {
             try {
                 const answer: RTCSessionDescriptionInit = await rtc.createAnswer();
                 await rtc.setLocalDescription(answer);
-                listenerChest.exec(PEER_EVENTS.SDP, { sdp: answer });
+                chest.exec(PEER_EVENTS.SDP, { sdp: answer });
             } catch (err: any) { console.error("Error of answer generating:", err.message); }
         },
         addCandidate (ice) {
@@ -218,7 +230,7 @@ export const Peer: PeerConstructor = function (config = DEFAULT_CONFIG) {
         },
         addDataChannel (name, config) {
             if (isStarted) return false;
-            initDataChannel( rtc.createDataChannel(name, config) );
+            chest.on("start", () => initDataChannel( rtc.createDataChannel(name, config) ) );
             return true;
         },
         addMediaTrack (track, stream) {
