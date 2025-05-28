@@ -1,19 +1,8 @@
-export {
-    Options as DeepCopyOptions,
-    deepCopy, deepCopyArr, deepCopyDict,
-    wait,
-    addDebug,
-    once,
-    listen,
-    unlisten,
-    listenOnce,
-};
-
-
+import { AnyDict, Listener } from "@lib/pprinter-tools";
 import { BasicDataStruct } from "@types";
 
 
-type Options = {
+export type Options = {
     copyDict?:          boolean;
     copyArray?:         boolean;
     depth?:             number;
@@ -21,7 +10,7 @@ type Options = {
 };
 
 
-function deepCopyDict<D extends {}> (dict: D, {
+export function deepCopyDict<D extends {}> (dict: D, {
     copyDict        =   true,
     copyArray       =   false,
     depth           =   3,
@@ -29,7 +18,7 @@ function deepCopyDict<D extends {}> (dict: D, {
 }: Options = {}): BasicDataStruct {
     return deepCopy<D>(dict, {copyDict, copyArray, depth, underGround});
 }
-function deepCopyArr<A extends any[]> (arr: A, {
+export function deepCopyArr<A extends any[]> (arr: A, {
     copyDict        =   false,
     copyArray       =   true,
     depth           =   3,
@@ -38,7 +27,7 @@ function deepCopyArr<A extends any[]> (arr: A, {
     return deepCopy<A>(arr, {copyDict, copyArray, depth, underGround});
 }
 
-function deepCopy<T extends BasicDataStruct> (
+export function deepCopy<T extends BasicDataStruct> (
     obj: T,
     {
         copyDict        =   true,
@@ -81,37 +70,50 @@ function deepCopy<T extends BasicDataStruct> (
     return resultObj;
 }
 
-const wait = async (ms: number): Promise<void> => {
+export const wait = async (ms: number): Promise<void> => {
     return new Promise( (resolve) => setTimeout(resolve, ms) );
 };
 
-function addDebug(prop: string, val: any) {
+export function addDebug(prop: string, val: any) {
     if (!window.debug) window.debug = {};
     window.debug[prop] = val;
 }
 
-function once (callback: CallableFunction): () => boolean {
+export function once (callback: CallableFunction): () => boolean {
     let called = false;
     return (...args) => { if (called) return false; called = true; callback(...args); return true; };
 }
 
 
-type OnType<E extends string = string>  = (event: E, listener: CallableFunction) => void;
-type OffType<E extends string = string> = (event: E, listener: CallableFunction) => void;
-type Events<E extends string = string> = Partial<Record<E, CallableFunction>>;
+export type ListenerCollection<M extends AnyDict> = {
+    [E in keyof M]?: Listener<M[E]>
+};
 
-function listen <E extends string = string>(
-    master: Record<keyof any, any>, events: Events<E>, toolName: string = 'on'
+
+export function manageListeners <I extends AnyDict, M extends AnyDict = AnyDict>(
+    master: I, listeners: {[E in keyof M]?: Listener<M[E]>}, toolName: string
 ): void {
-    for (let event in events) master[toolName]?.(event, events[event]);
+    if (typeof master[toolName] !== 'function') {
+        console.error(`Method "${toolName}" is not found on:`, master);
+        return;
+    }
+    for (let event in listeners) {
+        if (typeof listeners[event] !== "function") continue;
+        master[toolName](event, listeners[event]);
+    }
 }
-function listenOnce <E extends string = string>(
-    master: Record<keyof any, any>, events: Events<E>, toolName: string = 'once'
+export function listen <I extends AnyDict, M extends AnyDict = AnyDict>(
+    master: I, listeners: {[E in keyof M]?: Listener<M[E]>}, toolName: string = 'on'
 ): void {
-    for (let event in events) master[toolName](event, events[event]);
+    manageListeners(master, listeners, toolName);
 }
-function unlisten <E extends string = string>(
-    master: Record<keyof any, any>, events: Events<E>, toolName: string = 'off'
+export function listenOnce <I extends AnyDict, M extends AnyDict = AnyDict>(
+    master: I, listeners: {[E in keyof M]?: Listener<M[E]>}, toolName: string = 'once'
 ): void {
-    for (let event in events) master[toolName](event, events[event]);
+    manageListeners(master, listeners, toolName);
+}
+export function unlisten <I extends AnyDict, M extends AnyDict = AnyDict>(
+    master: I, listeners: {[E in keyof M]?: Listener<M[E]>}, toolName: string = 'off'
+): void {
+    manageListeners(master, listeners, toolName);
 }
