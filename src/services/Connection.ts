@@ -2,7 +2,7 @@ import { addDebug } from "@lib/utils";
 import { Peer, PEER_EVENTS } from "@lib/webrtc";
 import { Signal } from "./Signal";
 import { DuoChatUnit } from "./DuoChatUnit";
-import { Accessor, IWhen, ListenerChest, When } from "@lib/pprinter-tools";
+import { IAccessor, IWhen, Accessor, When } from "@lib/pprinter-tools";
 import { whenLocalMedia } from "./localMedia";
 import { ChatPeerBus } from "./ChatPeerBus";
 import { SignalPeerBus } from "./SignalPeerBus";
@@ -23,7 +23,7 @@ export const WHEN_READY_FLAG = "ready";
 
 export interface Connection {
     whenAccess:     IWhen<{'ready': undefined}>,
-    signalAccessor: Accessor<typeof ACC_FLAGS[keyof typeof ACC_FLAGS]>,
+    signalAccessor: IAccessor<typeof ACC_FLAGS[keyof typeof ACC_FLAGS]>,
 
     chatUnit:       DuoChatUnit,
     peer:           Peer,
