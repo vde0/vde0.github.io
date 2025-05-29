@@ -14,7 +14,7 @@ const Btn: React.FC<BtnProps> = ({ className, children, type = "button", ...prop
     <button
         {...props}
         type={type}
-        className={`py-3 px-2 text-center flex justify-center gap-4 ${className}`}
+        className={`py-3 px-2 text-center flex justify-center gap-4 select-none hover:opacity-50 active:opacity-50 transition-opacity ${className}`}
     >
         {children}
     </button>
