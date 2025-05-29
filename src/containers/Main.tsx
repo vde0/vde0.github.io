@@ -8,19 +8,9 @@ import { EmCss } from "@emotion/react"; // custom type
 import { useWebApp } from "@vkruglikov/react-telegram-web-app";
 import { TWebApp } from "@tg-types"; // custom type
 import { useEffect, useLayoutEffect, useState } from "react";
-import { useConnection, useMobileKeyboard, usePeerState, useUnread } from "@hooks";
+import { useConnection, useMobileKeyboard, usePeerState, usePlatform, useUnread } from "@hooks";
 import { ChatCValue } from "@store/ChatProvider";
 
-
-const mainCss: EmCss = css`
-    /* top: var(--tg-content-safe-area-inset-top);
-    bottom: var(--tg-content-safe-area-inset-bottom); */
-    top: 0;
-    bottom: 0;
-
-    max-height: var(--tg-viewport-stable-height);
-    overflow: clip;
-`;
 
 const Main: React.FC = () => {
 
@@ -30,6 +20,17 @@ const Main: React.FC = () => {
     const keyboardStatus:       boolean                                 = useMobileKeyboard();
     const [, read]:             ChatCValue['unread']                    = useUnread();
     const [isTextChatShown, setIsTextChatShown]                         = useState<boolean>(false);
+    const platform                                                      = usePlatform();
+
+
+    const mainCss: EmCss = css`
+    
+        top: ${platform!=="unknown"?"var(--tg-content-safe-area-inset-top)":0};
+        bottom: ${platform!=="unknown"?"var(--tg-content-safe-area-inset-bottom)":0};
+
+        max-height: var(--tg-viewport-stable-height);
+        overflow: clip;
+    `;
 
 
     useEffect(() => {
