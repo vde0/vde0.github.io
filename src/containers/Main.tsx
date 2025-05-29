@@ -12,7 +12,7 @@ import { useChatHistory, useConnection, useMobileKeyboard, usePeer, usePeerState
 import { Peer, PeerEventMap } from "@lib/webrtc";
 import { ChatHistory, ChatHistoryEventMap } from "@lib/chat-history";
 import { Listener } from "@lib/pprinter-tools";
-import { ChatValue } from "@store/ChatProvider";
+import { ChatCValue } from "@store/ChatProvider";
 
 
 const mainCss: EmCss = css`
@@ -31,7 +31,7 @@ const Main: React.FC = () => {
     const peerState:            RTCPeerConnection['connectionState']    = usePeerState();
     const keyboardStatus:       boolean                                 = useMobileKeyboard();
     const chatHistory:          ChatHistory                             = useChatHistory();
-    const [unread, setUnread]:  ChatValue['unread']                     = useUnread();
+    const [unread, setUnread]:  ChatCValue['unread']                    = useUnread();
     const [isTextChatShown, setIsTextChatShown]                         = useState<boolean>(false);
 
 
