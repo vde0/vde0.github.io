@@ -154,7 +154,10 @@ export const Peer: PeerConstructor = function (config = DEFAULT_CONFIG) {
 
     // === EXEC CODE ===
     rtc.onicecandidate = (ev: RTCPeerConnectionIceEvent) => chest.exec(PEER_EVENTS.ICE, ev);
-    rtc.onconnectionstatechange = execUpdateState;
+    rtc.onconnectionstatechange = () => {
+        if (rtc.connectionState === "closed") return;
+        execUpdateState();
+    };
     rtc.ondatachannel = (ev: RTCDataChannelEvent) => {
         initDataChannel(ev.channel);
     };
