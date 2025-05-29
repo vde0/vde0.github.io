@@ -105,7 +105,7 @@ const VideoChat: React.FC<VideoChatProps> = ({ className, remote, hidden=false }
                 className="scale-x-[-1] aspect-video w-full h-full object-fit [object-position:center_center] block"
             >   
                 <div className="absolute top-0 bottom-0 left-0 right-0 bg-cloud">
-                    <img src={empty_video} className="block top-0 bottom-0 left-0 right-0 absolute m-auto"/>
+                    <img src={empty_video} className="pointer-events-none block top-0 bottom-0 left-0 right-0 absolute m-auto"/>
                 </div>
             </Video>
             {remote && <div ref={poster} className="
@@ -114,7 +114,7 @@ const VideoChat: React.FC<VideoChatProps> = ({ className, remote, hidden=false }
                 bg-gray-900/75
                 flex justify-center items-center"
             >
-                <span className="block text-white font-bold text-lg font-stretch-extra-expanded">TAP ME</span>
+                <span className="block select-none text-white font-bold text-lg font-stretch-extra-expanded">TAP ME</span>
             </div>}
         </section>
     );

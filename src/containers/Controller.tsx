@@ -42,19 +42,19 @@ const Controller: React.FC<ContrtollerProps> = ({ onTextChat, onAddUser, onNext 
                         {unread}
                     </span>
                 </div>
-                <img className="block" src={dialogue} />
+                <img draggable={false} className="block pointer-events-none" src={dialogue} />
             </Btn>
             {/* AddUser */}
             <Btn disabled className="bg-gray flex-grow-1 rounded-xl" {...{[onTurn]: onAddUser}}>
-                <img className="block" src={add_user} />
+                <img draggable={false} className="block pointer-events-none" src={add_user} />
             </Btn>
             {/* Next */}
             <Btn
                 disabled={peerState !== "closed" && peerState !== "connected" && peerState !== "disconnected" && peerState !== "failed"}
-                className="bg-light-blue flex-grow-3 rounded-xl flex items-center" {...{[onTurn]: onNext}}
+                className="bg-light-blue flex-grow-3 rounded-xl" {...{[onTurn]: onNext}}
             >
                 <span className="text-2xl font-bold">NEXT</span>
-                <img src={arrow_to_right} />
+                <img draggable={false} className="pointer-events-none" src={arrow_to_right} />
             </Btn>
         </section>
     )

@@ -10,14 +10,20 @@ type BtnProps = ButtonHTMLAttributes<HTMLButtonElement> & {
 };
 
 // react component
-const Btn: React.FC<BtnProps> = ({ className, children, type = "button", ...props }) => (
-    <button
-        {...props}
-        type={type}
-        className={`py-3 px-2 text-center flex justify-center gap-4 select-none touch-manipulation transition-opacity active:opacity-70 disabled:opacity-50 disabled:pointer-events-none ${className}`}
-    >
-        {children}
-    </button>
+const Btn: React.FC<BtnProps> = ({ className, children, type = "button", disabled, ...props }) => (
+    <div className={`touch-manipulation transition-opacity active:opacity-70
+        ${className ?? ""}
+        ${disabled ? "opacity-50" : ""}
+    `}>
+        <button
+            {...props}
+            type={type}
+            disabled={disabled}
+            className={`w-full h-full py-3 px-2 text-center flex items-center justify-center gap-4 select-none disabled:pointer-events-none`}
+        >
+            {children}
+        </button>
+    </div>
 );
 
 

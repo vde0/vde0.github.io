@@ -53,7 +53,7 @@ const MsgForm: React.FC<MsgFormProps> = ({ className, onPush }) => {
                 onClick={submitHandler}
                 className="bg-gray rounded-lg shrink-0 w-10"
             >
-                <img src={send} className="block h-full scale-200 relative right-1" />
+                <img draggable={false} src={send} className="block h-full scale-200 relative right-1 pointer-events-none" />
             </SubmitBtn>
         </form>
     );
