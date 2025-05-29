@@ -51,32 +51,6 @@ const Main: React.FC = () => {
     }, [peerState]);
 
     useEffect(() => {
-
-        try {
-            webApp?.ready();
-            webApp?.lockOrientation?.();
-            webApp?.disableVerticalSwipes?.();
-            webApp?.requestFullscreen?.();
-        } catch (err) {}
-    }, [webApp]);
-
-    useEffect(() => {
-        if (!peer) return; 
-
-        const updatePeerHandler: Listener<PeerEventMap['updated']> = ({ state }) => {
-            if (
-                state !== "closed" &&
-                state !== "disconnected" &&
-                state !== "failed"
-            ) return;
-            updateConnection();
-        };
-
-        peer.once("updated", updatePeerHandler);
-        return () => peer.off("updated", updatePeerHandler);
-    }, [peer]);
-
-    useEffect(() => {
         const addMsgHandler: Listener<ChatHistoryEventMap['add']> = () => {
             if (!isTextChatShown) setUnread(unread +1);
         };
@@ -89,9 +63,19 @@ const Main: React.FC = () => {
         if (isTextChatShown) setUnread(0);
     }, [isTextChatShown]);
 
+    useEffect(() => {
+
+        try {
+            webApp?.ready();
+            webApp?.lockOrientation?.();
+            webApp?.disableVerticalSwipes?.();
+            webApp?.requestFullscreen?.();
+        } catch (err) {}
+    }, [webApp]);
+
 
     return (
-    <div className={`w-full fixed px-3 md:px-8 box-border"}`} css={mainCss}>
+    <div className={`w-full fixed px-3 md:px-8 box-border`} css={mainCss}>
         <section className="
             container max-w-xl h-full
             relative mx-auto text-white
