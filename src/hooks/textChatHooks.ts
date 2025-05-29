@@ -1,7 +1,7 @@
 import { CHAT_HISTORY_EVENTS, ChatHistory, ChatHistoryEventMap, MsgItem } from "@lib/chat-history";
 import { addDebug, listen, unlisten } from "@lib/utils";
-import { DUO_CHAT_UNIT_EVENTS, DuoChatUnit, DuoChatUnitEventMap, MediaEventPayload, SymbolChatter } from "@services/DuoChatUnit";
-import { ChatContext, ChatCValue, ConnectionContext, ConnectionCValue } from "@store";
+import { DUO_CHAT_UNIT_EVENTS, DuoChatUnit, DuoChatUnitEventMap, SymbolChatter } from "@services/DuoChatUnit";
+import { ChatContext, ChatCValue } from "@store";
 import { useCallback, useContext, useEffect, useState } from "react";
 import { useConnection } from "./connectHooks";
 import { Listener } from "@lib/pprinter-tools";
@@ -17,26 +17,38 @@ export const useChatUnit = (): DuoChatUnit => { return useConnection()[0].chatUn
 export const useChatHistory = (): ChatHistory => { return useConnection()[0].chatUnit.history };
 
 export const useChatFeed = (): MsgItem[] => {
-    const history          = useChatHistory();
-    const [feed, setFeed]   = useState<MsgItem[]>( history.tail(100) );
+
+    const FEED_COUNT = 100;
+
+    const history           = useChatHistory();
+    const [feed, setFeed]   = useState<MsgItem[]>( getFeed() );
+
+    addDebug("feed", feed);
+
+    // === HELPERS ===
+    function getFeed (): MsgItem[] {
+        return history.tail(FEED_COUNT);
+    }
 
     useEffect(() => {
-        const update: Listener<ChatHistory['add' | 'delete' | 'clear']> = () => setFeed( history.tail(100) );
 
-        listen(history, {
+        setFeed( getFeed() );
+
+        const update: Listener<ChatHistoryEventMap['add' | 'delete' | 'clear']> = () => setFeed( getFeed() );
+
+        listen<ChatHistory, ChatHistoryEventMap>(history, {
             [CHAT_HISTORY_EVENTS.ADD]:      update,
             [CHAT_HISTORY_EVENTS.DELETE]:   update,
             [CHAT_HISTORY_EVENTS.CLEAR]:    update,
         });
 
-        return () => unlisten(history, {
+        return () => unlisten<ChatHistory, ChatHistoryEventMap>(history, {
             [CHAT_HISTORY_EVENTS.ADD]:      update,
             [CHAT_HISTORY_EVENTS.DELETE]:   update,
             [CHAT_HISTORY_EVENTS.CLEAR]:    update,
         });
     }, [history]);
 
-    addDebug("feed", feed);
 
     return feed;
 };
