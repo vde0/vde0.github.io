@@ -8,8 +8,7 @@ import { EmCss } from "@emotion/react"; // custom type
 import { useWebApp } from "@vkruglikov/react-telegram-web-app";
 import { TWebApp } from "@tg-types"; // custom type
 import { useEffect, useState } from "react";
-import { useChatHistory, useConnection, useMobileKeyboard, usePeer, usePeerState, useUnread } from "@hooks";
-import { Peer, PeerEventMap } from "@lib/webrtc";
+import { useChatHistory, useConnection, useMobileKeyboard, usePeerState, useUnread } from "@hooks";
 import { ChatHistory, ChatHistoryEventMap } from "@lib/chat-history";
 import { Listener } from "@lib/pprinter-tools";
 import { ChatCValue } from "@store/ChatProvider";
@@ -27,7 +26,6 @@ const Main: React.FC = () => {
 
     const webApp:               TWebApp                                 = useWebApp();
     const [connection, updateConnection]                                = useConnection();
-    const peer:                 Peer                                    = usePeer();
     const peerState:            RTCPeerConnection['connectionState']    = usePeerState();
     const keyboardStatus:       boolean                                 = useMobileKeyboard();
     const chatHistory:          ChatHistory                             = useChatHistory();
