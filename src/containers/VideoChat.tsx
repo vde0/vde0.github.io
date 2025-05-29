@@ -75,16 +75,15 @@ const VideoChat: React.FC<VideoChatProps> = ({ className, remote, hidden=false }
             if ( !video.current?.paused ) return;
             video.current.play();
             setUnlocked(true);
-            connection.signalAccessor.set(ACC_FLAGS.PLAY_REMOTE_VIDEO);
 
             if ( !accessToggler.current ) return;
             accessToggler.current.hidden = true;
         };
 
         // === ADD LISTENERS ===
-        if (video.current) video.current.onpause            = pauseHandler;
+        if (video.current) video.current.onpause                = pauseHandler;
         
-        accessToggler.current[isMobile?"ontouchend":"onclick"]     = tapHandler;
+        accessToggler.current[isMobile?"ontouchend":"onclick"]  = tapHandler;
 
         return () => {
             // === REMOVE LISTENERS ===
@@ -93,7 +92,7 @@ const VideoChat: React.FC<VideoChatProps> = ({ className, remote, hidden=false }
             accessToggler.current.ontouchend   = null;
             accessToggler.current.onclick      = null;
         };
-    }, []);
+    }, [connection]);
     
 
     return (
