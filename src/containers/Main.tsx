@@ -8,9 +8,7 @@ import { EmCss } from "@emotion/react"; // custom type
 import { useWebApp } from "@vkruglikov/react-telegram-web-app";
 import { TWebApp } from "@tg-types"; // custom type
 import { useEffect, useLayoutEffect, useState } from "react";
-import { useChatHistory, useConnection, useMobileKeyboard, usePeerState, useUnread } from "@hooks";
-import { ChatHistory, ChatHistoryEventMap } from "@lib/chat-history";
-import { Listener } from "@lib/pprinter-tools";
+import { useConnection, useMobileKeyboard, usePeerState, useUnread } from "@hooks";
 import { ChatCValue } from "@store/ChatProvider";
 
 
@@ -30,13 +28,11 @@ const Main: React.FC = () => {
     const [connection, updateConnection]                                = useConnection();
     const peerState:            RTCPeerConnection['connectionState']    = usePeerState();
     const keyboardStatus:       boolean                                 = useMobileKeyboard();
-    const chatHistory:          ChatHistory                             = useChatHistory();
-    const [unread, setUnread]:  ChatCValue['unread']                    = useUnread();
+    const [, read]:             ChatCValue['unread']                    = useUnread();
     const [isTextChatShown, setIsTextChatShown]                         = useState<boolean>(false);
 
 
     useEffect(() => {
-        setUnread(0);
         connection.connect();
     }, [connection]);
 
@@ -55,16 +51,8 @@ const Main: React.FC = () => {
     }, [peerState]);
 
     useEffect(() => {
-        const addMsgHandler: Listener<ChatHistoryEventMap['add']> = () => {
-            if (!isTextChatShown) setUnread(unread +1);
-        };
-        chatHistory.on('add', addMsgHandler);
-
-        return () => chatHistory.off('add', addMsgHandler);
-    }, [isTextChatShown, unread, chatHistory]);
-
-    useEffect(() => {
-        if (isTextChatShown) setUnread(0);
+        if (isTextChatShown)    read(true);
+        else                    read(false);
     }, [isTextChatShown]);
 
     useEffect(() => {

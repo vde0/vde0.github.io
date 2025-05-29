@@ -14,13 +14,13 @@ const MemoConnectionProvider    = React.memo( ConnectionProvider );
 const App: React.FC = () => (
     <WebAppProvider>
 
-    <MemoChatProvider>
     <MemoConnectionProvider>
+    <MemoChatProvider>
 
         <MemoMain />
 
-    </MemoConnectionProvider>
     </MemoChatProvider>
+    </MemoConnectionProvider>
 
     </WebAppProvider>
 );
