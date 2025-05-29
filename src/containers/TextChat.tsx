@@ -51,7 +51,7 @@ const TextChat: React.FC<TextChatProps> = ({ className, hidden=false }) => {
                 <MessageList history={feed} />
             </section>
             <section className="shrink-0 h-15 box-border">
-                <MessageForm className="mt-auto shrink-0" onPush={pushMsgHandler} />
+                {!hidden&&<MessageForm className="mt-auto shrink-0" onPush={pushMsgHandler} />}
             </section>
         </article>
     );

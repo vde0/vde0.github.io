@@ -2,7 +2,7 @@ import { SubmitBtn } from "@components/Btn";
 import MessageInput from "@components/MessageInput";
 import { useMobileKeyboard, useWrite } from "@hooks";
 import { PropsWithClassName } from "@types";
-import { ChangeEventHandler, MouseEventHandler, useCallback, useLayoutEffect, useRef, useState } from "react";
+import { ChangeEventHandler, MouseEventHandler, useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import send from "../assets/icon/send.svg";
 
 
@@ -19,6 +19,16 @@ const MessageForm: React.FC<MessageFormProps> = ({ className, onPush }) => {
     const [pos, setPos]     = useState<"absolute" | "block">("block");
     const inputRef          = useRef<HTMLTextAreaElement | null>(null);
 
+    const [blur, setBlur]   = useState(true);
+
+
+    const asyncFocusInput = () => {
+        setTimeout(() => {
+            inputRef.current?.setAttribute('readonly', 'true');
+            inputRef.current?.focus();
+            inputRef.current?.removeAttribute('readonly');
+        });
+    };
 
     const typeHandler = useCallback<ChangeEventHandler<HTMLTextAreaElement>>( function (evt) {
         setWrite(evt.target?.value);
@@ -26,11 +36,25 @@ const MessageForm: React.FC<MessageFormProps> = ({ className, onPush }) => {
     //
     const submitHandler = useCallback<MouseEventHandler<HTMLButtonElement>>( function (evt) {
         evt.preventDefault();
-        inputRef.current?.focus();
+        isMobileKeyboard
+            ?inputRef.current?.focus()
+            :asyncFocusInput()
+        ;
         if (write === "") return;
         onPush?.(write);
         setWrite("");
-    }, [write] );
+    }, [write, isMobileKeyboard] );
+
+
+    useEffect(() => {
+        inputRef.current!.onblur    = () => setBlur(true);
+        inputRef.current!.onfocus   = () => setBlur(false);
+    }, []);
+
+    useEffect(() => {
+        if (!blur) return;
+        asyncFocusInput();
+    }, [blur]);
 
 
     useLayoutEffect(() => { setPos(isMobileKeyboard ? "absolute" : "block") }, [isMobileKeyboard]);
