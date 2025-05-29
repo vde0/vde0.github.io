@@ -15,7 +15,7 @@ const VideoChat: React.FC<VideoChatProps> = ({ className, remote, hidden=false }
     const useChatter            = remote ? useRemoteChatter : useLocalChatter;
     
     const video             = useRef<HTMLVideoElement | null>(null);
-    const poster            = useRef<HTMLDivElement | null>(null);
+    const accessToggler     = useRef<HTMLDivElement | null>(null);
     const [,,media]         = useChatter();
     const isMobile          = useIsMobile();
     const peerState         = usePeerState();
@@ -64,7 +64,7 @@ const VideoChat: React.FC<VideoChatProps> = ({ className, remote, hidden=false }
     useEffect(() => {
         addDebug(remote?"remoteVide":"localVideo", video.current);
 
-        if ( !(remote && poster.current) ) return;
+        if ( !(remote && accessToggler.current) ) return;
 
         // === HANDLERS ===
         const pauseHandler = (evt: Event) => {
@@ -77,21 +77,21 @@ const VideoChat: React.FC<VideoChatProps> = ({ className, remote, hidden=false }
             setUnlocked(true);
             connection.signalAccessor.set(ACC_FLAGS.PLAY_REMOTE_VIDEO);
 
-            if ( !poster.current ) return;
-            poster.current.hidden = true;
+            if ( !accessToggler.current ) return;
+            accessToggler.current.hidden = true;
         };
 
         // === ADD LISTENERS ===
         if (video.current) video.current.onpause            = pauseHandler;
         
-        poster.current[isMobile?"ontouchend":"onclick"]     = tapHandler;
+        accessToggler.current[isMobile?"ontouchend":"onclick"]     = tapHandler;
 
         return () => {
             // === REMOVE LISTENERS ===
             if (video.current) video.current.onpause = null;
-            if (!poster.current) return;
-            poster.current.ontouchend   = null;
-            poster.current.onclick      = null;
+            if (!accessToggler.current) return;
+            accessToggler.current.ontouchend   = null;
+            accessToggler.current.onclick      = null;
         };
     }, []);
     
@@ -108,7 +108,7 @@ const VideoChat: React.FC<VideoChatProps> = ({ className, remote, hidden=false }
                     <img src={empty_video} className="pointer-events-none block top-0 bottom-0 left-0 right-0 absolute m-auto"/>
                 </div>
             </Video>
-            {remote && <div ref={poster} className="
+            {remote && <div ref={accessToggler} className="
                 absolute
                 top-0 bottom-0 left-0 right-0
                 bg-gray-900/75
