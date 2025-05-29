@@ -43,7 +43,7 @@ const MessageForm: React.FC<MessageFormProps> = ({ className, onPush }) => {
         if (write === "") return;
         onPush?.(write);
         setWrite("");
-    }, [write, isMobileKeyboard] );
+    }, [write, isMobileKeyboard, onPush] );
 
 
     useEffect(() => {
