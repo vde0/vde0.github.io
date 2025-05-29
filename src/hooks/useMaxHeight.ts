@@ -27,7 +27,6 @@ const useMaxHeight = ( getMX: GetHeight = getMaxHeight ): number => {
 
         const vpChangedHandler = ({ isStateStable }: { isStateStable: boolean }): void => {
             if (!isStateStable) return;
-            console.log("MAX HEIGHT", { height: webApp.viewportHeight, maxHeight: getMX() })
             addDebug("maxHeight", getMX());
             setMaxHeight( getMX() );
         };
