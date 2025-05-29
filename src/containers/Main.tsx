@@ -7,7 +7,7 @@ import TextChat from "./TextChat";
 import { EmCss } from "@emotion/react"; // custom type
 import { useWebApp } from "@vkruglikov/react-telegram-web-app";
 import { TWebApp } from "@tg-types"; // custom type
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import { useChatHistory, useConnection, useMobileKeyboard, usePeerState, useUnread } from "@hooks";
 import { ChatHistory, ChatHistoryEventMap } from "@lib/chat-history";
 import { Listener } from "@lib/pprinter-tools";
@@ -15,8 +15,10 @@ import { ChatCValue } from "@store/ChatProvider";
 
 
 const mainCss: EmCss = css`
-    top: var(--tg-content-safe-area-inset-top);
-    bottom: var(--tg-content-safe-area-inset-bottom);
+    /* top: var(--tg-content-safe-area-inset-top);
+    bottom: var(--tg-content-safe-area-inset-bottom); */
+    top: 0;
+    bottom: 0;
 
     max-height: var(--tg-viewport-stable-height);
     overflow: clip;
@@ -46,6 +48,10 @@ const Main: React.FC = () => {
         ) {
             updateConnection();
         }
+    }, [peerState]);
+
+    useLayoutEffect(() => {
+        if (peerState !== "connected") setIsTextChatShown(false);
     }, [peerState]);
 
     useEffect(() => {
@@ -99,7 +105,6 @@ const Main: React.FC = () => {
                             peerState !== "disconnected" &&
                             peerState !== "failed"
                         ) return;
-                        setIsTextChatShown(false);
                         connection.disconnect()
                     }}
                     onTextChat={() => { setIsTextChatShown(!isTextChatShown) }}

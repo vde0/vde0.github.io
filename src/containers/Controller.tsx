@@ -32,7 +32,10 @@ const Controller: React.FC<ContrtollerProps> = ({ onTextChat, onAddUser, onNext 
             box-content w-full h-15 py-4
         ">
             {/* TextChat */}
-            <Btn className="bg-gray flex-grow-1 rounded-xl relative" {...{[onTurn]: onTextChat}}>
+            <Btn
+                disabled={peerState!=="connected"}
+                className="bg-gray flex-grow-1 rounded-xl relative" {...{[onTurn]: onTextChat}}
+            >
                 <div hidden={unread <= 0} className="absolute right-0 top-0 translate-x-[30%] translate-y-[-30%] bg-red rounded-full p-4">
                     <span className="
                         absolute top-0 left-0 w-full h-full
