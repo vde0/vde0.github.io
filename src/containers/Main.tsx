@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
 import DisplayBox from "@components/DisplayBox";
-import Controller from "@components/Controller";
+import Controller from "@containers/Controller";
 import VideoChat from "./VideoChat";
 import TextChat from "./TextChat";
 import { EmCss } from "@emotion/react"; // custom type
@@ -36,7 +36,7 @@ const Main: React.FC = () => {
 
 
     useEffect(() => {
-        console.log("CONNECTION CONNECT");
+        setUnread(0);
         connection.connect();
     }, [connection]);
 
@@ -83,7 +83,7 @@ const Main: React.FC = () => {
         chatHistory.on('add', addMsgHandler);
 
         return () => chatHistory.off('add', addMsgHandler);
-    }, [isTextChatShown, unread]);
+    }, [isTextChatShown, unread, chatHistory]);
 
     useEffect(() => {
         if (isTextChatShown) setUnread(0);
@@ -110,7 +110,16 @@ const Main: React.FC = () => {
             
             <div style={{ display: keyboardStatus?"none":"block" }} className="shrink-0 h-24">
                 <Controller
-                    onNext={() => { connection.disconnect() }}
+                    onNext={() => {
+                        if (
+                            peerState !== "closed" &&
+                            peerState !== "connected" &&
+                            peerState !== "disconnected" &&
+                            peerState !== "failed"
+                        ) return;
+                        setIsTextChatShown(false);
+                        connection.disconnect()
+                    }}
                     onTextChat={() => { setIsTextChatShown(!isTextChatShown) }}
                 />
             </div>
