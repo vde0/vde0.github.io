@@ -1,6 +1,6 @@
-import MsgList from "@components/MsgList";
-import MsgForm from "./MsgForm";
-import { useChangedHeight, useChatFeed, useChatHistory, useChatUnit, useResizeEl } from "@hooks";
+import MessageList from "@components/MessageList";
+import MessageForm from "./MessageForm";
+import { useChatFeed, useChatHistory, useChatUnit, useResizeEl } from "@hooks";
 import { PropsWithClassName } from "@types";
 import { useCallback, useEffect, useLayoutEffect, useRef } from "react";
 
@@ -48,10 +48,10 @@ const TextChat: React.FC<TextChatProps> = ({ className, hidden=false }) => {
     return (
         <article hidden={hidden} className={`h-full w-full flex flex-col ${className}`}>
             <section ref={listRef} className="overflow-y-scroll grow-1 shrink-1">
-                <MsgList history={feed} />
+                <MessageList history={feed} />
             </section>
             <section className="shrink-0 h-15 box-border">
-                <MsgForm className="mt-auto shrink-0" onPush={pushMsgHandler} />
+                <MessageForm className="mt-auto shrink-0" onPush={pushMsgHandler} />
             </section>
         </article>
     );

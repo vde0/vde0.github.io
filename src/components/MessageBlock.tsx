@@ -1,10 +1,10 @@
-interface MsgItemProps {
+interface MessageBlockProps {
     direction: 'left' | 'right';
     sender: string,
     text: string,
 }
 
-const MsgItem: React.FC<MsgItemProps> = ({ sender, text, direction }) => (
+const MessageBlock: React.FC<MessageBlockProps> = ({ sender, text, direction }) => (
     <section className={`mb-2 p-2 rounded-2xl w-2/3 relative
         ${direction==="left"?"bg-gray rounded-bl-none left-2":"bg-light-blue rounded-br-none right-2 ml-auto"}`
     }>
@@ -24,4 +24,4 @@ const MsgItem: React.FC<MsgItemProps> = ({ sender, text, direction }) => (
 );
 
 
-export default MsgItem
+export default MessageBlock

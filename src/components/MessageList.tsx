@@ -1,18 +1,18 @@
 /** @jsxImportSource @emotion/react */
 import { css, EmCss } from "@emotion/react";
-import MsgItem from "./MsgItem";
-import { forwardRef, useEffect, useLayoutEffect, useRef, useState } from "react";
-import { MsgItem as SemanticMsgItem } from "@lib/chat-history";
-import { useChatHistory, useChatUnit } from "@hooks";
+import MessageBlock from "./MessageBlock";
+import { forwardRef, useEffect, useRef } from "react";
+import { MsgItem } from "@lib/chat-history";
+import { useChatUnit } from "@hooks";
 
 
-interface MsgListProps {
-    history: SemanticMsgItem[];
+interface MessageListProps {
+    history: MsgItem[];
 }
 
 const msgListCss: EmCss = css``;
 
-const MsgList = forwardRef<HTMLElement, MsgListProps>(({ history }, ref) => {
+const MessageList = forwardRef<HTMLElement, MessageListProps>(({ history }, ref) => {
 
     const listRef       = useRef<HTMLUListElement | null>(null);
     const chatUnit      = useChatUnit();
@@ -37,7 +37,7 @@ const MsgList = forwardRef<HTMLElement, MsgListProps>(({ history }, ref) => {
 
                 return (
                     <li className={`${index===history.length-1?"mb-0":"mb-2"}`}>
-                        <MsgItem sender={sender} text={sMsgItem.text} direction={direction} key={index} />
+                        <MessageBlock sender={sender} text={sMsgItem.text} direction={direction} key={index} />
                     </li>
                 )
             } )}
@@ -45,10 +45,4 @@ const MsgList = forwardRef<HTMLElement, MsgListProps>(({ history }, ref) => {
 )});
 
 
-export default MsgList
-
-
-function checkSender(sender: any) {
-    try {}
-    catch {}
-}
+export default MessageList

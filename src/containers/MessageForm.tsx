@@ -1,16 +1,16 @@
 import { SubmitBtn } from "@components/Btn";
-import InputMsg from "@components/InputMsg";
+import MessageInput from "@components/MessageInput";
 import { useMobileKeyboard, useWrite } from "@hooks";
 import { PropsWithClassName } from "@types";
 import { ChangeEventHandler, MouseEventHandler, useCallback, useLayoutEffect, useRef, useState } from "react";
 import send from "../assets/icon/send.svg";
 
 
-type MsgFormProps = PropsWithClassName & {
+type MessageFormProps = PropsWithClassName & {
     onPush?: (msgValue: string) => void;
 };
 
-const MsgForm: React.FC<MsgFormProps> = ({ className, onPush }) => {
+const MessageForm: React.FC<MessageFormProps> = ({ className, onPush }) => {
 
     const pending: boolean = false;
     //
@@ -43,7 +43,7 @@ const MsgForm: React.FC<MsgFormProps> = ({ className, onPush }) => {
             box-border pb-1 pt-2
             flex flex-row gap-1 bottom-0`}
         action="">
-            <InputMsg
+            <MessageInput
                 ref={inputRef}
                 disabled={pending}
                 className="grow"
@@ -60,4 +60,4 @@ const MsgForm: React.FC<MsgFormProps> = ({ className, onPush }) => {
 };
 
 
-export default MsgForm
+export default MessageForm

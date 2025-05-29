@@ -1,9 +1,9 @@
 import { forwardRef, TextareaHTMLAttributes } from "react";
 
 
-type InputMsgProps = Omit<TextareaHTMLAttributes<HTMLTextAreaElement>, "children">;
+type MessageInputProps = Omit<TextareaHTMLAttributes<HTMLTextAreaElement>, "children">;
 
-const InputMsg = forwardRef<HTMLTextAreaElement, InputMsgProps>(({ className, ...props }, inputRef) => {
+const MessageInput = forwardRef<HTMLTextAreaElement, MessageInputProps>(({ className, ...props }, inputRef) => {
 
     return <textarea
         {...props}
@@ -14,7 +14,7 @@ const InputMsg = forwardRef<HTMLTextAreaElement, InputMsgProps>(({ className, ..
 });
 
 
-export default InputMsg
+export default MessageInput
 export {
-   InputMsgProps,
+   MessageInputProps as InputMsgProps,
 };
