@@ -176,7 +176,7 @@ export const ChatHistory: ChatHistoryConstructor = function () {
 
     // === HELPERS ===
     function checkStartArg (start: MsgId): boolean {
-        if ( !has(start) ) { console.warn(`'start' arg(=${start}) isn't existing MsgId.`); return false; }
+        if ( !has(start) ) return false;
         return true;
     }
 
