@@ -1,4 +1,4 @@
-import Btn, { BtnProps } from "./Btn";
+import Btn, { BtnProps } from "../components/Btn";
 import { useIsMobile, useUnread } from "@hooks";
 import { useMemo } from "react";
 import add_user from "../assets/icon/add_user.svg";
