@@ -20,6 +20,7 @@
         "@store": ["store/"],
         "@hooks": ["hooks/"],
         "@services/*": ["services/*"],
+        "@api/*": ["api/*"],
         "@lib/*": ["lib/*"],
         "@utils": ["lib/utils/"],
         "@test-utils": ["test-utils/"],

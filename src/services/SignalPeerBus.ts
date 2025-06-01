@@ -1,6 +1,6 @@
 import { listen, ListenerCollection, unlisten } from "@utils";
 import { Peer, PEER_EVENTS, PeerEvent, PeerEventMap } from "lib/webrtc";
-import { Signal, SIGNAL_EVENTS, SignalEvent, SignalEventMap } from "./Signal";
+import { Signal, SIGNAL_EVENTS, SignalEvent, SignalEventMap } from "@api/Signal";
 
 
 

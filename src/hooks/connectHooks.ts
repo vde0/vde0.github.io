@@ -1,6 +1,6 @@
 import { Listener } from "@lib/pprinter-tools";
 import { Peer, PeerEventMap } from "@lib/webrtc";
-import { Signal } from "@services/Signal";
+import { Signal } from "@api/Signal";
 import { ConnectionContext, ConnectionCValue } from "@store/ConnectionProvider";
 import { useContext, useEffect, useState } from "react";
 

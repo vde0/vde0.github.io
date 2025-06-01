@@ -1,9 +1,9 @@
 import { addDebug } from "@lib/utils";
 import { Peer, PEER_EVENTS } from "@lib/webrtc";
-import { Signal } from "./Signal";
+import { Signal } from "@api/Signal";
 import { DuoChatUnit } from "./DuoChatUnit";
 import { IAccessor, IWhen, Accessor, When } from "@lib/pprinter-tools";
-import { whenLocalMedia } from "./localMedia";
+import { whenLocalMedia } from "@api/localMedia";
 import { ChatPeerBus } from "./ChatPeerBus";
 import { SignalPeerBus } from "./SignalPeerBus";
 
