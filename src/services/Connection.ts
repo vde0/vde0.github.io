@@ -1,126 +1,98 @@
-import { addDebug } from "@lib/utils";
-import { Peer, PEER_EVENTS } from "@lib/webrtc";
-import { Signal } from "@api/Signal";
-import { DuoChatUnit } from "./DuoChatUnit";
-import { IAccessor, IWhen, Accessor, When } from "@lib/pprinter-tools";
-import { whenLocalMedia } from "@api/localMedia";
-import { ChatPeerBus } from "./ChatPeerBus";
-import { SignalPeerBus } from "./SignalPeerBus";
-
+import { addDebug } from '@lib/utils';
+import { Peer, PEER_EVENTS } from '@lib/webrtc';
+import { Signal } from '@api/Signal';
+import { DuoChatUnit } from './DuoChatUnit';
+import { whenLocalMedia } from '@api/localMedia';
+import { ChatPeerBus } from './ChatPeerBus';
+import { SignalPeerBus } from './SignalPeerBus';
+import { when as whenAccess } from './AppAccessor';
+import { ContentMedia } from '@types';
 
 // === API FIELDS ===
-export const CONTROL_NAME   = "CONTROL";
-
-
-export const ACC_FLAGS = {
-    LOCAL_MEDIA:        'localmedia',
-    PLAY_REMOTE_VIDEO:  'playremotevideo',
-} as const;
-Object.freeze(ACC_FLAGS);
-
-export const WHEN_READY_FLAG = "ready";
-
+export const CONTROL_NAME = 'CONTROL';
 
 export interface Connection {
-    whenAccess:     IWhen<{'ready': undefined}>,
-    signalAccessor: IAccessor<typeof ACC_FLAGS[keyof typeof ACC_FLAGS]>,
+	chatUnit: DuoChatUnit;
+	peer: Peer;
+	signal: Signal;
 
-    chatUnit:       DuoChatUnit,
-    peer:           Peer,
-    signal:         Signal,
-
-    connect     (): void;
-    disconnect  (): void;
-    destroy     (): void;
+	connect(): void;
+	disconnect(): void;
+	destroy(): void;
 }
 
+export function Connection(): Connection {
+	// === INNER FIELDS ===
+	const peer: Peer = new Peer();
+	const signal: Signal = new Signal();
+	const chatUnit: DuoChatUnit = new DuoChatUnit();
 
-export function Connection (): Connection {
+	let state: 'new' | 'connecting' | 'connected' | 'disconnected' = 'new';
 
-    // === INNER FIELDS ===
-    const peer:     Peer        = new Peer();
-    const signal:   Signal      = new Signal();
-    const chatUnit: DuoChatUnit = new DuoChatUnit();
+	addDebug('chatUnit', chatUnit);
+	addDebug('peer', peer);
 
-    let state:      'new' | 'connecting' | 'connected' | 'disconnected' = "new";
+	// === HELPERS ===
+	function sendStop(): void {
+		peer.send('stop', CONTROL_NAME);
+	}
 
-    addDebug("chatUnit", chatUnit);
-    addDebug("peer", peer);
+	function setLocalMedia(media: ContentMedia): void {
+		media?.getTracks().forEach((track) => peer.addMediaTrack(track, media));
+		chatUnit.setMedia(chatUnit.localChatter, media);
+	}
 
+	function stopPeer() {
+		peer.stop();
+	}
+	function stopSignal() {
+		signal.stop();
+	}
 
-    // === API EVENT SYSTEM ===
-    const accessor      = new Accessor( Object.values(ACC_FLAGS) );
-    const whenAccess    = new When<{'ready': undefined}>();
+	// === HANDLERS ===
+	function stopHandler({ label }: { data: string; label: string }) {
+		if (label !== CONTROL_NAME) return;
+		stopPeer();
+	}
 
-    accessor.on("access", () => {
-        whenAccess.occur("ready");
-    });
+	// === EXEC ===
+	const chatPeerBus = ChatPeerBus(chatUnit, peer);
+	const signalPeerBus = SignalPeerBus(signal, peer);
 
-    // === HELPERS ===
-    function sendStop (): void {
-        peer.send("stop", CONTROL_NAME);
-    }
+	peer.addDataChannel(CONTROL_NAME);
+	peer.on(PEER_EVENTS.TEXT, stopHandler);
 
-    function setLocalMedia (media: MediaStream): void {
-        media.getTracks().forEach(track => peer.addMediaTrack(track, media));
-        chatUnit.setMedia(chatUnit.localChatter, media);
-        
-        accessor.set(ACC_FLAGS.LOCAL_MEDIA);
-    }
+	whenLocalMedia((media) => setLocalMedia(media));
 
-    function stopPeer () {
-        peer.stop();
-    }
-    function stopSignal () { signal.stop() }
+	return {
+		chatUnit,
+		peer,
+		signal,
 
+		connect() {
+			if (state !== 'new') return;
+			state = 'connecting';
+			whenAccess(() => signal.start());
 
-    // === HANDLERS ===
-    function stopHandler ({ label }: {data: string, label: string}) {
-        if (label !== CONTROL_NAME) return;
-        stopPeer();
-    }
+			peer.once(PEER_EVENTS.CONNECTED, () => {
+				state = 'connected';
+			});
+		},
 
+		disconnect() {
+			if (state !== 'connecting' && state !== 'connected') return;
+			state = 'disconnected';
+			sendStop();
 
-    // === EXEC ===
-    const chatPeerBus   = ChatPeerBus(chatUnit, peer);
-    const signalPeerBus = SignalPeerBus(signal, peer);
+			stopPeer();
+			stopSignal();
 
-    peer.addDataChannel(CONTROL_NAME);
-    peer.on(PEER_EVENTS.TEXT, stopHandler);
+			this.destroy();
+		},
 
-    whenLocalMedia(media => setLocalMedia(media));
-
-
-    return {
-        whenAccess,
-        signalAccessor: accessor,
-
-        chatUnit,
-        peer,
-        signal,
-
-        connect () {
-            if (state !== "new") return;
-            state = "connecting";
-            whenAccess.when("ready", () => signal.start() );
-
-            peer.once(PEER_EVENTS.CONNECTED, () => { state = "connected" });
-        },
-
-        disconnect () {
-            if (state !== "connecting" && state !== "connected") return;
-            state = "disconnected"
-            sendStop();
-
-            stopPeer();
-            stopSignal();
-
-            this.destroy();
-        },
-
-        destroy () {
-            chatPeerBus.destroy();
-            signalPeerBus.destroy();
-        },
-    };
+		destroy() {
+			chatPeerBus.destroy();
+			signalPeerBus.destroy();
+		},
+	};
 }

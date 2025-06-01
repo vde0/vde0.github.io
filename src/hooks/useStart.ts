@@ -1,14 +1,12 @@
-import { getStart, onStart, start } from "@services/Start";
-import { useEffect, useState } from "react";
+import { getStarted, onStart, start } from '@services/Start';
+import { useEffect, useState } from 'react';
 
+export const useStart = (): [ReturnType<typeof getStarted>, typeof start, typeof onStart] => {
+	const [started, setStarted] = useState(getStarted());
 
-export const useStart = (): [ReturnType<typeof getStart>, typeof start] => {
+	useEffect(() => {
+		onStart(() => setStarted(getStarted()));
+	}, []);
 
-    const [startState, setStartState]   = useState( getStart() );
-
-    useEffect(() => {
-        onStart(() => setStartState( getStart() ));
-    }, []);
-
-    return [startState, start]
+	return [started, start, onStart];
 };

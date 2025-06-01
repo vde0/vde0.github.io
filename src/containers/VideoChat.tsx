@@ -1,123 +1,128 @@
-import { useConnection, useIsMobile, useLocalChatter, usePeerState, useRemoteChatter } from "@hooks";
-import { addDebug } from "@lib/utils";
-import { ACC_FLAGS } from "@services/Connection";
-import { PropsWithClassName } from "@types";
-import { useEffect, useRef, useState } from "react";
-import empty_video from "../assets/img/empty_video.png";
-import Video from "@components/Video";
+import {
+	useAppAccessor,
+	useConnection,
+	useIsMobile,
+	useLocalChatter,
+	usePeerState,
+	useRemoteChatter,
+	useStart,
+} from '@hooks';
+import { addDebug } from '@lib/utils';
+import { ACC_FLAGS } from '@services/AppAccessor';
+import { PropsWithClassName } from '@types';
+import { useEffect, useRef, useState } from 'react';
+import empty_video from '../assets/img/empty_video.png';
+import Video from '@components/Video';
+import { whenLocalMedia } from '@api/localMedia';
 
+type VideoChatProps = PropsWithClassName & { remote: boolean; hidden?: boolean };
 
-type VideoChatProps = PropsWithClassName & { remote: boolean, hidden?: boolean };
+const VideoChat: React.FC<VideoChatProps> = ({ className, remote, hidden = false }) => {
+	const videoChatClassName = className ?? '';
+	const useChatter = remote ? useRemoteChatter : useLocalChatter;
 
-const VideoChat: React.FC<VideoChatProps> = ({ className, remote, hidden=false }) => {
+	const video = useRef<HTMLVideoElement | null>(null);
 
-    const videoChatClassName    = className ?? "";
-    const useChatter            = remote ? useRemoteChatter : useLocalChatter;
-    
-    const video             = useRef<HTMLVideoElement | null>(null);
-    const accessToggler     = useRef<HTMLDivElement | null>(null);
-    const [,,media]         = useChatter();
-    const isMobile          = useIsMobile();
-    const peerState         = usePeerState();
-    const [show, setShow]   = useState<boolean>(false);
-    const [connection]      = useConnection();
+	const peerState = usePeerState();
+	const [show, setShow] = useState<boolean>(false);
 
-    const [unlocked, setUnlocked] = useState(false);
+	const [, , onStart] = useStart();
+	const [, , media] = useChatter();
+	const [, setAccessFlag] = useAppAccessor();
 
-    useEffect(() => {
-        if (!remote || !unlocked) return;
-        connection.signalAccessor.set(ACC_FLAGS.PLAY_REMOTE_VIDEO);
-    }, [connection, unlocked, remote]);
+	// General effect
+	useEffect(() => {
+		if (!video.current) return;
+		video.current.getAttribute('id') &&
+			addDebug(video.current.getAttribute('id') as string, video.current);
 
-    useEffect(() => {
-        if (!video.current) return;
-        video.current.srcObject = media;
-        video.current.getAttribute("id") && addDebug(video.current.getAttribute("id") as string, video.current);
-    }, [media]);
+		// === HANDLERS ===
+		const pauseHandler = (evt: Event) => {
+			(evt.target as HTMLVideoElement)?.load();
+			(evt.target as HTMLVideoElement)?.play();
+		};
 
-    useEffect(() => {
-        if (!remote) return;
+		// === ADD LISTENERS ===
+		video.current.onpause = pauseHandler;
 
-        if ( peerState === "connected" )    setShow(true);
-        else                                setShow(false);
-    }, [peerState, remote]);
+		return () => {
+			// === REMOVE LISTENERS ===
+			if (video.current) video.current.onpause = null;
+		};
+	}, []);
 
-    useEffect(() => {
-        if (remote) return;
-        if (!video.current) return;
+	// Rules for playing or pausing local video
+	useEffect(() => {
+		if (remote) return;
+		if (!video.current) return;
 
-        video.current.onplaying = () => setShow(true);
-        video.current.onwaiting = () => setShow(false);
-        video.current.onended   = () => setShow(false);
-        video.current.onstalled = () => setShow(false);
+		whenLocalMedia(() => video.current?.play());
 
-        return () => {
-            if (!video.current) return;
+		video.current.onplaying = () => setShow(true);
+		video.current.onwaiting = () => setShow(false);
+		video.current.onended = () => setShow(false);
+		video.current.onstalled = () => setShow(false);
 
-            video.current.onplaying = () => setShow(true);
-            video.current.onwaiting = () => setShow(false);
-            video.current.onended   = () => setShow(false);
-            video.current.onstalled = () => setShow(false);
-        };
-    }, [remote]);
+		return () => {
+			if (!video.current) return;
 
-    useEffect(() => {
-        addDebug(remote?"remoteVide":"localVideo", video.current);
+			video.current.onplaying = () => setShow(true);
+			video.current.onwaiting = () => setShow(false);
+			video.current.onended = () => setShow(false);
+			video.current.onstalled = () => setShow(false);
+		};
+	}, [remote]);
 
-        if ( !(remote && accessToggler.current) ) return;
+	// Play remote video when user turn START and set appropriate APP FLAG
+	useEffect(() => {
+		if (!remote) return;
 
-        // === HANDLERS ===
-        const pauseHandler = (evt: Event) => {
-            (evt.target as HTMLVideoElement)?.load();
-            (evt.target as HTMLVideoElement)?.play();
-        };
-        const tapHandler = () => {
-            if ( !video.current?.paused ) return;
-            video.current.play();
-            setUnlocked(true);
+		onStart(() => {
+			if (!video.current?.paused) return;
+			video.current.play();
+			setAccessFlag(ACC_FLAGS.PLAY_REMOTE_VIDEO);
+		});
+	}, [remote]);
 
-            if ( !accessToggler.current ) return;
-            accessToggler.current.hidden = true;
-        };
+	// Update media
+	useEffect(() => {
+		if (!video.current) return;
+		video.current.srcObject = media;
+	}, [media]);
 
-        // === ADD LISTENERS ===
-        if (video.current) video.current.onpause                = pauseHandler;
-        
-        accessToggler.current[isMobile?"ontouchend":"onclick"]  = tapHandler;
+	// if REMOTE and only CONNECTED: show = true
+	useEffect(() => {
+		if (!remote) return;
 
-        return () => {
-            // === REMOVE LISTENERS ===
-            if (video.current) video.current.onpause = null;
-            if (!accessToggler.current) return;
-            accessToggler.current.ontouchend   = null;
-            accessToggler.current.onclick      = null;
-        };
-    }, [connection]);
-    
+		if (peerState === 'connected') setShow(true);
+		else setShow(false);
+	}, [peerState, remote]);
 
-    return (
-        <section hidden={hidden} className={videoChatClassName + " relative w-full h-full rounded-xl flex items-center overflow-clip"}>
-            <Video
-                show={show}
-                autoPlay ref={video} playsInline muted={!remote}
-                id={remote?"remoteVideo":"localVideo"}
-                className="scale-x-[-1] aspect-video w-full h-full object-fit [object-position:center_center] block"
-            >   
-                <div className="absolute top-0 bottom-0 left-0 right-0 bg-cloud">
-                    <img src={empty_video} className="pointer-events-none block top-0 bottom-0 left-0 right-0 absolute m-auto"/>
-                </div>
-            </Video>
-            {remote && <div ref={accessToggler} className="
-                absolute
-                top-0 bottom-0 left-0 right-0
-                bg-gray-900/75
-                flex justify-center items-center"
-            >
-                <span className="block select-none text-white font-bold text-lg font-stretch-extra-expanded">TAP ME</span>
-            </div>}
-        </section>
-    );
+	return (
+		<section
+			hidden={hidden}
+			className={
+				videoChatClassName + ' relative w-full h-full rounded-xl flex items-center overflow-clip'
+			}
+		>
+			<Video
+				show={show}
+				autoPlay
+				ref={video}
+				playsInline
+				muted={!remote}
+				id={remote ? 'remoteVideo' : 'localVideo'}
+				className="scale-x-[-1] aspect-video w-full h-full object-fit [object-position:center_center] block"
+			>
+				<div className="absolute top-0 bottom-0 left-0 right-0 bg-cloud">
+					<img
+						src={empty_video}
+						className="pointer-events-none block top-0 bottom-0 left-0 right-0 absolute m-auto"
+					/>
+				</div>
+			</Video>
+		</section>
+	);
 };
 
-
-export default VideoChat
+export default VideoChat;
