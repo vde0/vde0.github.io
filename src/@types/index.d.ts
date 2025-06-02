@@ -57,30 +57,29 @@ export type Unsplit<
  *   - If H and B are capitalized, but T starts uncapitalized → Split and Step.
  *   - If H, B, and T are all capitalized → Step continues without splitting.
  */
-export type Split<L extends String, C extends string = DefaultSplitter> = Unsplit<
-	L,
-	C & DefaultSplitter
-> extends `${infer H}${infer B}${infer T}`
-	? IfEmpty<
-			T,
-			[H, B] extends [Uncapitalize<H>, Capitalize<B>]
-				? `${Suffix<H, C>}${B}` // Case A: hB => h__B
-				: `${H}${B}`, // Case B: hb | Hb | HB => Case B
-			IfUncapitalized<
-				B,
-				`${H}${Split<`${B}${T}`, C>}`, // Case C: [hH] b [tT] => 1 Step by Case C
+export type Split<L extends String, C extends string = DefaultSplitter> = L extends string
+	? Unsplit<L, C & DefaultSplitter> extends `${infer H}${infer B}${infer T}`
+		? IfEmpty<
+				T,
+				[H, B] extends [Uncapitalize<H>, Capitalize<B>]
+					? `${Suffix<H, C>}${B}` // Case A: hB => h__B
+					: `${H}${B}`, // Case B: hb | Hb | HB => Case B
 				IfUncapitalized<
-					H,
-					`${Suffix<H, C>}${Split<`${B}${T}`, C>}`, // Case D: hB [t/T] => h_B [t/T] and 1 Step
+					B,
+					`${H}${Split<`${B}${T}`, C>}`, // Case C: [hH] b [tT] => 1 Step by Case C
 					IfUncapitalized<
-						T,
-						`${Suffix<H, C>}${Split<`${B}${T}`, C>}`, // Case E: HBt => H_Bt and 1 Step
-						`${H}${Split<`${B}${T}`, C>}` // Case F: HBT => 1 Step by Case F
+						H,
+						`${Suffix<H, C>}${Split<`${B}${T}`, C>}`, // Case D: hB [t/T] => h_B [t/T] and 1 Step
+						IfUncapitalized<
+							T,
+							`${Suffix<H, C>}${Split<`${B}${T}`, C>}`, // Case E: HBt => H_Bt and 1 Step
+							`${H}${Split<`${B}${T}`, C>}` // Case F: HBT => 1 Step by Case F
+						>
 					>
 				>
-			>
-	  >
-	: L; // '' | length = 1
+		  >
+		: L
+	: never; // '' | length = 1
 
 export type CamelCase<S extends string> = Unsplit<LowerSnakeCase<S>>;
 export type PascalCase<S extends string> = Capitalize<CamelCase<S>>;
