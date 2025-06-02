@@ -25,8 +25,8 @@ export type SignalEventMap = {
 	sdp: { sdp: RTCSessionDescription | RTCSessionDescriptionInit };
 	ice: { ice: RTCIceCandidate | null };
 };
-export type SignalEvent = keyof SignalEventMap;
-export const SIGNAL_EVENTS: EventKeys<SignalEvent> = {
+export type SignalEvent = Lowercase<keyof SignalEventMap>;
+export const SIGNAL_EVENTS: EventKeys<keyof SignalEventMap> = {
 	START: 'start',
 	STOP: 'stop',
 	SET_CONFIG: 'setconfig',
