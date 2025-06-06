@@ -1,4 +1,5 @@
-import { Dict, EventMap, EventsWithoutData, Listener, ListenerDict, MethodKey } from './general';
+import { AnyDict, Dict, MethodKey } from '@types';
+import { EventsWithoutData, Listener, ListenerDict } from './general';
 import { doApi } from './helpers';
 import { PrivateContext } from './PrivateContext';
 
@@ -12,7 +13,7 @@ export const LISTENER_CHEST_API: MethodKey<IListenerChest>[] = [
 Object.freeze(LISTENER_CHEST_API);
 
 // === TYPES ===
-export type IListenerChest<M extends EventMap = EventMap> = Dict & {
+export type IListenerChest<M extends AnyDict = AnyDict> = {
 	on<E extends keyof M>(event: E, listener: Listener<M[E]>): void;
 	off<E extends keyof M>(event: E, listener: Listener<M[E]>): void;
 	once<E extends keyof M>(event: E, listener: Listener<M[E]>): void;
@@ -25,18 +26,14 @@ export type IListenerChest<M extends EventMap = EventMap> = Dict & {
 const privateContext = new PrivateContext<IListenerChest<Dict>, PrivateProps>();
 
 interface PrivateProps {
-	onceSet: Set<Listener<unknown>>;
-	listenerDict: ListenerDict<Dict>;
+	onceSet: Set<Listener<any>>;
+	listenerDict: ListenerDict<AnyDict>;
 }
 
 // === CLASS DEFINITION ===
-export class ListenerChest<M extends EventMap = EventMap> implements IListenerChest<M> {
-	[key: number]: never;
-	[key: symbol]: never;
-	[key: string]: unknown;
-
+export class ListenerChest<M extends AnyDict = AnyDict> implements IListenerChest<M> {
 	static implementTo<L extends IListenerChest<Dict>>(obj: L, api: L) {
-		doApi<IListenerChest<EventMap>>(obj, api, false, LISTENER_CHEST_API);
+		doApi<IListenerChest>(obj, api, false, LISTENER_CHEST_API);
 	}
 
 	constructor(api?: IListenerChest<M>) {
@@ -54,6 +51,7 @@ export class ListenerChest<M extends EventMap = EventMap> implements IListenerCh
 	// === API FRAGMENT ===
 	on<E extends keyof M>(event: E, listener: Listener<M[E]>): void {
 		const listenerDict: ListenerDict<M> = privateContext.get(this, 'listenerDict')!;
+		type T = typeof listenerDict;
 		if (listenerDict[event] === undefined) listenerDict[event] = new Set();
 		listenerDict[event].add(listener);
 	}

@@ -1,10 +1,10 @@
-import { Dict, MethodKey } from './general';
+import { MethodKey } from '@types';
 
 export function checkForPropertyKey(key: unknown): boolean {
 	return typeof key === 'string' || typeof key === 'symbol' || typeof key === 'number';
 }
 
-export function doApi<A extends Dict>(
+export function doApi<A extends object>(
 	target: A,
 	api: A,
 	bind: boolean,
