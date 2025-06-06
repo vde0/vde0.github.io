@@ -2,24 +2,38 @@ export type PropsWithClassName = { className?: string };
 export type BasicDataStruct = { [key: string | symbol | number]: any };
 export type ContentMedia = MediaStream | null;
 
-export type IsUncapitalized<L extends string> = L extends Uncapitalize<L> ? true : false;
-export type IsCapitalized<L extends string> = L extends Capitalize<L> ? true : false;
-export type IsUpper<L extends string> = L extends Uppercase<L> ? true : false;
-export type IsLower<L extends string> = L extends Lowercase<L> ? true : false;
+export type IsUncapitalized<L extends string> = Uncapitalize<L> extends L ? true : false;
+export type IsCapitalized<L extends string> = Capitalize<L> extends L ? true : false;
+export type IsUppercased<L extends string> = Uppercase<L> extends L ? true : false;
+export type IsLowercased<L extends string> = Lowercase<L> extends L ? true : false;
 export type IsEmpty<L extends string> = L extends '' ? true : false;
+
+export type Cond<T extends boolean, Then = never, Else = never> = T extends true ? Then : Else;
 
 export type Prefix<L extends string, C extends string> = `${C}${L}`;
 export type Suffix<L extends string, C extends string> = `${L}${C}`;
 
-export type IfUncapitalized<L extends string, Then, Else> = IsUncapitalized<L> extends true
-	? Then
-	: Else;
-export type IfCapitalized<L extends string, Then, Else> = IsCapitalized<L> extends true
-	? Then
-	: Else;
-export type IfUpper<L extends string, Then, Else> = IsUpper<L> extends true ? Then : Else;
-export type IfLower<L extends string, Then, Else> = IsLower<L> extends true ? Then : Else;
-export type IfEmpty<L extends string, Then, Else> = IsEmpty<L> extends true ? Then : Else;
+export type IfUncapitalized<L extends string, Then = never, Else = never> = Cond<
+	IsUncapitalized<L>,
+	Then,
+	Else
+>;
+export type IfCapitalized<L extends string, Then = never, Else = never> = Cond<
+	IsCapitalized<L>,
+	Then,
+	Else
+>;
+export type IfUppercased<L extends string, Then = never, Else = never> = Cond<
+	IsUppercased<L>,
+	Then,
+	Else
+>;
+export type IfLowercased<L extends string, Then = never, Else = never> = Cond<
+	IsLowercased<L>,
+	Then,
+	Else
+>;
+export type IfEmpty<L extends string, Then = never, Else = never> = Cond<IsEmpty<L>, Then, Else>;
 
 export type DefaultSplitter = '-' | '_' | '+' | '=' | ' ' | ',' | '.' | ':' | '|' | '	';
 
@@ -57,8 +71,11 @@ export type Unsplit<
  *   - If H and B are capitalized, but T starts uncapitalized → Split and Step.
  *   - If H, B, and T are all capitalized → Step continues without splitting.
  */
-export type Split<L extends String, C extends string = DefaultSplitter> = L extends string
-	? Unsplit<L, C & DefaultSplitter> extends `${infer H}${infer B}${infer T}`
+export type Split<L extends string, C extends string = DefaultSplitter> = Unsplit<
+	L,
+	C & DefaultSplitter
+> extends infer R
+	? R extends `${infer H}${infer B}${infer T}`
 		? IfEmpty<
 				T,
 				[H, B] extends [Uncapitalize<H>, Capitalize<B>]
@@ -78,8 +95,8 @@ export type Split<L extends String, C extends string = DefaultSplitter> = L exte
 					>
 				>
 		  >
-		: L
-	: never; // '' | length = 1
+		: R // '' | length = 1
+	: never;
 
 export type CamelCase<S extends string> = Unsplit<LowerSnakeCase<S>>;
 export type PascalCase<S extends string> = Capitalize<CamelCase<S>>;
@@ -87,3 +104,70 @@ export type PascalCase<S extends string> = Capitalize<CamelCase<S>>;
 export type LowerSnakeCase<S extends string> = Lowercase<Split<S, '_'>>;
 
 export type UpperSnakeCase<S extends string> = Uppercase<Split<S, '_'>>;
+
+export type IsLowercasedMap<M extends object> = keyof M extends infer L
+	? L extends keyof M
+		? IfLowercased<Extract<L, string>, true, false>
+		: never
+	: never;
+
+export type IfLowercasedMap<M extends object, Then = never, Else = never> = Cond<
+	IsLowercasedMap<M>,
+	Then,
+	Else
+>;
+
+export type LowercaseMap<M extends object> = keyof M extends never
+	? {
+			[K in PropertyKey as K extends string ? Lowercase<K> : K]: unknown;
+	  }
+	: {
+			[K in keyof M as K extends string ? Lowercase<K> : K]: M[K];
+	  };
+
+export type LowercasedMap<M extends object = {}> = IfLowercasedMap<M, M, never>;
+
+export type Dict<M extends object = {}> = {
+	[K in keyof M as K extends string ? K : never]: M[K];
+} extends infer R
+	? keyof R extends never
+		? {
+				[x: number | symbol]: never;
+		  }
+		: R & {
+				[x: number | symbol]: never;
+		  }
+	: never;
+export type Undict<M extends object = Record<string, unknown>> = {
+	[K in keyof M as [number, M[K]] extends [K, never]
+		? never
+		: [symbol, M[K]] extends [K, never]
+		? never
+		: K]: M[K];
+};
+
+export type UnknownDict = Dict<{ [x: string]: unknown }>;
+export type AnyDict = Dict<{ [x: string]: any }>;
+
+export type IsDict<M extends object> = M extends Dict ? true : false;
+export type IfDict<M extends object, Then = never, Else = never> = Cond<IsDict<M>, Then, Else>;
+
+export type MethodKey<O extends object> = {
+	[K in keyof O]: O[K] extends Function ? K : never;
+}[keyof O];
+
+export type Method<O extends object> = {
+	[K in keyof O]: O[K] extends Function ? O[K] : never;
+}[keyof O];
+
+export type OnlyMethods<O extends object> = Pick<O, MethodKey<O>>;
+
+export type FieldKey<O extends object> = {
+	[K in keyof O]: O[K] extends Function ? never : K;
+}[keyof O];
+
+export type Field<O extends object> = {
+	[K in keyof O]: O[K] extends Function ? never : O[K];
+}[keyof O];
+
+export type OnlyFields<O extends object> = Pick<O, FieldKey<O>>;
