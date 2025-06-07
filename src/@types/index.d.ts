@@ -117,13 +117,9 @@ export type IfLowercasedMap<M extends object, Then = never, Else = never> = Cond
 	Else
 >;
 
-export type LowercaseMap<M extends object> = keyof M extends never
-	? {
-			[K in PropertyKey as K extends string ? Lowercase<K> : K]: unknown;
-	  }
-	: {
-			[K in keyof M as K extends string ? Lowercase<K> : K]: M[K];
-	  };
+export type LowercaseMap<M extends object> = {
+	[K in keyof M as K extends string ? Lowercase<K> : K]: M[K];
+};
 
 export type LowercasedMap<M extends object = {}> = IfLowercasedMap<M, M, never>;
 
@@ -171,3 +167,13 @@ export type Field<O extends object> = {
 }[keyof O];
 
 export type OnlyFields<O extends object> = Pick<O, FieldKey<O>>;
+
+export type KnownKeys<M extends object> = {
+	[K in keyof M as string extends K
+		? never
+		: number extends K
+		? never
+		: symbol extends K
+		? never
+		: K]: M[K];
+};

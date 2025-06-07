@@ -1,6 +1,7 @@
 import { io, Socket } from 'socket.io-client';
 import { EventKeys, IListenerChest, ListenerChest } from '@lib/pprinter-tools';
 import { addDebug, listen } from '@lib/utils';
+import { LowercaseMap } from '@types';
 
 // === GENERAL DATA ===
 addDebug('signalHost', process.env.SIGNAL);
@@ -8,7 +9,7 @@ export const SIGNAL_SERVER = process.env.SIGNAL ?? 'https://vde0.chat';
 
 // === TYPES ===
 export type SignalConstructor = new () => Signal;
-export type Signal = IListenerChest<SignalEventMap> & {
+export type Signal = IListenerChest<LowercaseMap<SignalEventMap>> & {
 	start(): void;
 	stop(): void;
 
@@ -45,7 +46,7 @@ export const Signal: SignalConstructor = function (): Signal {
 
 	let state: 'new' | 'started' | 'stopped' = 'new';
 
-	const chest: IListenerChest<SignalEventMap> = new ListenerChest();
+	const chest: IListenerChest<LowercaseMap<SignalEventMap>> = new ListenerChest();
 
 	const signal = (): void => {
 		socket = io(SIGNAL_SERVER);
