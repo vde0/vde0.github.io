@@ -1,4 +1,4 @@
-import { CleanPayload, Dict, LowercaseMap, MethodKey } from '@types';
+import { Dict, LowercaseMap, MethodKey } from '@types';
 import { EventsWithoutData, Listener, ListenerDict } from './general';
 import { doApi } from './helpers';
 import { PrivateContext } from './PrivateContext';
@@ -13,7 +13,7 @@ export const LISTENER_CHEST_API: MethodKey<IListenerChest>[] = [
 Object.freeze(LISTENER_CHEST_API);
 
 // === TYPES ===
-export type IListenerChest<M extends CleanPayload<Dict<LowercaseMap<M>>> = {}> = {
+export type IListenerChest<M extends Dict<LowercaseMap<M>> = {}> = {
 	on<E extends keyof M>(event: E, listener: Listener<M[E]>): void;
 	off<E extends keyof M>(event: E, listener: Listener<M[E]>): void;
 	once<E extends keyof M>(event: E, listener: Listener<M[E]>): void;
@@ -31,9 +31,7 @@ interface PrivateProps {
 }
 
 // === CLASS DEFINITION ===
-export class ListenerChest<M extends CleanPayload<Dict<LowercaseMap<M>>> = {}>
-	implements IListenerChest<M>
-{
+export class ListenerChest<M extends Dict<LowercaseMap<M>> = {}> implements IListenerChest<M> {
 	static implementTo<L extends IListenerChest<Dict>>(obj: L, api: L) {
 		doApi<IListenerChest>(obj, api, false, LISTENER_CHEST_API);
 	}
