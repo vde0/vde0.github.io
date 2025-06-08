@@ -8,6 +8,11 @@ export type IsUppercased<L extends string> = Uppercase<L> extends L ? true : fal
 export type IsLowercased<L extends string> = Lowercase<L> extends L ? true : false;
 export type IsEmpty<L extends string> = L extends '' ? true : false;
 
+export type Uncapitalized = Uncapitalize<string>;
+export type Capitalized = Capitalize<string>;
+export type Uppercased = Uppercase<string>;
+export type Lowercased = Lowercase<string>;
+
 export type Cond<T extends boolean, Then = never, Else = never> = T extends true ? Then : Else;
 
 export type Prefix<L extends string, C extends string> = `${C}${L}`;
@@ -121,7 +126,7 @@ export type LowercaseMap<M extends object> = {
 	[K in keyof M as K extends string ? Lowercase<K> : K]: M[K];
 };
 
-export type LowercasedMap<M extends object = {}> = IfLowercasedMap<M, M, never>;
+export type LowercasedMap = { [x: Lowercase<string>]: unknown };
 
 export type Dict<M extends object = {}> = {
 	[K in keyof M as K extends string ? K : never]: M[K];
