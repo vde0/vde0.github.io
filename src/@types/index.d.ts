@@ -168,7 +168,7 @@ export type Field<O extends object> = {
 
 export type OnlyFields<O extends object> = Pick<O, FieldKey<O>>;
 
-export type KnownKeys<M extends object> = {
+export type CleanPayload<M extends object> = {
 	[K in keyof M as string extends K
 		? never
 		: number extends K
@@ -177,3 +177,5 @@ export type KnownKeys<M extends object> = {
 		? never
 		: K]: M[K];
 };
+
+export type KnownKeys<M extends object> = keyof CleanPayload<M>;
