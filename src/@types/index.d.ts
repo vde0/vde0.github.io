@@ -110,10 +110,17 @@ export type LowerSnakeCase<S extends string> = Lowercase<Split<S, '_'>>;
 
 export type UpperSnakeCase<S extends string> = Uppercase<Split<S, '_'>>;
 
-export type IsLowercasedMap<M extends object> = keyof M extends infer L
-	? L extends keyof M
-		? IfLowercased<Extract<L, string>, true, false>
-		: never
+export type IsLowercasedMap<M extends object> = keyof M extends infer L extends keyof M
+	? IfLowercased<Extract<L, string>, true, false>
+	: never;
+export type IsUppercasedMap<M extends object> = keyof M extends infer L extends keyof M
+	? IfUppercased<Extract<L, string>, true, false>
+	: never;
+export type IsUncapitalizedMap<M extends object> = keyof M extends infer L extends keyof M
+	? IfUncapitalized<Extract<L, string>, true, false>
+	: never;
+export type IsCapitalizedMap<M extends object> = keyof M extends infer L extends keyof M
+	? IfCapitalized<Extract<L, string>, true, false>
 	: never;
 
 export type IfLowercasedMap<M extends object, Then = never, Else = never> = Cond<
@@ -121,12 +128,39 @@ export type IfLowercasedMap<M extends object, Then = never, Else = never> = Cond
 	Then,
 	Else
 >;
+export type IfUppercasedMap<M extends object, Then = never, Else = never> = Cond<
+	IsUppercasedMap<M>,
+	Then,
+	Else
+>;
+export type IfUncapitalizedMap<M extends object, Then = never, Else = never> = Cond<
+	IsUncapitalizedMap<M>,
+	Then,
+	Else
+>;
+export type IfCapitalizedMap<M extends object, Then = never, Else = never> = Cond<
+	IsCapitalizedMap<M>,
+	Then,
+	Else
+>;
 
+export type UncapitalizeMap<M extends object> = {
+	[K in keyof M as K extends string ? Uncapitalize<K> : K]: M[K];
+};
+export type CapitalizeMap<M extends object> = {
+	[K in keyof M as K extends string ? Capitalize<K> : K]: M[K];
+};
 export type LowercaseMap<M extends object> = {
 	[K in keyof M as K extends string ? Lowercase<K> : K]: M[K];
 };
+export type UppercaseMap<M extends object> = {
+	[K in keyof M as K extends string ? Uppercase<K> : K]: M[K];
+};
 
+export type UncapitalizedMap = { [x: Uncapitalize<string>]: unknown };
+export type CapitalizedMap = { [x: Capitalize<string>]: unknown };
 export type LowercasedMap = { [x: Lowercase<string>]: unknown };
+export type UppercasedMap = { [x: Uppercase<string>]: unknown };
 
 export type Dict<M extends object = {}> = {
 	[K in keyof M as K extends string ? K : never]: M[K];
