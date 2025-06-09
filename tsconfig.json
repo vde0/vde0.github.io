@@ -1,37 +1,32 @@
 {
-    "compilerOptions": {
-      "target": "es2015",
-      "module": "esnext",
-      "jsx": "react-jsx",
-      "moduleResolution": "node",
-      "outDir": "./docs",
-      "rootDir": "./src",
-      "strict": true,
-      "noImplicitAny": true,
-      "esModuleInterop": true,
-      "skipLibCheck": true,
-      "forceConsistentCasingInFileNames": true,
-      "typeRoots": ["./node_modules/@types", "./@types", "src/@types"],
-      "baseUrl": "./src",
-      "paths": {
-        "@containers/*": ["containers/*"],
-        "@components/*": ["components/*"],
-        "@store/*": ["store/*"],
-        "@store": ["store/"],
-        "@hooks": ["hooks/"],
-        "@services/*": ["services/*"],
-        "@api/*": ["api/*"],
-        "@lib/*": ["lib/*"],
-        "@utils": ["lib/utils/"],
-        "@test-utils": ["test-utils/"],
-        "@tg-types": ["../@types/tg"]
-      },
-    },
-    "include": [
-      "src/**/*",
-      "@types/*"
-    ],
-    "exclude": [
-      "node_modules"
-    ]
+	"compilerOptions": {
+		"target": "es2015",
+		"module": "esnext",
+		"jsx": "react-jsx",
+		"moduleResolution": "node",
+		"outDir": "./docs",
+		"rootDir": "./src",
+		"strict": true,
+		"noImplicitAny": true,
+		"esModuleInterop": true,
+		"skipLibCheck": true,
+		"forceConsistentCasingInFileNames": true,
+		"typeRoots": ["./node_modules/@types", "./@types", "src/@types"],
+		"baseUrl": "./src",
+		"paths": {
+			"@containers/*": ["containers/*"],
+			"@components/*": ["components/*"],
+			"@store/*": ["store/*"],
+			"@store": ["store/"],
+			"@hooks": ["hooks/"],
+			"@services/*": ["services/*"],
+			"@api/*": ["api/*"],
+			"@lib/*": ["lib/*"],
+			"@utils": ["lib/utils/"],
+			"@test-utils": ["test-utils/"],
+			"@tg-types": ["../@types/tg"]
+		}
+	},
+	"include": ["src/**/*", "@types/*"],
+	"exclude": ["node_modules"]
 }
