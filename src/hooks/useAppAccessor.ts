@@ -1,5 +1,7 @@
-import { getAccess, set, when } from '@services/AppAccessor';
+import { appAcessor } from '@services/appAccessor';
 import { useEffect, useState } from 'react';
+
+const { getAccess, when, set } = appAcessor;
 
 export const useAppAccessor = (): [ReturnType<typeof getAccess>, typeof set, typeof when] => {
 	const [access, setAccess] = useState(getAccess());

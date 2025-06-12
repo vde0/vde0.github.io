@@ -1,4 +1,4 @@
-import { EventKeys, EventsWithoutData, IListenerChest, ListenerChest } from '@lib/pprinter-tools';
+import { EventKeys, EventWithoutData, IListenerChest, ListenerChest } from '@lib/pprinter-tools';
 import { LowercaseMap, Unsplit, UpperSnakeCase } from '@types';
 
 export type IntentEvent = Lowercase<keyof IntentEventMap>;
@@ -25,22 +25,17 @@ export const INTENT_EVENTS: EventKeys<keyof IntentEventMap> = {
 	ADD_USER: 'adduser',
 	START_APP: 'startapp',
 	REQUEST_USER_MEDIA: 'requestusermedia',
-} as const;
+};
 
 export const INTENTS: {
-	[I in UpperSnakeCase<keyof IntentEventMap>]: Unsplit<Lowercase<I>> extends infer R
-		? R extends keyof IntentEventMap
-			? R extends EventsWithoutData<IntentEventMap>
-				? (data?: IntentEventMap[R]) => void
-				: (data: IntentEventMap[R]) => void
-			: never
-		: never;
+	[I in keyof IntentEventMap as Lowercase<I>]: I extends EventWithoutData<IntentEventMap>
+		? (data?: IntentEventMap[I]) => void
+		: (data: IntentEventMap[I]) => void;
 } = (() => {
 	const result: typeof INTENTS = {} as typeof INTENTS;
-	Object.entries(INTENT_EVENTS).forEach(([prop, event]) => {
-		const key = prop as keyof typeof INTENT_EVENTS;
-		result[key] = (data) => {
-			orig.exec!(event, data);
+	Object.values(INTENT_EVENTS).forEach((intentName) => {
+		result[intentName] = (payload) => {
+			orig.exec!(intentName, payload);
 		};
 	});
 	return result;
