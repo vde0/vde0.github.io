@@ -1,25 +1,41 @@
 import { addDebug } from '@lib/utils';
 import { Peer, PEER_EVENTS, PeerEventMap } from './Peer';
 import { LowercaseMap } from '@types';
-import { IListenerChest, Listener, ListenerChest } from '@lib/pprinter-tools';
+import {
+	IListenerChest,
+	IStateLeader,
+	Listener,
+	ListenerChest,
+	StateLeader,
+} from '@lib/pprinter-tools';
 
 // === STATIC DATA ===
 const CONTROL_NAME = 'CONTROL';
 
-const accessedStateUpdates: { [K in ConnectionState]?: Set<ConnectionState> } = {
-	new: new Set(['connecting', 'closed']),
-	connecting: new Set(['connected', 'closed']),
-	connected: new Set(['reconnecting', 'closed']),
-	reconnecting: new Set(['connected', 'closed']),
+export type StateGraph = {
+	new: ['connecting', 'closed'];
+	connecting: ['connected', 'closed'];
+	connected: ['reconnecting', 'closed'];
+	reconnecting: ['connected', 'closed'];
+	closed: [];
+};
+
+const stateGraph: StateGraph = {
+	new: ['connecting', 'closed'],
+	connecting: ['connected', 'closed'],
+	connected: ['reconnecting', 'closed'],
+	reconnecting: ['connected', 'closed'],
+	closed: [],
 } as const;
 
 export type Connection = ConnectionChest & {
 	getPeer(): Peer;
+	getState(): ConnectionState;
 
 	connect(): void;
 	close(): void;
 };
-export type ConnectionState = 'new' | 'connecting' | 'connected' | 'reconnecting' | 'closed';
+export type ConnectionState = keyof StateGraph;
 export type ConnectionChest = IListenerChest<LowercaseMap<ConnectionEventMap>>;
 
 export type ConnectionEventMap = {
@@ -30,8 +46,8 @@ export function Connection(): Connection {
 	// === FIELDS ===
 	let peer: Peer = new Peer();
 
-	let state: ConnectionState = 'new';
-	let chest: ConnectionChest = new ListenerChest();
+	const stateLeader: IStateLeader<StateGraph> = new StateLeader('new', stateGraph);
+	const chest: ConnectionChest = new ListenerChest();
 
 	// === DEV ===
 	// addDebug('chatUnit', chatUnit); TODO: ADD FOR Room ENTITY
@@ -40,21 +56,22 @@ export function Connection(): Connection {
 	// === HANDLERS ===
 	const peerStopHandler: Listener<PeerEventMap['text']> = ({ label }) => {
 		if (label !== CONTROL_NAME) return;
-		makeClosed() && stopPeer();
+		updateState('closed');
+		stopPeer();
 	};
 
 	const peerUpdatedHandler: Listener<PeerEventMap['updated']> = ({ state: peerState }) => {
 		switch (peerState) {
 			case 'connected':
-				makeConnected();
+				updateState('connected');
 				break;
 
 			case 'disconnected':
 			case 'closed':
 			case 'failed':
-				if (state === 'closed') break;
+				if (stateIs('closed')) break;
 
-				makeReconnecting();
+				updateState('reconnecting');
 				stopPeer();
 				remakePeer();
 				configurePeer();
@@ -66,40 +83,19 @@ export function Connection(): Connection {
 
 	// === HELPERS ===
 	// state manipulates
-	function updateState(newState: ConnectionState): void {
-		if (accessedStateUpdates[state] === undefined)
-			throw Error(`'${newState}' [Connection] state is not able to update.`);
-		if (!accessedStateUpdates[state]!.has(newState))
+	function updateState(nextState: ConnectionState): void {
+		if (!stateLeader.move(nextState))
 			throw Error(
-				`'${newState}' is not able next [Connection] state for current '${state}' state.`
+				`'${nextState}' is not able next [Connection] state for current '${getState}' state.`
 			);
 
-		state = newState;
-		chest.exec('stateupdated', state);
+		chest.exec('stateupdated', stateLeader.get());
 	}
-
-	function makeConnecting(): boolean {
-		if (state !== 'new') return false;
-		updateState('connecting');
-		return true;
+	function getState(): ConnectionState {
+		return stateLeader.get();
 	}
-
-	function makeReconnecting(): boolean {
-		if (state !== 'connected') return false;
-		updateState('reconnecting');
-		return true;
-	}
-
-	function makeConnected(): boolean {
-		if (state !== 'connecting' && state !== 'reconnecting') return false;
-		updateState('connected');
-		return true;
-	}
-
-	function makeClosed(): boolean {
-		if (state === 'closed') return false;
-		updateState('closed');
-		return true;
+	function stateIs(isState: ConnectionState): boolean {
+		return stateLeader.is(isState);
 	}
 
 	// Peer manipulates
@@ -112,41 +108,46 @@ export function Connection(): Connection {
 	function startPeer(): void {
 		peer.start();
 	}
+	function stopPeer(): void {
+		peer.stop();
+	}
 	function remakePeer(): void {
 		peer = new Peer();
 	}
 	function sendStop(): void {
 		peer.send('stop', CONTROL_NAME);
 	}
-	function stopPeer(): void {
-		peer.stop();
-	}
 
 	// === API ===
 	function connect(): void {
-		if (state !== 'new') {
-			return console.error('[Connect].connect() is not able for used instance.');
+		if (!stateIs('new')) {
+			return console.warn('[Connect].connect() is not able for used instance.');
 		}
-		makeConnecting();
+		updateState('connecting');
 		peer.start();
 	}
 
 	function close(): void {
-		if (state === 'closed') {
-			return console.error('[Connect].close() is not able for closed instance.');
+		if (stateIs('closed')) {
+			return console.warn('[Connect].close() is not able for closed instance.');
 		}
-		makeClosed();
+		updateState('closed');
 		sendStop();
 	}
+
+	function getPeer() {
+		return peer;
+	}
+
+	// getState -> [=== HELPERS ===] : [Peer manipulates]
 
 	// === EXEC CODE ===
 	configurePeer();
 
 	return {
 		...chest,
-		getPeer() {
-			return peer;
-		},
+		getPeer,
+		getState,
 
 		connect,
 		close,
