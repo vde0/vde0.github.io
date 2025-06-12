@@ -1,5 +1,5 @@
 import { Dict, LowercaseMap, MethodKey } from '@types';
-import { EventsWithoutData, Listener, ListenerDict } from './general';
+import { EventWithoutData, Listener, ListenerDict } from './general';
 import { doApi } from './helpers';
 import { PrivateContext } from './PrivateContext';
 
@@ -19,7 +19,7 @@ export type IListenerChest<M extends Dict<LowercaseMap<M>> = {}> = {
 	once<E extends keyof M>(event: E, listener: Listener<M[E]>): void;
 	offAll(): void;
 	exec<E extends keyof M>(event: E, data: M[E]): void;
-	exec<E extends EventsWithoutData<M>>(event: E): void;
+	exec<E extends EventWithoutData<M>>(event: E): void;
 };
 
 // === PRIVATE CONTEXT ===
@@ -32,7 +32,7 @@ interface PrivateProps {
 
 // === CLASS DEFINITION ===
 export class ListenerChest<M extends Dict<LowercaseMap<M>> = {}> implements IListenerChest<M> {
-	static implementTo<L extends IListenerChest<Dict>>(obj: L, api: L) {
+	static implementTo<L extends IListenerChest<Dict<{}>>>(obj: L, api: L) {
 		doApi<IListenerChest>(obj, api, false, LISTENER_CHEST_API);
 	}
 
@@ -51,7 +51,6 @@ export class ListenerChest<M extends Dict<LowercaseMap<M>> = {}> implements ILis
 	// === API FRAGMENT ===
 	on<E extends keyof M>(event: E, listener: Listener<M[E]>): void {
 		const listenerDict: ListenerDict<M> = privateContext.get(this, 'listenerDict')!;
-		type T = typeof listenerDict;
 		if (listenerDict[event] === undefined) listenerDict[event] = new Set();
 		listenerDict[event].add(listener);
 	}
@@ -79,7 +78,7 @@ export class ListenerChest<M extends Dict<LowercaseMap<M>> = {}> implements ILis
 		privateContext.get(this, 'onceSet')!.clear();
 	}
 	exec<E extends keyof M>(event: E, data: M[E]): void;
-	exec<E extends EventsWithoutData<M>>(event: E): void;
+	exec<E extends EventWithoutData<M>>(event: E): void;
 	exec<E extends keyof M>(event: E, data?: M[E]): void {
 		const listenerDict: ListenerDict<M> = privateContext.get(this, 'listenerDict')!;
 		const onceSet: Set<Listener<M[E]>> = privateContext.get(this, 'onceSet')!;

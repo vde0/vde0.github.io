@@ -1,5 +1,5 @@
 import { AnyDict, Dict, MethodKey } from '@types';
-import { EventsWithoutData, Listener, ListenerDict } from './general';
+import { EventWithoutData, Listener, ListenerDict } from './general';
 import { doApi } from './helpers';
 import { PrivateContext } from './PrivateContext';
 
@@ -7,7 +7,7 @@ export const WHEN_API: MethodKey<IWhen>[] = ['occur', 'when'] as const;
 Object.freeze(WHEN_API);
 
 export type IWhen<M extends AnyDict = AnyDict> = {
-	occur<N extends EventsWithoutData<M>>(stateName: N): void;
+	occur<N extends EventWithoutData<M>>(stateName: N): void;
 	occur<N extends keyof M>(stateName: N, state: M[N]): void;
 	when<N extends keyof M>(stateName: N, listener?: Listener<M[N]>): M[N] | undefined;
 	unwhen<N extends keyof M>(stateName: N, listener: Listener<M[N]>): void;
@@ -40,7 +40,7 @@ export class When<M extends AnyDict = AnyDict> implements IWhen<M> {
 		doApi<IWhen<M>>(this, this, true, WHEN_API);
 	}
 
-	occur<N extends EventsWithoutData<M>>(stateName: N): void;
+	occur<N extends EventWithoutData<M>>(stateName: N): void;
 	occur<N extends keyof M>(stateName: N, state: M[N]): void;
 	occur<N extends keyof M>(stateName: N, state?: M[N]): void {
 		const listenerDict: ListenerDict<M> = privateContext.get(this, 'listenerDict')!;
