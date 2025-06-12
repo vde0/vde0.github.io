@@ -21,7 +21,8 @@ import { ChatCValue } from '@store/ChatProvider';
 import { useStart } from 'hooks/useStart';
 import Btn from '@components/Btn';
 import { requestLocalMedia, whenLocalMedia } from '@api/localMedia';
-import { ACC_FLAGS } from '@services/AppAccessor';
+import { ACC_FLAGS } from '@services/appAccessor';
+import { INTENT_EVENTS, INTENTS } from '@services/intents';
 
 const Main: React.FC = () => {
 	const webApp: TWebApp = useWebApp();
@@ -30,7 +31,6 @@ const Main: React.FC = () => {
 	const keyboardStatus: boolean = useMobileKeyboard();
 	const [, read]: ChatCValue['unread'] = useUnread();
 	const platform = usePlatform();
-	const [started, start, onStart] = useStart();
 	const [access, setAccessFlag] = useAppAccessor();
 	const localMedia = useLocalMedia();
 
@@ -45,20 +45,18 @@ const Main: React.FC = () => {
 		overflow: clip;
 	`;
 
-	useEffect(() => {
-		onStart(() => {
-			requestLocalMedia();
-			whenLocalMedia((media) => media && setAccessFlag(ACC_FLAGS.LOCAL_MEDIA));
-		});
-	}, []);
+	// TODO: Replace for any service
+	// useEffect(() => {
+	// 	onStart(() => {
+	// 		requestLocalMedia();
+	// 		whenLocalMedia((media) => media && setAccessFlag(ACC_FLAGS.LOCAL_MEDIA));
+	// 	});
+	// }, []);
 
-	useEffect(() => {
-		started && setModal(-1);
-	}, [started]);
-
-	useEffect(() => {
-		started && localMedia === null && setModal(1);
-	}, [started, localMedia]);
+	useStart(() => {
+		setModal(-1);
+		whenLocalMedia(() => setModal(1));
+	});
 
 	useEffect(() => {
 		connection.connect();
@@ -122,7 +120,7 @@ const Main: React.FC = () => {
 									peerState !== 'failed'
 								)
 									return;
-								connection.disconnect();
+								connection.close();
 							}}
 							onTextChat={() => {
 								setIsTextChatShown(!isTextChatShown);
@@ -145,7 +143,10 @@ const Main: React.FC = () => {
 						<p className="mb-2 mt-auto text-xl">
 							Добро пожаловать в чат-рулетку! Чтобы начать, нажмите кнопку "Начать" и разрешите приложению доступ к Вашим пользовательским медиа
 						</p>
-						<Btn onClick={start} className="border-2 border-white rounded-2xl mt-auto">
+						<Btn
+							onClick={() => INTENTS[INTENT_EVENTS.START_APP]}
+							className="border-2 border-white rounded-2xl mt-auto"
+						>
 							<span className="font-bold uppercase">Начать</span>
 						</Btn>
 					</section>

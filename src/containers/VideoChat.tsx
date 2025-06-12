@@ -8,7 +8,7 @@ import {
 	useStart,
 } from '@hooks';
 import { addDebug } from '@lib/utils';
-import { ACC_FLAGS } from '@services/AppAccessor';
+import { ACC_FLAGS } from '@services/appAccessor';
 import { PropsWithClassName } from '@types';
 import { useEffect, useRef, useState } from 'react';
 import empty_video from '../assets/img/empty_video.png';
@@ -26,7 +26,6 @@ const VideoChat: React.FC<VideoChatProps> = ({ className, remote, hidden = false
 	const peerState = usePeerState();
 	const [show, setShow] = useState<boolean>(false);
 
-	const [, , onStart] = useStart();
 	const [, , media] = useChatter();
 	const [, setAccessFlag] = useAppAccessor();
 
@@ -74,15 +73,12 @@ const VideoChat: React.FC<VideoChatProps> = ({ className, remote, hidden = false
 	}, [remote]);
 
 	// Play remote video when user turn START and set appropriate APP FLAG
-	useEffect(() => {
+	useStart(() => {
 		if (!remote) return;
-
-		onStart(() => {
-			if (!video.current?.paused) return;
-			video.current.play();
-			setAccessFlag(ACC_FLAGS.PLAY_REMOTE_VIDEO);
-		});
-	}, [remote]);
+		if (!video.current?.paused) return;
+		video.current.play();
+		setAccessFlag(ACC_FLAGS.PLAY_REMOTE_VIDEO);
+	});
 
 	// Update media
 	useEffect(() => {
