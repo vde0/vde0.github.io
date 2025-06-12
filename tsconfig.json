@@ -1,6 +1,6 @@
 {
 	"compilerOptions": {
-		"target": "es2015",
+		"target": "es2021",
 		"module": "esnext",
 		"jsx": "react-jsx",
 		"moduleResolution": "node",
@@ -18,6 +18,8 @@
 			"@components/*": ["components/*"],
 			"@store/*": ["store/*"],
 			"@store": ["store/"],
+			"@entities/*": ["entities/*"],
+			"@entities": ["entities/"],
 			"@hooks": ["hooks/"],
 			"@services/*": ["services/*"],
 			"@api/*": ["api/*"],
