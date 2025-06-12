@@ -162,23 +162,20 @@ export type CapitalizedMap = { [x: Capitalize<string>]: unknown };
 export type LowercasedMap = { [x: Lowercase<string>]: unknown };
 export type UppercasedMap = { [x: Uppercase<string>]: unknown };
 
-export type Dict<M extends object = {}> = {
+export type Dict<M extends object> = {
 	[K in keyof M as K extends string ? K : never]: M[K];
-} extends infer R
-	? keyof R extends never
-		? {
-				[x: number | symbol]: never;
-		  }
-		: R & {
-				[x: number | symbol]: never;
-		  }
-	: never;
-export type Undict<M extends object = Record<string, unknown>> = {
+};
+export type Undict<M extends object> = {
 	[K in keyof M as [number, M[K]] extends [K, never]
 		? never
 		: [symbol, M[K]] extends [K, never]
 		? never
 		: K]: M[K];
+};
+
+export type Dictable = {
+	[x: string]: unknown;
+	[x: number | symbol]: never;
 };
 
 export type UnknownDict = Dict<{ [x: string]: unknown }>;
