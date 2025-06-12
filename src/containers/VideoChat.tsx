@@ -1,12 +1,4 @@
-import {
-	useAppAccessor,
-	useConnection,
-	useIsMobile,
-	useLocalChatter,
-	usePeerState,
-	useRemoteChatter,
-	useStart,
-} from '@hooks';
+import { useAppAccessor, useLocalChatter, usePeerState, useRemoteChatter, useStart } from '@hooks';
 import { addDebug } from '@lib/utils';
 import { ACC_FLAGS } from '@services/appAccessor';
 import { PropsWithClassName } from '@types';

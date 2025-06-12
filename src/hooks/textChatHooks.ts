@@ -5,10 +5,10 @@ import {
 	DuoChatUnit,
 	DuoChatUnitEventMap,
 	SymbolChatter,
-} from '@services/DuoChatUnit';
+} from '@entities/DuoChatUnit';
 import { ChatContext, ChatCValue } from '@store';
 import { useCallback, useContext, useEffect, useState } from 'react';
-import { useConnection } from './connectHooks';
+import { useRoom } from './connectHooks';
 import { Listener } from '@lib/pprinter-tools';
 import { ContentMedia } from '@types';
 
@@ -22,11 +22,11 @@ export const useUnread = (): ChatCValue['unread'] => {
 };
 
 export const useChatUnit = (): DuoChatUnit => {
-	return useConnection()[0].chatUnit;
+	return useRoom()[0].chatUnit;
 };
 
 export const useChatHistory = (): ChatHistory => {
-	return useConnection()[0].chatUnit.history;
+	return useRoom()[0].chatUnit.history;
 };
 
 export const useChatFeed = (): MsgItem[] => {

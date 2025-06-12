@@ -1,15 +1,15 @@
 import { Listener } from '@lib/pprinter-tools';
 import { Peer, PeerEventMap } from '@entities/Peer';
-import { ConnectionContext, ConnectionCValue } from '@store/ConnectionProvider';
+import { RoomContext, RoomCValue } from '@store/RoomProvider';
 import { useContext, useEffect, useState } from 'react';
 
-export const useConnection = (): ConnectionCValue => {
-	return getConnectionContext();
+export const useRoom = (): RoomCValue => {
+	return getRoomContext();
 };
 
 export const usePeer = (): Peer => {
-	const [connection] = getConnectionContext();
-	return connection.getPeer();
+	const [room] = getRoomContext();
+	return room.connection.getPeer();
 };
 
 export const usePeerState = (): RTCPeerConnection['connectionState'] => {
@@ -31,9 +31,9 @@ export const usePeerState = (): RTCPeerConnection['connectionState'] => {
 };
 
 // === HELPERS ===
-function getConnectionContext(hookName?: string): ConnectionCValue {
+function getRoomContext(hookName?: string): RoomCValue {
 	// === SUCCESS ===
-	const context: ConnectionCValue | null = useContext(ConnectionContext);
+	const context: RoomCValue | null = useContext(RoomContext);
 	if (context) return context;
 
 	// === FAIL ===

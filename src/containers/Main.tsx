@@ -10,8 +10,7 @@ import { TWebApp } from '@tg-types'; // custom type
 import { useEffect, useLayoutEffect, useState } from 'react';
 import {
 	useAppAccessor,
-	useConnection,
-	useLocalMedia,
+	useRoom,
 	useMobileKeyboard,
 	usePeerState,
 	usePlatform,
@@ -20,19 +19,17 @@ import {
 import { ChatCValue } from '@store/ChatProvider';
 import { useStart } from 'hooks/useStart';
 import Btn from '@components/Btn';
-import { requestLocalMedia, whenLocalMedia } from '@api/localMedia';
-import { ACC_FLAGS } from '@services/appAccessor';
+import { whenLocalMedia } from '@api/localMedia';
 import { INTENT_EVENTS, INTENTS } from '@services/intents';
 
 const Main: React.FC = () => {
 	const webApp: TWebApp = useWebApp();
-	const [connection, updateConnection] = useConnection();
+	const [room, updateRoom] = useRoom();
 	const peerState: RTCPeerConnection['connectionState'] = usePeerState();
 	const keyboardStatus: boolean = useMobileKeyboard();
 	const [, read]: ChatCValue['unread'] = useUnread();
 	const platform = usePlatform();
-	const [access, setAccessFlag] = useAppAccessor();
-	const localMedia = useLocalMedia();
+	const [access] = useAppAccessor();
 
 	const [isTextChatShown, setIsTextChatShown] = useState<boolean>(false);
 	const [modal, setModal] = useState(0);
@@ -59,12 +56,12 @@ const Main: React.FC = () => {
 	});
 
 	useEffect(() => {
-		connection.connect();
-	}, [connection]);
+		room.connection.connect();
+	}, [room]);
 
 	useEffect(() => {
 		if (peerState === 'closed' || peerState === 'failed' || peerState === 'disconnected') {
-			updateConnection();
+			updateRoom();
 		}
 	}, [peerState]);
 
@@ -120,7 +117,7 @@ const Main: React.FC = () => {
 									peerState !== 'failed'
 								)
 									return;
-								connection.close();
+								room.connection.close();
 							}}
 							onTextChat={() => {
 								setIsTextChatShown(!isTextChatShown);
