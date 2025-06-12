@@ -3,6 +3,7 @@ import { FinalState, StateGraph, StateMap } from './general';
 import { PrivateContext } from './PrivateContext';
 
 export interface IStateLeader<M extends Dict<LowercaseMap<StateGraph<M>>>> {
+	is<S extends keyof M>(isState: S): boolean;
 	set<S extends FinalState<M>>(state: S): void;
 	set<S extends keyof M>(state: S, next: M[S]): void;
 	get<S extends keyof M>(): S;
@@ -30,6 +31,11 @@ export class StateLeader<M extends Dict<LowercaseMap<StateGraph<M>>> | never = {
 			if (!Array.isArray(stateGraph[state])) continue;
 			stateMap[state] = new Set(stateGraph[state]) as StateMap<M>[typeof state];
 		}
+	}
+
+	is<S extends keyof M>(isState: S): boolean {
+		const state: S = privateContext.get(this, 'state')! as S;
+		return state === isState;
 	}
 
 	set<S extends FinalState<M>>(state: S): void;
