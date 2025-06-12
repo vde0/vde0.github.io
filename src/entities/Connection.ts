@@ -42,7 +42,9 @@ export type ConnectionEventMap = {
 	stateUpdated: ConnectionState;
 };
 
-export function Connection(): Connection {
+type ConnectionConstructor = new () => Connection;
+
+export const Connection: ConnectionConstructor = function (): Connection {
 	// === FIELDS ===
 	let peer: Peer = new Peer();
 
@@ -152,4 +154,4 @@ export function Connection(): Connection {
 		connect,
 		close,
 	};
-}
+} as unknown as ConnectionConstructor;
