@@ -8,6 +8,7 @@ export interface IStateLeader<M extends Dict<LowercaseMap<StateGraph<M>>>> {
 	set<S extends keyof M>(state: S, next: M[S]): void;
 	get<S extends keyof M>(): S;
 	move<S extends keyof M>(nextState: S): boolean;
+	canMove<S extends keyof M>(nextState: S): boolean;
 }
 
 const privateContext = new PrivateContext<
@@ -53,6 +54,13 @@ export class StateLeader<M extends Dict<LowercaseMap<StateGraph<M>>> | never = {
 	}
 
 	move<S extends keyof M>(nextState: S): boolean {
+		if (!this.canMove(nextState)) return false;
+
+		privateContext.set(this, 'state', nextState as Lowercase<S & string>);
+		return true;
+	}
+
+	canMove<S extends keyof M>(nextState: S): boolean {
 		const stateMap: StateMap<M> = privateContext.get(this, 'stateMap')!;
 		const state: keyof M = privateContext.get(this, 'state')! as S;
 
@@ -60,7 +68,6 @@ export class StateLeader<M extends Dict<LowercaseMap<StateGraph<M>>> | never = {
 			return false;
 		}
 
-		privateContext.set(this, 'state', nextState as Lowercase<S & string>);
 		return true;
 	}
 }
