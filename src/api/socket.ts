@@ -19,21 +19,21 @@ addDebug('signalHost', process.env.SIGNAL);
 export const SIGNAL_SERVER = process.env.SIGNAL ?? 'https://vde0.chat';
 
 // === PRIVATE FIELDS AND METHODS ===
-const socket: Socket<{ [E in keyof ActionMap]: Listener<ActionMap[E]> }> = io(SIGNAL_SERVER, {
+const webSocket: Socket<{ [E in keyof ActionMap]: Listener<ActionMap[E]> }> = io(SIGNAL_SERVER, {
 	autoConnect: false,
 });
 const chest: IListenerChest<ActionMap> = new ListenerChest();
 
 // === HELPERS ===
 const safeConnecting = (f: CallableFunction): void => {
-	if (socket.disconnected) socket.connect();
+	if (webSocket.disconnected) webSocket.connect();
 	f();
 };
 
 // === MAKE LISTENING ===
-listen<Socket, ActionMap>(socket, {
+listen<Socket, ActionMap>(webSocket, {
 	[ACTIONS.SUCCESS]: () => {
-		socket.close();
+		webSocket.close();
 		chest.exec(ACTIONS.SUCCESS);
 	},
 	[ACTIONS.ACCEPT_ICE]: (payload) => chest.exec(ACTIONS.ACCEPT_ICE, payload),
@@ -41,17 +41,27 @@ listen<Socket, ActionMap>(socket, {
 	[ACTIONS.ACCEPT_TARGET]: (payload) => chest.exec(ACTIONS.ACCEPT_TARGET, payload),
 });
 listen<typeof chest, ActionMap>(chest, {
-	[ACTIONS.RELAY_ICE]: (payload) => safeConnecting(() => socket.emit(ACTIONS.RELAY_ICE, payload)),
-	[ACTIONS.RELAY_SDP]: (payload) => safeConnecting(() => socket.emit(ACTIONS.RELAY_SDP, payload)),
+	[ACTIONS.RELAY_ICE]: (payload) =>
+		safeConnecting(() => webSocket.emit(ACTIONS.RELAY_ICE, payload)),
+	[ACTIONS.RELAY_SDP]: (payload) =>
+		safeConnecting(() => webSocket.emit(ACTIONS.RELAY_SDP, payload)),
 });
 
 // === API EXPORT ===
-export const onSocket = chest.on;
-export const onceSocket = chest.once;
-export const offSocket = chest.off;
+const onSocket = chest.on;
+const onceSocket = chest.once;
+const offSocket = chest.off;
 
-export const relayIce = (payload: ActionMap[typeof ACTIONS.RELAY_ICE]) =>
+const relayIce = (payload: ActionMap[typeof ACTIONS.RELAY_ICE]) =>
 	chest.exec(ACTIONS.RELAY_ICE, payload);
 
-export const relaySdp = (payload: ActionMap[typeof ACTIONS.RELAY_SDP]) =>
+const relaySdp = (payload: ActionMap[typeof ACTIONS.RELAY_SDP]) =>
 	chest.exec(ACTIONS.RELAY_SDP, payload);
+
+export const socket = {
+	on: onSocket,
+	once: onceSocket,
+	off: offSocket,
+	relayIce,
+	relaySdp,
+};
