@@ -1,6 +1,5 @@
 export type PropsWithClassName = { className?: string };
 export type BasicDataStruct = { [key: string | symbol | number]: any };
-export type ContentMedia = MediaStream | null;
 
 export type IsUncapitalized<L extends string> = Uncapitalize<L> extends L ? true : false;
 export type IsCapitalized<L extends string> = Capitalize<L> extends L ? true : false;
