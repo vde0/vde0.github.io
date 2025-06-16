@@ -7,9 +7,9 @@ import empty_video from '../assets/img/empty_video.png';
 import Video from '@components/Video';
 import { whenLocalMedia } from '@api/localMedia';
 
-type VideoChatProps = PropsWithClassName & { remote: boolean; hidden?: boolean };
+type VideoStreamProps = PropsWithClassName & { remote: boolean; hidden?: boolean };
 
-const VideoChat: React.FC<VideoChatProps> = ({ className, remote, hidden = false }) => {
+const VideoStream: React.FC<VideoStreamProps> = ({ className, remote, hidden = false }) => {
 	const videoChatClassName = className ?? '';
 	const useMeta = remote ? useTargetMeta : useClientMeta;
 
@@ -113,4 +113,4 @@ const VideoChat: React.FC<VideoChatProps> = ({ className, remote, hidden = false
 	);
 };
 
-export default VideoChat;
+export default VideoStream;

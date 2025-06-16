@@ -2,8 +2,8 @@
 import { css } from '@emotion/react';
 import DisplayBox from '@components/DisplayBox';
 import Controller from '@containers/Controller';
-import VideoChat from './VideoChat';
-import TextChat from './TextChat';
+import VideoStream from './VideoStream';
+import GraphicChat from './GraphicChat';
 import { EmCss } from '@emotion/react'; // custom type
 import { useWebApp } from '@vkruglikov/react-telegram-web-app';
 import { TWebApp } from '@tg-types'; // custom type
@@ -75,11 +75,11 @@ const Main: React.FC = () => {
 						} absolute top-0 bottom-0 w-full`}
 					>
 						<DisplayBox className="flex items-center overflow-hidden shrink-0">
-							<VideoChat remote />
+							<VideoStream remote />
 						</DisplayBox>
 						<DisplayBox className="flex items-center overflow-hidden">
-							<TextChat hidden={!isTextChatShown} />
-							<VideoChat remote={false} hidden={isTextChatShown} />
+							<GraphicChat hidden={!isTextChatShown} />
+							<VideoStream remote={false} hidden={isTextChatShown} />
 						</DisplayBox>
 					</section>
 
