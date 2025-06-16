@@ -1,5 +1,5 @@
 import { IPeer, PEER_EVENTS, PeerEventMap } from '@lib/webrtc/Peer';
-import { CHAT_EVENTS, Chat, ChatEventMap } from './Chat';
+import { CHAT_EVENTS, IChat, ChatEventMap } from './Chat';
 import { listen, ListenerCollection, unlisten } from '@lib/utils';
 import { ISignal, Signal } from './Signal';
 import { ActionMap, ACTIONS } from '@api/socket-api';
@@ -17,7 +17,7 @@ export function chatPeerBridge({
 }: {
 	client: UserId;
 	target: UserId;
-	chat: Chat;
+	chat: IChat;
 	peer: IPeer;
 }): Destroy {
 	peer.addDataChannel(CHAT_NAME);
@@ -37,11 +37,11 @@ export function chatPeerBridge({
 	};
 
 	listen<IPeer, PeerEventMap>(peer, peerListeners);
-	listen<Chat, ChatEventMap>(chat, historyListeners);
+	listen<IChat, ChatEventMap>(chat, historyListeners);
 
 	return () => {
 		unlisten<IPeer, PeerEventMap>(peer, peerListeners);
-		unlisten<Chat, ChatEventMap>(chat, historyListeners);
+		unlisten<IChat, ChatEventMap>(chat, historyListeners);
 	};
 }
 
