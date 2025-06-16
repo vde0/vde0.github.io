@@ -18,24 +18,23 @@ export interface MsgItem {
 export type MsgText = string;
 export type MsgId = number;
 
-export type ChatConstructor = new () => Chat;
-export type Chat = Iterable<MsgItem> &
-	IListenerChest<ChatEventMap> & {
-		has(msgId: MsgId): boolean;
-		get(msgId: MsgId): MsgItem | null;
-		head(quant: number): MsgItem[];
-		tail(quant: number): MsgItem[];
-		getAll(): MsgItem[];
+export type ChatConstructor = new () => IChat;
+export interface IChat extends Iterable<MsgItem>, IListenerChest<ChatEventMap> {
+	has(msgId: MsgId): boolean;
+	get(msgId: MsgId): MsgItem | null;
+	head(quant: number): MsgItem[];
+	tail(quant: number): MsgItem[];
+	getAll(): MsgItem[];
 
-		add(userId: UserId, text: MsgText): MsgId;
-		delete(msgId: MsgId): boolean;
-		read(msgId: MsgId): boolean;
-		clear(): void;
+	add(userId: UserId, text: MsgText): MsgId;
+	delete(msgId: MsgId): boolean;
+	read(msgId: MsgId): boolean;
+	clear(): void;
 
-		length: number;
-		forEach(callback: ForEachCallback): void;
-		map<T = any>(callback: MapCallback<T>): T[];
-	};
+	length: number;
+	forEach(callback: ForEachCallback): void;
+	map<T = any>(callback: MapCallback<T>): T[];
+}
 
 export type ChatEvent = keyof ChatEventMap;
 export type ChatEventMap = {
@@ -44,13 +43,13 @@ export type ChatEventMap = {
 	clear: undefined;
 };
 
-type MapCallback<T> = (msgItem: MsgItem, msgId: MsgId, thisChatHistory: Chat) => T;
-type ForEachCallback = (msgItem: MsgItem, msgId: MsgId, thisChatHistory: Chat) => void;
+type MapCallback<T> = (msgItem: MsgItem, msgId: MsgId, thisChatHistory: IChat) => T;
+type ForEachCallback = (msgItem: MsgItem, msgId: MsgId, thisChatHistory: IChat) => void;
 
 export const Chat: ChatConstructor = function () {
 	// === STORE ===
 	const msgMap: Map<MsgId, MsgItem> = new Map();
-	let thisChat: Chat;
+	let thisChat: IChat;
 	let firstMsgId: MsgId = -1;
 	let lastMsgId: MsgId = -1;
 
@@ -67,14 +66,14 @@ export const Chat: ChatConstructor = function () {
 	});
 	const length = (): number => msgMap.size;
 
-	const has: Chat['has'] = function (msgId) {
+	const has: IChat['has'] = function (msgId) {
 		return msgMap.has(msgId);
 	};
-	const get: Chat['get'] = function (msgId) {
+	const get: IChat['get'] = function (msgId) {
 		return msgMap.get(msgId) ?? null;
 	};
 
-	const add: Chat['add'] = function (userId, text) {
+	const add: IChat['add'] = function (userId, text) {
 		checkChatterType(userId);
 		checkMsgType(text);
 
@@ -86,7 +85,7 @@ export const Chat: ChatConstructor = function () {
 		listenerChest.exec(CHAT_EVENTS.ADD, { item });
 		return lastMsgId;
 	};
-	const remove: Chat['delete'] = function (msgId) {
+	const remove: IChat['delete'] = function (msgId) {
 		if (typeof msgId !== 'number') throw TypeError('msgId must be number.');
 
 		if (msgId === firstMsgId) firstMsgId = findMsgByCount(firstMsgId, 1);
@@ -103,13 +102,13 @@ export const Chat: ChatConstructor = function () {
 		item && listenerChest.exec(CHAT_EVENTS.DELETE, { item });
 		return result;
 	};
-	const read: Chat['read'] = function (msgId) {
+	const read: IChat['read'] = function (msgId) {
 		if (!msgMap.has(msgId) || msgMap.get(msgId)!['read']) return false;
 
 		msgMap.get(msgId)!['read'] = true;
 		return true;
 	};
-	const clear: Chat['clear'] = function () {
+	const clear: IChat['clear'] = function () {
 		msgMap.clear();
 		listenerChest.exec(CHAT_EVENTS.CLEAR);
 
@@ -186,7 +185,7 @@ export const Chat: ChatConstructor = function () {
 	}
 
 	// === RESULT INSTANCE ===
-	const instance: Chat = {
+	const instance: IChat = {
 		...listenerChest,
 
 		add,
