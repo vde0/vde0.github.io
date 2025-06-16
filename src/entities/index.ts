@@ -1,6 +1,6 @@
 export * from './Chat';
 export * from './Connection';
-export * from './Peer';
+export * from './PeerEntity';
 export * from './Profile';
 export * from './Room';
 export * from './Session';

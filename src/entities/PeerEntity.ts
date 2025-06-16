@@ -9,7 +9,7 @@ export function setPeerFactory(peerFactory: PeerFactory) {
 	createPeer = peerFactory;
 }
 
-export const Peer: PeerConstructor = function (): IPeer {
+export const PeerEntity: PeerConstructor = function (): IPeer {
 	if (createPeer === null) throw Error('`peerFactory` is not defined.');
 	return createPeer();
 } as unknown as PeerConstructor;

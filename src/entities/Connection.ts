@@ -10,7 +10,7 @@ import {
 } from '@lib/pprinter-tools';
 import { Destroy, peerSignalBridge } from './helpers';
 import { UserId } from './User';
-import { Peer } from './Peer';
+import { PeerEntity } from './PeerEntity';
 
 // === STATIC DATA ===
 const CONTROL_NAME = 'CONTROL';
@@ -108,7 +108,7 @@ export const Connection: ConnectionConstructor = function (userId: UserId): Conn
 
 	// Peer manipulates
 	function setPeer(): void {
-		peer = new Peer();
+		peer = new PeerEntity();
 
 		peer.addDataChannel(CONTROL_NAME);
 		peer.on(PEER_EVENTS.TEXT, peerStopHandler);
