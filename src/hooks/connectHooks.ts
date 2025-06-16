@@ -1,46 +1,46 @@
+import {
+	CONNECTION_EVENTS,
+	ConnectionEventMap,
+	ConnectionState,
+	IConnection,
+} from '@entities/Connection';
+import { Session, SESSION_EVENTS, SessionEventMap } from '@entities/Session';
 import { Listener } from '@lib/pprinter-tools';
-import { IPeer, PeerEventMap } from '@lib/webrtc/Peer';
-import { RoomContext, RoomCValue } from '@store/RoomProvider';
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
-export const useRoom = (): RoomCValue => {
-	return getRoomContext();
-};
-
-export const usePeer = (): IPeer => {
-	const [room] = getRoomContext();
-	return room.connection.getPeer();
-};
-
-export const usePeerState = (): RTCPeerConnection['connectionState'] => {
-	const peer: IPeer = usePeer();
-	const [peerState, setPeerState] = useState<RTCPeerConnection['connectionState']>(peer.getState());
+export const useConnection = (): IConnection | null => {
+	const [connection, setConnection] = useState<IConnection | null>(Session.connection);
 
 	useEffect(() => {
-		setPeerState(peer.getState());
-
-		const updatePeerState: Listener<PeerEventMap['updated']> = ({ state }) => {
-			setPeerState(state);
+		const nextTargetHandler: Listener<SessionEventMap['nexttarget']> = function ({ connection }) {
+			setConnection(connection);
 		};
 
-		peer.on('updated', updatePeerState);
-		return () => peer.off('updated', updatePeerState);
-	}, [peer]);
+		Session.on(SESSION_EVENTS.NEXT_TARGET, nextTargetHandler);
+		return () => Session.off(SESSION_EVENTS.NEXT_TARGET, nextTargetHandler);
+	}, []);
 
-	return peerState;
+	return connection;
 };
 
-// === HELPERS ===
-function getRoomContext(hookName?: string): RoomCValue {
-	// === SUCCESS ===
-	const context: RoomCValue | null = useContext(RoomContext);
-	if (context) return context;
+export const useConnectionState = (): ConnectionState | null => {
+	const connection: IConnection | null = useConnection();
+	const [connectionState, setConnectionState] = useState<ConnectionState | null>(
+		connection?.getState() ?? null
+	);
 
-	// === FAIL ===
-	let errMsg: string = '';
+	useEffect(() => {
+		if (!connection) return;
 
-	if (hookName) errMsg = `${hookName} must be used within a ConnectionProvider`;
-	else errMsg = 'useContext(ConnectionContext) should be called within the ConnectionProvider';
+		setConnectionState(connection.getState());
 
-	throw new Error(errMsg);
-}
+		const stateUpdatedHandler: Listener<ConnectionEventMap['stateupdated']> = ({ state }) => {
+			setConnectionState(state);
+		};
+
+		connection.on(CONNECTION_EVENTS.STATE_UPDATED, stateUpdatedHandler);
+		return () => connection.off(CONNECTION_EVENTS.STATE_UPDATED, stateUpdatedHandler);
+	}, [connection]);
+
+	return connectionState;
+};
