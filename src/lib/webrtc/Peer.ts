@@ -31,7 +31,7 @@ export const DEFAULT_CONFIG: RTCConfiguration = {
 };
 
 // === ANNOTATION ===
-export type Peer = IListenerChest<PeerEventMap> & {
+export interface IPeer extends IListenerChest<PeerEventMap> {
 	rtc: RTCPeerConnection;
 	getState(): RTCPeerConnection['connectionState'];
 
@@ -52,7 +52,7 @@ export type Peer = IListenerChest<PeerEventMap> & {
 	getDataChannelLabels(): string[];
 	getMediaTrackIds(): string[];
 	getMediaStreamIds(): string[];
-};
+}
 
 export interface DataChannelConfig {
 	reliable?: boolean; // default: true
@@ -64,7 +64,7 @@ export interface DataChannelConfig {
 	id?: number; // default: undefined
 }
 
-export type PeerConstructor = new (config?: RTCConfiguration) => Peer;
+export type PeerConstructor = new (config?: RTCConfiguration) => IPeer;
 
 export const PEER_EVENTS: EventKeys<PeerEvent> = {
 	CLOSED: 'closed',
@@ -163,7 +163,7 @@ export const Peer: PeerConstructor = function (config = DEFAULT_CONFIG) {
 	};
 
 	// === INSTANCE ===
-	const peerInstance: Peer = {
+	const peerInstance: IPeer = {
 		// === LISTENERS CONTROLLING ===
 		...chest,
 

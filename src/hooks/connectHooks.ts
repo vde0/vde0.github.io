@@ -1,5 +1,5 @@
 import { Listener } from '@lib/pprinter-tools';
-import { Peer, PeerEventMap } from '@lib/webrtc/Peer';
+import { IPeer, PeerEventMap } from '@lib/webrtc/Peer';
 import { RoomContext, RoomCValue } from '@store/RoomProvider';
 import { useContext, useEffect, useState } from 'react';
 
@@ -7,13 +7,13 @@ export const useRoom = (): RoomCValue => {
 	return getRoomContext();
 };
 
-export const usePeer = (): Peer => {
+export const usePeer = (): IPeer => {
 	const [room] = getRoomContext();
 	return room.connection.getPeer();
 };
 
 export const usePeerState = (): RTCPeerConnection['connectionState'] => {
-	const peer: Peer = usePeer();
+	const peer: IPeer = usePeer();
 	const [peerState, setPeerState] = useState<RTCPeerConnection['connectionState']>(peer.getState());
 
 	useEffect(() => {

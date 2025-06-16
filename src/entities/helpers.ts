@@ -1,4 +1,4 @@
-import { Peer, PEER_EVENTS, PeerEventMap } from '@lib/webrtc/Peer';
+import { IPeer, PEER_EVENTS, PeerEventMap } from '@lib/webrtc/Peer';
 import { CHAT_EVENTS, Chat, ChatEventMap } from './Chat';
 import { listen, ListenerCollection, unlisten } from '@lib/utils';
 import { ISignal, Signal } from './Signal';
@@ -18,7 +18,7 @@ export function chatPeerBridge({
 	client: UserId;
 	target: UserId;
 	chat: Chat;
-	peer: Peer;
+	peer: IPeer;
 }): Destroy {
 	peer.addDataChannel(CHAT_NAME);
 
@@ -36,16 +36,16 @@ export function chatPeerBridge({
 		},
 	};
 
-	listen<Peer, PeerEventMap>(peer, peerListeners);
+	listen<IPeer, PeerEventMap>(peer, peerListeners);
 	listen<Chat, ChatEventMap>(chat, historyListeners);
 
 	return () => {
-		unlisten<Peer, PeerEventMap>(peer, peerListeners);
+		unlisten<IPeer, PeerEventMap>(peer, peerListeners);
 		unlisten<Chat, ChatEventMap>(chat, historyListeners);
 	};
 }
 
-export function peerSignalBridge(peer: Peer, target: string): Destroy {
+export function peerSignalBridge(peer: IPeer, target: string): Destroy {
 	// === LISTENERS
 	const signalListeners: ListenerCollection<ActionMap> = {
 		[ACTIONS.ACCEPT_TARGET]: ({ target: id, offer }) => {
@@ -75,8 +75,8 @@ export function peerSignalBridge(peer: Peer, target: string): Destroy {
 	const listenSignal = (): void => listen<ISignal, ActionMap>(Signal, signalListeners);
 	const unlistenSignal = (): void => unlisten<ISignal, ActionMap>(Signal, signalListeners);
 
-	const listenPeer = (): void => listen<Peer, PeerEventMap>(peer, peerListeners);
-	const unlistenPeer = (): void => unlisten<Peer, PeerEventMap>(peer, peerListeners);
+	const listenPeer = (): void => listen<IPeer, PeerEventMap>(peer, peerListeners);
+	const unlistenPeer = (): void => unlisten<IPeer, PeerEventMap>(peer, peerListeners);
 
 	// === EXEC ===
 	listenPeer();

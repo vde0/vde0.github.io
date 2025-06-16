@@ -1,6 +1,6 @@
 import { Peer } from '@lib/webrtc';
-import { PeerFabric, setPeerFabric } from '@entities/Connection';
+import { PeerFactory, setPeerFactory } from '@entities/Peer';
 
-let peerFabric: PeerFabric = () => new Peer();
+let peerFabric: PeerFactory = () => new Peer();
 
-setPeerFabric(peerFabric);
+setPeerFactory(peerFabric);

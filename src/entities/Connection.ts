@@ -1,5 +1,5 @@
 import { addDebug } from '@lib/utils';
-import { Peer, PEER_EVENTS, PeerEventMap } from '../lib/webrtc/Peer';
+import { IPeer, PEER_EVENTS, PeerEventMap } from '../lib/webrtc/Peer';
 import { LowercaseMap } from '@types';
 import {
 	IListenerChest,
@@ -10,6 +10,7 @@ import {
 } from '@lib/pprinter-tools';
 import { Destroy, peerSignalBridge } from './helpers';
 import { UserId } from './User';
+import { Peer } from './Peer';
 
 // === STATIC DATA ===
 const CONTROL_NAME = 'CONTROL';
@@ -31,7 +32,7 @@ const stateGraph: StateGraph = {
 } as const;
 
 export type Connection = ConnectionChest & {
-	getPeer(): Peer;
+	getPeer(): IPeer;
 	getState(): ConnectionState;
 
 	connect(): void;
@@ -44,26 +45,12 @@ export type ConnectionEventMap = {
 	stateUpdated: ConnectionState;
 };
 
-// === `Peer` FABRIC AND `Signal` PUBLISHER
-export type PeerFabric = () => Peer;
-
-let createPeer: PeerFabric | null = null;
-
-export function setPeerFabric(peerFabric: PeerFabric) {
-	createPeer = peerFabric;
-}
-
-function ensurePeerFabric(): Peer {
-	if (createPeer === null) throw Error('`peerFabric` is not defined.');
-	return createPeer();
-}
-
 // === `Connection` DEFINE
 type ConnectionConstructor = new (userId: UserId) => Connection;
 
 export const Connection: ConnectionConstructor = function (userId: UserId): Connection {
 	// === FIELDS ===
-	let peer: Peer;
+	let peer: IPeer;
 	let unsubFromSignal: Destroy;
 
 	const stateLeader: IStateLeader<StateGraph> = new StateLeader('new', stateGraph);
@@ -121,7 +108,7 @@ export const Connection: ConnectionConstructor = function (userId: UserId): Conn
 
 	// Peer manipulates
 	function setPeer(): void {
-		peer = ensurePeerFabric();
+		peer = new Peer();
 
 		peer.addDataChannel(CONTROL_NAME);
 		peer.on(PEER_EVENTS.TEXT, peerStopHandler);
