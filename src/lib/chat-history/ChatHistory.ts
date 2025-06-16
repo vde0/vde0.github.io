@@ -26,7 +26,7 @@ export type ChatHistory = Iterable<MsgItem> &
 		tail(quant: number): MsgItem[];
 		getAll(): MsgItem[];
 
-		add(text: MsgText, chatter: Chatter): MsgId;
+		add(chatter: Chatter, text: MsgText): MsgId;
 		delete(id: MsgId): boolean;
 		read(id: MsgId): boolean;
 		clear(): void;
@@ -74,7 +74,7 @@ export const ChatHistory: ChatHistoryConstructor = function () {
 		return msgMap.get(msgId) ?? null;
 	};
 
-	const add: ChatHistory['add'] = function (text, chatter) {
+	const add: ChatHistory['add'] = function (chatter, text) {
 		checkChatterType(chatter);
 		checkMsgType(text);
 

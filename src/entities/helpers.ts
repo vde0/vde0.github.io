@@ -1,33 +1,37 @@
 import { Peer, PEER_EVENTS, PeerEventMap } from '../lib/webrtc/Peer';
 import { CHAT_HISTORY_EVENTS, ChatHistory, ChatHistoryEventMap } from '@lib/chat-history';
-import { addDebug, listen, ListenerCollection, unlisten } from '@lib/utils';
+import { listen, ListenerCollection, unlisten } from '@lib/utils';
 import { ISignal, Signal } from './Signal';
 import { ActionMap, ACTIONS } from '@api/socket-api';
-import { Session } from './Session';
+import { UserId } from './User';
 
 export const CHAT_NAME = 'CHAT';
 
 export type Destroy = () => void;
 
-export function chatPeerBridge(chat: ChatHistory, peer: Peer): Destroy {
+export function chatPeerBridge({
+	client,
+	target,
+	chat,
+	peer,
+}: {
+	client: UserId;
+	target: UserId;
+	chat: ChatHistory;
+	peer: Peer;
+}): Destroy {
 	peer.addDataChannel(CHAT_NAME);
 
 	const peerListeners: ListenerCollection<PeerEventMap> = {
-		[PEER_EVENTS.TEXT]: ({ data, label }) => {
+		[PEER_EVENTS.TEXT]: ({ data: text, label }) => {
 			if (label !== CHAT_NAME) return;
-			if (Session.target === null) throw Error('[Session.target] is not set.');
-			chat.add(data, Session.target);
-		},
-		[PEER_EVENTS.MEDIA]: ({ media }) => {
-			if (Session.target === null) throw Error('[Session.target] is not set.');
-			Session.room.userMap.get(Session.target)?.setMedia(media);
-			addDebug('remoteMedia', media);
+			chat.add(target, text);
 		},
 	};
 
 	const historyListeners: ListenerCollection<ChatHistoryEventMap> = {
 		[CHAT_HISTORY_EVENTS.ADD]: ({ item: { chatter, text } }) => {
-			if (chatter !== Session.client) return;
+			if (chatter !== client) return;
 			peer.send(text, CHAT_NAME);
 		},
 	};

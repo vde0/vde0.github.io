@@ -22,7 +22,12 @@ const findTarget: ISession['findTarget'] = function () {
 
 		target = userId;
 		connection = new Connection(target);
-		destroyChatPeerBridge = chatPeerBridge(room.chat, connection.getPeer());
+		destroyChatPeerBridge = chatPeerBridge({
+			client: CLIENT,
+			target,
+			chat: room.chat,
+			peer: connection.getPeer(),
+		});
 
 		if (offer) connection.connect();
 	});
