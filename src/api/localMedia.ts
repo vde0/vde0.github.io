@@ -1,4 +1,4 @@
-import { ContentMedia } from '@types';
+import { ContentMedia } from '@entities/User';
 
 // === DATA ===
 export type LocalMediaHandler = (localMedia: ContentMedia) => void;
