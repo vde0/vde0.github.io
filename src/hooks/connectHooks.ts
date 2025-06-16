@@ -1,5 +1,5 @@
 import { Listener } from '@lib/pprinter-tools';
-import { Peer, PeerEventMap } from '@entities/Peer';
+import { Peer, PeerEventMap } from '@lib/webrtc/Peer';
 import { RoomContext, RoomCValue } from '@store/RoomProvider';
 import { useContext, useEffect, useState } from 'react';
 
