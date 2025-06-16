@@ -1,8 +1,29 @@
-import { Connection } from './Connection';
+import { LowercaseMap } from '@types';
+import { Connection, IConnection } from './Connection';
 import { chatPeerBridge, Destroy } from './helpers';
 import { Profile } from './Profile';
 import { IRoom, Room } from './Room';
 import { Signal } from './Signal';
+import { EventKeys, IListenerChest, ListenerChest } from '@lib/pprinter-tools';
+import { UserId } from './User';
+
+// === EVENT SYSTEM ===
+const chest: SessionListenerChest = new ListenerChest();
+export const SESSION_EVENTS: EventKeys<keyof OrigSessionEventMap> = {
+	NEXT_TARGET: 'nexttarget',
+};
+
+type SessionListenerChest = IListenerChest<SessionEventMap>;
+
+export type SessionEvent = keyof SessionEventMap;
+export type SessionEventMap = LowercaseMap<OrigSessionEventMap>;
+type OrigSessionEventMap = {
+	nextTarget: {
+		target: ISession['target'];
+		connection: ISession['connection'];
+		room: ISession['room'];
+	};
+};
 
 // === DATA ===
 let destroyChatPeerBridge: Destroy | null = null;
@@ -15,11 +36,18 @@ let connection: ISession['connection'] = null;
 let room: ISession['room'];
 
 const findTarget: ISession['findTarget'] = function () {
-	Signal.exec('relaytarget', { target: CLIENT });
-	Signal.once('accepttarget', ({ target: userId, offer }) => {
-		destroyChatPeerBridge?.();
-		createRoom();
+	destroyChatPeerBridge?.();
 
+	target = null;
+	connection = null;
+	createRoom();
+
+	// Emit
+	chest.exec('nexttarget', { target, connection, room });
+	Signal.exec('relaytarget', { target: CLIENT });
+
+	// Listen
+	Signal.once('accepttarget', ({ target: userId, offer }) => {
 		target = userId;
 		connection = new Connection(target);
 		destroyChatPeerBridge = chatPeerBridge({
@@ -30,6 +58,7 @@ const findTarget: ISession['findTarget'] = function () {
 		});
 
 		if (offer) connection.connect();
+		chest.exec('nexttarget', { target, connection, room });
 	});
 };
 
@@ -43,15 +72,16 @@ function createRoom() {
 }
 
 // === DEFINE SESSION AND ITS INTERFACE
-export interface ISession {
-	client: string;
-	target: string | null;
-	connection: Connection | null;
+export interface ISession extends SessionListenerChest {
+	client: UserId;
+	target: UserId | null;
+	connection: IConnection | null;
 	room: IRoom;
 	findTarget(): void;
 }
 
 export const Session: ISession = {
+	...chest,
 	get client() {
 		return CLIENT;
 	},

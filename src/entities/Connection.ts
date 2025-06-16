@@ -2,6 +2,7 @@ import { addDebug } from '@lib/utils';
 import { IPeer, PEER_EVENTS, PeerEventMap } from '../lib/webrtc/Peer';
 import { LowercaseMap } from '@types';
 import {
+	EventKeys,
 	IListenerChest,
 	IStateLeader,
 	Listener,
@@ -14,6 +15,9 @@ import { PeerEntity } from './PeerEntity';
 
 // === STATIC DATA ===
 const CONTROL_NAME = 'CONTROL';
+export const CONNECTION_EVENTS: EventKeys<keyof OrigConnectionEventMap> = {
+	STATE_UPDATED: 'stateupdated',
+};
 
 export type StateGraph = {
 	new: ['connecting', 'closed'];
@@ -31,24 +35,25 @@ const stateGraph: StateGraph = {
 	closed: [],
 } as const;
 
-export type Connection = ConnectionChest & {
+export interface IConnection extends ConnectionChest {
 	getPeer(): IPeer;
 	getState(): ConnectionState;
 
 	connect(): void;
 	close(): void;
-};
+}
 export type ConnectionState = keyof StateGraph;
-export type ConnectionChest = IListenerChest<LowercaseMap<ConnectionEventMap>>;
+export type ConnectionChest = IListenerChest<ConnectionEventMap>;
 
-export type ConnectionEventMap = {
-	stateUpdated: ConnectionState;
+type OrigConnectionEventMap = {
+	stateUpdated: { state: ConnectionState };
 };
+export type ConnectionEventMap = LowercaseMap<OrigConnectionEventMap>;
 
 // === `Connection` DEFINE
-type ConnectionConstructor = new (userId: UserId) => Connection;
+type ConnectionConstructor = new (userId: UserId) => IConnection;
 
-export const Connection: ConnectionConstructor = function (userId: UserId): Connection {
+export const Connection: ConnectionConstructor = function (userId: UserId): IConnection {
 	// === FIELDS ===
 	let peer: IPeer;
 	let unsubFromSignal: Destroy;
