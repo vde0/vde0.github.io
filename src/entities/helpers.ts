@@ -1,5 +1,5 @@
-import { Peer, PEER_EVENTS, PeerEventMap } from '../lib/webrtc/Peer';
-import { CHAT_HISTORY_EVENTS, ChatHistory, ChatHistoryEventMap } from '@lib/chat-history';
+import { Peer, PEER_EVENTS, PeerEventMap } from '@lib/webrtc/Peer';
+import { CHAT_EVENTS, Chat, ChatEventMap } from './Chat';
 import { listen, ListenerCollection, unlisten } from '@lib/utils';
 import { ISignal, Signal } from './Signal';
 import { ActionMap, ACTIONS } from '@api/socket-api';
@@ -17,7 +17,7 @@ export function chatPeerBridge({
 }: {
 	client: UserId;
 	target: UserId;
-	chat: ChatHistory;
+	chat: Chat;
 	peer: Peer;
 }): Destroy {
 	peer.addDataChannel(CHAT_NAME);
@@ -29,19 +29,19 @@ export function chatPeerBridge({
 		},
 	};
 
-	const historyListeners: ListenerCollection<ChatHistoryEventMap> = {
-		[CHAT_HISTORY_EVENTS.ADD]: ({ item: { chatter, text } }) => {
-			if (chatter !== client) return;
+	const historyListeners: ListenerCollection<ChatEventMap> = {
+		[CHAT_EVENTS.ADD]: ({ item: { userId, text } }) => {
+			if (userId !== client) return;
 			peer.send(text, CHAT_NAME);
 		},
 	};
 
 	listen<Peer, PeerEventMap>(peer, peerListeners);
-	listen<ChatHistory, ChatHistoryEventMap>(chat, historyListeners);
+	listen<Chat, ChatEventMap>(chat, historyListeners);
 
 	return () => {
 		unlisten<Peer, PeerEventMap>(peer, peerListeners);
-		unlisten<ChatHistory, ChatHistoryEventMap>(chat, historyListeners);
+		unlisten<Chat, ChatEventMap>(chat, historyListeners);
 	};
 }
 
