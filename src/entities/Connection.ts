@@ -1,5 +1,5 @@
 import { addDebug } from '@lib/utils';
-import { Peer, PEER_EVENTS, PeerEventMap } from './Peer';
+import { Peer, PEER_EVENTS, PeerEventMap } from '../lib/webrtc/Peer';
 import { LowercaseMap } from '@types';
 import {
 	IListenerChest,
@@ -8,6 +8,8 @@ import {
 	ListenerChest,
 	StateLeader,
 } from '@lib/pprinter-tools';
+import { Destroy, peerSignalBridge } from './helpers';
+import { UserId } from './User';
 
 // === STATIC DATA ===
 const CONTROL_NAME = 'CONTROL';
@@ -42,18 +44,36 @@ export type ConnectionEventMap = {
 	stateUpdated: ConnectionState;
 };
 
-type ConnectionConstructor = new () => Connection;
+// === `Peer` FABRIC AND `Signal` PUBLISHER
+export type PeerFabric = () => Peer;
 
-export const Connection: ConnectionConstructor = function (): Connection {
+let createPeer: PeerFabric | null = null;
+
+export function setPeerFabric(peerFabric: PeerFabric) {
+	createPeer = peerFabric;
+}
+
+function ensurePeerFabric(): Peer {
+	if (createPeer === null) throw Error('`peerFabric` is not defined.');
+	return createPeer();
+}
+
+// === `Connection` DEFINE
+type ConnectionConstructor = new (userId: UserId) => Connection;
+
+export const Connection: ConnectionConstructor = function (userId: UserId): Connection {
 	// === FIELDS ===
-	let peer: Peer = new Peer();
+	let peer: Peer;
+	let unsubFromSignal: Destroy;
 
 	const stateLeader: IStateLeader<StateGraph> = new StateLeader('new', stateGraph);
 	const chest: ConnectionChest = new ListenerChest();
 
+	// === EXEC ===
+	setPeer();
+
 	// === DEV ===
-	// addDebug('chatUnit', chatUnit); TODO: ADD FOR Room ENTITY
-	addDebug('peer', peer);
+	addDebug('peer', peer!);
 
 	// === HANDLERS ===
 	const peerStopHandler: Listener<PeerEventMap['text']> = ({ label }) => {
@@ -75,8 +95,7 @@ export const Connection: ConnectionConstructor = function (): Connection {
 
 				updateState('reconnecting');
 				stopPeer();
-				remakePeer();
-				configurePeer();
+				setPeer();
 
 				startPeer();
 				break;
@@ -101,10 +120,15 @@ export const Connection: ConnectionConstructor = function (): Connection {
 	}
 
 	// Peer manipulates
-	function configurePeer(): void {
+	function setPeer(): void {
+		peer = ensurePeerFabric();
+
 		peer.addDataChannel(CONTROL_NAME);
 		peer.on(PEER_EVENTS.TEXT, peerStopHandler);
 		peer.on(PEER_EVENTS.UPDATED, peerUpdatedHandler);
+
+		unsubFromSignal?.();
+		unsubFromSignal = peerSignalBridge(peer, userId);
 	}
 
 	function startPeer(): void {
@@ -112,9 +136,6 @@ export const Connection: ConnectionConstructor = function (): Connection {
 	}
 	function stopPeer(): void {
 		peer.stop();
-	}
-	function remakePeer(): void {
-		peer = new Peer();
 	}
 	function sendStop(): void {
 		peer.send('stop', CONTROL_NAME);
@@ -135,6 +156,8 @@ export const Connection: ConnectionConstructor = function (): Connection {
 		}
 		updateState('closed');
 		sendStop();
+
+		unsubFromSignal();
 	}
 
 	function getPeer() {
@@ -142,9 +165,6 @@ export const Connection: ConnectionConstructor = function (): Connection {
 	}
 
 	// getState -> [=== HELPERS ===] : [Peer manipulates]
-
-	// === EXEC CODE ===
-	configurePeer();
 
 	return {
 		...chest,

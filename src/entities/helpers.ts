@@ -41,7 +41,7 @@ export function chatPeerBridge(chat: ChatHistory, peer: Peer): Destroy {
 	};
 }
 
-export function configurePeer(peer: Peer, target: string): Destroy {
+export function peerSignalBridge(peer: Peer, target: string): Destroy {
 	// === LISTENERS
 	const signalListeners: ListenerCollection<ActionMap> = {
 		[ACTIONS.ACCEPT_TARGET]: ({ target: id, offer }) => {
