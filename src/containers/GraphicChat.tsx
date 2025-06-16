@@ -1,6 +1,6 @@
 import MessageList from '@components/MessageList';
 import MessageForm from './MessageForm';
-import { useChatFeed, useChatHistory, useChatUnit, useResizeEl } from '@hooks';
+import { useChat, useChatFeed, useClientId, useResizeEl } from '@hooks';
 import { PropsWithClassName } from '@types';
 import { useCallback, useEffect, useLayoutEffect, useRef } from 'react';
 
@@ -10,16 +10,16 @@ interface GraphicChatProps extends PropsWithClassName {
 
 const GraphicChat: React.FC<GraphicChatProps> = ({ className, hidden = false }) => {
 	const feed = useChatFeed();
-	const history = useChatHistory();
-	const chatUnit = useChatUnit();
+	const chat = useChat();
+	const client = useClientId();
 	const listRef = useRef<HTMLElement | null>(null);
 	const [resizeList, setList] = useResizeEl();
 
 	const pushMsgHandler = useCallback<(msgValue: string) => void>(
 		(msgText) => {
-			history.add(msgText, chatUnit.localChatter);
+			chat.add(client, msgText);
 		},
-		[chatUnit, history]
+		[chat]
 	);
 
 	// === HELPERS ===
