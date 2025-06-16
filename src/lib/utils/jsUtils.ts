@@ -1,5 +1,5 @@
 import { Listener } from '@lib/pprinter-tools';
-import { BasicDataStruct, Dict } from '@types';
+import { BasicDataStruct, Dict, UnknownDict } from '@types';
 
 export type Options = {
 	copyDict?: boolean;
@@ -75,11 +75,11 @@ export function once(callback: CallableFunction): () => boolean {
 	};
 }
 
-export type ListenerCollection<M extends Dict> = {
+export type ListenerCollection<M extends Dict<M>> = {
 	[E in keyof M]?: Listener<M[E]>;
 };
 
-export function manageListeners<I extends Record<string, any>, M extends Dict = Dict>(
+export function manageListeners<I extends Record<string, any>, M extends Dict<M> = UnknownDict>(
 	master: I,
 	listeners: { [E in keyof M]?: Listener<M[E]> },
 	toolName: string
@@ -93,21 +93,21 @@ export function manageListeners<I extends Record<string, any>, M extends Dict = 
 		master[toolName](event, listeners[event]);
 	}
 }
-export function listen<I extends object, M extends Dict = Dict>(
+export function listen<I extends object, M extends Dict<M> = UnknownDict>(
 	master: I,
 	listeners: { [E in keyof M]?: Listener<M[E]> },
 	toolName: string = 'on'
 ): void {
 	manageListeners(master, listeners, toolName);
 }
-export function listenOnce<I extends object, M extends Dict = Dict>(
+export function listenOnce<I extends object, M extends Dict<M> = UnknownDict>(
 	master: I,
 	listeners: { [E in keyof M]?: Listener<M[E]> },
 	toolName: string = 'once'
 ): void {
 	manageListeners(master, listeners, toolName);
 }
-export function unlisten<I extends object, M extends Dict = Dict>(
+export function unlisten<I extends object, M extends Dict<M> = UnknownDict>(
 	master: I,
 	listeners: { [E in keyof M]?: Listener<M[E]> },
 	toolName: string = 'off'
