@@ -1,4 +1,4 @@
-import { AnyDict, Dict, MethodKey } from '@types';
+import { UnknownDict, Dict, MethodKey, LowercaseMap } from '@types';
 import { EventWithoutData, Listener, ListenerDict } from './general';
 import { doApi } from './helpers';
 import { PrivateContext } from './PrivateContext';
@@ -6,24 +6,24 @@ import { PrivateContext } from './PrivateContext';
 export const WHEN_API: MethodKey<IWhen>[] = ['occur', 'when'] as const;
 Object.freeze(WHEN_API);
 
-export type IWhen<M extends AnyDict = AnyDict> = {
+export interface IWhen<M extends Dict<LowercaseMap<M>> = UnknownDict> {
 	occur<N extends EventWithoutData<M>>(stateName: N): void;
 	occur<N extends keyof M>(stateName: N, state: M[N]): void;
 	when<N extends keyof M>(stateName: N, listener?: Listener<M[N]>): M[N] | undefined;
 	unwhen<N extends keyof M>(stateName: N, listener: Listener<M[N]>): void;
-};
-
-const privateContext = new PrivateContext<IWhen<Dict>, PrivateProps>();
-
-interface PrivateProps {
-	stateDict: Partial<AnyDict>;
-	initSet: Set<any>;
-	listenerDict: ListenerDict<AnyDict>;
 }
 
-export class When<M extends AnyDict = AnyDict> implements IWhen<M> {
-	static implementTo<W extends IWhen<Dict>>(obj: W, api: W) {
-		doApi<IWhen<Dict>>(obj, api, false, WHEN_API);
+const privateContext = new PrivateContext<IWhen<{}>, PrivateProps>();
+
+interface PrivateProps {
+	stateDict: Partial<UnknownDict>;
+	initSet: Set<any>;
+	listenerDict: ListenerDict<UnknownDict>;
+}
+
+export class When<M extends Dict<LowercaseMap<M>> = UnknownDict> implements IWhen<M> {
+	static implementTo<W extends IWhen<UnknownDict>>(obj: W, api: W) {
+		doApi<IWhen<UnknownDict>>(obj, api, false, WHEN_API);
 	}
 
 	constructor(stateDict: Partial<M> = {}) {
