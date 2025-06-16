@@ -1,26 +1,41 @@
 import { Connection } from './Connection';
+import { chatPeerBridge, Destroy } from './helpers';
 import { Profile } from './Profile';
 import { IRoom, Room } from './Room';
+import { Signal } from './Signal';
+
+// === DATA ===
+let destroyChatPeerBridge: Destroy | null = null;
 
 // === API ===
 const CLIENT: ISession['client'] = Profile.id;
 
 let target: ISession['target'] = null;
 let connection: ISession['connection'] = null;
-let room: IRoom;
+let room: ISession['room'];
 
-async function findTarget() {
-	connection = new Connection();
-}
+const findTarget: ISession['findTarget'] = function () {
+	Signal.exec('relaytarget', { target: CLIENT });
+	Signal.once('accepttarget', ({ target: userId, offer }) => {
+		destroyChatPeerBridge?.();
+		createRoom();
+
+		target = userId;
+		connection = new Connection(target);
+		destroyChatPeerBridge = chatPeerBridge(room.chat, connection.getPeer());
+
+		if (offer) connection.connect();
+	});
+};
+
+// === EXEC ===
+createRoom();
 
 // === HELPERS ===
 function createRoom() {
 	room = new Room();
 	room.addUser(CLIENT);
 }
-
-// === EXEC ===
-createRoom();
 
 // === DEFINE SESSION AND ITS INTERFACE
 export interface ISession {
