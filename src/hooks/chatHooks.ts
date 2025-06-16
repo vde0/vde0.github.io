@@ -11,6 +11,8 @@ import {
 	USER_EVENTS,
 	SessionEventMap,
 	SESSION_EVENTS,
+	Target,
+	Client,
 } from '@entities';
 import { addDebug, listen, unlisten } from '@lib/utils';
 import { ChatContext, ChatCValue } from '@store';
@@ -89,32 +91,43 @@ export const useTargetId = (): UserId | null => {
 	return targetId;
 };
 
-export const useUser = <ID extends UserId>(id: ID): IUser<ID> | undefined => {
-	return useRoom().getUser(id);
+export const useUser = <ID extends UserId | null>(id: ID): IUser<ID & string> | undefined => {
+	if (id === null) return;
+
+	const user = useRoom().getUser(id);
+	if (!user) throw Error('`user` is not found');
+
+	return user;
 };
 
-export const useClientUser = (): IUser<UserId> => {
+export const useClientUser = (): IUser<Client> => {
 	return useUser(useClientId())!;
 };
 
 export const useTargetUser = (): IUser<UserId> | undefined => {
 	const target = useTargetId();
-	if (!target) return;
 	return useUser(target);
 };
 
-export const useUserMeta = (userId: UserId): [UserId, Send, ContentMedia] => {
+export const useUserMeta = (userId: UserId | null): [UserId | null, Send, ContentMedia] => {
 	const chat = useChat();
 	const user = useUser(userId);
 
 	if (user === undefined) throw Error(`user '${userId}' is undefined`);
 
-	const [userMedia, setUserMedia] = useState<ContentMedia>(user.getMedia());
+	const [userMedia, setUserMedia] = useState<ContentMedia>(user?.getMedia() ?? null);
 
-	const send = useCallback<Send>((msgText) => chat.add(userId, msgText), [chat]);
+	const send = useCallback<Send>(
+		(msgText) => {
+			userId && chat.add(userId, msgText);
+		},
+		[chat, userId]
+	);
 
 	// Update Media
 	useEffect(() => {
+		if (!user) return;
+
 		const update: Listener<UserEventMap['media']> = ({ userId: id, media }) => {
 			if (userId !== id) return;
 			setUserMedia(media);
@@ -130,12 +143,12 @@ export const useUserMeta = (userId: UserId): [UserId, Send, ContentMedia] => {
 export const useClientMeta = (): [UserId, Send, ContentMedia] => {
 	const clientId = useClientId();
 
-	return useUserMeta(clientId);
+	return useUserMeta(clientId) as [UserId, Send, ContentMedia];
 };
 
-export const useTargetMeta = (): [UserId | undefined, Send, ContentMedia | undefined] => {
+export const useTargetMeta = (): [Target, Send, ContentMedia | undefined] => {
 	const targetId = useTargetId();
-	if (!targetId) return [undefined, (msgText) => {}, undefined];
+	if (!targetId) return [targetId, (msgText) => {}, undefined];
 
 	return useUserMeta(targetId);
 };

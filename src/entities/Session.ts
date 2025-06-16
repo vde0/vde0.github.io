@@ -7,6 +7,9 @@ import { Signal } from './Signal';
 import { EventKeys, IListenerChest, ListenerChest } from '@lib/pprinter-tools';
 import { UserId } from './User';
 
+export type Client = UserId;
+export type Target = UserId | null;
+
 // === EVENT SYSTEM ===
 const chest: SessionListenerChest = new ListenerChest();
 export const SESSION_EVENTS: EventKeys<keyof OrigSessionEventMap> = {
@@ -73,8 +76,8 @@ function createRoom() {
 
 // === DEFINE SESSION AND ITS INTERFACE
 export interface ISession extends SessionListenerChest {
-	client: UserId;
-	target: UserId | null;
+	client: Client;
+	target: Target;
 	connection: IConnection | null;
 	room: IRoom;
 	findTarget(): void;
