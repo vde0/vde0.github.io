@@ -21,7 +21,7 @@ import { ChatCValue } from '@store/ChatProvider';
 import { useStart } from 'hooks/useStart';
 import Btn from '@components/Btn';
 import { whenLocalMedia } from '@api/localMedia';
-import { INTENT_EVENTS, INTENTS } from '@services/intents';
+import { INTENT_ACTIONS, DO_INTENT } from '@services/intents';
 import { ConnectionState, IConnection } from '@entities/Connection';
 import { IRoom } from '@entities/Room';
 
@@ -45,22 +45,10 @@ const Main: React.FC = () => {
 		overflow: clip;
 	`;
 
-	// TODO: Replace for any service
-	// useEffect(() => {
-	// 	onStart(() => {
-	// 		requestLocalMedia();
-	// 		whenLocalMedia((media) => media && setAccessFlag(ACC_FLAGS.LOCAL_MEDIA));
-	// 	});
-	// }, []);
-
 	useStart(() => {
 		setModal(-1);
 		whenLocalMedia(() => setModal(1));
 	});
-
-	useEffect(() => {
-		connection?.connect();
-	}, [connection]);
 
 	useLayoutEffect(() => {
 		if (connectionState !== 'connected') setIsTextChatShown(false);
@@ -70,15 +58,6 @@ const Main: React.FC = () => {
 		if (isTextChatShown) read(true);
 		else read(false);
 	}, [isTextChatShown]);
-
-	useEffect(() => {
-		try {
-			webApp?.ready();
-			webApp?.lockOrientation?.();
-			webApp?.disableVerticalSwipes?.();
-			webApp?.requestFullscreen?.();
-		} catch (err) {}
-	}, [webApp]);
 
 	return (
 		<>
@@ -133,7 +112,7 @@ const Main: React.FC = () => {
 							Добро пожаловать в чат-рулетку! Чтобы начать, нажмите кнопку "Начать" и разрешите приложению доступ к Вашим пользовательским медиа
 						</p>
 						<Btn
-							onClick={() => INTENTS[INTENT_EVENTS.START_APP]}
+							onClick={() => DO_INTENT[INTENT_ACTIONS.START_APP]}
 							className="border-2 border-white rounded-2xl mt-auto"
 						>
 							<span className="font-bold uppercase">Начать</span>
