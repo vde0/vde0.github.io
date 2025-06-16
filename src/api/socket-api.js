@@ -11,8 +11,6 @@ const DATA_NAME = {
 };
 Object.freeze(DATA_NAME);
 export const ACTIONS = {
-	SUCCESS: 'success',
-
 	get RELAY_SDP() {
 		return this.getRelay(EVENT_ATOM.SDP);
 	},

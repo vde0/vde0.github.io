@@ -2,6 +2,7 @@ const { EventEmitter } = require('events');
 const { ACTIONS, DATA_NAME, EVENT_ATOM } = require('../src/api/socket-api');
 
 const DISCONNECT_DELAY = 10000;
+const CONNECTION_LOOP_DELAY = 500;
 
 module.exports = async function SocketIo(server) {
 	// === DATA ===
@@ -12,74 +13,52 @@ module.exports = async function SocketIo(server) {
 		},
 	});
 
-	const freeSockets = new Set();
+	const freeSockets = new Map();
+	const getSocket = (socketId) => io.of('/').sockets.get(socketId);
+
+	// dev
 	const emitterMap = new Map();
 
-	let getSocket;
-	{
-		const sockets = io.of('/').sockets;
-		getSocket = (socketId) => sockets.get(socketId);
-	}
-
-	// === CONNECTING LOOP ===
-	const connectCheckingDelay = 500;
-	setInterval(makeConnect, connectCheckingDelay);
+	// === CONNECTION LOOP ===
+	setInterval(makeConnect, CONNECTION_LOOP_DELAY);
 
 	// === SERVICES ===
-	function wait(socket) {
-		freeSockets.add(socket);
+	function wait(userId, socketId) {
+		freeSockets.set(userId, socketId);
 	}
-	function dewait(socket) {
-		freeSockets.delete(socket);
+	function dewait(userId) {
+		freeSockets.delete(userId);
 	}
 
-	let isConnecting = false;
 	function makeConnect() {
-		if (isConnecting) return;
 		if (freeSockets.size < 2) return;
-		isConnecting = true;
 
 		let userCount = 2;
 		const users = [];
 
-		const motor = freeSockets.values();
+		const ids = freeSockets.keys();
 		while (userCount > 0) {
-			const { value } = motor.next();
-			if (!value) throw Error('At the connectManager() socket was undefined.');
-			users.push(value);
+			const { userId } = ids.next();
 
+			if (!userId) throw Error('At the `makeConnect` func socket was undefined.');
+
+			users.push(userId);
 			userCount--;
 		}
 
 		console.log('RELAY TARGET');
-		relay(users[0].id, users[1].id, EVENT_ATOM.TARGET, true);
-		relay(users[1].id, users[0].id, EVENT_ATOM.TARGET, false);
+		relay(users[0], users[1], EVENT_ATOM.TARGET, true);
+		relay(users[1], users[0], EVENT_ATOM.TARGET, false);
 		freeSockets.delete(users[0]);
 		freeSockets.delete(users[1]);
-
-		isConnecting = false;
 	}
 
 	// === HELPERS ===
-	function findFreeSocket(exceptSocketIds = []) {
-		let returnSocket = null;
-		for (let socket of freeSockets.values()) {
-			if (checkForExcept(socket.id)) continue;
-			returnSocket = socket;
-			break;
-		}
-
-		function checkForExcept(socketId) {
-			for (let id of exceptIds) if (socketId === id) return true;
-			return false;
-		}
-		return returnSocket;
-	}
 	function relay(senderId, targetId, atom, data) {
 		console.log(`relay ${senderId} -> ${targetId}`);
 
-		const senderSocket = getSocket(senderId);
-		const targetSocket = getSocket(targetId);
+		const senderSocket = getSocket(freeSockets.get(senderId));
+		const targetSocket = getSocket(freeSockets.get(targetId));
 		if (!senderSocket) {
 			console.warn('Failed to find the Sender Socket.');
 			return;
@@ -90,9 +69,10 @@ module.exports = async function SocketIo(server) {
 		}
 
 		const [acceptWay, dataName] = defineAcceptState(atom);
+		targetSocket.emit(acceptWay, { target: senderId, [dataName]: data });
 
-		emitterMap.get(targetId)?.emit(acceptWay, { target: senderId, [dataName]: data });
-		targetSocket?.emit(acceptWay, { target: senderId, [dataName]: data });
+		// dev
+		emitterMap.get(targetSocket.id)?.emit(acceptWay, { target: senderId, [dataName]: data });
 	}
 	function defineAcceptState(atom) {
 		return [ACTIONS.getAccept(atom), DATA_NAME[atom]];
@@ -101,65 +81,85 @@ module.exports = async function SocketIo(server) {
 	// === SOCKET LISTENING ===
 	io.on('connection', (socket) => {
 		console.log('connect', socket.id);
+
+		// === DATA ===
 		let successTimerId;
 		let dataRelayed = false;
 		let dataAccepted = false;
 
+		let userId = null;
+
+		// === SUBSCRIBE SOCKET FOR LOCAL EMITTER
 		const socketEmitter = new EventEmitter();
 		const on = socketEmitter.on.bind(socketEmitter);
 		emitterMap.set(socket.id, socketEmitter);
-
-		// SUCCESS -> disconnect
-		socket.on(ACTIONS.SUCCESS, (_) => {
-			console.log('SUCCESS');
-			checkForDisconnect(0);
-		});
-		socket.on('disconnect', closeHandler);
-
-		// RELAY_ICE -> trigger ACCEPT_ICE
-		socket.on(ACTIONS.RELAY_ICE, ({ target: targetId, ice }) => {
-			console.log('RELAY_ICE');
-			relay(socket.id, targetId, EVENT_ATOM.ICE, ice);
-			checkForDisconnect(DISCONNECT_DELAY);
-		});
-		// RELAY_SDP -> trigger ACCEPT_SDP
-		socket.on(ACTIONS.RELAY_SDP, ({ target: targetId, sdp }) => {
-			console.log('RELAY_SDP');
-			relay(socket.id, targetId, EVENT_ATOM.SDP, sdp);
-			dataRelayed = true;
-		});
-
-		// ACCEPT_TARGET
-		on(ACTIONS.ACCEPT_TARGET, (_) => console.log('ACCEPT_TARGET'));
-		// ACCEPT_SDP
-		on(ACTIONS.ACCEPT_SDP, (_) => {
-			console.log('ACCEPT_SDP');
-			dataAccepted = true;
-		});
-		// ACCEPT_ICE
-		on(ACTIONS.ACCEPT_ICE, (_) => console.log('ACCEPT_ICE'));
-
-		// === INIT FOR FREE SOCKETS ===
-		wait(socket);
 
 		// === HELPERS ===
 		function checkForDisconnect(delay) {
 			clearTimeout(successTimerId);
 
 			if (!dataRelayed && !dataAccepted) return;
-			successTimerId = setTimeout((_) => close(), delay);
+			successTimerId = setTimeout((_) => disconnect(), delay);
 		}
-		function close() {
+
+		function setUserId(id) {
+			userId = id;
+			wait(userId, socket.id);
+		}
+
+		function disconnect() {
 			socket.disconnect();
 		}
-		function closeHandler() {
-			console.log('CLOSE');
-			safeClosing();
-		}
-		function safeClosing() {
+
+		// === LISTENERS ===
+		function disconnectHandler() {
+			console.log('DISCONNECT');
 			emitterMap.delete(socket.id);
-			dewait(socket);
+			dewait(userId);
 		}
+
+		function relayTargetHandler({ target: userId }) {
+			console.log('RELAY_TARGET');
+			setUserId(userId);
+		}
+
+		function relayIceHandler({ target: targetId, ice }) {
+			console.log('RELAY_ICE');
+			relay(userId, targetId, EVENT_ATOM.ICE, ice);
+			checkForDisconnect(DISCONNECT_DELAY);
+		}
+
+		function relaySdpHandler({ target: targetId, sdp }) {
+			console.log('RELAY_SDP');
+			relay(userId, targetId, EVENT_ATOM.SDP, sdp);
+			dataRelayed = true;
+		}
+
+		function acceptTargetHandler(_) {
+			console.log('ACCEPT_TARGET');
+		}
+
+		function acceptIceHandler(_) {
+			console.log('ACCEPT_ICE');
+		}
+
+		function acceptSdpHandler(_) {
+			console.log('ACCEPT_SDP');
+			dataAccepted = true;
+		}
+
+		// === LISTEN GENERAL ===
+		socket.on('disconnect', disconnectHandler);
+
+		// === LISTEN RELAY ===
+		socket.on(ACTIONS.RELAY_TARGET, relayTargetHandler);
+		socket.on(ACTIONS.RELAY_ICE, relayIceHandler);
+		socket.on(ACTIONS.RELAY_SDP, relaySdpHandler);
+
+		// === LISTEN ACCEPT ===
+		on(ACTIONS.ACCEPT_TARGET, acceptTargetHandler);
+		on(ACTIONS.ACCEPT_ICE, acceptIceHandler);
+		on(ACTIONS.ACCEPT_SDP, acceptSdpHandler);
 	});
 
 	return io;
