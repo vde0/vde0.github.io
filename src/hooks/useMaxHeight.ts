@@ -1,57 +1,44 @@
-export { useMaxHeight, defineMaxHeight, GetHeight };
-
-
-import { useWebApp } from "@vkruglikov/react-telegram-web-app";
-import { TWebApp } from "@tg-types"
-import { useEffect, useState } from "react";
-import { addDebug, getWebApp } from "@utils";
-
+import { useWebApp } from '@vkruglikov/react-telegram-web-app';
+import { TWebApp } from '@tg-types';
+import { useEffect, useState } from 'react';
+import { addDebug, getWebApp } from '@utils';
 
 const webApp: TWebApp | null = getWebApp();
-if (!webApp) throw Error("Undefined WebApp.");
+if (!webApp) throw Error('Undefined WebApp.');
 
+export type GetHeight = () => number;
+const getMaxHeight: GetHeight = defineMaxHeight(() => webApp.viewportHeight);
 
-type GetHeight = () => number;
-const getMaxHeight: GetHeight = defineMaxHeight( () => webApp.viewportHeight );
+export const useMaxHeight = (getMX: GetHeight = getMaxHeight): number => {
+	const webApp: TWebApp = useWebApp();
+	if (!webApp) throw Error('webApp was undefined');
 
+	const [maxHeight, setMaxHeight] = useState<number>(getMX());
 
-const useMaxHeight = ( getMX: GetHeight = getMaxHeight ): number => {
+	useEffect(() => {
+		const vpChangedHandler = ({ isStateStable }: { isStateStable: boolean }): void => {
+			if (!isStateStable) return;
+			addDebug('maxHeight', getMX());
+			setMaxHeight(getMX());
+		};
 
-    const webApp: TWebApp           = useWebApp();
-    if (!webApp)    throw Error("webApp was undefined");
+		webApp.onEvent('viewportChanged', vpChangedHandler);
+		return () => webApp.offEvent('viewportChanged', vpChangedHandler);
+	}, [webApp]);
 
-    const [maxHeight, setMaxHeight] = useState<number>( getMX() );
-
-
-    useEffect(() => {
-
-        const vpChangedHandler = ({ isStateStable }: { isStateStable: boolean }): void => {
-            if (!isStateStable) return;
-            addDebug("maxHeight", getMX());
-            setMaxHeight( getMX() );
-        };
-
-        webApp.onEvent("viewportChanged", vpChangedHandler);
-        return () => webApp.offEvent("viewportChanged", vpChangedHandler);
-    }, [webApp]);
-
-
-    return maxHeight;
+	return maxHeight;
 };
-
 
 // === HELPERS ===
-function defineMaxHeight ( getHeight: GetHeight ): GetHeight {
+export function defineMaxHeight(getHeight: GetHeight): GetHeight {
+	let maxHeight: number = getHeight();
 
-    let maxHeight: number = getHeight();
+	const getMaxHeight: GetHeight = () => {
+		const curHeight: number = getHeight();
+		maxHeight = curHeight > maxHeight ? curHeight : maxHeight;
+		//
+		return maxHeight;
+	};
 
-    const getMaxHeight: GetHeight = () => {
-
-        const curHeight: number = getHeight();
-        maxHeight               = curHeight > maxHeight ? curHeight : maxHeight;
-        //
-        return maxHeight;
-    };
-
-    return getMaxHeight;
-};
+	return getMaxHeight;
+}

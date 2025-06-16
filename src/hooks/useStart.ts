@@ -1,6 +1,6 @@
 import { EventWithData } from '@lib/pprinter-tools';
 import { intentChest, IntentActionMap, INTENT_ACTIONS } from '@services/intents';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
 type StartApp = typeof INTENT_ACTIONS.START_APP;
 

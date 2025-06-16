@@ -1,41 +1,37 @@
-import { bindProps } from "@utils";
-import { ButtonHTMLAttributes } from "react";
-
+import { bindProps } from '@utils';
+import { ButtonHTMLAttributes } from 'react';
 
 type BtnProps = ButtonHTMLAttributes<HTMLButtonElement> & {
-    onTouchStart?: (e: React.TouchEvent<HTMLButtonElement>) => void;
-    onTouchEnd?: (e: React.TouchEvent<HTMLButtonElement>) => void;
-    onTouchMove?: (e: React.TouchEvent<HTMLButtonElement>) => void;
-    onTouchCancel?: (e: React.TouchEvent<HTMLButtonElement>) => void;
+	onTouchStart?: (e: React.TouchEvent<HTMLButtonElement>) => void;
+	onTouchEnd?: (e: React.TouchEvent<HTMLButtonElement>) => void;
+	onTouchMove?: (e: React.TouchEvent<HTMLButtonElement>) => void;
+	onTouchCancel?: (e: React.TouchEvent<HTMLButtonElement>) => void;
 };
 
 // react component
-const Btn: React.FC<BtnProps> = ({ className, children, type = "button", disabled, ...props }) => (
-    <div className={`touch-manipulation transition-opacity active:opacity-70
-        ${className ?? ""}
-        ${disabled ? "opacity-50" : ""}
-    `}>
-        <button
-            {...props}
-            type={type}
-            disabled={disabled}
-            className={`w-full h-full py-3 px-2 text-center flex items-center justify-center gap-4 select-none disabled:pointer-events-none`}
-        >
-            {children}
-        </button>
-    </div>
+const Btn: React.FC<BtnProps> = ({ className, children, type = 'button', disabled, ...props }) => (
+	<div
+		className={`touch-manipulation transition-opacity active:opacity-70
+        ${className ?? ''}
+        ${disabled ? 'opacity-50' : ''}
+    `}
+	>
+		<button
+			{...props}
+			type={type}
+			disabled={disabled}
+			className={`w-full h-full py-3 px-2 text-center flex items-center justify-center gap-4 select-none disabled:pointer-events-none`}
+		>
+			{children}
+		</button>
+	</div>
 );
 
-
 // Specific Btns
-type SpecificBtnProps   = Omit<BtnProps, "type">;
+type SpecificBtnProps = Omit<BtnProps, 'type'>;
 
-const SubmitBtn     = bindProps<BtnProps, {type: "submit"}>(Btn, {type: "submit"});
-const ResetBtn      = bindProps<BtnProps, {type: "reset"}>(Btn, {type: "reset"});
+const SubmitBtn = bindProps<BtnProps, { type: 'submit' }>(Btn, { type: 'submit' });
+const ResetBtn = bindProps<BtnProps, { type: 'reset' }>(Btn, { type: 'reset' });
 
-
-export default Btn
-export {
-    SubmitBtn, ResetBtn,
-    BtnProps, SpecificBtnProps,
-};
+export default Btn;
+export { SubmitBtn, ResetBtn, BtnProps, SpecificBtnProps };

@@ -10,7 +10,6 @@ import { TWebApp } from '@tg-types'; // custom type
 import { useEffect, useLayoutEffect, useState } from 'react';
 import {
 	useAppAccessor,
-	useRoom,
 	useMobileKeyboard,
 	useConnectionState,
 	usePlatform,

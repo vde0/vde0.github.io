@@ -1,5 +1,5 @@
 import { Listener } from '@lib/pprinter-tools';
-import { BasicDataStruct, Dict, UnknownDict } from '@types';
+import { BasicDataStruct, Dict } from '@types';
 
 export type Options = {
 	copyDict?: boolean;

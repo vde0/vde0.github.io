@@ -1,5 +1,3 @@
-/** @jsxImportSource @emotion/react */
-import { css, EmCss } from '@emotion/react';
 import MessageBlock from './MessageBlock';
 import { forwardRef, useEffect, useRef } from 'react';
 import { MsgItem } from '@entities/Chat';
@@ -8,8 +6,6 @@ import { useClientId } from '@hooks';
 interface MessageListProps {
 	history: MsgItem[];
 }
-
-const msgListCss: EmCss = css``;
 
 const MessageList = forwardRef<HTMLElement, MessageListProps>(({ history }, ref) => {
 	const listRef = useRef<HTMLUListElement | null>(null);
@@ -23,7 +19,7 @@ const MessageList = forwardRef<HTMLElement, MessageListProps>(({ history }, ref)
 	}, []);
 
 	return (
-		<ul ref={listRef} css={msgListCss} className="px-2">
+		<ul ref={listRef} className="px-2">
 			{history.map((sMsgItem, index) => {
 				const [sender, direction] =
 					sMsgItem.userId === client
