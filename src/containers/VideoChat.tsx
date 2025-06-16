@@ -11,14 +11,14 @@ type VideoChatProps = PropsWithClassName & { remote: boolean; hidden?: boolean }
 
 const VideoChat: React.FC<VideoChatProps> = ({ className, remote, hidden = false }) => {
 	const videoChatClassName = className ?? '';
-	const useChatter = remote ? useTargetMeta : useClientMeta;
+	const useMeta = remote ? useTargetMeta : useClientMeta;
 
 	const video = useRef<HTMLVideoElement | null>(null);
 
 	const peerState = useConnectionState();
 	const [show, setShow] = useState<boolean>(false);
 
-	const [, , media] = useChatter();
+	const [, , media] = useMeta();
 	const [, setAccessFlag] = useAppAccessor();
 
 	// General effect

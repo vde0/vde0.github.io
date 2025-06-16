@@ -146,9 +146,8 @@ export const useClientMeta = (): [UserId, Send, ContentMedia] => {
 	return useUserMeta(clientId) as [UserId, Send, ContentMedia];
 };
 
-export const useTargetMeta = (): [Target, Send, ContentMedia | undefined] => {
+export const useTargetMeta = (): [Target, Send, ContentMedia] => {
 	const targetId = useTargetId();
-	if (!targetId) return [targetId, (msgText) => {}, undefined];
 
 	return useUserMeta(targetId);
 };
