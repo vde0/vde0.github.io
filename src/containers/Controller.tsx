@@ -1,67 +1,72 @@
-import Btn, { BtnProps } from "../components/Btn";
-import { useIsMobile, usePeerState, useUnread } from "@hooks";
-import { useMemo } from "react";
-import add_user from "../assets/icon/add_user.svg";
-import arrow_to_right from "../assets/icon/arrow_to_right.svg";
-import dialogue from "../assets/icon/dialogue.svg";
+import Btn, { BtnProps } from '../components/Btn';
+import { useIsMobile, useConnectionState, useUnread } from '@hooks';
+import { useMemo } from 'react';
+import add_user from '../assets/icon/add_user.svg';
+import arrow_to_right from '../assets/icon/arrow_to_right.svg';
+import dialogue from '../assets/icon/dialogue.svg';
 
-
-const MOBILE_HANDLER: keyof BtnProps = "onTouchEnd";
-const DESKTOP_HANDLER: keyof BtnProps = "onClick";
-
+const MOBILE_HANDLER: keyof BtnProps = 'onTouchEnd';
+const DESKTOP_HANDLER: keyof BtnProps = 'onClick';
 
 type TurnEvent = React.MouseEvent | React.TouchEvent;
 
 interface ContrtollerProps {
-    onTextChat?: (e?: TurnEvent) => void;
-    onAddUser?: (e?: TurnEvent) => void;
-    onNext?: (e?: TurnEvent) => void;
+	onTextChat?: (e?: TurnEvent) => void;
+	onAddUser?: (e?: TurnEvent) => void;
+	onNext?: (e?: TurnEvent) => void;
 }
 
 const Controller: React.FC<ContrtollerProps> = ({ onTextChat, onAddUser, onNext }) => {
-    
-    const isMobile  = useIsMobile();
-    const [unread]  = useUnread(); 
-    const onTurn    = useMemo<string>(() => isMobile ? MOBILE_HANDLER : DESKTOP_HANDLER, [isMobile]);
-    const peerState = usePeerState();
+	const isMobile = useIsMobile();
+	const [unread] = useUnread();
+	const onTurn = useMemo<string>(() => (isMobile ? MOBILE_HANDLER : DESKTOP_HANDLER), [isMobile]);
+	const connectionState = useConnectionState();
 
-    return (
-        <section className="
+	return (
+		<section
+			className="
             flex items-stretch justify-between gap-3
             absolute bottom-0
             box-content w-full h-15 py-4
-        ">
-            {/* TextChat */}
-            <Btn
-                disabled={peerState!=="connected"}
-                className="bg-gray flex-grow-1 rounded-xl relative" {...{[onTurn]: onTextChat}}
-            >
-                <div hidden={unread <= 0} className="absolute right-0 top-0 translate-x-[30%] translate-y-[-30%] bg-red rounded-full p-4">
-                    <span className="
+        "
+		>
+			{/* TextChat */}
+			<Btn
+				disabled={connectionState !== 'connected'}
+				className="bg-gray flex-grow-1 rounded-xl relative"
+				{...{ [onTurn]: onTextChat }}
+			>
+				<div
+					hidden={unread <= 0}
+					className="absolute right-0 top-0 translate-x-[30%] translate-y-[-30%] bg-red rounded-full p-4"
+				>
+					<span
+						className="
                         absolute top-0 left-0 w-full h-full
                         flex items-center justify-center
                         font-bold text-lg text-white
-                    ">
-                        {unread}
-                    </span>
-                </div>
-                <img draggable={false} className="block pointer-events-none" src={dialogue} />
-            </Btn>
-            {/* AddUser */}
-            <Btn disabled className="bg-gray flex-grow-1 rounded-xl" {...{[onTurn]: onAddUser}}>
-                <img draggable={false} className="block pointer-events-none" src={add_user} />
-            </Btn>
-            {/* Next */}
-            <Btn
-                disabled={peerState !== "closed" && peerState !== "connected" && peerState !== "disconnected" && peerState !== "failed"}
-                className="bg-light-blue flex-grow-3 rounded-xl" {...{[onTurn]: onNext}}
-            >
-                <span className="text-2xl font-bold">NEXT</span>
-                <img draggable={false} className="pointer-events-none" src={arrow_to_right} />
-            </Btn>
-        </section>
-    )
+                    "
+					>
+						{unread}
+					</span>
+				</div>
+				<img draggable={false} className="block pointer-events-none" src={dialogue} />
+			</Btn>
+			{/* AddUser */}
+			<Btn disabled className="bg-gray flex-grow-1 rounded-xl" {...{ [onTurn]: onAddUser }}>
+				<img draggable={false} className="block pointer-events-none" src={add_user} />
+			</Btn>
+			{/* Next */}
+			<Btn
+				disabled={connectionState !== 'connected'}
+				className="bg-light-blue flex-grow-3 rounded-xl"
+				{...{ [onTurn]: onNext }}
+			>
+				<span className="text-2xl font-bold">NEXT</span>
+				<img draggable={false} className="pointer-events-none" src={arrow_to_right} />
+			</Btn>
+		</section>
+	);
 };
 
-
-export default Controller
+export default Controller;

@@ -1,4 +1,4 @@
-import { useAppAccessor, useLocalChatter, usePeerState, useRemoteChatter, useStart } from '@hooks';
+import { useAppAccessor, useClientMeta, useConnectionState, useTargetMeta, useStart } from '@hooks';
 import { addDebug } from '@lib/utils';
 import { ACC_FLAGS } from '@services/appAccessor';
 import { PropsWithClassName } from '@types';
@@ -11,11 +11,11 @@ type VideoChatProps = PropsWithClassName & { remote: boolean; hidden?: boolean }
 
 const VideoChat: React.FC<VideoChatProps> = ({ className, remote, hidden = false }) => {
 	const videoChatClassName = className ?? '';
-	const useChatter = remote ? useRemoteChatter : useLocalChatter;
+	const useChatter = remote ? useTargetMeta : useClientMeta;
 
 	const video = useRef<HTMLVideoElement | null>(null);
 
-	const peerState = usePeerState();
+	const peerState = useConnectionState();
 	const [show, setShow] = useState<boolean>(false);
 
 	const [, , media] = useChatter();

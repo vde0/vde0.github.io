@@ -12,20 +12,23 @@ import {
 	useAppAccessor,
 	useRoom,
 	useMobileKeyboard,
-	usePeerState,
+	useConnectionState,
 	usePlatform,
 	useUnread,
+	useConnection,
 } from '@hooks';
 import { ChatCValue } from '@store/ChatProvider';
 import { useStart } from 'hooks/useStart';
 import Btn from '@components/Btn';
 import { whenLocalMedia } from '@api/localMedia';
 import { INTENT_EVENTS, INTENTS } from '@services/intents';
+import { ConnectionState, IConnection } from '@entities/Connection';
+import { IRoom } from '@entities/Room';
 
 const Main: React.FC = () => {
 	const webApp: TWebApp = useWebApp();
-	const [room, updateRoom] = useRoom();
-	const peerState: RTCPeerConnection['connectionState'] = usePeerState();
+	const connection: IConnection | null = useConnection();
+	const connectionState: ConnectionState | null = useConnectionState();
 	const keyboardStatus: boolean = useMobileKeyboard();
 	const [, read]: ChatCValue['unread'] = useUnread();
 	const platform = usePlatform();
@@ -56,18 +59,12 @@ const Main: React.FC = () => {
 	});
 
 	useEffect(() => {
-		room.connection.connect();
-	}, [room]);
-
-	useEffect(() => {
-		if (peerState === 'closed' || peerState === 'failed' || peerState === 'disconnected') {
-			updateRoom();
-		}
-	}, [peerState]);
+		connection?.connect();
+	}, [connection]);
 
 	useLayoutEffect(() => {
-		if (peerState !== 'connected') setIsTextChatShown(false);
-	}, [peerState]);
+		if (connectionState !== 'connected') setIsTextChatShown(false);
+	}, [connectionState]);
 
 	useEffect(() => {
 		if (isTextChatShown) read(true);
@@ -110,14 +107,9 @@ const Main: React.FC = () => {
 					<div style={{ display: keyboardStatus ? 'none' : 'block' }} className="shrink-0 h-24">
 						<Controller
 							onNext={() => {
-								if (
-									peerState !== 'closed' &&
-									peerState !== 'connected' &&
-									peerState !== 'disconnected' &&
-									peerState !== 'failed'
-								)
-									return;
-								room.connection.close();
+								if (connectionState !== 'connected') return;
+								if (!connection) throw Error('`connection` is null or undefined');
+								connection.close();
 							}}
 							onTextChat={() => {
 								setIsTextChatShown(!isTextChatShown);
