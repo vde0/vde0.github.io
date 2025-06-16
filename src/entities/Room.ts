@@ -1,11 +1,12 @@
-import { Chat } from './Chat';
-import { IUser, User } from './User';
+import { Chat, IChat } from './Chat';
+import { IUser, User, UserId } from './User';
 
 export interface IRoom {
-	chat: Chat;
-	userMap: Map<string, IUser<string>>;
-	addUser<ID extends string>(id: ID): IUser<ID>;
-	delUser<ID extends string>(id: ID): boolean;
+	chat: IChat;
+	userMap: Map<UserId, IUser<UserId>>;
+	addUser<ID extends UserId>(id: ID): IUser<ID>;
+	delUser<ID extends UserId>(id: ID): boolean;
+	getUser<ID extends UserId>(id: ID): IUser<ID> | undefined;
 }
 
 type RoomConstructor = new () => IRoom;
@@ -20,11 +21,15 @@ export const Room: RoomConstructor = function (): IRoom {
 	const delUser: IRoom['delUser'] = function (id) {
 		return userMap.delete(id);
 	};
+	const getUser: IRoom['getUser'] = function (id) {
+		return userMap.get(id) as IUser<typeof id> | undefined;
+	};
 
 	return {
 		chat,
 		userMap,
 		addUser,
 		delUser,
+		getUser,
 	};
 } as unknown as RoomConstructor;
