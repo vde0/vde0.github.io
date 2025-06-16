@@ -1,18 +1,18 @@
 import { EventWithData } from '@lib/pprinter-tools';
-import { intentChest, IntentEventMap } from '@services/intents';
+import { intentChest, IntentActionMap, INTENT_ACTIONS } from '@services/intents';
 import { useEffect, useState } from 'react';
 
-type StartApp = 'startApp';
+type StartApp = typeof INTENT_ACTIONS.START_APP;
 
 type UseStart = (
-	startAppHandler: StartApp extends EventWithData<IntentEventMap>
-		? (payload: IntentEventMap['startApp']) => void
+	startAppHandler: StartApp extends EventWithData<IntentActionMap>
+		? (payload: IntentActionMap[StartApp]) => void
 		: () => void
 ) => void;
 
 export const useStart: UseStart = (startAppHandler) => {
 	useEffect(() => {
-		intentChest.on('startapp', startAppHandler);
-		return () => intentChest.off('startapp', startAppHandler);
+		intentChest.on(INTENT_ACTIONS.START_APP, startAppHandler);
+		return () => intentChest.off(INTENT_ACTIONS.START_APP, startAppHandler);
 	}, []);
 };

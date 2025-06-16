@@ -1,8 +1,9 @@
 import { EventKeys, EventWithoutData, IListenerChest, ListenerChest } from '@lib/pprinter-tools';
 import { LowercaseMap, Unsplit, UpperSnakeCase } from '@types';
 
-export type IntentEvent = Lowercase<keyof IntentEventMap>;
-export type IntentEventMap = {
+export type IntentAction = keyof IntentActionMap;
+export type IntentActionMap = LowercaseMap<OrigIntentActionMap>;
+type OrigIntentActionMap = {
 	next: undefined;
 	toggleChat: boolean;
 	addUser: undefined; // TODO
@@ -10,7 +11,7 @@ export type IntentEventMap = {
 	requestUserMedia: undefined;
 };
 
-type LocalIntentChest = IListenerChest<LowercaseMap<IntentEventMap>>;
+type LocalIntentChest = IListenerChest<IntentActionMap>;
 type Denied = 'exec' | 'offAll';
 
 export const intentChest: Omit<LocalIntentChest, Denied> = new ListenerChest();
@@ -19,7 +20,7 @@ const orig: Partial<{ [D in Denied]: LocalIntentChest[D] }> = {};
 denie('exec');
 denie('offAll');
 
-export const INTENT_EVENTS: EventKeys<keyof IntentEventMap> = {
+export const INTENT_ACTIONS: EventKeys<keyof OrigIntentActionMap> = {
 	NEXT: 'next',
 	TOGGLE_CHAT: 'togglechat',
 	ADD_USER: 'adduser',
@@ -27,13 +28,13 @@ export const INTENT_EVENTS: EventKeys<keyof IntentEventMap> = {
 	REQUEST_USER_MEDIA: 'requestusermedia',
 };
 
-export const INTENTS: {
-	[I in keyof IntentEventMap as Lowercase<I>]: I extends EventWithoutData<IntentEventMap>
-		? (data?: IntentEventMap[I]) => void
-		: (data: IntentEventMap[I]) => void;
+export const DO_INTENT: {
+	[I in keyof IntentActionMap as Lowercase<I>]: I extends EventWithoutData<IntentActionMap>
+		? (data?: IntentActionMap[I]) => void
+		: (data: IntentActionMap[I]) => void;
 } = (() => {
-	const result: typeof INTENTS = {} as typeof INTENTS;
-	Object.values(INTENT_EVENTS).forEach((intentName) => {
+	const result: typeof DO_INTENT = {} as typeof DO_INTENT;
+	Object.values(INTENT_ACTIONS).forEach((intentName) => {
 		result[intentName] = (payload) => {
 			orig.exec!(intentName, payload);
 		};
