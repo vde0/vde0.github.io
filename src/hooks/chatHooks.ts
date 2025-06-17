@@ -113,7 +113,7 @@ export const useUserMeta = (userId: UserId | null): [UserId | null, Send, Conten
 	const chat = useChat();
 	const user = useUser(userId);
 
-	if (user === undefined) throw Error(`user '${userId}' is undefined`);
+	if (user === undefined) throw Error(`'user' with '${userId}' id is not found`);
 
 	const [userMedia, setUserMedia] = useState<ContentMedia>(user?.getMedia() ?? null);
 
