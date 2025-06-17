@@ -14,6 +14,7 @@ import { getWebApp } from '@lib/utils';
 }
 
 {
+	appAcessor.when(() => Session.findTarget());
 	Session.on(SESSION_EVENTS.NEXT_TARGET, ({ connection }) => connection?.connect());
 }
 
