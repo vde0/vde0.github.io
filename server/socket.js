@@ -13,7 +13,8 @@ module.exports = async function SocketIo(server) {
 		},
 	});
 
-	const freeSockets = new Map();
+	const sockets = new Map();
+	const freeSockets = new Set();
 	const getSocket = (socketId) => io.of('/').sockets.get(socketId);
 
 	// dev
@@ -24,9 +25,11 @@ module.exports = async function SocketIo(server) {
 
 	// === SERVICES ===
 	function wait(userId, socketId) {
-		freeSockets.set(userId, socketId);
+		sockets.set(userId, socketId);
+		freeSockets.add(userId);
 	}
 	function dewait(userId) {
+		sockets.delete(userId);
 		freeSockets.delete(userId);
 	}
 
@@ -36,7 +39,7 @@ module.exports = async function SocketIo(server) {
 		let userCount = 2;
 		const users = [];
 
-		const ids = freeSockets.keys();
+		const ids = freeSockets.values();
 		while (userCount > 0) {
 			const { value: userId } = ids.next();
 
@@ -57,14 +60,14 @@ module.exports = async function SocketIo(server) {
 	function relay(senderId, targetId, atom, data) {
 		console.log(`relay ${senderId} -> ${targetId}`);
 
-		const senderSocket = getSocket(freeSockets.get(senderId));
-		const targetSocket = getSocket(freeSockets.get(targetId));
+		const senderSocket = getSocket(sockets.get(senderId));
+		const targetSocket = getSocket(sockets.get(targetId));
 		if (!senderSocket) {
-			console.warn('Failed to find the Sender Socket.');
+			console.warn('Failed to find the Sender Socket:', senderId, senderSocket);
 			return;
 		}
 		if (!targetSocket) {
-			console.warn('Failed to find the Target Socket.');
+			console.warn('Failed to find the Target Socket:', targetId, targetSocket);
 			return;
 		}
 
@@ -119,18 +122,19 @@ module.exports = async function SocketIo(server) {
 		}
 
 		function relayTargetHandler({ target: userId }) {
-			console.log('RELAY_TARGET');
+			if (!userId) return;
+			console.log('RELAY_TARGET', userId);
 			setUserId(userId);
 		}
 
 		function relayIceHandler({ target: targetId, ice }) {
-			console.log('RELAY_ICE');
+			console.log('RELAY_ICE', targetId, ice);
 			relay(userId, targetId, SIGNAL_ACTION_ATOM.ICE, ice);
 			checkForDisconnect(DISCONNECT_DELAY);
 		}
 
 		function relaySdpHandler({ target: targetId, sdp }) {
-			console.log('RELAY_SDP');
+			console.log('RELAY_SDP', targetId, sdp);
 			relay(userId, targetId, SIGNAL_ACTION_ATOM.SDP, sdp);
 			dataRelayed = true;
 		}
