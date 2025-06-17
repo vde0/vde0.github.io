@@ -105,8 +105,8 @@ export const useClientUser = (): IUser<Client> => {
 };
 
 export const useTargetUser = (): IUser<UserId> | undefined => {
-	const target = useTargetId();
-	return useUser(target);
+	const targetId = useTargetId();
+	return useUser(targetId);
 };
 
 export const useUserMeta = (userId: UserId | null): [UserId | null, Send, ContentMedia] => {
@@ -148,7 +148,6 @@ export const useClientMeta = (): [UserId, Send, ContentMedia] => {
 
 export const useTargetMeta = (): [Target, Send, ContentMedia] => {
 	const targetId = useTargetId();
-
 	return useUserMeta(targetId);
 };
 
