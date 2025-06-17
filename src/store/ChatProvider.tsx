@@ -1,5 +1,5 @@
-import { useChatHistory, useRoom } from '@hooks';
-import { ChatHistoryEventMap } from '@lib/chat-history';
+import { useChat, useRoom } from '@hooks';
+import { ChatEventMap } from '@entities/Chat';
 import { Listener } from '@lib/pprinter-tools';
 import { createContext, useEffect, useState } from 'react';
 
@@ -18,7 +18,7 @@ const ChatProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
 	const [readFlag, read] = useState<boolean>(false);
 
 	const connection = useRoom();
-	const chatHistory = useChatHistory();
+	const chatHistory = useChat();
 
 	useEffect(() => {
 		setUnread(0);
@@ -29,7 +29,7 @@ const ChatProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
 	}, [readFlag]);
 
 	useEffect(() => {
-		const addMsgHandler: Listener<ChatHistoryEventMap['add']> = () => {
+		const addMsgHandler: Listener<ChatEventMap['add']> = () => {
 			!readFlag && setUnread(unreadCount + 1);
 		};
 		chatHistory.on('add', addMsgHandler);
