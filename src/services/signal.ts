@@ -1,6 +1,6 @@
 import { listen } from '@lib/utils';
 import { socket } from '@api/socket';
-import { ActionMap, ACTIONS } from '@api/socket-api';
+import { ActionMap, ACTIONS } from '../api/socket-api';
 import { Signal } from '@entities/Signal';
 
 listen<typeof socket, ActionMap>(socket, {

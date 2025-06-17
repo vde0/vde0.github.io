@@ -2,7 +2,7 @@ import { IPeer, PEER_EVENTS, PeerEventMap } from '@lib/webrtc/Peer';
 import { CHAT_EVENTS, IChat, ChatEventMap } from './Chat';
 import { listen, ListenerCollection, unlisten } from '@lib/utils';
 import { ISignal, Signal } from './Signal';
-import { ActionMap, ACTIONS } from '@api/socket-api';
+import { ActionMap, ACTIONS } from '../api/socket-api';
 import { UserId } from './User';
 
 export const CHAT_NAME = 'CHAT';

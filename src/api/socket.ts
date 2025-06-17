@@ -1,7 +1,7 @@
 import { io, Socket } from 'socket.io-client';
 import { IListenerChest, Listener, ListenerChest } from '@lib/pprinter-tools';
 import { addDebug, listen } from '@lib/utils';
-import { ActionMap, ACTIONS } from '@api/socket-api';
+import { ActionMap, ACTIONS } from './socket-api';
 
 // === GENERAL DATA ===
 addDebug('signalHost', process.env.SIGNAL);
