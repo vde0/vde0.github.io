@@ -1,28 +1,28 @@
 import { listen } from '@lib/utils';
 import { socket } from '@api/socket';
-import { ActionMap, ACTIONS } from '../api/socket-api';
+import { SignalActionMap, SIGNAL_ACTIONS } from '../api/socket-api';
 import { Signal } from '@entities/Signal';
 
-listen<typeof socket, ActionMap>(socket, {
-	[ACTIONS.ACCEPT_TARGET]: (payload) => {
-		Signal.exec(ACTIONS.ACCEPT_TARGET, payload);
+listen<typeof socket, SignalActionMap>(socket, {
+	[SIGNAL_ACTIONS.ACCEPT_TARGET]: (payload) => {
+		Signal.exec(SIGNAL_ACTIONS.ACCEPT_TARGET, payload);
 	},
-	[ACTIONS.ACCEPT_SDP]: (payload) => {
-		Signal.exec(ACTIONS.ACCEPT_SDP, payload);
+	[SIGNAL_ACTIONS.ACCEPT_SDP]: (payload) => {
+		Signal.exec(SIGNAL_ACTIONS.ACCEPT_SDP, payload);
 	},
-	[ACTIONS.ACCEPT_ICE]: (payload) => {
-		Signal.exec(ACTIONS.ACCEPT_ICE, payload);
+	[SIGNAL_ACTIONS.ACCEPT_ICE]: (payload) => {
+		Signal.exec(SIGNAL_ACTIONS.ACCEPT_ICE, payload);
 	},
 });
 
-listen<typeof Signal, ActionMap>(Signal, {
-	[ACTIONS.RELAY_TARGET]: (payload) => {
-		socket.exec(ACTIONS.RELAY_TARGET, payload);
+listen<typeof Signal, SignalActionMap>(Signal, {
+	[SIGNAL_ACTIONS.RELAY_TARGET]: (payload) => {
+		socket.exec(SIGNAL_ACTIONS.RELAY_TARGET, payload);
 	},
-	[ACTIONS.RELAY_SDP]: (payload) => {
-		socket.exec(ACTIONS.RELAY_SDP, payload);
+	[SIGNAL_ACTIONS.RELAY_SDP]: (payload) => {
+		socket.exec(SIGNAL_ACTIONS.RELAY_SDP, payload);
 	},
-	[ACTIONS.RELAY_ICE]: (payload) => {
-		socket.exec(ACTIONS.RELAY_ICE, payload);
+	[SIGNAL_ACTIONS.RELAY_ICE]: (payload) => {
+		socket.exec(SIGNAL_ACTIONS.RELAY_ICE, payload);
 	},
 });

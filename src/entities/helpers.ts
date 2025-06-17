@@ -2,7 +2,7 @@ import { IPeer, PEER_EVENTS, PeerEventMap } from '@lib/webrtc/Peer';
 import { CHAT_EVENTS, IChat, ChatEventMap } from './Chat';
 import { listen, ListenerCollection, unlisten } from '@lib/utils';
 import { ISignal, Signal } from './Signal';
-import { ActionMap, ACTIONS } from '../api/socket-api';
+import { SignalActionMap, SIGNAL_ACTIONS } from '../api/socket-api';
 import { UserId } from './User';
 
 export const CHAT_NAME = 'CHAT';
@@ -47,16 +47,16 @@ export function chatPeerBridge({
 
 export function peerSignalBridge(peer: IPeer, target: string): Destroy {
 	// === LISTENERS
-	const signalListeners: ListenerCollection<ActionMap> = {
-		[ACTIONS.ACCEPT_TARGET]: ({ target: id, offer }) => {
+	const signalListeners: ListenerCollection<SignalActionMap> = {
+		[SIGNAL_ACTIONS.ACCEPT_TARGET]: ({ target: id, offer }) => {
 			if (target !== id) return;
 			offer && peer.start();
 		},
-		[ACTIONS.ACCEPT_SDP]: ({ target: id, sdp }) => {
+		[SIGNAL_ACTIONS.ACCEPT_SDP]: ({ target: id, sdp }) => {
 			if (target !== id) return;
 			peer.setRemoteSdp(sdp);
 		},
-		[ACTIONS.ACCEPT_ICE]: ({ target: id, ice }) => {
+		[SIGNAL_ACTIONS.ACCEPT_ICE]: ({ target: id, ice }) => {
 			if (target !== id) return;
 			peer.addCandidate(ice);
 		},
@@ -64,16 +64,16 @@ export function peerSignalBridge(peer: IPeer, target: string): Destroy {
 
 	const peerListeners: ListenerCollection<PeerEventMap> = {
 		[PEER_EVENTS.SDP]: ({ sdp }) => {
-			Signal.exec(ACTIONS.RELAY_SDP, { target, sdp });
+			Signal.exec(SIGNAL_ACTIONS.RELAY_SDP, { target, sdp });
 		},
 		[PEER_EVENTS.ICE]: ({ candidate }) => {
-			Signal.exec(ACTIONS.RELAY_ICE, { target, ice: candidate });
+			Signal.exec(SIGNAL_ACTIONS.RELAY_ICE, { target, ice: candidate });
 		},
 	};
 
 	// === HELPERS ===
-	const listenSignal = (): void => listen<ISignal, ActionMap>(Signal, signalListeners);
-	const unlistenSignal = (): void => unlisten<ISignal, ActionMap>(Signal, signalListeners);
+	const listenSignal = (): void => listen<ISignal, SignalActionMap>(Signal, signalListeners);
+	const unlistenSignal = (): void => unlisten<ISignal, SignalActionMap>(Signal, signalListeners);
 
 	const listenPeer = (): void => listen<IPeer, PeerEventMap>(peer, peerListeners);
 	const unlistenPeer = (): void => unlisten<IPeer, PeerEventMap>(peer, peerListeners);

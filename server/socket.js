@@ -1,5 +1,5 @@
 const { EventEmitter } = require('events');
-const { ACTIONS, DATA_NAME, EVENT_ATOM } = require('../src/api/socket-api');
+const { SIGNAL_ACTIONS, SIGNAL_DATA_NAME, SIGNAL_ACTION_ATOM } = require('../src/api/socket-api');
 
 const DISCONNECT_DELAY = 10000;
 const CONNECTION_LOOP_DELAY = 500;
@@ -38,17 +38,17 @@ module.exports = async function SocketIo(server) {
 
 		const ids = freeSockets.keys();
 		while (userCount > 0) {
-			const { userId } = ids.next();
+			const { value: userId } = ids.next();
 
-			if (!userId) throw Error('At the `makeConnect` func socket was undefined.');
+			if (!userId) throw Error(`At the 'makeConnect()' socket '${userId}' is not found`);
 
 			users.push(userId);
 			userCount--;
 		}
 
 		console.log('RELAY TARGET');
-		relay(users[0], users[1], EVENT_ATOM.TARGET, true);
-		relay(users[1], users[0], EVENT_ATOM.TARGET, false);
+		relay(users[0], users[1], SIGNAL_ACTION_ATOM.TARGET, true);
+		relay(users[1], users[0], SIGNAL_ACTION_ATOM.TARGET, false);
 		freeSockets.delete(users[0]);
 		freeSockets.delete(users[1]);
 	}
@@ -75,7 +75,7 @@ module.exports = async function SocketIo(server) {
 		emitterMap.get(targetSocket.id)?.emit(acceptWay, { target: senderId, [dataName]: data });
 	}
 	function defineAcceptState(atom) {
-		return [ACTIONS.getAccept(atom), DATA_NAME[atom]];
+		return [SIGNAL_ACTIONS.getAccept(atom), SIGNAL_DATA_NAME[atom]];
 	}
 
 	// === SOCKET LISTENING ===
@@ -125,13 +125,13 @@ module.exports = async function SocketIo(server) {
 
 		function relayIceHandler({ target: targetId, ice }) {
 			console.log('RELAY_ICE');
-			relay(userId, targetId, EVENT_ATOM.ICE, ice);
+			relay(userId, targetId, SIGNAL_ACTION_ATOM.ICE, ice);
 			checkForDisconnect(DISCONNECT_DELAY);
 		}
 
 		function relaySdpHandler({ target: targetId, sdp }) {
 			console.log('RELAY_SDP');
-			relay(userId, targetId, EVENT_ATOM.SDP, sdp);
+			relay(userId, targetId, SIGNAL_ACTION_ATOM.SDP, sdp);
 			dataRelayed = true;
 		}
 
@@ -152,14 +152,14 @@ module.exports = async function SocketIo(server) {
 		socket.on('disconnect', disconnectHandler);
 
 		// === LISTEN RELAY ===
-		socket.on(ACTIONS.RELAY_TARGET, relayTargetHandler);
-		socket.on(ACTIONS.RELAY_ICE, relayIceHandler);
-		socket.on(ACTIONS.RELAY_SDP, relaySdpHandler);
+		socket.on(SIGNAL_ACTIONS.RELAY_TARGET, relayTargetHandler);
+		socket.on(SIGNAL_ACTIONS.RELAY_ICE, relayIceHandler);
+		socket.on(SIGNAL_ACTIONS.RELAY_SDP, relaySdpHandler);
 
 		// === LISTEN ACCEPT ===
-		on(ACTIONS.ACCEPT_TARGET, acceptTargetHandler);
-		on(ACTIONS.ACCEPT_ICE, acceptIceHandler);
-		on(ACTIONS.ACCEPT_SDP, acceptSdpHandler);
+		on(SIGNAL_ACTIONS.ACCEPT_TARGET, acceptTargetHandler);
+		on(SIGNAL_ACTIONS.ACCEPT_ICE, acceptIceHandler);
+		on(SIGNAL_ACTIONS.ACCEPT_SDP, acceptSdpHandler);
 	});
 
 	return io;

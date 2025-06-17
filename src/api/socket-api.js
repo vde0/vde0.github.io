@@ -1,34 +1,34 @@
-const EVENT_ATOM = {
+export const SIGNAL_ACTION_ATOM = {
 	ICE: 'ice',
 	SDP: 'sdp',
 	TARGET: 'target',
 };
-Object.freeze(EVENT_ATOM);
-const DATA_NAME = {
-	[EVENT_ATOM.ICE]: 'ice',
-	[EVENT_ATOM.SDP]: 'sdp',
-	[EVENT_ATOM.TARGET]: 'offer',
+
+export const SIGNAL_DATA_NAME = {
+	[SIGNAL_ACTION_ATOM.ICE]: 'ice',
+	[SIGNAL_ACTION_ATOM.SDP]: 'sdp',
+	[SIGNAL_ACTION_ATOM.TARGET]: 'offer',
 };
-Object.freeze(DATA_NAME);
-export const ACTIONS = {
+
+export const SIGNAL_ACTIONS = {
 	get RELAY_SDP() {
-		return this.getRelay(EVENT_ATOM.SDP);
+		return this.getRelay(SIGNAL_ACTION_ATOM.SDP);
 	},
 	get RELAY_ICE() {
-		return this.getRelay(EVENT_ATOM.ICE);
+		return this.getRelay(SIGNAL_ACTION_ATOM.ICE);
 	},
 	get RELAY_TARGET() {
-		return this.getRelay(EVENT_ATOM.TARGET);
+		return this.getRelay(SIGNAL_ACTION_ATOM.TARGET);
 	},
 
 	get ACCEPT_SDP() {
-		return this.getAccept(EVENT_ATOM.SDP);
+		return this.getAccept(SIGNAL_ACTION_ATOM.SDP);
 	},
 	get ACCEPT_ICE() {
-		return this.getAccept(EVENT_ATOM.ICE);
+		return this.getAccept(SIGNAL_ACTION_ATOM.ICE);
 	},
 	get ACCEPT_TARGET() {
-		return this.getAccept(EVENT_ATOM.TARGET);
+		return this.getAccept(SIGNAL_ACTION_ATOM.TARGET);
 	},
 
 	getRelay(atom) {
@@ -39,6 +39,6 @@ export const ACTIONS = {
 	},
 };
 
-Object.freeze(EVENT_ATOM);
-Object.freeze(DATA_NAME);
-Object.freeze(ACTIONS);
+Object.freeze(SIGNAL_ACTION_ATOM);
+Object.freeze(SIGNAL_DATA_NAME);
+Object.freeze(SIGNAL_ACTIONS);
