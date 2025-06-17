@@ -111,7 +111,7 @@ const Main: React.FC = () => {
 							Добро пожаловать в чат-рулетку! Чтобы начать, нажмите кнопку "Начать" и разрешите приложению доступ к Вашим пользовательским медиа
 						</p>
 						<Btn
-							onClick={() => DO_INTENT[INTENT_ACTIONS.START_APP]}
+							onClick={() => DO_INTENT[INTENT_ACTIONS.START_APP]()}
 							className="border-2 border-white rounded-2xl mt-auto"
 						>
 							<span className="font-bold uppercase">Начать</span>
