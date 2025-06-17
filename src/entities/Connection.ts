@@ -102,7 +102,7 @@ export const Connection: ConnectionConstructor = function (userId: UserId): ICon
 				`'${nextState}' is not able next [Connection] state for current '${getState}' state.`
 			);
 
-		chest.exec('stateupdated', stateLeader.get());
+		chest.exec(CONNECTION_EVENTS.STATE_UPDATED, { state: stateLeader.get() });
 	}
 	function getState(): ConnectionState {
 		return stateLeader.get();
