@@ -61,9 +61,6 @@ export const Connection: ConnectionConstructor = function (userId: UserId): ICon
 	const stateLeader: IStateLeader<StateGraph> = new StateLeader('new', stateGraph);
 	const chest: ConnectionChest = new ListenerChest();
 
-	// === EXEC ===
-	setPeer();
-
 	// === DEV ===
 	addDebug('peer', peer!);
 
@@ -93,6 +90,9 @@ export const Connection: ConnectionConstructor = function (userId: UserId): ICon
 				break;
 		}
 	};
+
+	// === EXEC ===
+	setPeer();
 
 	// === HELPERS ===
 	// state manipulates
