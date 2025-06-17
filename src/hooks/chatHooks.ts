@@ -95,8 +95,6 @@ export const useUser = <ID extends UserId | null>(id: ID): IUser<ID & string> | 
 	if (id === null) return;
 
 	const user = useRoom().getUser(id);
-	if (!user) throw Error('`user` is not found');
-
 	return user;
 };
 
