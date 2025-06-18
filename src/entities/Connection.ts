@@ -99,7 +99,7 @@ export const Connection: ConnectionConstructor = function (userId: UserId): ICon
 	function updateState(nextState: ConnectionState): void {
 		if (!stateLeader.move(nextState))
 			throw Error(
-				`'${nextState}' is not able next [Connection] state for current '${getState}' state.`
+				`'${nextState}' is not able next [Connection] state for current '${getState()}' state.`
 			);
 
 		chest.exec(CONNECTION_EVENTS.STATE_UPDATED, { state: stateLeader.get() });
