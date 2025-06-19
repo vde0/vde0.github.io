@@ -1,8 +1,9 @@
 import MessageList from '@components/MessageList';
 import MessageForm from './MessageForm';
-import { useChat, useChatFeed, useClientId, useResizeEl } from '@hooks';
+import { useChatFeed, useResizeEl } from '@hooks';
 import { PropsWithClassName } from '@types';
-import { useCallback, useEffect, useLayoutEffect, useRef } from 'react';
+import { useEffect, useLayoutEffect, useRef } from 'react';
+import { DO_INTENT, INTENT_ACTIONS } from '@services/intents';
 
 interface GraphicChatProps extends PropsWithClassName {
 	hidden?: boolean;
@@ -10,17 +11,8 @@ interface GraphicChatProps extends PropsWithClassName {
 
 const GraphicChat: React.FC<GraphicChatProps> = ({ className, hidden = false }) => {
 	const feed = useChatFeed();
-	const chat = useChat();
-	const client = useClientId();
 	const listRef = useRef<HTMLElement | null>(null);
 	const [resizeList, setList] = useResizeEl();
-
-	const pushMsgHandler = useCallback<(msgValue: string) => void>(
-		(msgText) => {
-			chat.add(client, msgText);
-		},
-		[chat]
-	);
 
 	// === HELPERS ===
 	function scrollY(
@@ -51,7 +43,12 @@ const GraphicChat: React.FC<GraphicChatProps> = ({ className, hidden = false }) 
 				<MessageList history={feed} />
 			</section>
 			<section className="shrink-0 h-15 box-border">
-				{!hidden && <MessageForm className="mt-auto shrink-0" onPush={pushMsgHandler} />}
+				{!hidden && (
+					<MessageForm
+						className="mt-auto shrink-0"
+						onPush={() => DO_INTENT[INTENT_ACTIONS.SEND_MESSAGE]()}
+					/>
+				)}
 			</section>
 		</article>
 	);

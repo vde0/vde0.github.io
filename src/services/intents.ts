@@ -8,6 +8,7 @@ type OrigIntentActionMap = {
 	toggleChat: boolean;
 	addUser: undefined; // TODO
 	startApp: undefined;
+	sendMessage: undefined;
 };
 
 type LocalIntentChest = IListenerChest<IntentActionMap>;
@@ -24,6 +25,7 @@ export const INTENT_ACTIONS: EventKeys<keyof OrigIntentActionMap> = {
 	TOGGLE_CHAT: 'togglechat',
 	ADD_USER: 'adduser',
 	START_APP: 'startapp',
+	SEND_MESSAGE: 'sendmessage',
 };
 
 export const DO_INTENT: {
