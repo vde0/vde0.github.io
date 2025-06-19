@@ -11,18 +11,24 @@ import {
 	USER_EVENTS,
 	SessionEventMap,
 	SESSION_EVENTS,
-	Target,
+	TargetId,
+	ClientId,
+	Profile,
+	CurrentRoom,
+	PROFILE_EVENTS,
+	ProfileEventMap,
 	Client,
+	Target,
 } from '@entities';
 import { addDebug, listen, unlisten } from '@lib/utils';
 import { ChatContext, ChatCValue } from '@store';
 import { useCallback, useContext, useEffect, useState } from 'react';
 import { Listener } from '@lib/pprinter-tools';
-import { IRoom } from '@entities/Room';
-import { useSession } from './useSession';
+import { IRoom, ROOM_EVENTS, RoomEventMap } from '@entities/Room';
 
 type Send = (msgText: string) => void;
 
+// PROVIDER HOOKS
 export const useWrite = (): ChatCValue['write'] => {
 	return getChatContext()['write'];
 };
@@ -30,13 +36,25 @@ export const useUnread = (): ChatCValue['unread'] => {
 	return getChatContext()['unread'];
 };
 
-export const useRoom = (): IRoom => {
-	return useSession().room;
+// ROOM
+export const useRoom = (): CurrentRoom => {
+	const [room, setRoom] = useState(Profile.room);
+
+	useEffect(() => {
+		const roomUpdatedHandler: Listener<ProfileEventMap['updateroom']> = function ({ room }) {
+			console.log('UPDATE ROOM AT HOOK', room);
+			setRoom(room);
+		};
+
+		Profile.on(PROFILE_EVENTS.UPDATE_ROOM, roomUpdatedHandler);
+		return () => Profile.off(PROFILE_EVENTS.UPDATE_ROOM, roomUpdatedHandler);
+	}, []);
+
+	return room;
 };
 
-export const useChat = (): IChat => {
-	return useRoom().chat;
-};
+// CHAT
+export const useChat = (): IChat => useRoom().chat;
 
 export const useChatFeed = (): MsgItem[] => {
 	const FEED_COUNT = 100;
@@ -73,78 +91,123 @@ export const useChatFeed = (): MsgItem[] => {
 	return feed;
 };
 
-export const useClientId = (): UserId => {
-	return Session.client;
+// CLIENT
+export const useClientId = (): ClientId => {
+	useEffect(() => {});
+
+	return Profile.id;
 };
-export const useTargetId = (): UserId | null => {
-	const [targetId, setTargetId] = useState(Session.target);
+
+export const useClient = (): Client => {
+	useEffect(() => {});
+
+	return Profile.user;
+};
+
+// TARGET
+export const useTargetId = (): TargetId => {
+	const [targetIdState, setTargetIdState] = useState(Session.targetId);
 
 	useEffect(() => {
-		const nextStateHandler: Listener<SessionEventMap['nexttarget']> = function ({ target }) {
-			setTargetId(target);
+		const nextTargetHandler: Listener<SessionEventMap['nexttarget']> = function ({ targetId }) {
+			setTargetIdState(targetId);
 		};
 
-		Session.on(SESSION_EVENTS.NEXT_TARGET, nextStateHandler);
-		return () => Session.off(SESSION_EVENTS.NEXT_TARGET, nextStateHandler);
+		Session.on(SESSION_EVENTS.NEXT_TARGET, nextTargetHandler);
+		return () => Session.off(SESSION_EVENTS.NEXT_TARGET, nextTargetHandler);
 	}, []);
 
-	return targetId;
+	return targetIdState;
+};
+export const useTarget = (): Target => {
+	const [targetState, setTargetState] = useState(Session.target);
+
+	useEffect(() => {
+		const nextTargetHandler: Listener<SessionEventMap['nexttarget']> = function ({ target }) {
+			setTargetState(target);
+		};
+
+		Session.on(SESSION_EVENTS.NEXT_TARGET, nextTargetHandler);
+		return () => Session.off(SESSION_EVENTS.NEXT_TARGET, nextTargetHandler);
+	}, []);
+
+	return targetState;
 };
 
-export const useUser = <ID extends UserId | null>(id: ID): IUser<ID & string> | undefined => {
-	if (id === null) return;
+// GENERAL USER
+export const useUser = (id: UserId | null): IUser<UserId> | undefined => {
+	const room = useRoom();
+	const [user, setUser] = useState<IUser<UserId> | undefined>(getUser());
 
-	const user = useRoom().getUser(id);
+	function getUser() {
+		if (id === null) return;
+		return room.getUserById(id);
+	}
+
+	useEffect(() => {
+		setUser(getUser());
+		if (id === null) return;
+
+		const updateUserHandler: Listener<RoomEventMap['adduser']> & Listener<RoomEventMap['deluser']> =
+			function ({ userId, user }) {
+				if (userId !== id) return;
+				setUser(user);
+			};
+
+		listen<IRoom, RoomEventMap>(room, {
+			[ROOM_EVENTS.ADD_USER]: updateUserHandler,
+			[ROOM_EVENTS.DEL_USER]: updateUserHandler,
+		});
+		return () =>
+			unlisten<IRoom, RoomEventMap>(room, {
+				[ROOM_EVENTS.ADD_USER]: updateUserHandler,
+				[ROOM_EVENTS.DEL_USER]: updateUserHandler,
+			});
+	}, [room, id]);
+
 	return user;
 };
 
-export const useClientUser = (): IUser<Client> => {
-	return useUser(useClientId())!;
-};
-
-export const useTargetUser = (): IUser<UserId> | undefined => {
-	const targetId = useTargetId();
-	return useUser(targetId);
-};
-
-export const useUserMeta = (userId: UserId | null): [UserId | null, Send, ContentMedia] => {
-	const chat = useChat();
-	const user = useUser(userId);
+export const useUserMedia = (userId: UserId | null): ContentMedia => {
+	const user: IUser<UserId> | undefined = useUser(userId);
 
 	const [userMedia, setUserMedia] = useState<ContentMedia>(user?.getMedia() ?? null);
 
-	const send = useCallback<Send>(
-		(msgText) => {
-			userId && chat.add(userId, msgText);
-		},
-		[chat, userId]
-	);
-
 	// Update Media
 	useEffect(() => {
+		console.log('UPDATE USER', user);
+		console.log('IS CLIENT', userId === Profile.id);
+		console.log('IS TARGET', userId === Session.targetId);
+
+		setUserMedia(user ? user.getMedia() : null);
 		if (!user) return;
 
 		const update: Listener<UserEventMap['media']> = ({ userId: id, media }) => {
+			console.log('UPDATE USER MEDIA');
 			if (userId !== id) return;
 			setUserMedia(media);
 		};
 
+		console.log('ON UPDATE MEDIA LISTENER');
 		user.on(USER_EVENTS.MEDIA, update);
-		return () => user.off(USER_EVENTS.MEDIA, update);
+
+		return () => {
+			console.log('OFF UPDATE MEDIA LISTENER');
+			user.off(USER_EVENTS.MEDIA, update);
+		};
 	}, [user]);
 
-	return [userId, send, userMedia];
+	return userMedia;
 };
-
-export const useClientMeta = (): [UserId, Send, ContentMedia] => {
+export const useClientMedia = (): ContentMedia => {
 	const clientId = useClientId();
 
-	return useUserMeta(clientId) as [UserId, Send, ContentMedia];
+	return useUserMedia(clientId);
 };
-
-export const useTargetMeta = (): [Target, Send, ContentMedia] => {
+export const useTargetMedia = (): ContentMedia => {
 	const targetId = useTargetId();
-	return useUserMeta(targetId);
+
+	return useUserMedia(targetId);
 };
 
 // === HELPERS ===
