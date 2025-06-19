@@ -208,6 +208,7 @@ export const Peer: PeerConstructor = function (config = DEFAULT_CONFIG) {
 			}
 		},
 		stop() {
+			if (!isStarted) return;
 			chest.exec('stop');
 			chest.once(PEER_EVENTS.CLOSED, () => chest.offAll());
 			rtc.close();
