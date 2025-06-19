@@ -40,9 +40,9 @@ module.exports = (env, argv) => {
 			isProduction &&
 				new MiniCssExtractPlugin({
 					filename: '[name].[contenthash].css', // Имя файла для стилей
-					buildDependencies: {
-						config: [__filename], // Перезагружать только при изменении конфигурации
-					},
+					// buildDependencies: {
+					// 	config: [__filename], // Перезагружать только при изменении конфигурации
+					// },
 				}),
 		].filter(Boolean), // Убираем undefined (если не в продакшн),
 		optimization: {
