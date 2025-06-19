@@ -22,11 +22,9 @@ import {
 } from '@entities';
 import { addDebug, listen, unlisten } from '@lib/utils';
 import { ChatContext, ChatCValue } from '@store';
-import { useCallback, useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Listener } from '@lib/pprinter-tools';
 import { IRoom, ROOM_EVENTS, RoomEventMap } from '@entities/Room';
-
-type Send = (msgText: string) => void;
 
 // PROVIDER HOOKS
 export const useWrite = (): ChatCValue['write'] => {
