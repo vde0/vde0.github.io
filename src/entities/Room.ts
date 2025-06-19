@@ -1,40 +1,75 @@
+import { LowercaseMap } from '@types';
 import { Chat, IChat } from './Chat';
-import { IUser, User, UserId } from './User';
+import { IUser, UserId } from './User';
+import { EventKeys, IListenerChest, ListenerChest } from '@lib/pprinter-tools';
 
-export interface IRoom {
+// == EVENT SYSTEM ==
+export const ROOM_EVENTS: EventKeys<keyof OrigRoomEventMap> = {
+	ADD_USER: 'adduser',
+	DEL_USER: 'deluser',
+};
+Object.freeze(ROOM_EVENTS);
+
+type RoomChest = IListenerChest<RoomEventMap>;
+export type RoomEvent = keyof RoomEventMap;
+export type RoomEventMap = LowercaseMap<OrigRoomEventMap>;
+type OrigRoomEventMap = {
+	addUser: { userId: UserId; user: IUser<UserId> };
+	delUser: { userId: UserId; user: IUser<UserId> };
+};
+
+// == FACTORY ===
+export interface IRoom extends RoomChest {
 	chat: IChat;
-	addUser<ID extends UserId>(id: ID): IUser<ID>;
-	delUser<ID extends UserId>(id: ID): boolean;
-	getUser<ID extends UserId>(id: ID): IUser<ID> | undefined;
-	hasUser<ID extends UserId>(id: ID): boolean;
+	addUser<ID extends UserId>(user: IUser<ID>): void;
+	delUser<ID extends UserId>(user: IUser<ID>): boolean;
+	hasUser<ID extends UserId>(user: IUser<ID>): boolean;
+	getUserById<ID extends UserId>(userId: ID): IUser<ID> | undefined;
+	getUserIdList(): UserId[];
 }
 
 type RoomConstructor = new () => IRoom;
 
 export const Room: RoomConstructor = function (): IRoom {
+	const chest: RoomChest = new ListenerChest();
+
 	const chat: IRoom['chat'] = new Chat();
 	const userMap: Map<UserId, IUser<UserId>> = new Map();
 
-	const addUser: IRoom['addUser'] = function (id) {
-		const user = new User(id);
-		userMap.set(id, user);
-		return user;
+	const addUser: IRoom['addUser'] = function (user) {
+		const userId = user.getId();
+
+		if (userMap.has(userId)) return;
+		userMap.set(userId, user);
+
+		chest.exec(ROOM_EVENTS.ADD_USER, { userId, user });
 	};
-	const delUser: IRoom['delUser'] = function (id) {
-		return userMap.delete(id);
+	const delUser: IRoom['delUser'] = function (user) {
+		const userId = user.getId();
+		const result = userMap.delete(userId);
+
+		result && chest.exec(ROOM_EVENTS.DEL_USER, { userId, user });
+		return result;
 	};
-	const getUser: IRoom['getUser'] = function (id) {
-		return userMap.get(id) as IUser<typeof id> | undefined;
+	const hasUser: IRoom['hasUser'] = function (user) {
+		return userMap.has(user.getId());
 	};
-	const hasUser: IRoom['hasUser'] = function (id) {
-		return userMap.has(id);
+	const getUserById: IRoom['getUserById'] = function <ID extends UserId>(
+		userId: ID
+	): IUser<ID> | undefined {
+		return userMap.get(userId) as IUser<ID> | undefined;
+	};
+	const getUserIdList: IRoom['getUserIdList'] = function () {
+		return [...userMap.keys()];
 	};
 
 	return {
+		...chest,
 		chat,
 		addUser,
 		delUser,
-		getUser,
 		hasUser,
+		getUserById,
+		getUserIdList,
 	};
 } as unknown as RoomConstructor;

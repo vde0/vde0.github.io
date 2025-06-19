@@ -10,18 +10,19 @@ import {
 	StateLeader,
 } from '@lib/pprinter-tools';
 import { Destroy, peerSignalBridge } from './helpers';
-import { UserId } from './User';
 import { PeerEntity } from './PeerEntity';
+import { SignalActionMap } from '@api/socket-api';
 
 // === STATIC DATA ===
 const CONTROL_NAME = 'CONTROL';
 export const CONNECTION_EVENTS: EventKeys<keyof OrigConnectionEventMap> = {
 	STATE_UPDATED: 'stateupdated',
+	PEER_UPDATER: 'peerupdater',
 };
 
 export type StateGraph = {
 	new: ['connecting', 'closed'];
-	connecting: ['connected', 'closed'];
+	connecting: ['connected', 'reconnecting', 'closed'];
 	connected: ['reconnecting', 'closed'];
 	reconnecting: ['connected', 'closed'];
 	closed: [];
@@ -29,7 +30,7 @@ export type StateGraph = {
 
 const stateGraph: StateGraph = {
 	new: ['connecting', 'closed'],
-	connecting: ['connected', 'closed'],
+	connecting: ['connected', 'reconnecting', 'closed'],
 	connected: ['reconnecting', 'closed'],
 	reconnecting: ['connected', 'closed'],
 	closed: [],
@@ -47,13 +48,20 @@ export type ConnectionChest = IListenerChest<ConnectionEventMap>;
 
 type OrigConnectionEventMap = {
 	stateUpdated: { state: ConnectionState };
+	peerUpdater: { peer: IPeer };
 };
 export type ConnectionEventMap = LowercaseMap<OrigConnectionEventMap>;
 
 // === `Connection` DEFINE
-type ConnectionConstructor = new (userId: UserId) => IConnection;
+type ConnectionConstructor = new (
+	targetPayload: SignalActionMap['accepttarget'],
+	media: MediaStream
+) => IConnection;
 
-export const Connection: ConnectionConstructor = function (userId: UserId): IConnection {
+export const Connection: ConnectionConstructor = function (
+	{ target, offer }: SignalActionMap['accepttarget'],
+	media: MediaStream
+): IConnection {
 	// === FIELDS ===
 	let peer: IPeer;
 	let unsubFromSignal: Destroy;
@@ -83,7 +91,6 @@ export const Connection: ConnectionConstructor = function (userId: UserId): ICon
 				if (stateIs('closed')) break;
 
 				updateState('reconnecting');
-				stopPeer();
 				setPeer();
 
 				startPeer();
@@ -97,6 +104,7 @@ export const Connection: ConnectionConstructor = function (userId: UserId): ICon
 	// === HELPERS ===
 	// state manipulates
 	function updateState(nextState: ConnectionState): void {
+		if (stateIs(nextState)) return;
 		if (!stateLeader.move(nextState))
 			throw Error(
 				`'${nextState}' is not able next [Connection] state for current '${getState()}' state.`
@@ -116,11 +124,15 @@ export const Connection: ConnectionConstructor = function (userId: UserId): ICon
 		peer = new PeerEntity();
 
 		peer.addDataChannel(CONTROL_NAME);
+		media.getTracks().forEach((track) => peer.addMediaTrack(track, media));
+
 		peer.on(PEER_EVENTS.TEXT, peerStopHandler);
 		peer.on(PEER_EVENTS.UPDATED, peerUpdatedHandler);
 
 		unsubFromSignal?.();
-		unsubFromSignal = peerSignalBridge(peer, userId);
+		unsubFromSignal = peerSignalBridge(peer, target);
+
+		chest.exec(CONNECTION_EVENTS.PEER_UPDATER, { peer });
 	}
 
 	function startPeer(): void {
@@ -139,7 +151,7 @@ export const Connection: ConnectionConstructor = function (userId: UserId): ICon
 			return console.warn('[Connect].connect() is not able for used instance.');
 		}
 		updateState('connecting');
-		peer.start();
+		offer && peer.start();
 	}
 
 	function close(): void {

@@ -10,12 +10,12 @@ export const CHAT_NAME = 'CHAT';
 export type Destroy = () => void;
 
 export function chatPeerBridge({
-	client,
+	clientId: client,
 	target,
 	chat,
 	peer,
 }: {
-	client: UserId;
+	clientId: UserId;
 	target: UserId;
 	chat: IChat;
 	peer: IPeer;
@@ -48,10 +48,6 @@ export function chatPeerBridge({
 export function peerSignalBridge(peer: IPeer, target: string): Destroy {
 	// === LISTENERS
 	const signalListeners: ListenerCollection<SignalActionMap> = {
-		[SIGNAL_ACTIONS.ACCEPT_TARGET]: ({ target: id, offer }) => {
-			if (target !== id) return;
-			offer && peer.start();
-		},
 		[SIGNAL_ACTIONS.ACCEPT_SDP]: ({ target: id, sdp }) => {
 			if (target !== id) return;
 			peer.setRemoteSdp(sdp);
