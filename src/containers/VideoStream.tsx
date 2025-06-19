@@ -1,4 +1,10 @@
-import { useAppAccessor, useClientMeta, useConnectionState, useTargetMeta, useStart } from '@hooks';
+import {
+	useAppAccessor,
+	useClientMedia,
+	useConnectionState,
+	useTargetMedia,
+	useStart,
+} from '@hooks';
 import { addDebug } from '@lib/utils';
 import { ACC_FLAGS } from '@services/appAccessor';
 import { PropsWithClassName } from '@types';
@@ -11,14 +17,14 @@ type VideoStreamProps = PropsWithClassName & { remote: boolean; hidden?: boolean
 
 const VideoStream: React.FC<VideoStreamProps> = ({ className, remote, hidden = false }) => {
 	const videoChatClassName = className ?? '';
-	const useMeta = remote ? useTargetMeta : useClientMeta;
+	const useMedia = remote ? useTargetMedia : useClientMedia;
 
 	const video = useRef<HTMLVideoElement | null>(null);
 
-	const peerState = useConnectionState();
+	const connectionState = useConnectionState();
 	const [show, setShow] = useState<boolean>(false);
 
-	const [, , media] = useMeta();
+	const media = useMedia();
 	const [, setAccessFlag] = useAppAccessor();
 
 	// General effect
@@ -47,7 +53,10 @@ const VideoStream: React.FC<VideoStreamProps> = ({ className, remote, hidden = f
 		if (remote) return;
 		if (!video.current) return;
 
-		whenLocalMedia(() => video.current?.play());
+		// whenLocalMedia(() => {
+		// 	console.log('PLAY LOCAL MEDIA');
+		// 	video.current?.play();
+		// });
 
 		video.current.onplaying = () => setShow(true);
 		video.current.onwaiting = () => setShow(false);
@@ -66,8 +75,9 @@ const VideoStream: React.FC<VideoStreamProps> = ({ className, remote, hidden = f
 
 	// Play remote video when user turn START and set appropriate APP FLAG
 	useStart(() => {
-		if (!remote) return;
+		// if (!remote) return;
 		if (!video.current?.paused) return;
+		console.log('START APP');
 		video.current.play();
 		setAccessFlag(ACC_FLAGS.PLAY_REMOTE_VIDEO);
 	});
@@ -82,9 +92,9 @@ const VideoStream: React.FC<VideoStreamProps> = ({ className, remote, hidden = f
 	useEffect(() => {
 		if (!remote) return;
 
-		if (peerState === 'connected') setShow(true);
+		if (connectionState === 'connected') setShow(true);
 		else setShow(false);
-	}, [peerState, remote]);
+	}, [connectionState, remote]);
 
 	return (
 		<section
