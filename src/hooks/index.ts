@@ -8,5 +8,4 @@ export * from './useMaxHeight';
 export * from './useMobileKeyboard';
 export * from './usePlatform';
 export * from './useResizeEl';
-export * from './useSession';
 export * from './useStart';
