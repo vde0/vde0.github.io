@@ -73,7 +73,7 @@ const next: SessionNext = function () {
 
 		listen<IConnection, ConnectionEventMap>(connection, {
 			[CONNECTION_EVENTS.STATE_UPDATED]: ({ state }) => {
-				if (!target) throw Error("'target' in not found");
+				if (!target) throw Error("'target' is not found");
 				console.log('CONNECTION STATE', state);
 				if (state === 'closed') {
 					destroyChatPeerBridge();
@@ -83,8 +83,8 @@ const next: SessionNext = function () {
 				}
 			},
 			[CONNECTION_EVENTS.PEER_UPDATER]: ({ peer }) => {
-				if (!targetId) throw Error("'targetId' in not found");
-				if (!connection) throw Error("'connection' in not found");
+				if (!targetId) throw Error("'targetId' is not found");
+				if (!connection) throw Error("'connection' is not found");
 				destroyChatPeerBridge();
 				destroyChatPeerBridge = chatPeerBridge({
 					clientId: Profile.id,
